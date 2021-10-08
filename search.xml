@@ -96,7 +96,7 @@
           
           <category> CTF </category>
           
-          <category> 命令执行 </category>
+          <category> 代码\命令执行类 </category>
           
       </categories>
       
@@ -123,7 +123,7 @@
           
           <category> CTF </category>
           
-          <category> 常用函数 </category>
+          <category> 常见函数 </category>
           
       </categories>
       
@@ -206,7 +206,7 @@
           
           <category> CTF </category>
           
-          <category> 代码执行 </category>
+          <category> 代码\命令执行类 </category>
           
       </categories>
       
@@ -233,8 +233,6 @@
           
           <category> CTF </category>
           
-          <category> 绕过 </category>
-          
           <category> 脚本 </category>
           
       </categories>
@@ -242,7 +240,7 @@
       
         <tags>
             
-            <tag> 绕过,md5 </tag>
+            <tag> 脚本 </tag>
             
         </tags>
       
@@ -264,14 +262,12 @@
           
           <category> 绕过 </category>
           
-          <category> md5 </category>
-          
       </categories>
       
       
         <tags>
             
-            <tag> 绕过,md5 </tag>
+            <tag> 绕过 </tag>
             
         </tags>
       
@@ -291,14 +287,14 @@
           
           <category> CTF </category>
           
-          <category> 代码执行 </category>
+          <category> 代码\命令执行类 </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> 代码执行，无参数rec </tag>
+            <tag> 代码执行 </tag>
             
         </tags>
       
@@ -399,16 +395,12 @@
           
           <category> CTF </category>
           
-          <category> SQL </category>
-          
           <category> 脚本 </category>
           
       </categories>
       
       
         <tags>
-            
-            <tag> sql </tag>
             
             <tag> 脚本 </tag>
             
@@ -457,16 +449,12 @@
           
           <category> CTF </category>
           
-          <category> SQL </category>
-          
           <category> 字典 </category>
           
       </categories>
       
       
         <tags>
-            
-            <tag> sql </tag>
             
             <tag> 字典 </tag>
             
@@ -625,7 +613,7 @@
           
           <category> CTF </category>
           
-          <category> 文件包含 </category>
+          <category> 代码\命令执行类 </category>
           
       </categories>
       
