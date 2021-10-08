@@ -136,6 +136,20 @@
   </url>
 
   
+  <url>
+    <loc>https://sakurahack-y.github.io/tags/python%E7%BC%96%E7%A8%8B/</loc>
+    <lastmod>2021-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
 
+  
+  <url>
+    <loc>https://sakurahack-y.github.io/categories/CTF/</loc>
+    <lastmod>2021-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
   
 </urlset>
