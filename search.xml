@@ -4,33 +4,6 @@
   
     
     <entry>
-      <title>SUCTF2019-python-nginx</title>
-      <link href="/2021/10/10/SUCTF2019-python-nginx/"/>
-      <url>/2021/10/10/SUCTF2019-python-nginx/</url>
-      
-        <content type="html"><![CDATA[<p>��ĿԴ�룺</p><pre><code>@app.route(&#39;/getUrl&#39;, methods = [&#39;GET&#39;, &#39;POST&#39;]) def getUrl():   url = request.args.get(&quot;url&quot;)   host = parse.urlparse(url).hostnameif host == &#39;suctf.cc&#39;:   return &quot;���� your problem? 111&quot;parts = list(urlsplit(url)) host = parts[1]if host == &#39;suctf.cc&#39;:   return &quot;���� your problem? 222 &quot; + host newhost = []for h in host.split(&#39;.&#39;):   newhost.append(h.encode(&#39;idna&#39;).decode(&#39;utf-8&#39;))   parts[1] = &#39;.&#39;.join(newhost)  # ȥ�� url �еĿո�   finalUrl = urlunsplit(parts).split(&#39; &#39;)[0]   host = parse.urlparse(finalUrl).hostnameif host == &#39;suctf.cc&#39;:   return urllib.request.urlopen(finalUrl).read()else :  return &quot;���� your problem? 333&quot;</code></pre><h1 id="����һ"><a href="#����һ" class="headerlink" title="����һ"></a>����һ</h1><p>�������Ҫ��������</p><p>h.encode(‘idna’).decode(‘utf-8’)</p><p>IDNAʵ�����ǹ��ʻ�����</p><p>ʲô��IDN?</p><p>���ʻ�����(Internationalized Domain Name,IDN)���������ַ���������ָ���ֻ���ȫʹ���������ֻ���ĸ��ɵĻ������������������ġ��������������ϣ�������������ĸ�ȷ�Ӣ����ĸ����Щ���־������ֽ�����������ɡ�������ϵͳ�У����ʻ�����ʹ��punycodeתд����ASCII�ַ����洢��</p><p>?����ַ�,���ʹ��python3����idna����Ļ�<br><img src="5716b75ee313a7b46b03f9e81a0c281235eefcef.png" alt="5716b75ee313a7b46b03f9e81a0c281235eefcef"><br>Nginx��Ҫ�����ļ���</p><pre><code>�����ļ����Ŀ¼��/etc/nginx�������ļ���/etc/nginx/conf/nginx.conf�����ű���/usr/lib64/systemd/system/nginx.serviceģ�飺/usr/lisb64/nginx/modulesӦ�ó���/usr/sbin/nginx����Ĭ�ϴ��λ�ã�/usr/share/nginx/html��־Ĭ�ϴ��λ�ã�/var/log/nginx�����ļ�Ŀ¼Ϊ��/usr/local/nginx/conf/nginx.conf</code></pre><p>���ýű����ܿ����ַ���</p><pre><code class="#">for i in range(128,65537):        tmp=chr(i)        try:                res = tmp.encode(&#39;idna&#39;).decode(&#39;utf-8&#39;)                if(&quot;-&quot;) in res:                        continue                print(&quot;U:&#123;&#125;    A:&#123;&#125;      ascii:&#123;&#125; &quot;.format(tmp, res, i))        except:                pass</code></pre><p><img src="1a7b4518d0195e0f991788c2a30b071f6c667c06.png" alt="1a7b4518d0195e0f991788c2a30b071f6c667c06"><br>���ֿ������ַ���<br>���죺<img src="2551a2077a8e7cd35b3fae02754beeeee8e45352.png" alt="2551a2077a8e7cd35b3fae02754beeeee8e45352"><br><img src="b207d65aad991e8dab48a62ce5fb82fd290a84fe.png" alt="b207d65aad991e8dab48a62ce5fb82fd290a84fe"></p><h1 id="������"><a href="#������" class="headerlink" title="������"></a>������</h1><p>��������urlsplit©����<br>����ⲻ������Ϊsuctf.cc<br><img src="5870acef4e876503eed0436e9eebb67f85a0ed80.png" alt="5870acef4e876503eed0436e9eebb67f85a0ed80"><br>���Ǿ����� urlunsplit ���� suctf.cc�������׾͹������file////:suctf.cc/usr/local/nginx/conf/nginx.conf���������ܶ�ȡ�ļ��ˡ�</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> CTF </category>
-          
-          <category> ˢ�� </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> ˢ�� </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>一句话木马执行</title>
       <link href="/2021/10/08/%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%9C%A8%E9%A9%AC/"/>
       <url>/2021/10/08/%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%9C%A8%E9%A9%AC/</url>

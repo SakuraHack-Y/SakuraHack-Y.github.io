@@ -2,13 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://sakurahack-y.github.io/2021/10/10/SUCTF2019-python-nginx/</loc>
-    
-    <lastmod>2021-10-09</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://sakurahack-y.github.io/2021/10/08/%E6%97%A0%E5%8F%82%E6%95%B0rec/</loc>
     
     <lastmod>2021-10-08</lastmod>
@@ -346,13 +339,6 @@
     <priority>0.6</priority>
   </url>
   
-  <url>
-    <loc>https://sakurahack-y.github.io/tags/%CB%A2%EF%BF%BD%EF%BF%BD/</loc>
-    <lastmod>2021-10-09</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
 
   
   <url>
@@ -448,13 +434,6 @@
   
   <url>
     <loc>https://sakurahack-y.github.io/categories/CTF/%E8%84%9A%E6%9C%AC/</loc>
-    <lastmod>2021-10-09</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://sakurahack-y.github.io/categories/CTF/%CB%A2%EF%BF%BD%EF%BF%BD/</loc>
     <lastmod>2021-10-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
