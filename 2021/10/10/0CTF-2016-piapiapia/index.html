@@ -1,0 +1,131 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>0CTF 2016-piapiapia | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">0CTF 2016-piapiapia</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2021/10/10/0CTF-2016-piapiapia/">2021-10-10</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E5%88%B7%E9%A2%98/">刷题</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><h1 id="0CTF-2016-piapiapia"><a href="#0CTF-2016-piapiapia" class="headerlink" title="0CTF 2016-piapiapia"></a>0CTF 2016-piapiapia</h1><p>代码审计还有PHP反序列化一直是我的硬伤，所以想借助这个题目来理一理思路。</p>
+<p>首先，打开网址，如图：</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010224803224.png" alt="image-20211010224803224"></p>
+<p>先尝试了万能密码，没有效果。</p>
+<p>sql注入，手工和sqlmap跑半天没有效果，放弃。</p>
+<p>没有什么可以做的，就扫一扫目录。</p>
+<p>python dirsearch.py  -u <a target="_blank" rel="noopener" href="http://7580b1d4-c607-4a67-a008-092706787c67.node4.buuoj.cn:81/">http://7580b1d4-c607-4a67-a008-092706787c67.node4.buuoj.cn:81/</a> -e * -s 1 -x 400,403,404,500,503,429 -o C:\Users\Sakura\Desktop\1.txt</p>
+<p>buu扫目录一直容易崩溃，所以要降低dirsearch的扫描速度。</p>
+<p>最终扫描出来了 register.php 和<a target="_blank" rel="noopener" href="http://www.zip./">www.zip。</a></p>
+<p>进入 xxx/register.php :<br><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010225335750.png" alt="image-20211010225335750"> </p>
+<p>注册账号并登录：</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010225502569.png" alt="image-20211010225502569"></p>
+<p>考虑了文件上传，上传多次，没有效果，放弃！</p>
+<p>更新文件后，进入这个界面：</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010225645545.png" alt="image-20211010225645545"></p>
+<p>就此停下，不知道如何进行下一步，决定从源码入手。</p>
+<p>访问 <a target="_blank" rel="noopener" href="http://7580b1d4-c607-4a67-a008-092706787c67.node4.buuoj.cn:81/www.zip">http://7580b1d4-c607-4a67-a008-092706787c67.node4.buuoj.cn:81/www.zip</a></p>
+<p>获取到了网站源码。</p>
+<p>进行苦逼的代码审计：</p>
+<p>由上方可知逻辑结构为：register-&gt;login-&gt;update-&gt;profile</p>
+<p>登录和注册可以先不看，由 update-&gt;profile</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010225831335.png" alt="image-20211010225831335"></p>
+<p>首先查看config.php，看到了flag但是为空，没有显示,这里要注意下config.php，下面可能会用到。</p>
+<p>继续浏览代码，寻找敏感点：</p>
+<p>在profile.php中发现了两个关键点，unserialize(),file_get_contents()</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010230540368.png" alt="image-20211010230540368"></p>
+<p>猜测应该考察PHP反序列化，$profile[‘photo’] 是重点，考虑对其传值，实现flag的读取。</p>
+<p>进一步审计：</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010230732653.png" alt="image-20211010230732653"></p>
+<p>在update.php中发现了这样一个函数：</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010230845047.png" alt="image-20211010230845047"></p>
+<p>$profile[‘photo’] = ‘upload/‘ . md5($file[‘name’]);</p>
+<p>发现该值被hash加密了，根本无法对其进行控制。</p>
+<p>既然profile[‘photo’] 无法控制，我们是否可以考虑传入其它值来达到目的。看profile[‘photo’]的上一个参数，profile[‘nickname’]，是否可以通过profile[‘nickname’]传值给profile[‘photo’]呢.</p>
+<p>继续看unserialize($profile)</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010230540368.png" alt="image-20211010230540368"></p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010232230667.png" alt="image-20211010232230667"></p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010232355284.png" alt="image-20211010232355284"></p>
+<p>由此可知，对像user中show_profile()的返回值被反序列化，查看show_porfile函数：</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010233728714.png" alt="image-20211010233728714"></p>
+<p>$username首先会被过滤一次，跟进filter()函数：</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010235353988.png" alt="image-20211010235353988"></p>
+<p>这里的意思是\会被|替代，一些敏感的sql单词会被hacker代替(上文的select,insert,update,delete,where)</p>
+<p>过滤后，$username会被插入到select语句中：</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010235733254.png" alt="image-20211010235733254"></p>
+<p>到此，基本明白了网站的运行逻辑。</p>
+<p>接下来继续从反序列化入手：</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010230540368.png" alt="image-20211010230540368"></p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010230845047.png" alt="image-20211010230845047"></p>
+<p>接上面的思路，由于profile=[‘photo’] 我们无法控制，而fileter过滤，如果存在where则会变为hacker，增加了一个字符，所以考察的知识点应该为字符串增加的PHP反序列化逃逸。这里会对$profile进行序列化。</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011003440679.png" alt="image-20211011003440679"></p>
+<p>修改phpto的值</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011010728666.png" alt="image-20211011010728666"></p>
+<p>要注意，最后还要通过update.php中还存在一个限制：</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011011455216.png" alt="image-20211011011455216"></p>
+<p>nickname的长度不可以&gt;10,那该怎么绕过它呢？</p>
+<p>这里就要用到数组了</p>
+<pre><code>md5(Array()) = null
+sha1(Array()) = null
+ereg(pattern,Array()) =null
+preg_match(pattern,Array()) = false
+strcmp(Array(), “abc”) =null
+strpos(Array(),“abc”) = null
+strlen(Array()) = null
+</code></pre>
+<p>所以nickname传入数组就可以绕过。</p>
+<p>如何将nickname变为数组呢？让我们来看一个例子：</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNjIyNDQy,size_16,color_FFFFFF,t_70.png" alt="img"></p>
+<pre><code>a:4:&#123;s:5:&quot;phone&quot;;s:11:&quot;15885248522&quot;;s:5:&quot;email&quot;;s:10:&quot;123@qq.com&quot;;s:8:&quot;nickname&quot;;a:1:&#123;i:0;s:3:&quot;123&quot;;&#125;s:5:&quot;photo&quot;;s:10:&quot;config.php&quot;;&#125;s:39:&quot;upload/9f6e6800cfae7749eb6c486619254b9c&quot;;&#125;
+</code></pre>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011014313810.png" alt="image-20211011014313810"></p>
+<p>要让 </p>
+<pre><code>&quot;;&#125;s:5:&quot;photo&quot;;s:10:&quot;config.php&quot;;&#125;
+</code></pre>
+<p>逃逸出来</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011014619609.png" alt="image-20211011014619609"></p>
+<p>34个字符，所以应该有34个where来逃逸34个字符。</p>
+<p>6*34=204</p>
+<pre><code>a:4:&#123;s:5:&quot;phone&quot;;s:11:&quot;15885248522&quot;;s:5:&quot;email&quot;;s:10:&quot;123@qq.com&quot;;s:8:&quot;nickname&quot;;a:1:&#123;i:0;s:204:&quot;wherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewhere&quot;;&#125;s:5:&quot;photo&quot;;s:10:&quot;config.php&quot;;&#125;s:39:&quot;upload/9f6e6800cfae7749eb6c486619254b9c&quot;;&#125;
+</code></pre>
+<p>所以payload就为：</p>
+<pre><code>wherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewhere&quot;;&#125;s:5:&quot;photo&quot;;s:10:&quot;config.php&quot;;&#125;
+</code></pre>
+<p>在burp中将nickname类型改为数组，并传入payload</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011015434242.png" alt="image-20211011015434242"></p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011015942962.png" alt="image-20211011015942962"></p>
+<p>查看源代码，可发现base64加密</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011020008050.png" alt="image-20211011020008050"></p>
+<p>解密即可得到flag</p>
+<p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011020027430.png" alt="image-20211011020027430"></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">John Doe</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2021/10/10/0CTF-2016-piapiapia/">https://sakurahack-y.github.io/2021/10/10/0CTF-2016-piapiapia/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">John Doe的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0CTF-2016-piapiapia"><span class="toc-number">1.</span> <span class="toc-text">0CTF 2016-piapiapia</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2021/10/10/SUCTF2019-python-nginx/">SUCTF2019-python-nginx &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2021 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
