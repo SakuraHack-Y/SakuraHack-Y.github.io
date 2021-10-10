@@ -27,7 +27,7 @@ else :
 <p>IDNA实际上是国际化域名</p>
 <p>什么是IDN?</p>
 <p>国际化域名(Internationalized Domain Name,IDN)又名特殊字符域名，是指部分或完全使用特殊文字或字母组成的互联网域名，包括中文、发育、阿拉伯语、希伯来语或拉丁字母等非英文字母，这些文字经过多字节万国码编码而成。在域名系统中，国际化域名使用punycode转写并以ASCII字符串存储。</p>
-<p><img src="/SUCTF2019-python-nginx/1.png"></p>
+<p><img src="/10/10/SUCTF2019-python-nginx/1.png"></p>
 <p>Nginx重要配置文件：</p>
 <pre><code>配置文件存放目录：/etc/nginx
 主配置文件：/etc/nginx/conf/nginx.conf
@@ -49,8 +49,8 @@ else :
     except:        
         pass
 </code></pre>
-<p><img src="/SUCTF2019-python-nginx/3.png"><br>发现可利用字符,获取flag：<br><img src="/SUCTF2019-python-nginx/2.png"></p>
-<h1 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h1><p>利用两此urlsplit漏洞：<br>这道题不能让他为suctf.cc<br><img src="/SUCTF2019-python-nginx/5.png"><br>但是经过了 urlunsplit 后变成 suctf.cc，很容易就构造出：file////:suctf.cc/usr/local/nginx/conf/nginx.conf，这样就能读取文件了。</p>
+<p><img src="/10/10/SUCTF2019-python-nginx/3.png"><br>发现可利用字符,获取flag：<br><img src="/10/10/SUCTF2019-python-nginx/2.png"></p>
+<h1 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h1><p>利用两此urlsplit漏洞：<br>这道题不能让他为suctf.cc<br><img src="/10/10/SUCTF2019-python-nginx/5.png"><br>但是经过了 urlunsplit 后变成 suctf.cc，很容易就构造出：file////:suctf.cc/usr/local/nginx/conf/nginx.conf，这样就能读取文件了。</p>
 </div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">John Doe</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2021/10/10/SUCTF2019-python-nginx/">https://sakurahack-y.github.io/2021/10/10/SUCTF2019-python-nginx/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">John Doe的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/%E5%88%B7%E9%A2%98/">刷题</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80"><span class="toc-number">1.</span> <span class="toc-text">方法一</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C"><span class="toc-number">2.</span> <span class="toc-text">方法二</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2021/10/08/%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%9C%A8%E9%A9%AC/">一句话木马执行 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
 .night .v[data-class=v] a:hover { color: #216C73 !important; }
 .night .v[data-class=v] li { list-style: inherit; }
