@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title> | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title"></h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/">2021-10-24</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E5%88%B7%E9%A2%98/">刷题</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/image-20211024235829685.png" alt="image-20211024235829685"></p>
+<p>查看源代码</p>
+<p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/image-20211024235901200.png" alt="image-20211024235901200"></p>
+<p>看到一个关键点，check.php，访问一下</p>
+<pre><code class="php"> &lt;?php
+#这不是抽奖程序的源代码！不许看！
+header(&quot;Content-Type: text/html;charset=utf-8&quot;);
+session_start();
+if(!isset($_SESSION[&#39;seed&#39;]))&#123;
+$_SESSION[&#39;seed&#39;]=rand(0,999999999);
+&#125;
+
+mt_srand($_SESSION[&#39;seed&#39;]);
+$str_long1 = &quot;abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;;
+$str=&#39;&#39;;
+$len1=20;
+for ( $i = 0; $i &lt; $len1; $i++ )&#123;
+    $str.=substr($str_long1, mt_rand(0, strlen($str_long1) - 1), 1);       
+&#125;
+$str_show = substr($str, 0, 10);
+echo &quot;&lt;p id=&#39;p1&#39;&gt;&quot;.$str_show.&quot;&lt;/p&gt;&quot;;
+
+
+if(isset($_POST[&#39;num&#39;]))&#123;
+    if($_POST[&#39;num&#39;]===$str)&#123;x
+        echo &quot;&lt;p id=flag&gt;抽奖，就是那么枯燥且无味，给你flag&#123;xxxxxxxxx&#125;&lt;/p&gt;&quot;;
+    &#125;
+    else&#123;
+        echo &quot;&lt;p id=flag&gt;没抽中哦，再试试吧&lt;/p&gt;&quot;;
+    &#125;
+&#125;
+show_source(&quot;check.php&quot;); 
+</code></pre>
+<p>这里涉及到了伪随机数漏洞，即当确定了种子后，随机数每次生成数的所有数是重复得，并不是真正意义上的随机数。</p>
+<pre><code class="php">&lt;?php  
+mt_srand(12345);    
+echo mt_rand().&quot;&lt;br/&gt;&quot;;
+?&gt;  
+</code></pre>
+<p>当你每次运行这个函数得到的随机数都是相同的。</p>
+<p>这个就像一个关系式：y=ax，如果我们能得到y和a就可以推出x。</p>
+<p>当然，实际上这个函数的关系是十分复杂的，但我们仍然可以用工具去破解。</p>
+<p>首先，我们要把题目给我们的线索转化为脚本可读的形式：</p>
+<p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/image-20211025011936452.png" alt="image-20211025011936452"></p>
+<pre><code class="python">str1 = &#39;abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ&#39;
+str2 = &#39;nngMHvCoQB&#39;
+res = &#39;&#39;
+for i in range(len(str2)):
+    for j in range(len(str1)):
+        if str2[i] == str1[j]:
+            res += str(j)+&#39; &#39;+str(j)+&#39; &#39;+&#39;0&#39;+&#39; &#39;+str(len(str1)-1)+&#39; &#39;
+            break
+print(res)
+</code></pre>
+<p>![image-20211025012020617](GWCTF-2019枯燥的抽奖-0x30-0x3f/image-20211025012020617.png</p>
+<p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/Kali-Linux-2021.3-vmware-amd64-2021-10-25-01-20-39.png" alt="Kali-Linux-2021.3-vmware-amd64-2021-10-25-01-20-39"></p>
+<p>获得到了种子，我们来生成下后序的字符串：</p>
+<p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/image-20211025012917063.png" alt="image-20211025012917063"></p>
+<p>我们看到前面十位完全吻合。</p>
+<p>提交：</p>
+<p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/image-20211025013042600.png" alt="image-20211025013042600"></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">John Doe</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/">https://sakurahack-y.github.io/2021/10/24/GWCTF-2019枯燥的抽奖-0x30-0x3f/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">John Doe的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0/">伪随机数</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2021/10/22/WUSTCTF2020-%E9%A2%9C%E5%80%BC%E6%88%90%E7%BB%A9%E6%9F%A5%E8%AF%A2-0x21-0x2F/">WUSTCTF2020 颜值成绩查询_0x21-0x2F &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2021 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>

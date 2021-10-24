@@ -6,7 +6,7 @@
   <link href="https://sakurahack-y.github.io/atom.xml" rel="self"/>
   
   <link href="https://sakurahack-y.github.io/"/>
-  <updated>2021-10-22T06:55:50.285Z</updated>
+  <updated>2021-10-24T17:31:30.327Z</updated>
   <id>https://sakurahack-y.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title></title>
+    <link href="https://sakurahack-y.github.io/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/"/>
+    <id>https://sakurahack-y.github.io/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/</id>
+    <published>2021-10-24T15:57:20.000Z</published>
+    <updated>2021-10-24T17:31:30.327Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/image-20211024235829685.png" alt="image-20211024235829685"></p><p>查看源代码</p><p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/image-20211024235901200.png" alt="image-20211024235901200"></p><p>看到一个关键点，check.php，访问一下</p><pre><code class="php"> &lt;?php#这不是抽奖程序的源代码！不许看！header(&quot;Content-Type: text/html;charset=utf-8&quot;);session_start();if(!isset($_SESSION[&#39;seed&#39;]))&#123;$_SESSION[&#39;seed&#39;]=rand(0,999999999);&#125;mt_srand($_SESSION[&#39;seed&#39;]);$str_long1 = &quot;abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;;$str=&#39;&#39;;$len1=20;for ( $i = 0; $i &lt; $len1; $i++ )&#123;    $str.=substr($str_long1, mt_rand(0, strlen($str_long1) - 1), 1);       &#125;$str_show = substr($str, 0, 10);echo &quot;&lt;p id=&#39;p1&#39;&gt;&quot;.$str_show.&quot;&lt;/p&gt;&quot;;if(isset($_POST[&#39;num&#39;]))&#123;    if($_POST[&#39;num&#39;]===$str)&#123;x        echo &quot;&lt;p id=flag&gt;抽奖，就是那么枯燥且无味，给你flag&#123;xxxxxxxxx&#125;&lt;/p&gt;&quot;;    &#125;    else&#123;        echo &quot;&lt;p id=flag&gt;没抽中哦，再试试吧&lt;/p&gt;&quot;;    &#125;&#125;show_source(&quot;check.php&quot;); </code></pre><p>这里涉及到了伪随机数漏洞，即当确定了种子后，随机数每次生成数的所有数是重复得，并不是真正意义上的随机数。</p><pre><code class="php">&lt;?php  mt_srand(12345);    echo mt_rand().&quot;&lt;br/&gt;&quot;;?&gt;  </code></pre><p>当你每次运行这个函数得到的随机数都是相同的。</p><p>这个就像一个关系式：y=ax，如果我们能得到y和a就可以推出x。</p><p>当然，实际上这个函数的关系是十分复杂的，但我们仍然可以用工具去破解。</p><p>首先，我们要把题目给我们的线索转化为脚本可读的形式：</p><p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/image-20211025011936452.png" alt="image-20211025011936452"></p><pre><code class="python">str1 = &#39;abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ&#39;str2 = &#39;nngMHvCoQB&#39;res = &#39;&#39;for i in range(len(str2)):    for j in range(len(str1)):        if str2[i] == str1[j]:            res += str(j)+&#39; &#39;+str(j)+&#39; &#39;+&#39;0&#39;+&#39; &#39;+str(len(str1)-1)+&#39; &#39;            breakprint(res)</code></pre><p>![image-20211025012020617](GWCTF-2019枯燥的抽奖-0x30-0x3f/image-20211025012020617.png</p><p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/Kali-Linux-2021.3-vmware-amd64-2021-10-25-01-20-39.png" alt="Kali-Linux-2021.3-vmware-amd64-2021-10-25-01-20-39"></p><p>获得到了种子，我们来生成下后序的字符串：</p><p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/image-20211025012917063.png" alt="image-20211025012917063"></p><p>我们看到前面十位完全吻合。</p><p>提交：</p><p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/image-20211025013042600.png" alt="image-20211025013042600"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/image-20211024235829685.png&quot; alt=&quot;image-202110242</summary>
+      
+    
+    
+    
+    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
+    
+    <category term="刷题" scheme="https://sakurahack-y.github.io/categories/CTF/%E5%88%B7%E9%A2%98/"/>
+    
+    
+    <category term="伪随机数" scheme="https://sakurahack-y.github.io/tags/%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0/"/>
+    
+  </entry>
   
   <entry>
     <title>WUSTCTF2020 颜值成绩查询_0x21-0x2F</title>
@@ -535,32 +561,6 @@ import has</summary>
     
     
     <category term="绕过" scheme="https://sakurahack-y.github.io/tags/%E7%BB%95%E8%BF%87/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>无参数rec</title>
-    <link href="https://sakurahack-y.github.io/2021/10/08/%E6%97%A0%E5%8F%82%E6%95%B0rec/"/>
-    <id>https://sakurahack-y.github.io/2021/10/08/%E6%97%A0%E5%8F%82%E6%95%B0rec/</id>
-    <published>2021-10-08T15:23:21.413Z</published>
-    <updated>2021-10-08T16:09:51.735Z</updated>
-    
-    <content type="html"><![CDATA[<p>localeconv() 函数返回一包含本地数字及货币格式信息的数组。而数组第一项就是.<br>current() 返回数组中的当前单元, 默认取第一个值。<br>pos() current() 的别名<br>current(localeconv())永远都是个点<br>readfile() 输出一个文件。<br>next() 函数将内部指针指向数组中的下一个元素，并输出。<br>array_reverse()以相反的元素顺序返回数组。<br>highlight_file()打印输出或者返回 filename 文件中语法高亮版本的代码。<br>array_flip()交换数组的键和值<br>array_rand()从数组中随机取出一个或多个单元，不断刷新访问就会不断随机返回，本题目中scandir()返回的数组只有5个元素，刷新几次就能刷出来flag.php</p><p>如何读flag.php的源码<br>不能使用file_get_contents()，但是可以可以使用readfile()或highlight_file()以及其别名函数show_source()<br>view-source:<a href="http://172.21.4.12:10031/?exp=print_r(readfile(next(array_reverse(scandir(pos(localeconv()">http://172.21.4.12:10031/?exp=print_r(readfile(next(array_reverse(scandir(pos(localeconv()</a>))))));<br>?exp=highlight_file(next(array_reverse(scandir(pos(localeconv())))));</p><p>?exp=show_source(session_id(session_start()));</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;localeconv() 函数返回一包含本地数字及货币格式信息的数组。而数组第一项就是.&lt;br&gt;current() 返回数组中的当前单元, 默认取第一个值。&lt;br&gt;pos() current() 的别名&lt;br&gt;current(localeconv())永远都是个点&lt;br&gt;r</summary>
-      
-    
-    
-    
-    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
-    
-    <category term="代码\命令执行类" scheme="https://sakurahack-y.github.io/categories/CTF/%E4%BB%A3%E7%A0%81-%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E7%B1%BB/"/>
-    
-    
-    <category term="代码执行" scheme="https://sakurahack-y.github.io/tags/%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/"/>
     
   </entry>
   
