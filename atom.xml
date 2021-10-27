@@ -6,7 +6,7 @@
   <link href="https://sakurahack-y.github.io/atom.xml" rel="self"/>
   
   <link href="https://sakurahack-y.github.io/"/>
-  <updated>2021-10-26T14:43:25.075Z</updated>
+  <updated>2021-10-27T14:38:46.578Z</updated>
   <id>https://sakurahack-y.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>phar反序列化漏洞</title>
+    <link href="https://sakurahack-y.github.io/2021/10/27/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/"/>
+    <id>https://sakurahack-y.github.io/2021/10/27/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/</id>
+    <published>2021-10-27T12:41:33.000Z</published>
+    <updated>2021-10-27T14:38:46.578Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>来自Secarma的安全研究员Sam Thomas发现了一种新的漏洞利用方式，可以在不使用php函数unserialize()的前提下，引起严重的php对象注入漏洞。<br> 这个新的攻击方式被他公开在了美国的BlackHat会议演讲上，演讲主题为：”不为人所知的php反序列化漏洞”。它可以使攻击者将相关漏洞的严重程度升级为远程代码执行。我们在RIPS代码分析引擎中添加了对这种新型攻击的检测。</p><h1 id="关于流包装"><a href="#关于流包装" class="headerlink" title="关于流包装"></a>关于流包装</h1><p>大多数PHP文件操作允许使用各种URL协议去访问文件路径：如<code>data://</code>，<code>zlib://</code>或<code>php://</code>。<br> 例如常见的</p><pre><code class="php">include(&#39;php://filter/read=convert.base64-encode/resource=index.php&#39;);include(&#39;data://text/plain;base64,xxxxxxxxxxxx&#39;);</code></pre><p><code>phar://</code>也是流包装的一种</p><h1 id="漏洞成因"><a href="#漏洞成因" class="headerlink" title="漏洞成因"></a>漏洞成因</h1><p>phar文件会以序列化的形式存储用户自定义的meta-data；该方法在文件系统函数（file_exists()、is_dir()等）参数可控的情况下，配合phar://伪协议，可以不依赖unserialize()直接进行反序列化操作</p><h1 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h1><p>phar由四个部分组成，分别是stub、manifest describing the  contents、 the file contents、 [optional] a signature for verifying Phar  integrity (phar file format only)</p><p>stub:标识作用，格式为xxx<?php xxx; __HALT_COMPILER();?>，前面任意，但是一定要以__HALT_COMPILER();?&gt;结尾，否则php无法识别这是一个phar文件；</p><p>manifest describing the contents:其实可以理解为phar文件本质上是一种压缩文件，其中包含有压缩信息和权限，当然我们需要利用的序列化也在里面；</p><p><img src="/2021/10/27/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/d8f9d72a6059252d260b20a9a98db93d5bb5b918.jpeg" alt="img"></p><p> the file contents:这里指的是被压缩文件的内容；</p><p>[optional] a signature for verifying Phar integrity (phar file format only):签名，放在结尾；</p><p>根据文件结构我们来自己构建一个phar文件，php内置了一个Phar类来处理相关操作</p><p><strong>注意：要将php.ini中的phar.readonly选项设置为Off，否则无法生成phar文件。</strong></p><pre><code class="php">&lt;?phpclass TestObject &#123;&#125;@unlink(&quot;phar.phar&quot;);$phar = new Phar(&quot;sakura.phar&quot;); //后缀名必须为phar$phar-&gt;startBuffering(); //开始缓冲 Phar 写操作$phar-&gt;setStub(&quot;&lt;?php __HALT_COMPILER(); ?&gt;&quot;); //设置stub$o = new TestObject();$o -&gt; data=&#39;sakura&#39;;$phar-&gt;setMetadata($o); //将自定义的meta-data存入manifest$phar-&gt;addFromString(&quot;test.txt&quot;, &quot;test&quot;); //添加要压缩的文件//签名自动计算$phar-&gt;stopBuffering();?&gt;</code></pre><p>访问一下，发现同目录下生成了一个.phar后缀的文件(如果这步无法创建，请修改php.ini的配置，设置phar.readonly = off 并去掉前面的分号)</p><p><img src="/2021/10/27/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/image-20211027213811961.png" alt="image-20211027213811961"></p><p>打开：</p><p><img src="/2021/10/27/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/image-20211027215216183.png" alt="image-20211027215216183"></p><p>发现写入的内容已经被序列化。</p><p>有序列化数据必然会有反序列化操作，php一大部分的文件系统函数在通过<code>phar://</code>伪协议解析phar文件时，都会将meta-data进行反序列化，测试后受影响的函数如下：</p><p><img src="/2021/10/27/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20180908164943-2151deae-b344-1.png" alt="img"></p><h1 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h1><p>phar_fan.php</p><pre><code class="php">&lt;?phpclass TestObject&#123;    function __destruct()    &#123;        echo $this -&gt; data;   // TODO: Implement __destruct() method.    &#125;&#125;include(&#39;phar://phar.phar&#39;);?&gt;</code></pre><p><img src="/2021/10/27/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/image-20211027215532641.png" alt="image-20211027215532641"></p><p>我们来简要说明下整个调用流程：</p><p>访问 phar_fun.php这个文件</p><p>执行incleude代码</p><p>解析phar文件</p><p>将里面的meta-data反序列化，在上述代码中也就是TestObject这个对象。</p><p>对象销毁，调用魔术方法__destruct()</p><p>执行echo语句完成攻击。</p><h1 id="将phar伪造成其他格式的文件"><a href="#将phar伪造成其他格式的文件" class="headerlink" title="将phar伪造成其他格式的文件"></a>将phar伪造成其他格式的文件</h1><p>php识别phar文件是通过其文件头的stub，更确切一点来说是<code>__HALT_COMPILER();?&gt;</code>这段代码，对前面的内容或者后缀名是没有要求的。那么我们就可以通过添加任意的文件头+修改后缀名的方式将phar文件伪装成其他格式的文件。</p><pre><code class="php">&lt;?php    class TestObject &#123;    &#125;    @unlink(&quot;sakura.phar&quot;);    $phar = new Phar(&quot;sakura.phar&quot;);    $phar-&gt;startBuffering();    $phar-&gt;setStub(&quot;GIF89a&quot;.&quot;&lt;?php __HALT_COMPILER(); ?&gt;&quot;); //设置stub，增加gif文件头    $o = new TestObject();    $phar-&gt;setMetadata($o); //将自定义meta-data存入manifest    $phar-&gt;addFromString(&quot;test.txt&quot;, &quot;test&quot;); //添加要压缩的文件    //签名自动计算    $phar-&gt;stopBuffering();?&gt;</code></pre><p>然后调用phar://sakura.php</p><p>是一样的效果。</p><h1 id="漏洞的利用条件"><a href="#漏洞的利用条件" class="headerlink" title="漏洞的利用条件"></a>漏洞的利用条件</h1><ol><li>phar文件要能够上传到服务器端。</li><li>要有可用的魔术方法作为“跳板”。</li><li>文件操作函数的参数可控，且<code>:</code>、<code>/</code>、<code>phar</code>等特殊字符没有被过滤。</li></ol><h1 id="防御"><a href="#防御" class="headerlink" title="防御"></a>防御</h1><ol><li>在文件系统函数的参数可控时，对参数进行严格的过滤。</li><li>严格检查上传文件的内容，而不是只检查文件头。</li><li>在条件允许的情况下禁用可执行系统命令、代码的危险函数。</li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;概要&quot;&gt;&lt;a href=&quot;#概要&quot; class=&quot;headerlink&quot; title=&quot;概要&quot;&gt;&lt;/a&gt;概要&lt;/h1&gt;&lt;p&gt;来自Secarma的安全研究员Sam Thomas发现了一种新的漏洞利用方式，可以在不使用php函数unserialize()的前提下，引起</summary>
+      
+    
+    
+    
+    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
+    
+    <category term="反序列化" scheme="https://sakurahack-y.github.io/categories/CTF/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"/>
+    
+    
+    <category term="反序列化" scheme="https://sakurahack-y.github.io/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"/>
+    
+  </entry>
   
   <entry>
     <title>preg_match正则绕过总结</title>
@@ -534,35 +560,6 @@ def getUrl():
     
     
     <category term="代码执行,nmap" scheme="https://sakurahack-y.github.io/tags/%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C-nmap/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MD5碰撞脚本</title>
-    <link href="https://sakurahack-y.github.io/2021/10/08/md5%E7%A2%B0%E6%92%9E%E8%84%9A%E6%9C%AC/"/>
-    <id>https://sakurahack-y.github.io/2021/10/08/md5%E7%A2%B0%E6%92%9E%E8%84%9A%E6%9C%AC/</id>
-    <published>2021-10-08T15:23:21.421Z</published>
-    <updated>2021-10-08T16:05:52.361Z</updated>
-    
-    <content type="html"><![CDATA[<p>0x04 MD5碰撞脚本<br>授人以鱼不如授人以渔，下面使多线程MD5哈希碰撞脚本，威力巨大。是根据网上代码改编而成，非原创。</p><pre><code># -*- coding: utf-8 -*-import multiprocessingimport hashlibimport randomimport stringimport sysCHARS = string.letters + string.digitsdef cmp_md5(substr, stop_event, str_len,. start=0, size=20):    global CHARS    while not stop_event.is_set():        rnds = &#39;&#39;.join(random.choice(CHARS) for _ in range(size))        md5 = hashlib.md5(rnds)        value = md5.hexdigest()        if value[start: start+str_len] == substr:            print rnds            stop_event.set()            &#39;&#39;&#39;            #碰撞双md5            md5 = hashlib.md5(value)            if md5.hexdigest()[start: start+str_len] == substr:                print rnds+ &quot;=&gt;&quot; + value+&quot;=&gt;&quot;+ md5.hexdigest()  + &quot;\n&quot;                stop_event.set()            &#39;&#39;&#39; if __name__ == &#39;__main__&#39;:    substr = sys.argv[1].strip()    start_pos = int(sys.argv[2]) if len(sys.argv) &gt; 1 else 0    str_len = len(substr)    cpus = multiprocessing.cpu_count()    stop_event = multiprocessing.Event()    processes = [multiprocessing.Process(target=cmp_md5, args=(substr,                                         stop_event, str_len, start_pos))                 for i in range(cpus)]    for p in processes:        p.start()    for p in processes:        p.join()</code></pre><p>上面脚本注释部分是双MD5碰撞，取消注释然后注释掉16行即可。</p><p>使用方法：python md5Crack.py “你要碰撞的字符串” 字符串的起始位置</p><p>例如：python md5Crack.py “0e” 0</p><p>将产生MD5值为0e开头的字符串。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;0x04 MD5碰撞脚本&lt;br&gt;授人以鱼不如授人以渔，下面使多线程MD5哈希碰撞脚本，威力巨大。是根据网上代码改编而成，非原创。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;# -*- coding: utf-8 -*-
-import multiprocessing
-import has</summary>
-      
-    
-    
-    
-    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
-    
-    <category term="脚本" scheme="https://sakurahack-y.github.io/categories/CTF/%E8%84%9A%E6%9C%AC/"/>
-    
-    
-    <category term="脚本" scheme="https://sakurahack-y.github.io/tags/%E8%84%9A%E6%9C%AC/"/>
     
   </entry>
   
