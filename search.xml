@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Linux脏牛提权</title>
+      <link href="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/"/>
+      <url>/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/</url>
+      
+        <content type="html"><![CDATA[<p>脏牛漏洞，又叫Dirty COW，存在Linux内核中已经有长达9年的时间，在2007年发布的Linux内核版本中就已经存在此漏洞。Linux kernel团队在2016年10月18日已经对此进行了修复。</p><p>漏洞范围：Linux内核 &gt;= 2.6.22（2007年发行，到2016年10月18日才修复）</p><p>简要分析：该漏洞具体为，Linux内核的内存子系统在处理写入复制（copy-on-write, COW）时产生了竞争条件（race condition）。恶意用户可利用此漏洞，来获取高权限，对只读内存映射进行写访问。竞争条件，指的是任务执行顺序异常，可导致应用崩溃，或令攻击者有机可乘，进一步执行其他代码。利用这一漏洞，攻击者可在其目标系统提升权限，甚至可能获得root权限。</p><p>复现：</p><p>环境：Ubuntu 14.04.5</p><p>靶场下载地址:<a href="https://www.vulnhub.com/entry/lampiao-1,249/">Lampião: 1 ~ VulnHub</a></p><p>开启kali，靶机，配置使其位于同一网段</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104144958930.png" alt="image-20220104144958930"></p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104144854766.png" alt="image-20220104144854766"></p><p>使用nmap对ip段进行扫描</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104144833775.png" alt="image-20220104144833775"></p><p>发现可疑ip  192.168.64.129</p><p>打开</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104145052541.png" alt="image-20220104145052541"></p><p>没有发现有用信息，对其端口进行进一步探测</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104145423615.png" alt="image-20220104145423615"></p><p>发现 1898端口</p><p>打开，网页如图</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104145547619.png" alt="image-20220104145547619"></p><p>在底部发现cms为Drupal</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104145621761.png" alt="image-20220104145621761"></p><p>探测其版本为 Drupal7</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104150839353.png" alt="image-20220104150839353"></p><p>百度一下，发现其存在 远程代码执行漏洞 CVE-2018-7600</p><p>打开msf搜索相关漏洞</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104145741167.png" alt="image-20220104145741167"></p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104151550089.png" alt="image-20220104151550089"></p><p>配置参数，进行攻击</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104151627775.png" alt="image-20220104151627775"></p><p>成功！</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104151712264.png" alt="image-20220104151712264"></p><p>下面上传漏洞检测脚本至目标靶机</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104173845980.png" alt="image-20220104173845980"></p><p>赋予权限并运行</p><pre><code>shellchmod +x sakuras.sh./sakuras.sh</code></pre><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104174121444.png" alt="image-20220104174121444"></p><p>发现了脏牛漏洞，准备开始提权</p><p>准备好exp</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104192056147.png" alt="image-20220104192056147"></p><p>链接：<a href="https://github.com/gbonacini/CVE-2016-5195">https://github.com/gbonacini/CVE-2016-5195</a></p><p>上传 dcow.cpp到靶机 </p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104192200178.png" alt="image-20220104192200178"></p><p>进行编译</p><pre><code>g++ -Wall -pedantic -O2 -std=c++11 -pthread -o dcow dcow.cpp -lutil</code></pre><p>打开交互式环境</p><pre><code>python -c &#39;import pty; pty.spawn(&quot;/bin/bash&quot;)&#39;</code></pre><p>运行</p><pre><code>./dcow</code></pre><p>成功</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104192407007.png" alt="image-20220104192407007"></p><p>新建ssh链接，或者直接</p><p>su root </p><p>记得切换用户要在交换式窗口下</p><p>成功提权</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104192533247.png" alt="image-20220104192533247"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 红队 </category>
+          
+          <category> 提权 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 提权 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Linux提权本地配合内核漏洞演示</title>
       <link href="/2022/01/04/Linux%E6%8F%90%E6%9D%83%E6%9C%AC%E5%9C%B0%E9%85%8D%E5%90%88%E5%86%85%E6%A0%B8%E6%BC%8F%E6%B4%9E%E6%BC%94%E7%A4%BA/"/>
       <url>/2022/01/04/Linux%E6%8F%90%E6%9D%83%E6%9C%AC%E5%9C%B0%E9%85%8D%E5%90%88%E5%86%85%E6%A0%B8%E6%BC%8F%E6%B4%9E%E6%BC%94%E7%A4%BA/</url>
