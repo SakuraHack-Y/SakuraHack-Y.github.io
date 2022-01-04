@@ -6,7 +6,7 @@
   <link href="https://sakurahack-y.github.io/atom.xml" rel="self"/>
   
   <link href="https://sakurahack-y.github.io/"/>
-  <updated>2022-01-04T05:48:56.278Z</updated>
+  <updated>2022-01-04T06:05:57.552Z</updated>
   <id>https://sakurahack-y.github.io/</id>
   
   <author>
@@ -17,13 +17,13 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Linux脏牛提权</title>
-    <link href="https://sakurahack-y.github.io/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/"/>
-    <id>https://sakurahack-y.github.io/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/</id>
+    <title>Linux提权本地配合内核漏洞演示</title>
+    <link href="https://sakurahack-y.github.io/2022/01/04/Linux%20%E6%8F%90%E6%9D%83%E6%9C%AC%E5%9C%B0%E9%85%8D%E5%90%88%E5%86%85%E6%A0%B8%E6%BC%8F%E6%B4%9E%E6%BC%94%E7%A4%BA/"/>
+    <id>https://sakurahack-y.github.io/2022/01/04/Linux%20%E6%8F%90%E6%9D%83%E6%9C%AC%E5%9C%B0%E9%85%8D%E5%90%88%E5%86%85%E6%A0%B8%E6%BC%8F%E6%B4%9E%E6%BC%94%E7%A4%BA/</id>
     <published>2022-01-04T04:00:46.000Z</published>
-    <updated>2022-01-04T05:48:56.278Z</updated>
+    <updated>2022-01-04T06:05:57.552Z</updated>
     
-    <content type="html"><![CDATA[<p>环境：Ubuntu 16.04(这里直接使用墨者学院的靶场)</p><p>漏洞编号：CVE-2017-16995</p><p>使用工具: linux-exploit-suggester-2 检测     特定exp提权</p><p>工具链接：<a href="https://github.com/jondonas/linux-exploit-suggester-2">GitHub - jondonas/linux-exploit-suggester-2: Next-Generation Linux Kernel Exploit Suggester</a></p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104134814506.png" alt="image-20220104134814506"></p><p>利用ssh工具连接</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104133116341.png" alt="image-20220104133116341"></p><p>上传工具，并运行，发现有  CVE-2017-16995 漏洞</p><p> Source: <a href="http://www.exploit-db.com/exploits/45010">http://www.exploit-db.com/exploits/45010</a></p><p>下载exp</p><p>得到45010.c</p><p>上传到服务器/tmp目录</p><p>编译执行</p><pre><code>gcc 45010.c -o 455010chmod +x 455010./ 455010</code></pre><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104133424470.png" alt="image-20220104133424470"></p><p>成功提权！</p>]]></content>
+    <content type="html"><![CDATA[<p>环境：Ubuntu 16.04(这里直接使用墨者学院的靶场)</p><p>漏洞编号：CVE-2017-16995</p><p>使用工具: linux-exploit-suggester-2 检测     特定exp提权</p><p>工具链接：<a href="https://github.com/jondonas/linux-exploit-suggester-2">GitHub - jondonas/linux-exploit-suggester-2: Next-Generation Linux Kernel Exploit Suggester</a></p><p>![image-20220104134814506](Linux 提权本地配合内核漏洞演示/image-20220104134814506.png)</p><p>利用ssh工具连接</p><p>![image-20220104133116341](Linux 提权本地配合内核漏洞演示/image-20220104133116341.png)</p><p>上传工具，并运行，发现有  CVE-2017-16995 漏洞</p><p> Source: <a href="http://www.exploit-db.com/exploits/45010">http://www.exploit-db.com/exploits/45010</a></p><p>下载exp</p><p>得到45010.c</p><p>上传到服务器/tmp目录</p><p>编译执行</p><pre><code>gcc 45010.c -o 455010chmod +x 455010./ 455010</code></pre><p>![image-20220104133424470](Linux 提权本地配合内核漏洞演示/image-20220104133424470.png)</p><p>成功提权！</p>]]></content>
     
     
       
