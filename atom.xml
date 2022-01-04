@@ -6,7 +6,7 @@
   <link href="https://sakurahack-y.github.io/atom.xml" rel="self"/>
   
   <link href="https://sakurahack-y.github.io/"/>
-  <updated>2022-01-04T05:46:01.800Z</updated>
+  <updated>2022-01-04T05:48:56.278Z</updated>
   <id>https://sakurahack-y.github.io/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="https://sakurahack-y.github.io/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/"/>
     <id>https://sakurahack-y.github.io/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/</id>
     <published>2022-01-04T04:00:46.000Z</published>
-    <updated>2022-01-04T05:46:01.800Z</updated>
+    <updated>2022-01-04T05:48:56.278Z</updated>
     
-    <content type="html"><![CDATA[<p>环境：Ubuntu 16.04(这里直接使用墨者学院的靶场)</p><p>漏洞编号：CVE-2017-16995</p><p>使用工具: linux-exploit-suggester-2 检测     特定exp提权</p><p>工具链接：<a href="https://github.com/jondonas/linux-exploit-suggester-2">GitHub - jondonas/linux-exploit-suggester-2: Next-Generation Linux Kernel Exploit Suggester</a></p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104133116341.png" alt="image-20220104133116341"></p><p>上传工具，并运行，发现有  CVE-2017-16995 漏洞</p><p> Source: <a href="http://www.exploit-db.com/exploits/45010">http://www.exploit-db.com/exploits/45010</a></p><p>下载exp</p><p>得到45010.c</p><p>上传到服务器/tmp目录</p><p>编译执行</p><pre><code>gcc 45010.c -o 455010chmod +x 455010./ 455010</code></pre><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104133424470.png" alt="image-20220104133424470"></p><p>成功提权！</p>]]></content>
+    <content type="html"><![CDATA[<p>环境：Ubuntu 16.04(这里直接使用墨者学院的靶场)</p><p>漏洞编号：CVE-2017-16995</p><p>使用工具: linux-exploit-suggester-2 检测     特定exp提权</p><p>工具链接：<a href="https://github.com/jondonas/linux-exploit-suggester-2">GitHub - jondonas/linux-exploit-suggester-2: Next-Generation Linux Kernel Exploit Suggester</a></p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104134814506.png" alt="image-20220104134814506"></p><p>利用ssh工具连接</p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104133116341.png" alt="image-20220104133116341"></p><p>上传工具，并运行，发现有  CVE-2017-16995 漏洞</p><p> Source: <a href="http://www.exploit-db.com/exploits/45010">http://www.exploit-db.com/exploits/45010</a></p><p>下载exp</p><p>得到45010.c</p><p>上传到服务器/tmp目录</p><p>编译执行</p><pre><code>gcc 45010.c -o 455010chmod +x 455010./ 455010</code></pre><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104133424470.png" alt="image-20220104133424470"></p><p>成功提权！</p>]]></content>
     
     
       
