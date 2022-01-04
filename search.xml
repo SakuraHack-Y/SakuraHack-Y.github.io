@@ -4,6 +4,50 @@
   
     
     <entry>
+      <title>Linux脏牛提权</title>
+      <link href="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/"/>
+      <url>/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/</url>
+      
+        <content type="html"><![CDATA[<p>环境：Ubuntu 16.04(这里直接使用墨者学院的靶场)</p><p>漏洞编号：CVE-2017-16995</p><p>使用工具: linux-exploit-suggester-2 检测     特定exp提权</p><p>工具链接：<a href="https://github.com/jondonas/linux-exploit-suggester-2">GitHub - jondonas/linux-exploit-suggester-2: Next-Generation Linux Kernel Exploit Suggester</a></p><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104133116341.png" alt="image-20220104133116341"></p><p>上传工具，并运行，发现有  CVE-2017-16995 漏洞</p><p> Source: <a href="http://www.exploit-db.com/exploits/45010">http://www.exploit-db.com/exploits/45010</a></p><p>下载exp</p><p>得到45010.c</p><p>上传到服务器/tmp目录</p><p>编译执行</p><pre><code>gcc 45010.c -o 455010chmod +x 455010./ 455010</code></pre><p><img src="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/image-20220104133424470.png" alt="image-20220104133424470"></p><p>成功提权！</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 红队，提权 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Linux</title>
+      <link href="/2021/11/12/Linux/"/>
+      <url>/2021/11/12/Linux/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/2021/11/12/Linux/image-20211112001054678.png" alt="image-20211112001054678"></p><p><img src="/2021/11/12/Linux/image-20211112001133176.png" alt="image-20211112001133176"></p><p><img src="/2021/11/12/Linux/image-20211112002049844.png" alt="image-20211112002049844"></p><p><img src="/2021/11/12/Linux/image-20211112002148742.png" alt="image-20211112002148742"></p><p><img src="/2021/11/12/Linux/image-20211112002405780.png" alt="image-20211112002405780"></p><p>命令：</p><p>uname -a  显示主机名、内核版本、硬件平台等详细信息 </p><p>uname -r 显示内核版本</p><p>cat /etc/os-release 查看版本号</p><p>hostname 显示全合格主机名</p><p>cat /proc/cpuinfo  查看cpu信息 或者lscpu</p><p>cat /proc/meminfo 查看内存信息  或者free</p><p>关机 poweroff   shutdown -h now</p><p>重启 reboot  shutdown -r now </p><p>Linux命令</p><p>用于实现某一类功能的指令或者程序</p><p>命令的执行依赖于解释器程序(例如：/bin/bash)</p><p>Linux 命令的分类</p><p>内部命令：属于shell解释器的一部分</p><p>即命令包含在shell程序本身之中，例如”history”命令</p><p>外部命令：独立于shell解释器之外的程序文件。</p><p>如何判断是外部命令还是内部？</p><p>使用：</p><p>which xx</p><p>如果可以搜索到为外部，不能则为内部</p><p>这个方法也用来查找外部命令的路径</p><p>如：</p><p>[root@o213 ~]# which ls<br>/usr/bin/ls</p><p>type  xx 了解一些命令的信息</p><p>如：</p><p>[root@o213 ~]# type ls<br>ls 是“ls –color=auto”的别名</p><p><img src="/2021/11/12/Linux/image-20211112233035921.png" alt="image-20211112233035921"></p><p>命令行编辑的几个辅助操作</p><p>Tab ：自动补齐</p><p>反斜杠 \ :强制换行</p><p>Ctrl+U :清空至行首</p><p>Ctrl+K :清空至行尾</p><p>Ctrl+L：清屏</p><p>Ctrl+C:取消本次命令编辑</p><p>内部命令help</p><p>查看Bash内部命令的帮助信息</p><p>命令的 “–help” 选项</p><p>适用于大多数外部命令</p><p>adduser 添加用户账号</p><p>passwd 设置(更改)用户口令</p><p>userdel 删除用户账号(及宿主目录)</p><p>usermod 设置用户属性</p><p> [root@o213 ~]# adduser admin  //增加用户</p><p>[root@o213 ~]# passwd admin  //修改admin的密码</p><p>[root@o213 ~]# passwd admin<br>更改用户 admin 的密码 。<br>新的密码：<br>重新输入新的密码：<br>passwd：所有的身份验证令牌已经成功更新。</p><p>[root@o213 ~]# usermod -L admin  锁定admin账号<br>[root@o213 ~]# userdel admin 删除admin账号</p><p>用户的账号信息保存在 /etc/passwd  文件中</p><p>tail -1 /etc/passwd   //从后往前显示一行</p><p>用户的加密口令保存在 /etc/shadow  文件中</p><p>tail -1 /etc/shadow</p><p>用户的宿主目录(家目录)在 /home 下</p><p>tail -1 /etc/home</p><p>切换用户</p><p>su admin  //切换到admin用户</p><p>组命令：</p><p>groupadd  添加指定名称的用户组账号</p><p>groupdel  删除指定名称的用户组账号</p><p>文件</p><p>/etc/group  保存用户组账号信息</p><pre><code>groupadd shuihugroupadd honglouuseradd -g shuihu wusong  //创建wusong用户并指定到shuihu组useradd -g honglou jiabaoyu //创建jiaobaoyu组并指定到honglou组groupadd daxia usermod -g daxia wusong //将wusong这个用户从shuihu组移到daxia组groupdel daxia  //删除组</code></pre><p><img src="/2021/11/12/Linux/image-20211113001359900.png" alt="image-20211113001359900"></p><p><img src="/2021/11/12/Linux/image-20211113001715071.png" alt="image-20211113001715071"></p><p>增加文件所有者的执行权限</p><p>chmod u+x anaconda-ks.cfg  </p><p>去除文件所属组的写权限</p><p>chmod g-w lshelp.txt</p><p>设置其他用户的文件权限为可执行</p><p>chmod o=x lshelp.txt</p><p>追加所有账号权限可读</p><p>chmod a+r anaconda-ks.cfg</p><p>chown命令：</p><p>设置文件的所以者为wusong，让所属组也跟着改</p><p>chown wusong:lshelp.txt</p><p>设置文件的所以者为root，所属组不改</p><p>chown root lshelp.txt</p><p>设置文件的所属组</p><p>chown : root lshelp.txt</p><p>查看及切换目录</p><p>pwd、cd、ls、du</p><p>pwd：查看工作目录</p><p>[root@o213 ~]# pwd<br>/root</p><p>cd：切换目录</p><p>cd ~  回家</p><p>ls：显示目录内容</p><p>ls -l:以长格式显示</p><p>ls -a:显示所有子目录和文件的信息，包括隐藏文件</p><p>ls -A:类似于”-a”,但不显示”.”和”..”目录的信息</p><p>ls -d:显示目录本身的属性</p><p>ls -h:以更易读的字节单位(K、M等)显示信息</p><p>ls -R:递归显示内容</p><p>ls –color:以颜色区分不同类型文件</p><p>创建目录和文件</p><p>mkdir、touch、In</p><p>mkdir a/b/c/d  创建多层目录 </p><p>touch aa.txt 创建一个空文件</p><p>ln：为文件或目录建立链接</p><pre><code>[root@o213 ~]# ln -s /usr/bin/ls aa[root@o213 ~]# lsaa  anaconda-ks.cfgln lshelp.txt abc //建立硬链接</code></pre><p>符号链接：指向原始文件所在的路径，又称为软链接</p><p>硬链接：</p><p>指向原始文件对应的数据存储位置</p><p>不能为目录建立硬链接文件</p><p>硬链接与原始文件必须位于同一分区(文件系统)</p><p>可以使用stat命令查看：</p><pre><code>[root@o213 ~]# touch sakura.txt[root@o213 ~]# lsaa  anaconda-ks.cfg  sakura.txt[root@o213 ~]# ln sakura.txt dd[root@o213 ~]# state dd-bash: state：未找到命令[root@o213 ~]# stat dd  文件：dd  大小：0               块：0          IO 块：4096   普通空文件设备：fd00h/64768d      Inode：786445      硬链接：2权限：(0644/-rw-r--r--)  Uid：(    0/    root)   Gid：(    0/    root)环境：unconfined_u:object_r:admin_home_t:s0最近访问：2021-11-13 01:10:30.704162871 +0800最近更改：2021-11-13 01:10:30.704162871 +0800最近改动：2021-11-13 01:10:58.974385168 +0800创建时间：2021-11-13 01:10:30.703162863 +0800[root@o213 ~]# stat sakura.txt  文件：sakura.txt  大小：0               块：0          IO 块：4096   普通空文件设备：fd00h/64768d      Inode：786445      硬链接：2权限：(0644/-rw-r--r--)  Uid：(    0/    root)   Gid：(    0/    root)环境：unconfined_u:object_r:admin_home_t:s0最近访问：2021-11-13 01:10:30.704162871 +0800最近更改：2021-11-13 01:10:30.704162871 +0800最近改动：2021-11-13 01:10:58.974385168 +0800创建时间：2021-11-13 01:10:30.703162863 +0800</code></pre><p>复制、删除、移动目录和文件</p><p>cp、rm、mv</p><p>cp: </p><p>-r：递归复制整个目录树</p><p>-p:保持源文件的属性不变</p><p>-f:强制覆盖目标同名文件或目录</p><p>-i:需要覆盖文件或目录时进行提醒</p><p>查找目录和文件</p><p>which、find</p><p>通配符：</p><p>*  代替零个、单个或多个字符</p><p>?  代替一个字符</p><p>alias 定义别名：</p><p>alias myls=’ls -alh’</p><p>du:</p><p>统计目录及文件的空间占用清空</p><p>-a:统计时包括所有的文件，而不仅仅只统计目录</p><p>-h:以更容读的字节单位(K、M等)显示信息</p><p>-s:只统计每个参数所占用空间的总的大小</p><p>如：</p><p>du -sh /home/</p><pre><code>[root@o213 ~]# du -sh /home/60K     /home/</code></pre><p>find 命令</p><p>比如：</p><p>find /etc -name “re*.conf”</p><p>从/etc 目录找这个文件</p><p>-name:按文件名称查找</p><p>-size:按文件大小查找</p><p>-user：按文件属主查找</p><p>-type：按文件类型查找</p><p><img src="/2021/11/12/Linux/image-20211121230756940.png" alt="image-20211121230756940"></p><p><img src="/2021/11/12/Linux/image-20211121231009685.png" alt="image-20211121231009685"></p><p><img src="/2021/11/12/Linux/image-20211121231235005.png" alt="image-20211121231235005"></p><p><img src="/2021/11/12/Linux/image-20211121231510277.png" alt="image-20211121231510277"></p><p><img src="/2021/11/12/Linux/image-20211121232610276.png" alt="image-20211121232610276"></p><p><img src="/2021/11/12/Linux/image-20211121233634742.png" alt="image-20211121233634742"></p><p><img src="/2021/11/12/Linux/image-20211121233758176.png" alt="image-20211121233758176"></p><p><img src="/2021/11/12/Linux/image-20211121234948834.png" alt="image-20211121234948834"></p><p><img src="/2021/11/12/Linux/image-20211122000239414.png" alt="image-20211122000239414"></p><p><img src="/2021/11/12/Linux/image-20211122001630415.png" alt="image-20211122001630415"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>SWPUCTF 2018 SimplePHP_0x50-0x5F</title>
       <link href="/2021/11/07/SWPUCTF-2018-SimplePHP-0x50-0x5F/"/>
       <url>/2021/11/07/SWPUCTF-2018-SimplePHP-0x50-0x5F/</url>

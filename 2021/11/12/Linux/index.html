@@ -1,0 +1,229 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>Linux | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">Linux</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2021/11/12/Linux/">2021-11-12</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/Linux/">Linux</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p><img src="/2021/11/12/Linux/image-20211112001054678.png" alt="image-20211112001054678"></p>
+<p><img src="/2021/11/12/Linux/image-20211112001133176.png" alt="image-20211112001133176"></p>
+<p><img src="/2021/11/12/Linux/image-20211112002049844.png" alt="image-20211112002049844"></p>
+<p><img src="/2021/11/12/Linux/image-20211112002148742.png" alt="image-20211112002148742"></p>
+<p><img src="/2021/11/12/Linux/image-20211112002405780.png" alt="image-20211112002405780"></p>
+<p>命令：</p>
+<p>uname -a  显示主机名、内核版本、硬件平台等详细信息 </p>
+<p>uname -r 显示内核版本</p>
+<p>cat /etc/os-release 查看版本号</p>
+<p>hostname 显示全合格主机名</p>
+<p>cat /proc/cpuinfo  查看cpu信息 或者lscpu</p>
+<p>cat /proc/meminfo 查看内存信息  或者free</p>
+<p>关机 poweroff   shutdown -h now</p>
+<p>重启 reboot  shutdown -r now </p>
+<p>Linux命令</p>
+<p>用于实现某一类功能的指令或者程序</p>
+<p>命令的执行依赖于解释器程序(例如：/bin/bash)</p>
+<p>Linux 命令的分类</p>
+<p>内部命令：属于shell解释器的一部分</p>
+<p>即命令包含在shell程序本身之中，例如”history”命令</p>
+<p>外部命令：独立于shell解释器之外的程序文件。</p>
+<p>如何判断是外部命令还是内部？</p>
+<p>使用：</p>
+<p>which xx</p>
+<p>如果可以搜索到为外部，不能则为内部</p>
+<p>这个方法也用来查找外部命令的路径</p>
+<p>如：</p>
+<p>[root@o213 ~]# which ls<br>/usr/bin/ls</p>
+<p>type  xx 了解一些命令的信息</p>
+<p>如：</p>
+<p>[root@o213 ~]# type ls<br>ls 是“ls –color=auto”的别名</p>
+<p><img src="/2021/11/12/Linux/image-20211112233035921.png" alt="image-20211112233035921"></p>
+<p>命令行编辑的几个辅助操作</p>
+<p>Tab ：自动补齐</p>
+<p>反斜杠 \ :强制换行</p>
+<p>Ctrl+U :清空至行首</p>
+<p>Ctrl+K :清空至行尾</p>
+<p>Ctrl+L：清屏</p>
+<p>Ctrl+C:取消本次命令编辑</p>
+<p>内部命令help</p>
+<p>查看Bash内部命令的帮助信息</p>
+<p>命令的 “–help” 选项</p>
+<p>适用于大多数外部命令</p>
+<p>adduser 添加用户账号</p>
+<p>passwd 设置(更改)用户口令</p>
+<p>userdel 删除用户账号(及宿主目录)</p>
+<p>usermod 设置用户属性</p>
+<p> [root@o213 ~]# adduser admin  //增加用户</p>
+<p>[root@o213 ~]# passwd admin  //修改admin的密码</p>
+<p>[root@o213 ~]# passwd admin<br>更改用户 admin 的密码 。<br>新的密码：<br>重新输入新的密码：<br>passwd：所有的身份验证令牌已经成功更新。</p>
+<p>[root@o213 ~]# usermod -L admin  锁定admin账号<br>[root@o213 ~]# userdel admin 删除admin账号</p>
+<p>用户的账号信息保存在 /etc/passwd  文件中</p>
+<p>tail -1 /etc/passwd   //从后往前显示一行</p>
+<p>用户的加密口令保存在 /etc/shadow  文件中</p>
+<p>tail -1 /etc/shadow</p>
+<p>用户的宿主目录(家目录)在 /home 下</p>
+<p>tail -1 /etc/home</p>
+<p>切换用户</p>
+<p>su admin  //切换到admin用户</p>
+<p>组命令：</p>
+<p>groupadd  添加指定名称的用户组账号</p>
+<p>groupdel  删除指定名称的用户组账号</p>
+<p>文件</p>
+<p>/etc/group  保存用户组账号信息</p>
+<pre><code>groupadd shuihu
+groupadd honglou
+useradd -g shuihu wusong  //创建wusong用户并指定到shuihu组
+useradd -g honglou jiabaoyu //创建jiaobaoyu组并指定到honglou组
+groupadd daxia 
+usermod -g daxia wusong //将wusong这个用户从shuihu组移到daxia组
+groupdel daxia  //删除组
+</code></pre>
+<p><img src="/2021/11/12/Linux/image-20211113001359900.png" alt="image-20211113001359900"></p>
+<p><img src="/2021/11/12/Linux/image-20211113001715071.png" alt="image-20211113001715071"></p>
+<p>增加文件所有者的执行权限</p>
+<p>chmod u+x anaconda-ks.cfg  </p>
+<p>去除文件所属组的写权限</p>
+<p>chmod g-w lshelp.txt</p>
+<p>设置其他用户的文件权限为可执行</p>
+<p>chmod o=x lshelp.txt</p>
+<p>追加所有账号权限可读</p>
+<p>chmod a+r anaconda-ks.cfg</p>
+<p>chown命令：</p>
+<p>设置文件的所以者为wusong，让所属组也跟着改</p>
+<p>chown wusong:lshelp.txt</p>
+<p>设置文件的所以者为root，所属组不改</p>
+<p>chown root lshelp.txt</p>
+<p>设置文件的所属组</p>
+<p>chown : root lshelp.txt</p>
+<p>查看及切换目录</p>
+<p>pwd、cd、ls、du</p>
+<p>pwd：查看工作目录</p>
+<p>[root@o213 ~]# pwd<br>/root</p>
+<p>cd：切换目录</p>
+<p>cd ~  回家</p>
+<p>ls：显示目录内容</p>
+<p>ls -l:以长格式显示</p>
+<p>ls -a:显示所有子目录和文件的信息，包括隐藏文件</p>
+<p>ls -A:类似于”-a”,但不显示”.”和”..”目录的信息</p>
+<p>ls -d:显示目录本身的属性</p>
+<p>ls -h:以更易读的字节单位(K、M等)显示信息</p>
+<p>ls -R:递归显示内容</p>
+<p>ls –color:以颜色区分不同类型文件</p>
+<p>创建目录和文件</p>
+<p>mkdir、touch、In</p>
+<p>mkdir a/b/c/d  创建多层目录 </p>
+<p>touch aa.txt 创建一个空文件</p>
+<p>ln：为文件或目录建立链接</p>
+<pre><code>[root@o213 ~]# ln -s /usr/bin/ls aa
+[root@o213 ~]# ls
+aa  anaconda-ks.cfg
+ln lshelp.txt abc //建立硬链接
+</code></pre>
+<p>符号链接：指向原始文件所在的路径，又称为软链接</p>
+<p>硬链接：</p>
+<p>指向原始文件对应的数据存储位置</p>
+<p>不能为目录建立硬链接文件</p>
+<p>硬链接与原始文件必须位于同一分区(文件系统)</p>
+<p>可以使用stat命令查看：</p>
+<pre><code>[root@o213 ~]# touch sakura.txt
+[root@o213 ~]# ls
+aa  anaconda-ks.cfg  sakura.txt
+[root@o213 ~]# ln sakura.txt dd
+[root@o213 ~]# state dd
+-bash: state：未找到命令
+[root@o213 ~]# stat dd
+  文件：dd
+  大小：0               块：0          IO 块：4096   普通空文件
+设备：fd00h/64768d      Inode：786445      硬链接：2
+权限：(0644/-rw-r--r--)  Uid：(    0/    root)   Gid：(    0/    root)
+环境：unconfined_u:object_r:admin_home_t:s0
+最近访问：2021-11-13 01:10:30.704162871 +0800
+最近更改：2021-11-13 01:10:30.704162871 +0800
+最近改动：2021-11-13 01:10:58.974385168 +0800
+创建时间：2021-11-13 01:10:30.703162863 +0800
+[root@o213 ~]# stat sakura.txt
+  文件：sakura.txt
+  大小：0               块：0          IO 块：4096   普通空文件
+设备：fd00h/64768d      Inode：786445      硬链接：2
+权限：(0644/-rw-r--r--)  Uid：(    0/    root)   Gid：(    0/    root)
+环境：unconfined_u:object_r:admin_home_t:s0
+最近访问：2021-11-13 01:10:30.704162871 +0800
+最近更改：2021-11-13 01:10:30.704162871 +0800
+最近改动：2021-11-13 01:10:58.974385168 +0800
+创建时间：2021-11-13 01:10:30.703162863 +0800
+</code></pre>
+<p>复制、删除、移动目录和文件</p>
+<p>cp、rm、mv</p>
+<p>cp: </p>
+<p>-r：递归复制整个目录树</p>
+<p>-p:保持源文件的属性不变</p>
+<p>-f:强制覆盖目标同名文件或目录</p>
+<p>-i:需要覆盖文件或目录时进行提醒</p>
+<p>查找目录和文件</p>
+<p>which、find</p>
+<p>通配符：</p>
+<p>*  代替零个、单个或多个字符</p>
+<p>?  代替一个字符</p>
+<p>alias 定义别名：</p>
+<p>alias myls=’ls -alh’</p>
+<p>du:</p>
+<p>统计目录及文件的空间占用清空</p>
+<p>-a:统计时包括所有的文件，而不仅仅只统计目录</p>
+<p>-h:以更容读的字节单位(K、M等)显示信息</p>
+<p>-s:只统计每个参数所占用空间的总的大小</p>
+<p>如：</p>
+<p>du -sh /home/</p>
+<pre><code>[root@o213 ~]# du -sh /home/
+60K     /home/
+</code></pre>
+<p>find 命令</p>
+<p>比如：</p>
+<p>find /etc -name “re*.conf”</p>
+<p>从/etc 目录找这个文件</p>
+<p>-name:按文件名称查找</p>
+<p>-size:按文件大小查找</p>
+<p>-user：按文件属主查找</p>
+<p>-type：按文件类型查找</p>
+<p><img src="/2021/11/12/Linux/image-20211121230756940.png" alt="image-20211121230756940"></p>
+<p><img src="/2021/11/12/Linux/image-20211121231009685.png" alt="image-20211121231009685"></p>
+<p><img src="/2021/11/12/Linux/image-20211121231235005.png" alt="image-20211121231235005"></p>
+<p><img src="/2021/11/12/Linux/image-20211121231510277.png" alt="image-20211121231510277"></p>
+<p><img src="/2021/11/12/Linux/image-20211121232610276.png" alt="image-20211121232610276"></p>
+<p><img src="/2021/11/12/Linux/image-20211121233634742.png" alt="image-20211121233634742"></p>
+<p><img src="/2021/11/12/Linux/image-20211121233758176.png" alt="image-20211121233758176"></p>
+<p><img src="/2021/11/12/Linux/image-20211121234948834.png" alt="image-20211121234948834"></p>
+<p><img src="/2021/11/12/Linux/image-20211122000239414.png" alt="image-20211122000239414"></p>
+<p><img src="/2021/11/12/Linux/image-20211122001630415.png" alt="image-20211122001630415"></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">John Doe</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2021/11/12/Linux/">https://sakurahack-y.github.io/2021/11/12/Linux/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">John Doe的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/Linux/">Linux</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="prev" href="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/">&lt; Linux脏牛提权</a><a class="next" href="/2021/11/07/SWPUCTF-2018-SimplePHP-0x50-0x5F/">SWPUCTF 2018 SimplePHP_0x50-0x5F &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
