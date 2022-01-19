@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>内网横向代理之FRP | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">内网横向代理之FRP</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/">2022-01-17</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/%E7%BA%A2%E9%98%9F/">红队</a>&nbsp;&bull;&nbsp;<a href="/categories/%E7%BA%A2%E9%98%9F/%E4%BB%A3%E7%90%86/">代理</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>Frp工具：开源免费，自行搭建，方便修改，成本低，使用多样化，防止隐私泄露。</p>
+<p>工具链接：<a target="_blank" rel="noopener" href="https://github.com/fatedier/frp">https://github.com/fatedier/frp</a></p>
+<p>作用:当本机和目标机处于不同内网，借用代理来实现用本机进行内网攻击。</p>
+<p>环境：</p>
+<p>kali2021(本机)  内网ip:192.168.64.128</p>
+<p>centos7.5(服务器) </p>
+<p>windows server 2008 R2 ×64 (目标机)  内网ip:192.168.1.9</p>
+<p>为什么要使用代理?</p>
+<p>两个不同的内网的主机想要通过CS或者MSF等工具实现控制或者通讯是不可能的，必须要借助代理.</p>
+<p>个人认为其根本原因就只有一点：没有独立且确定的公网ip</p>
+<p>如果控制端是外网主机，被控端是内网主机，就相当于控制端有一个唯一的IP地址（比如103.12.4.11），通过这个IP地址就可以找到控制端，而在内网的被控端（比如192.168.23.36），你通过控制端主动去找是找不到的，因为这个内网IP地址并不是唯一的，可能很多内网都用了这个IP地址，你根本没法找。此时就需要反向连接了，让内网的被控端主动去找外网的控制端。而本机和目标机都处于内网之中，此时必须使用代理来进行连接。</p>
+<p>首先配置好环境，kali与win2008处于不同网段，且都可联网。(vm中自行配置，可将一台主机至于NAT模式，一台置于仅主机，使仅主机可联网)</p>
+<p>检测kali的内网ip和网络</p>
+<p><img src="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/image-20220119155315218.png" alt="image-20220119155315218"></p>
+<p><img src="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/image-20220119155341286.png" alt="image-20220119155341286"></p>
+<p>检测win2008的内网ip和网络.</p>
+<p><img src="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/image-20220119155431599.png" alt="image-20220119155431599"></p>
+<p><img src="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/image-20220119155453758.png" alt="image-20220119155453758"></p>
+<p>下载frp到kali中</p>
+<p><img src="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/image-20220119155729846.png" alt="image-20220119155729846"></p>
+<p>frpc.ini配置文件是服务端，frpc.ini是客户端，下面进行配置。</p>
+<p>我们首先打开我们的服务器，编辑frps.ini</p>
+<p>随意设置一个端口号就好。</p>
+<p><img src="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/image-20220119162501013.png" alt="image-20220119162501013"></p>
+<p>启动服务端</p>
+<p><img src="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/image-20220119163847158.png" alt="image-20220119163847158"></p>
+<p>接下来在kali中配置控制端</p>
+<p><img src="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/image-20220119164721460.png" alt="image-20220119164721460"></p>
+<p>启动控制端</p>
+<p><img src="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/image-20220119164937708.png" alt="image-20220119164937708"></p>
+<p>接下来利用msfvenom生成木马开启监听</p>
+<p><img src="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/image-20220119171131305.png" alt="image-20220119171131305"></p>
+<p><img src="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/image-20220119171505986.png" alt="image-20220119171505986"></p>
+<p>将木马上线</p>
+<p><img src="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/image-20220119171914965.png" alt="image-20220119171914965"></p>
+<p>监听到会话</p>
+<p><img src="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/image-20220119173926936.png" alt="image-20220119173926936"></p>
+<p><img src="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/image-20220119173948480.png" alt="image-20220119173948480"></p>
+<p><img src="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/image-20220119174002938.png" alt="image-20220119174002938"></p>
+<p>成功实现了内网代理。</p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">John Doe</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/">https://sakurahack-y.github.io/2022/01/17/内网横向代理之FRP/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">John Doe的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/%E4%BB%A3%E7%90%86/">代理</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/01/04/Linux%E8%84%8F%E7%89%9B%E6%8F%90%E6%9D%83/">Linux脏牛提权 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
