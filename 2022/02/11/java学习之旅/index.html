@@ -1,0 +1,124 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>java学习之旅 | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">java学习之旅</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/">2022-02-11</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/java/">java</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>本篇文章更新java系列知识—持续更新中</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220211163044997.png" alt="image-20220211163044997"></p>
+<h1 id="day1-java初识"><a href="#day1-java初识" class="headerlink" title="day1 java初识"></a>day1 java初识</h1><h2 id="第一个HelloWord程序"><a href="#第一个HelloWord程序" class="headerlink" title="第一个HelloWord程序"></a>第一个HelloWord程序</h2><pre><code class="java">/*
+这里HelloWord是类名
+void main 是方法，也是程序的入口
+void 空
+main 主函数
+*/
+
+class HelloWord&#123;
+    public static void main(String[] args)&#123;
+        
+        System.out.println(&quot;Hello Word!&quot;);
+
+    &#125;
+&#125;
+</code></pre>
+<p>首先用 javac helloword.java –&gt;编译为   helloword.class</p>
+<p>然后 java helloword 执行(这里注意不要加后缀!)</p>
+<p>结果如下：</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220211171119785.png" alt="image-20220211171119785"></p>
+<p>注意点:</p>
+<p>1、java中严格区分大小写</p>
+<p>2、要记得更改编辑器的编码方式 要保持编码一致才能运行</p>
+<p>3、每一行语句结束必须以;结束</p>
+<p>4、注意缩进</p>
+<p>5、类名是什么，生成的字节码文件是什么，与原文件名字没有直接关系。</p>
+<p>6、当类是公共的，既用public修饰类，类名必须与文件名保持一致</p>
+<p>7、一个java文件中可以有多个类，每个类在编译后都会生成一个字节码文件。</p>
+<h2 id="标识符"><a href="#标识符" class="headerlink" title="标识符"></a>标识符</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220211210820972.png" alt="image-20220211210820972"></p>
+<p>关键字有：</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220211210537067.png" alt="image-20220211210537067"></p>
+<p>其中const和goto是保留字</p>
+<h2 id="规范"><a href="#规范" class="headerlink" title="规范:"></a>规范:</h2><p>1、见名知意</p>
+<p>2、驼峰命名</p>
+<p>当变量名 方法名 参数名 由两个或两个单词以上组成时，从第二个单词开始首字母大写</p>
+<p>如：userName passWord</p>
+<p>3、对常量进行命名时，每个单词的字母都大写，而且单词与单词之间使用_相连</p>
+<p>如: MAX_NUM</p>
+<p>4、对类进行命名时，对每一个单词的首字母大写</p>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>基本数据类型(四类八种):</p>
+<p>整数型:</p>
+<p>​        byte 字节类型</p>
+<p>​        short </p>
+<p>​        int</p>
+<p>​        long</p>
+<p>浮点类型:</p>
+<p>​        float 单精度</p>
+<p>​        double 双精度</p>
+<p>字符型: </p>
+<p>​        cha</p>
+<p>布尔型:</p>
+<p>​        boolean:</p>
+<p>​            true</p>
+<p>​            false</p>
+<p>引用类型数据:字符串 类 接口</p>
+<h2 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h2><p> 字符串常量</p>
+<p>“HelloWoerd”</p>
+<p>浮点类型常量</p>
+<p>3.14</p>
+<p>字符常量</p>
+<p>‘你’</p>
+<p>布尔类型常量</p>
+<p>true</p>
+<p>内置的常量</p>
+<p>Math.PI</p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>在程序执行过程中，其值可以改变的量</p>
+<p>三要素:</p>
+<p>变量类型</p>
+<p>变量名</p>
+<p>变量值</p>
+<p>如何申明变量?</p>
+<p>数据类型+变量名</p>
+<p>申明整数类型变量:</p>
+<p>byte b;</p>
+<p>long 1;</p>
+<p>同理可生成</p>
+<p>float f;</p>
+<p>double d;</p>
+<p>char c;</p>
+<p>String s;</p>
+<p>在方法内的变量 申明后要赋值才能使用</p>
+<p>变量的实质就是申请内存</p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">John Doe</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/">https://sakurahack-y.github.io/2022/02/11/java学习之旅/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">John Doe的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/java/">java</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#day1-java%E5%88%9D%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">day1 java初识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AAHelloWord%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.1.</span> <span class="toc-text">第一个HelloWord程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E8%AF%86%E7%AC%A6"><span class="toc-number">1.2.</span> <span class="toc-text">标识符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%84%E8%8C%83"><span class="toc-number">1.3.</span> <span class="toc-text">规范:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.4.</span> <span class="toc-text">数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E9%87%8F"><span class="toc-number">1.5.</span> <span class="toc-text">常量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F"><span class="toc-number">1.6.</span> <span class="toc-text">变量</span></a></li></ol></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="prev" href="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">&lt; 计算机组成原理</a><a class="next" href="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/">RootersCTF2019 I_&lt;3_Flask 0x70-0x7F &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>

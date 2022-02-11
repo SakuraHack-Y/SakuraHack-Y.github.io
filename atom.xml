@@ -6,7 +6,7 @@
   <link href="https://sakurahack-y.github.io/atom.xml" rel="self"/>
   
   <link href="https://sakurahack-y.github.io/"/>
-  <updated>2022-02-11T03:30:55.289Z</updated>
+  <updated>2022-02-11T15:03:56.049Z</updated>
   <id>https://sakurahack-y.github.io/</id>
   
   <author>
@@ -15,6 +15,58 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>计算机组成原理</title>
+    <link href="https://sakurahack-y.github.io/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"/>
+    <id>https://sakurahack-y.github.io/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/</id>
+    <published>2022-02-11T14:22:04.000Z</published>
+    <updated>2022-02-11T15:03:56.049Z</updated>
+    
+    <content type="html"><![CDATA[<p>前言：由于本人非计算机专业(苦逼化工狗)，所以想要自己补一下计算机的基础，这样才能发展的更远，所以看了这一栏，以后会坚持更新~</p><h1 id="计算机组成原理概述篇"><a href="#计算机组成原理概述篇" class="headerlink" title="计算机组成原理概述篇"></a>计算机组成原理概述篇</h1><h2 id="计算机的发展历史"><a href="#计算机的发展历史" class="headerlink" title="计算机的发展历史"></a>计算机的发展历史</h2><h3 id="计算机发展的四个阶段"><a href="#计算机发展的四个阶段" class="headerlink" title="计算机发展的四个阶段"></a>计算机发展的四个阶段</h3><p>第一个阶段:电子管计算机</p><p>集成度小，空间占用大</p><p>功耗高，运行速度慢</p><p>操作复杂，更换程序需要接线</p><p>第二个阶段:晶体管计算机</p><p>集成度相对较高，空间占用相对小</p><p>功耗相对较低，运行速度快</p><p>操作相对简单，交互更加方便</p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211222959451.png" alt="image-20220211222959451"></p><p>第三个阶段:集成电路计算机</p><p>计算机变得更小</p><p>功耗变得更低</p><p>计算速度变得更快</p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211223618107.png" alt="image-20220211223618107"></p><p>第四个阶段:超大规模集成电路计算机</p><p>一个芯片集成了上百万的晶体管<br>速度更快，体积更小，价格更低，更能被大众接受</p><p>用途丰富:文本处理，表格处理，高交互的游戏与应用</p><p>第五个阶段:未来计算机</p><p>生物计算机，以蛋白质分子作为主要原材料:</p><p>体积小，效率高</p><p>不易损坏</p><p>不受信号干扰，无热损耗 1</p><p>量子计算机</p><h3 id="微型计算机的发展历史"><a href="#微型计算机的发展历史" class="headerlink" title="微型计算机的发展历史"></a>微型计算机的发展历史</h3><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211224519853.png" alt="image-20220211224519853"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211224544536.png" alt="image-20220211224544536"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211224641392.png" alt="image-20220211224641392"></p><h2 id="计算机的分类"><a href="#计算机的分类" class="headerlink" title="计算机的分类"></a>计算机的分类</h2><p>超级计算机:</p><p>功能最强、运算速度最快、存储容量最大的计算机</p><p>多用于国家高科技领域和尖端技术研究</p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211225354851.png" alt="image-20220211225354851"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211225444783.png" alt="image-20220211225444783"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211225558827.png" alt="image-20220211225558827"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211225812247.png" alt="image-20220211225812247"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211225834345.png" alt="image-20220211225834345"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211225944642.png" alt="image-20220211225944642"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211230055284.png" alt="image-20220211230055284"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211230109064.png" alt="image-20220211230109064"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211230145911.png" alt="image-20220211230145911"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211230155449.png" alt="image-20220211230155449"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211230249731.png" alt="image-20220211230249731"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211230318814.png" alt="image-20220211230318814"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;前言：由于本人非计算机专业(苦逼化工狗)，所以想要自己补一下计算机的基础，这样才能发展的更远，所以看了这一栏，以后会坚持更新~&lt;/p&gt;
+&lt;h1 id=&quot;计算机组成原理概述篇&quot;&gt;&lt;a href=&quot;#计算机组成原理概述篇&quot; class=&quot;headerlink&quot; title=&quot;计</summary>
+      
+    
+    
+    
+    <category term="计算机基础" scheme="https://sakurahack-y.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/"/>
+    
+    <category term="计算机组成原理" scheme="https://sakurahack-y.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"/>
+    
+    
+    <category term="计算机组成原理" scheme="https://sakurahack-y.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>java学习之旅</title>
+    <link href="https://sakurahack-y.github.io/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/"/>
+    <id>https://sakurahack-y.github.io/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/</id>
+    <published>2022-02-11T08:00:26.000Z</published>
+    <updated>2022-02-11T13:50:45.085Z</updated>
+    
+    <content type="html"><![CDATA[<p>本篇文章更新java系列知识—持续更新中</p><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220211163044997.png" alt="image-20220211163044997"></p><h1 id="day1-java初识"><a href="#day1-java初识" class="headerlink" title="day1 java初识"></a>day1 java初识</h1><h2 id="第一个HelloWord程序"><a href="#第一个HelloWord程序" class="headerlink" title="第一个HelloWord程序"></a>第一个HelloWord程序</h2><pre><code class="java">/*这里HelloWord是类名void main 是方法，也是程序的入口void 空main 主函数*/class HelloWord&#123;    public static void main(String[] args)&#123;                System.out.println(&quot;Hello Word!&quot;);    &#125;&#125;</code></pre><p>首先用 javac helloword.java –&gt;编译为   helloword.class</p><p>然后 java helloword 执行(这里注意不要加后缀!)</p><p>结果如下：</p><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220211171119785.png" alt="image-20220211171119785"></p><p>注意点:</p><p>1、java中严格区分大小写</p><p>2、要记得更改编辑器的编码方式 要保持编码一致才能运行</p><p>3、每一行语句结束必须以;结束</p><p>4、注意缩进</p><p>5、类名是什么，生成的字节码文件是什么，与原文件名字没有直接关系。</p><p>6、当类是公共的，既用public修饰类，类名必须与文件名保持一致</p><p>7、一个java文件中可以有多个类，每个类在编译后都会生成一个字节码文件。</p><h2 id="标识符"><a href="#标识符" class="headerlink" title="标识符"></a>标识符</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220211210820972.png" alt="image-20220211210820972"></p><p>关键字有：</p><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220211210537067.png" alt="image-20220211210537067"></p><p>其中const和goto是保留字</p><h2 id="规范"><a href="#规范" class="headerlink" title="规范:"></a>规范:</h2><p>1、见名知意</p><p>2、驼峰命名</p><p>当变量名 方法名 参数名 由两个或两个单词以上组成时，从第二个单词开始首字母大写</p><p>如：userName passWord</p><p>3、对常量进行命名时，每个单词的字母都大写，而且单词与单词之间使用_相连</p><p>如: MAX_NUM</p><p>4、对类进行命名时，对每一个单词的首字母大写</p><h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>基本数据类型(四类八种):</p><p>整数型:</p><p>​        byte 字节类型</p><p>​        short </p><p>​        int</p><p>​        long</p><p>浮点类型:</p><p>​        float 单精度</p><p>​        double 双精度</p><p>字符型: </p><p>​        cha</p><p>布尔型:</p><p>​        boolean:</p><p>​            true</p><p>​            false</p><p>引用类型数据:字符串 类 接口</p><h2 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h2><p> 字符串常量</p><p>“HelloWoerd”</p><p>浮点类型常量</p><p>3.14</p><p>字符常量</p><p>‘你’</p><p>布尔类型常量</p><p>true</p><p>内置的常量</p><p>Math.PI</p><h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>在程序执行过程中，其值可以改变的量</p><p>三要素:</p><p>变量类型</p><p>变量名</p><p>变量值</p><p>如何申明变量?</p><p>数据类型+变量名</p><p>申明整数类型变量:</p><p>byte b;</p><p>long 1;</p><p>同理可生成</p><p>float f;</p><p>double d;</p><p>char c;</p><p>String s;</p><p>在方法内的变量 申明后要赋值才能使用</p><p>变量的实质就是申请内存</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;本篇文章更新java系列知识—持续更新中&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220211163044997.png&quot; alt=&quot;image-202202</summary>
+      
+    
+    
+    
+    <category term="java" scheme="https://sakurahack-y.github.io/categories/java/"/>
+    
+    
+    <category term="java" scheme="https://sakurahack-y.github.io/tags/java/"/>
+    
+  </entry>
   
   <entry>
     <title>RootersCTF2019 I_&lt;3_Flask 0x70-0x7F</title>
@@ -504,61 +556,6 @@
     
     
     <category term="反序列化" scheme="https://sakurahack-y.github.io/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>0CTF 2016-piapiapia</title>
-    <link href="https://sakurahack-y.github.io/2021/10/10/0CTF-2016-piapiapia/"/>
-    <id>https://sakurahack-y.github.io/2021/10/10/0CTF-2016-piapiapia/</id>
-    <published>2021-10-10T14:01:12.000Z</published>
-    <updated>2021-10-10T18:00:57.379Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="0CTF-2016-piapiapia"><a href="#0CTF-2016-piapiapia" class="headerlink" title="0CTF 2016-piapiapia"></a>0CTF 2016-piapiapia</h1><p>代码审计还有PHP反序列化一直是我的硬伤，所以想借助这个题目来理一理思路。</p><p>首先，打开网址，如图：</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010224803224.png" alt="image-20211010224803224"></p><p>先尝试了万能密码，没有效果。</p><p>sql注入，手工和sqlmap跑半天没有效果，放弃。</p><p>没有什么可以做的，就扫一扫目录。</p><p>python dirsearch.py  -u <a href="http://7580b1d4-c607-4a67-a008-092706787c67.node4.buuoj.cn:81/">http://7580b1d4-c607-4a67-a008-092706787c67.node4.buuoj.cn:81/</a> -e * -s 1 -x 400,403,404,500,503,429 -o C:\Users\Sakura\Desktop\1.txt</p><p>buu扫目录一直容易崩溃，所以要降低dirsearch的扫描速度。</p><p>最终扫描出来了 register.php 和<a href="http://www.zip./">www.zip。</a></p><p>进入 xxx/register.php :<br><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010225335750.png" alt="image-20211010225335750"> </p><p>注册账号并登录：</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010225502569.png" alt="image-20211010225502569"></p><p>考虑了文件上传，上传多次，没有效果，放弃！</p><p>更新文件后，进入这个界面：</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010225645545.png" alt="image-20211010225645545"></p><p>就此停下，不知道如何进行下一步，决定从源码入手。</p><p>访问 <a href="http://7580b1d4-c607-4a67-a008-092706787c67.node4.buuoj.cn:81/www.zip">http://7580b1d4-c607-4a67-a008-092706787c67.node4.buuoj.cn:81/www.zip</a></p><p>获取到了网站源码。</p><p>进行苦逼的代码审计：</p><p>由上方可知逻辑结构为：register-&gt;login-&gt;update-&gt;profile</p><p>登录和注册可以先不看，由 update-&gt;profile</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010225831335.png" alt="image-20211010225831335"></p><p>首先查看config.php，看到了flag但是为空，没有显示,这里要注意下config.php，下面可能会用到。</p><p>继续浏览代码，寻找敏感点：</p><p>在profile.php中发现了两个关键点，unserialize(),file_get_contents()</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010230540368.png" alt="image-20211010230540368"></p><p>猜测应该考察PHP反序列化，$profile[‘photo’] 是重点，考虑对其传值，实现flag的读取。</p><p>进一步审计：</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010230732653.png" alt="image-20211010230732653"></p><p>在update.php中发现了这样一个函数：</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010230845047.png" alt="image-20211010230845047"></p><p>$profile[‘photo’] = ‘upload/‘ . md5($file[‘name’]);</p><p>发现该值被hash加密了，根本无法对其进行控制。</p><p>既然profile[‘photo’] 无法控制，我们是否可以考虑传入其它值来达到目的。看profile[‘photo’]的上一个参数，profile[‘nickname’]，是否可以通过profile[‘nickname’]传值给profile[‘photo’]呢.</p><p>继续看unserialize($profile)</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010230540368.png" alt="image-20211010230540368"></p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010232230667.png" alt="image-20211010232230667"></p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010232355284.png" alt="image-20211010232355284"></p><p>由此可知，对像user中show_profile()的返回值被反序列化，查看show_porfile函数：</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010233728714.png" alt="image-20211010233728714"></p><p>$username首先会被过滤一次，跟进filter()函数：</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010235353988.png" alt="image-20211010235353988"></p><p>这里的意思是\会被|替代，一些敏感的sql单词会被hacker代替(上文的select,insert,update,delete,where)</p><p>过滤后，$username会被插入到select语句中：</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010235733254.png" alt="image-20211010235733254"></p><p>到此，基本明白了网站的运行逻辑。</p><p>接下来继续从反序列化入手：</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010230540368.png" alt="image-20211010230540368"></p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211010230845047.png" alt="image-20211010230845047"></p><p>接上面的思路，由于profile=[‘photo’] 我们无法控制，而fileter过滤，如果存在where则会变为hacker，增加了一个字符，所以考察的知识点应该为字符串增加的PHP反序列化逃逸。这里会对$profile进行序列化。</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011003440679.png" alt="image-20211011003440679"></p><p>修改phpto的值</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011010728666.png" alt="image-20211011010728666"></p><p>要注意，最后还要通过update.php中还存在一个限制：</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011011455216.png" alt="image-20211011011455216"></p><p>nickname的长度不可以&gt;10,那该怎么绕过它呢？</p><p>这里就要用到数组了</p><pre><code>md5(Array()) = nullsha1(Array()) = nullereg(pattern,Array()) =nullpreg_match(pattern,Array()) = falsestrcmp(Array(), “abc”) =nullstrpos(Array(),“abc”) = nullstrlen(Array()) = null</code></pre><p>所以nickname传入数组就可以绕过。</p><p>如何将nickname变为数组呢？让我们来看一个例子：</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNjIyNDQy,size_16,color_FFFFFF,t_70.png" alt="img"></p><pre><code>a:4:&#123;s:5:&quot;phone&quot;;s:11:&quot;15885248522&quot;;s:5:&quot;email&quot;;s:10:&quot;123@qq.com&quot;;s:8:&quot;nickname&quot;;a:1:&#123;i:0;s:3:&quot;123&quot;;&#125;s:5:&quot;photo&quot;;s:10:&quot;config.php&quot;;&#125;s:39:&quot;upload/9f6e6800cfae7749eb6c486619254b9c&quot;;&#125;</code></pre><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011014313810.png" alt="image-20211011014313810"></p><p>要让 </p><pre><code>&quot;;&#125;s:5:&quot;photo&quot;;s:10:&quot;config.php&quot;;&#125;</code></pre><p>逃逸出来</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011014619609.png" alt="image-20211011014619609"></p><p>34个字符，所以应该有34个where来逃逸34个字符。</p><p>6*34=204</p><pre><code>a:4:&#123;s:5:&quot;phone&quot;;s:11:&quot;15885248522&quot;;s:5:&quot;email&quot;;s:10:&quot;123@qq.com&quot;;s:8:&quot;nickname&quot;;a:1:&#123;i:0;s:204:&quot;wherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewhere&quot;;&#125;s:5:&quot;photo&quot;;s:10:&quot;config.php&quot;;&#125;s:39:&quot;upload/9f6e6800cfae7749eb6c486619254b9c&quot;;&#125;</code></pre><p>所以payload就为：</p><pre><code>wherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewhere&quot;;&#125;s:5:&quot;photo&quot;;s:10:&quot;config.php&quot;;&#125;</code></pre><p>在burp中将nickname类型改为数组，并传入payload</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011015434242.png" alt="image-20211011015434242"></p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011015942962.png" alt="image-20211011015942962"></p><p>查看源代码，可发现base64加密</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011020008050.png" alt="image-20211011020008050"></p><p>解密即可得到flag</p><p><img src="/2021/10/10/0CTF-2016-piapiapia/image-20211011020027430.png" alt="image-20211011020027430"></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;0CTF-2016-piapiapia&quot;&gt;&lt;a href=&quot;#0CTF-2016-piapiapia&quot; class=&quot;headerlink&quot; title=&quot;0CTF 2016-piapiapia&quot;&gt;&lt;/a&gt;0CTF 2016-piapiapia&lt;/h1&gt;&lt;p&gt;代码</summary>
-      
-    
-    
-    
-    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
-    
-    <category term="刷题" scheme="https://sakurahack-y.github.io/categories/CTF/%E5%88%B7%E9%A2%98/"/>
-    
-    
-    <category term="代码审计" scheme="https://sakurahack-y.github.io/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>SUCTF2019-python-nginx</title>
-    <link href="https://sakurahack-y.github.io/2021/10/10/SUCTF2019-python-nginx/"/>
-    <id>https://sakurahack-y.github.io/2021/10/10/SUCTF2019-python-nginx/</id>
-    <published>2021-10-09T16:26:18.000Z</published>
-    <updated>2021-10-10T07:26:02.043Z</updated>
-    
-    <content type="html"><![CDATA[<p>题目源码：</p><pre><code>@app.route(&#39;/getUrl&#39;, methods = [&#39;GET&#39;, &#39;POST&#39;]) def getUrl():   url = request.args.get(&quot;url&quot;)   host = parse.urlparse(url).hostnameif host == &#39;suctf.cc&#39;:   return &quot;我扌 your problem? 111&quot;parts = list(urlsplit(url)) host = parts[1]if host == &#39;suctf.cc&#39;:   return &quot;我扌 your problem? 222 &quot; + host newhost = []for h in host.split(&#39;.&#39;):   newhost.append(h.encode(&#39;idna&#39;).decode(&#39;utf-8&#39;))   parts[1] = &#39;.&#39;.join(newhost)  # 去掉 url 中的空格   finalUrl = urlunsplit(parts).split(&#39; &#39;)[0]   host = parse.urlparse(finalUrl).hostnameif host == &#39;suctf.cc&#39;:   return urllib.request.urlopen(finalUrl).read()else :  return &quot;我扌 your problem? 333&quot;</code></pre><h1 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h1><p>该题的主要问题是在</p><p>h.encode(‘idna’).decode(‘utf-8’)</p><p>IDNA实际上是国际化域名</p><p>什么是IDN?</p><p>国际化域名(Internationalized Domain Name,IDN)又名特殊字符域名，是指部分或完全使用特殊文字或字母组成的互联网域名，包括中文、发育、阿拉伯语、希伯来语或拉丁字母等非英文字母，这些文字经过多字节万国码编码而成。在域名系统中，国际化域名使用punycode转写并以ASCII字符串存储。</p><p><img src="/2021/10/10/SUCTF2019-python-nginx/1.png"></p><p>Nginx重要配置文件：</p><pre><code>配置文件存放目录：/etc/nginx主配置文件：/etc/nginx/conf/nginx.conf管理脚本：/usr/lib64/systemd/system/nginx.service模块：/usr/lisb64/nginx/modules应用程序：/usr/sbin/nginx程序默认存放位置：/usr/share/nginx/html日志默认存放位置：/var/log/nginx配置文件目录为：/usr/local/nginx/conf/nginx.conf</code></pre><p>利用脚本来跑可用字符：</p><pre><code class="#">for i in range(128,65537):        tmp=chr(i)        try:                res = tmp.encode(&#39;idna&#39;).decode(&#39;utf-8&#39;)                if(&quot;-&quot;) in res:                        continue                print(&quot;U:&#123;&#125;    A:&#123;&#125;      ascii:&#123;&#125; &quot;.format(tmp, res, i))        except:                pass</code></pre><p><img src="/2021/10/10/SUCTF2019-python-nginx/3.png"><br>发现可利用字符,获取flag：<br><img src="/2021/10/10/SUCTF2019-python-nginx/2.png"></p><h1 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h1><p>利用两此urlsplit漏洞：<br>这道题不能让他为suctf.cc<br><img src="/2021/10/10/SUCTF2019-python-nginx/5.png"><br>但是经过了 urlunsplit 后变成 suctf.cc，很容易就构造出：file////:suctf.cc/usr/local/nginx/conf/nginx.conf，这样就能读取文件了。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;题目源码：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;@app.route(&amp;#39;/getUrl&amp;#39;, methods = [&amp;#39;GET&amp;#39;, &amp;#39;POST&amp;#39;]) 
-def getUrl(): 
-  url = request.args.get(&amp;q</summary>
-      
-    
-    
-    
-    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
-    
-    <category term="刷题" scheme="https://sakurahack-y.github.io/categories/CTF/%E5%88%B7%E9%A2%98/"/>
-    
-    
-    <category term="刷题" scheme="https://sakurahack-y.github.io/tags/%E5%88%B7%E9%A2%98/"/>
     
   </entry>
   

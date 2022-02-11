@@ -4,6 +4,58 @@
   
     
     <entry>
+      <title>计算机组成原理</title>
+      <link href="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"/>
+      <url>/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/</url>
+      
+        <content type="html"><![CDATA[<p>前言：由于本人非计算机专业(苦逼化工狗)，所以想要自己补一下计算机的基础，这样才能发展的更远，所以看了这一栏，以后会坚持更新~</p><h1 id="计算机组成原理概述篇"><a href="#计算机组成原理概述篇" class="headerlink" title="计算机组成原理概述篇"></a>计算机组成原理概述篇</h1><h2 id="计算机的发展历史"><a href="#计算机的发展历史" class="headerlink" title="计算机的发展历史"></a>计算机的发展历史</h2><h3 id="计算机发展的四个阶段"><a href="#计算机发展的四个阶段" class="headerlink" title="计算机发展的四个阶段"></a>计算机发展的四个阶段</h3><p>第一个阶段:电子管计算机</p><p>集成度小，空间占用大</p><p>功耗高，运行速度慢</p><p>操作复杂，更换程序需要接线</p><p>第二个阶段:晶体管计算机</p><p>集成度相对较高，空间占用相对小</p><p>功耗相对较低，运行速度快</p><p>操作相对简单，交互更加方便</p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211222959451.png" alt="image-20220211222959451"></p><p>第三个阶段:集成电路计算机</p><p>计算机变得更小</p><p>功耗变得更低</p><p>计算速度变得更快</p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211223618107.png" alt="image-20220211223618107"></p><p>第四个阶段:超大规模集成电路计算机</p><p>一个芯片集成了上百万的晶体管<br>速度更快，体积更小，价格更低，更能被大众接受</p><p>用途丰富:文本处理，表格处理，高交互的游戏与应用</p><p>第五个阶段:未来计算机</p><p>生物计算机，以蛋白质分子作为主要原材料:</p><p>体积小，效率高</p><p>不易损坏</p><p>不受信号干扰，无热损耗 1</p><p>量子计算机</p><h3 id="微型计算机的发展历史"><a href="#微型计算机的发展历史" class="headerlink" title="微型计算机的发展历史"></a>微型计算机的发展历史</h3><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211224519853.png" alt="image-20220211224519853"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211224544536.png" alt="image-20220211224544536"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211224641392.png" alt="image-20220211224641392"></p><h2 id="计算机的分类"><a href="#计算机的分类" class="headerlink" title="计算机的分类"></a>计算机的分类</h2><p>超级计算机:</p><p>功能最强、运算速度最快、存储容量最大的计算机</p><p>多用于国家高科技领域和尖端技术研究</p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211225354851.png" alt="image-20220211225354851"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211225444783.png" alt="image-20220211225444783"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211225558827.png" alt="image-20220211225558827"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211225812247.png" alt="image-20220211225812247"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211225834345.png" alt="image-20220211225834345"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211225944642.png" alt="image-20220211225944642"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211230055284.png" alt="image-20220211230055284"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211230109064.png" alt="image-20220211230109064"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211230145911.png" alt="image-20220211230145911"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211230155449.png" alt="image-20220211230155449"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211230249731.png" alt="image-20220211230249731"></p><p><img src="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/image-20220211230318814.png" alt="image-20220211230318814"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 计算机基础 </category>
+          
+          <category> 计算机组成原理 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 计算机组成原理 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>java学习之旅</title>
+      <link href="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/"/>
+      <url>/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/</url>
+      
+        <content type="html"><![CDATA[<p>本篇文章更新java系列知识—持续更新中</p><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220211163044997.png" alt="image-20220211163044997"></p><h1 id="day1-java初识"><a href="#day1-java初识" class="headerlink" title="day1 java初识"></a>day1 java初识</h1><h2 id="第一个HelloWord程序"><a href="#第一个HelloWord程序" class="headerlink" title="第一个HelloWord程序"></a>第一个HelloWord程序</h2><pre><code class="java">/*这里HelloWord是类名void main 是方法，也是程序的入口void 空main 主函数*/class HelloWord&#123;    public static void main(String[] args)&#123;                System.out.println(&quot;Hello Word!&quot;);    &#125;&#125;</code></pre><p>首先用 javac helloword.java –&gt;编译为   helloword.class</p><p>然后 java helloword 执行(这里注意不要加后缀!)</p><p>结果如下：</p><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220211171119785.png" alt="image-20220211171119785"></p><p>注意点:</p><p>1、java中严格区分大小写</p><p>2、要记得更改编辑器的编码方式 要保持编码一致才能运行</p><p>3、每一行语句结束必须以;结束</p><p>4、注意缩进</p><p>5、类名是什么，生成的字节码文件是什么，与原文件名字没有直接关系。</p><p>6、当类是公共的，既用public修饰类，类名必须与文件名保持一致</p><p>7、一个java文件中可以有多个类，每个类在编译后都会生成一个字节码文件。</p><h2 id="标识符"><a href="#标识符" class="headerlink" title="标识符"></a>标识符</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220211210820972.png" alt="image-20220211210820972"></p><p>关键字有：</p><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220211210537067.png" alt="image-20220211210537067"></p><p>其中const和goto是保留字</p><h2 id="规范"><a href="#规范" class="headerlink" title="规范:"></a>规范:</h2><p>1、见名知意</p><p>2、驼峰命名</p><p>当变量名 方法名 参数名 由两个或两个单词以上组成时，从第二个单词开始首字母大写</p><p>如：userName passWord</p><p>3、对常量进行命名时，每个单词的字母都大写，而且单词与单词之间使用_相连</p><p>如: MAX_NUM</p><p>4、对类进行命名时，对每一个单词的首字母大写</p><h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>基本数据类型(四类八种):</p><p>整数型:</p><p>​        byte 字节类型</p><p>​        short </p><p>​        int</p><p>​        long</p><p>浮点类型:</p><p>​        float 单精度</p><p>​        double 双精度</p><p>字符型: </p><p>​        cha</p><p>布尔型:</p><p>​        boolean:</p><p>​            true</p><p>​            false</p><p>引用类型数据:字符串 类 接口</p><h2 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h2><p> 字符串常量</p><p>“HelloWoerd”</p><p>浮点类型常量</p><p>3.14</p><p>字符常量</p><p>‘你’</p><p>布尔类型常量</p><p>true</p><p>内置的常量</p><p>Math.PI</p><h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>在程序执行过程中，其值可以改变的量</p><p>三要素:</p><p>变量类型</p><p>变量名</p><p>变量值</p><p>如何申明变量?</p><p>数据类型+变量名</p><p>申明整数类型变量:</p><p>byte b;</p><p>long 1;</p><p>同理可生成</p><p>float f;</p><p>double d;</p><p>char c;</p><p>String s;</p><p>在方法内的变量 申明后要赋值才能使用</p><p>变量的实质就是申请内存</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> java </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>RootersCTF2019 I_&lt;3_Flask 0x70-0x7F</title>
       <link href="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/"/>
       <url>/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/</url>
