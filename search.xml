@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>红明谷CTF 2021 write_shell_0x81-0x8F</title>
+      <link href="/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/"/>
+      <url>/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/</url>
+      
+        <content type="html"><![CDATA[<p>这道题属于比较简单的，让我们来看一下源码</p><p><img src="/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/image-20220212104506611.png" alt="image-20220212104506611"></p><p>当我们在后缀加上?action=pwd 就可以得到路径</p><p><img src="/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/image-20220212104652393.png" alt="image-20220212104652393"></p><p>再换成upload就可以写文件</p><p>?action=upload&amp;date=xxx</p><p>这道题考察的就是shell的写入，但是它过滤了不少关键词</p><p>其中过滤了php这个关键词，但是这个可以进行绕过</p><pre><code>PHP中有两种短标签，&lt;??&gt;和&lt;?=?&gt;。其中，&lt;??&gt;相当于对&lt;?php&gt;的替换。而&lt;?=?&gt;则是相当于&lt;? echo&gt;大部分文章说短标签需要在php.ini中设置short_open_tag为on才能开启短标签(默认是开启的，但似乎又默认注释，所以还是等于没开启)。但实际上在PHP5.4以后，无论short_open_tag是否开启，&lt;?=?&gt;这种写法总是适用的，&lt;??&gt;这种写法则需要short_open_tag开启才行。</code></pre><p>PHP中，反引号可以起到命令执行的效果</p><p>空格可以用url编码绕过%09</p><p>由这个我们就可以构造出payload</p><pre><code>?action=upload&amp;data=&lt;?=%09`whoami`?&gt;</code></pre><p>访问文件</p><p><img src="/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/image-20220212110632709.png" alt="image-20220212110632709"></p><p>成功执行了命令</p><p><img src="/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/image-20220212111111008.png" alt="image-20220212111111008"></p><p>直接获取根目录所有文件信息，访问文件，获得flag</p><p><img src="/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/image-20220212111030856.png" alt="image-20220212111030856"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> CTF </category>
+          
+          <category> 刷题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> writeshell </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>计算机组成原理</title>
       <link href="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"/>
       <url>/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/</url>

