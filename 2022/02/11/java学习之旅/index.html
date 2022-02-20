@@ -164,7 +164,147 @@ class InputTest&#123;
 &#125;
 </code></pre>
 <p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220219224259748.png" alt="image-20220219224259748"></p>
-</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/">https://sakurahack-y.github.io/2022/02/11/java学习之旅/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/java/">java</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#day1-java%E5%88%9D%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">day1  java初识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AAHelloWord%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.1.</span> <span class="toc-text">第一个HelloWord程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E8%AF%86%E7%AC%A6"><span class="toc-number">1.2.</span> <span class="toc-text">标识符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%84%E8%8C%83"><span class="toc-number">1.3.</span> <span class="toc-text">规范:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.4.</span> <span class="toc-text">数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E9%87%8F"><span class="toc-number">1.5.</span> <span class="toc-text">常量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F"><span class="toc-number">1.6.</span> <span class="toc-text">变量</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day2-java%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">day2  java基础语法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2"><span class="toc-number">2.1.</span> <span class="toc-text">进制转换:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%AD%98%E5%82%A8%E5%8D%95%E4%BD%8D"><span class="toc-number">2.2.</span> <span class="toc-text">计算机存储单位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%A6%82%E4%BD%95%E5%AD%98%E5%82%A8%E6%95%B0%E6%8D%AE"><span class="toc-number">2.3.</span> <span class="toc-text">计算机如何存储数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E7%B1%BB%E5%9E%8B%E6%8F%90%E5%8D%87"><span class="toc-number">2.4.</span> <span class="toc-text">自动类型提升</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">2.5.</span> <span class="toc-text">运算符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">2.5.1.</span> <span class="toc-text">逻辑运算符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-number">2.5.2.</span> <span class="toc-text">运算符优先级</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day3-%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5"><span class="toc-number">3.</span> <span class="toc-text">day3  流程控制语句</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E8%AF%AD%E5%8F%A5-scanner"><span class="toc-number">3.1.</span> <span class="toc-text">输入语句 scanner</span></a></li></ol></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="prev" href="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">&lt; 计算机组成原理</a><a class="next" href="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/">RootersCTF2019 I_&lt;3_Flask 0x70-0x7F &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+<h2 id="next与nextLine"><a href="#next与nextLine" class="headerlink" title="next与nextLine"></a>next与nextLine</h2><p>键盘输入一个地址</p>
+<pre><code class="java">/*
+1、导包
+2、创建对象
+3、对象调方法
+*/
+import java.util.*;
+class InputTest&#123;
+    public static void main(String [] args)&#123;
+        Scanner input = new Scanner(System.in);
+        System.out.println(&quot;您的地址是&quot;);
+        String address = input.next();
+        System.out.println(&quot;您的地址是&quot;+address);
+    &#125;
+    
+&#125;
+</code></pre>
+<p>注意:<br>    next()无法接受 空格之后的内容</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220220223643121.png" alt="image-20220220223643121"></p>
+<p>此时我们可以用nextLine(可以接受整行内容)</p>
+<pre><code class="java">String address = input.nextLine();
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220220223819952.png" alt="image-20220220223819952"></p>
+<p>nextLine存在一些问题:</p>
+<pre><code class="java">import java.util.*;
+class InputTest&#123;
+    public static void main(String [] args)&#123;
+        Scanner input = new Scanner(System.in);
+         System.out.println(&quot;您的身高是&quot;);
+        double height = input.nextDouble();
+        System.out.println(&quot;您的身高是:&quot;+height);
+        System.out.println(&quot;您的地址是&quot;);
+        String address = input.nextLine();
+        System.out.println(&quot;您的地址是:&quot;+address);
+    &#125;
+&#125;
+</code></pre>
+<p>当代码如上时，运行程序会出现以下后果:</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220220224758917.png" alt="image-20220220224758917"></p>
+<p>我们发现第二个输出直接结束了，这是因为nextLine遇到回车，会误认为代码已经结束了。</p>
+<p>解决办法:</p>
+<p>在中间加入一个</p>
+<pre><code class="java">input.nextLine();
+</code></pre>
+<p>来接受回车</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220220225008607.png" alt="image-20220220225008607"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220220225108040.png" alt="image-20220220225108040"></p>
+<p>这样问题就解决了</p>
+<h2 id="if单分支"><a href="#if单分支" class="headerlink" title="if单分支"></a>if单分支</h2><pre><code class="java">/*
+if分支：
+    if单分支
+        if(boolean表达式)&#123;
+            分支内容
+        &#125;
+*/
+import java.util.*;
+class IfTest&#123;
+    public static void main(String [] args)&#123;
+        Scanner in = new Scanner(System.in);
+        System.out.println(&quot;请输入您的年龄&quot;);
+        int age = in.nextInt();
+        if(age &gt;= 18)&#123;
+            System.out.println(&quot;您已经成年，可以上网了&quot;);
+        &#125;
+        if(age &lt; 18)&#123;
+            System.out.println(&quot;您还没有成年,please go out!&quot;);
+        &#125;    
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220220231710122.png" alt="image-20220220231710122"></p>
+<h2 id="小习题-闰年的标准"><a href="#小习题-闰年的标准" class="headerlink" title="小习题-闰年的标准"></a>小习题-闰年的标准</h2><p>闰年的标准(两者满足其一即可):</p>
+<p>1、能被4整除，不能被100整除</p>
+<p>2、能被400整除</p>
+<p>代码功能:</p>
+<p>输入一个数判断是否是闰年</p>
+<pre><code class="java">import java.util.*;
+class RunYears&#123;
+    public static void main(String [] args)&#123;
+        Scanner input = new Scanner(System.in);
+        System.out.println(&quot;请输入一个年份:&quot;);
+        int years = input.nextInt();
+        if((years%4==0&amp;&amp;years%100!=0)||(years%400==0))
+            System.out.println(years+&quot;是闰年！&quot;);
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220220233501106.png" alt="image-20220220233501106"></p>
+<h2 id="if双分支"><a href="#if双分支" class="headerlink" title="if双分支"></a>if双分支</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220220233824314.png" alt="image-20220220233824314"></p>
+<h2 id="求三个数中的最大值"><a href="#求三个数中的最大值" class="headerlink" title="求三个数中的最大值"></a>求三个数中的最大值</h2><pre><code class="java">import java.util.*;
+class MaxNum&#123;
+    public static void main(String [] args)&#123;
+        int a = 50;
+        int b = 999;
+        int c = 12;
+        if(a &gt; b)&#123;
+            if(a &gt; c)&#123;
+                System.out.println(&quot;a是三个数中的最大值&quot;);
+            &#125;else&#123;
+                System.out.println(&quot;c是三个数中的最大值&quot;);
+            &#125;
+        
+        &#125;else&#123;
+            if(b &lt; c)&#123;
+                System.out.println(&quot;c是三个数中的最大值&quot;);
+            &#125;else&#123;
+                System.out.println(&quot;b是三个数中的最大值&quot;);
+            &#125;
+            
+        &#125;
+    &#125;
+    
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220221001754310.png" alt="image-20220221001754310"></p>
+<h2 id="if多分支"><a href="#if多分支" class="headerlink" title="if多分支"></a>if多分支</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220221002157818.png" alt="image-20220221002157818"></p>
+<h2 id="switch"><a href="#switch" class="headerlink" title="switch"></a>switch</h2><p> <img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220221002546023.png" alt="image-20220221002546023"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220221003440041.png" alt="image-20220221003440041"></p>
+<p>case后面的数据必须与表达式类型一致</p>
+<h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h2><p>满足特定条件反复执行的代码</p>
+<p>任何一个标准的循环都有四个条件:</p>
+<p><strong>初始化条件</strong></p>
+<p><strong>循环条件</strong></p>
+<p><strong>循环体</strong></p>
+<p><strong>迭代条件</strong></p>
+<p>实例:</p>
+<pre><code class="java">import java.util.*;
+class Repeat&#123;
+     public static void main(String [] args)&#123;
+        int i = 0;
+        while(i&lt;10)&#123;
+            System.out.println(&quot;Hello Word&quot;);
+            i++;
+        &#125;
+        
+    &#125;
+    
+    &#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220221005248322.png" alt="image-20220221005248322"></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/">https://sakurahack-y.github.io/2022/02/11/java学习之旅/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/java/">java</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#day1-java%E5%88%9D%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">day1  java初识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AAHelloWord%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.1.</span> <span class="toc-text">第一个HelloWord程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E8%AF%86%E7%AC%A6"><span class="toc-number">1.2.</span> <span class="toc-text">标识符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%84%E8%8C%83"><span class="toc-number">1.3.</span> <span class="toc-text">规范:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.4.</span> <span class="toc-text">数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E9%87%8F"><span class="toc-number">1.5.</span> <span class="toc-text">常量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F"><span class="toc-number">1.6.</span> <span class="toc-text">变量</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day2-java%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">day2  java基础语法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2"><span class="toc-number">2.1.</span> <span class="toc-text">进制转换:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%AD%98%E5%82%A8%E5%8D%95%E4%BD%8D"><span class="toc-number">2.2.</span> <span class="toc-text">计算机存储单位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%A6%82%E4%BD%95%E5%AD%98%E5%82%A8%E6%95%B0%E6%8D%AE"><span class="toc-number">2.3.</span> <span class="toc-text">计算机如何存储数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E7%B1%BB%E5%9E%8B%E6%8F%90%E5%8D%87"><span class="toc-number">2.4.</span> <span class="toc-text">自动类型提升</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">2.5.</span> <span class="toc-text">运算符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">2.5.1.</span> <span class="toc-text">逻辑运算符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-number">2.5.2.</span> <span class="toc-text">运算符优先级</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day3-%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5"><span class="toc-number">3.</span> <span class="toc-text">day3  流程控制语句</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E8%AF%AD%E5%8F%A5-scanner"><span class="toc-number">3.1.</span> <span class="toc-text">输入语句 scanner</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#next%E4%B8%8EnextLine"><span class="toc-number">3.2.</span> <span class="toc-text">next与nextLine</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#if%E5%8D%95%E5%88%86%E6%94%AF"><span class="toc-number">3.3.</span> <span class="toc-text">if单分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E4%B9%A0%E9%A2%98-%E9%97%B0%E5%B9%B4%E7%9A%84%E6%A0%87%E5%87%86"><span class="toc-number">3.4.</span> <span class="toc-text">小习题-闰年的标准</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#if%E5%8F%8C%E5%88%86%E6%94%AF"><span class="toc-number">3.5.</span> <span class="toc-text">if双分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B1%82%E4%B8%89%E4%B8%AA%E6%95%B0%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E5%80%BC"><span class="toc-number">3.6.</span> <span class="toc-text">求三个数中的最大值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#if%E5%A4%9A%E5%88%86%E6%94%AF"><span class="toc-number">3.7.</span> <span class="toc-text">if多分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#switch"><span class="toc-number">3.8.</span> <span class="toc-text">switch</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF"><span class="toc-number">3.9.</span> <span class="toc-text">循环</span></a></li></ol></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="prev" href="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">&lt; 计算机组成原理</a><a class="next" href="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/">RootersCTF2019 I_&lt;3_Flask 0x70-0x7F &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
 .night .v[data-class=v] a:hover { color: #216C73 !important; }
 .night .v[data-class=v] li { list-style: inherit; }
 .night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
