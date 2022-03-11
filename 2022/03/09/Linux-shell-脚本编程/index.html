@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>Linux shell 脚本编程 | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">Linux shell 脚本编程</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/">2022-03-09</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/Linux/">Linux</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><h1 id="文本三剑客之GREP与正则表达式入门"><a href="#文本三剑客之GREP与正则表达式入门" class="headerlink" title="文本三剑客之GREP与正则表达式入门"></a>文本三剑客之GREP与正则表达式入门</h1><h2 id="grep命令详解"><a href="#grep命令详解" class="headerlink" title="grep命令详解"></a>grep命令详解</h2><p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220309163744532.png" alt="image-20220309163744532"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220309164006965.png" alt="image-20220309164006965"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220309164124381.png" alt="image-20220309164124381"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220309164153116.png" alt="image-20220309164153116"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220309164202884.png" alt="image-20220309164202884"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220309164216276.png" alt="image-20220309164216276"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220309170755365.png" alt="image-20220309170755365"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220309171250634.png" alt="image-20220309171250634"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220309171452021.png" alt="image-20220309171452021"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220309171750029.png" alt="image-20220309171750029"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220309172440403.png" alt="image-20220309172440403"></p>
+<h2 id="正则表达式入门"><a href="#正则表达式入门" class="headerlink" title="正则表达式入门"></a>正则表达式入门</h2><p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220309172719330.png" alt="image-20220309172719330"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220309172932180.png" alt="image-20220309172932180"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220309173155868.png" alt="image-20220309173155868"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220310221059335.png" alt="image-20220310221059335"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220310222034558.png" alt="image-20220310222034558"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220310222048846.png" alt="image-20220310222048846"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220310222156870.png" alt="image-20220310222156870"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220310222253774.png" alt="image-20220310222253774"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220310222536062.png" alt="image-20220310222536062"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220310222947293.png" alt="image-20220310222947293"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220310223442895.png" alt="image-20220310223442895"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220310223457982.png" alt="image-20220310223457982"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220310223913660.png" alt="image-20220310223913660"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220310224006972.png" alt="image-20220310224006972"></p>
+<p><img src="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/image-20220310224106984.png" alt="image-20220310224106984"></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/03/09/Linux-shell-%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/">https://sakurahack-y.github.io/2022/03/09/Linux-shell-脚本编程/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/Linux/">Linux</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E4%B8%89%E5%89%91%E5%AE%A2%E4%B9%8BGREP%E4%B8%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8"><span class="toc-number">1.</span> <span class="toc-text">文本三剑客之GREP与正则表达式入门</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#grep%E5%91%BD%E4%BB%A4%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.1.</span> <span class="toc-text">grep命令详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8"><span class="toc-number">1.2.</span> <span class="toc-text">正则表达式入门</span></a></li></ol></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/02/27/BUU-%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%E4%B8%93%E9%A1%B9%E5%88%B7%E9%A2%98/">BUU-模板注入专项刷题 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
