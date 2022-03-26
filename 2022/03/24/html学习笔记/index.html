@@ -262,7 +262,329 @@ cellspacing 单元格的空白
 </code></pre>
 <img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220324224952975.png" alt="image-20220324224952975" style="zoom:50%;">
 
-</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">https://sakurahack-y.github.io/2022/03/24/html学习笔记/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/html/">html</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84HTML%E9%A1%B5%E9%9D%A2%E6%9E%B6%E6%9E%84"><span class="toc-number">1.</span> <span class="toc-text">简单的HTML页面架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HTML%E5%B8%B8%E8%A7%81%E6%A0%87%E7%AD%BE"><span class="toc-number">2.</span> <span class="toc-text">HTML常见标签</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#meta%E6%A0%87%E7%AD%BE"><span class="toc-number">2.1.</span> <span class="toc-text">meta标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E9%A2%98%E6%A0%87%E7%AD%BE"><span class="toc-number">2.2.</span> <span class="toc-text">标题标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E5%B1%9E%E6%80%A7"><span class="toc-number">2.3.</span> <span class="toc-text">文本属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#form%E8%A1%A8%E5%8D%95"><span class="toc-number">2.4.</span> <span class="toc-text">form表单</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#a%E6%A0%87%E7%AD%BE%E3%80%81img%E6%A0%87%E7%AD%BE%E3%80%81table%E6%A0%87%E7%AD%BE"><span class="toc-number">2.5.</span> <span class="toc-text">a标签、img标签、table标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%9A%E6%96%87%E6%9C%AC"><span class="toc-number">2.6.</span> <span class="toc-text">锚文本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#img%E6%A0%87%E7%AD%BE"><span class="toc-number">2.7.</span> <span class="toc-text">img标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#table%E8%A1%A8%E6%A0%BC"><span class="toc-number">2.8.</span> <span class="toc-text">table表格</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%97%E8%A1%A8"><span class="toc-number">2.9.</span> <span class="toc-text">列表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E5%BA%8F%E5%88%97%E8%A1%A8"><span class="toc-number">2.9.1.</span> <span class="toc-text">无序列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E5%BA%8F%E5%88%97%E8%A1%A8"><span class="toc-number">2.9.2.</span> <span class="toc-text">有序列表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%86%E6%9E%B6%E4%BD%BF%E7%94%A8"><span class="toc-number">2.10.</span> <span class="toc-text">框架使用</span></a></li></ol></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/">内网渗透篇 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+<hr>
+<h1 id="div-css"><a href="#div-css" class="headerlink" title="div css"></a>div css</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>层叠样式表(英文全称：Cascading Style Sheets)是一种用来表现HTML（标准通用标记语言的一个应用）或XML（标准通用标记语言的一个子集）等文件样式的计算机语言。CSS不仅可以静态地修饰网页，还可以配合各种脚本语言动态地对网页各元素进行格式化。</p>
+<p>CSS 能够对网页中元素位置的排版进行像素级精确控制，支持几乎所有的字体字号样式，拥有对网页对象和模型样式编辑的能力。</p>
+<p>DIV是html的一个标签 css是一个样式表</p>
+<h2 id="样式表类型"><a href="#样式表类型" class="headerlink" title="样式表类型"></a>样式表类型</h2><h3 id="嵌入式样式表"><a href="#嵌入式样式表" class="headerlink" title="嵌入式样式表"></a>嵌入式样式表</h3><pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;title&gt;&lt;/title&gt;
+        &lt;style&gt;
+            .demo01&#123;
+                color: mediumvioletred;
+                width: 1000px;
+                height: 500px;
+                background: salmon;
+            &#125;
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div class=&quot;demo01&quot;&gt;
+            人生若只如初见，何事秋风悲画扇
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220325210711988.png" alt="image-20220325210711988"></p>
+<h3 id="外部样式"><a href="#外部样式" class="headerlink" title="外部样式"></a>外部样式</h3><pre><code class="html">&lt;link rel=&quot;stylesheet&quot; href=&quot;css/style.css&quot;/&gt;
+
+@import url
+@import url(&quot;g.css&quot;);
+.demo1&#123;
+                color: red;
+                width: 100px;
+                height: 100px;
+                background: blue;
+            &#125;
+</code></pre>
+<p><strong>1、link直接引用</strong></p>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220325211849732.png" alt="image-20220325211849732"></p>
+<p><strong>2、在外部再引用外部</strong></p>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220325212537499.png" alt="image-20220325212537499"></p>
+<img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220325212557848.png" alt="image-20220325212557848" style="zoom:50%;">
+
+<h3 id="内联样式"><a href="#内联样式" class="headerlink" title="内联样式"></a>内联样式</h3><pre><code class="html">&lt;div style=&quot;color: blue;width: 100px;height: 100px; background: black;&quot;&gt;demo2&lt;/div&gt;
+</code></pre>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220325213538813.png" alt="image-20220325213538813"></p>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><pre><code class="html">/* */ 注释内容
+</code></pre>
+<h2 id="样式选择器"><a href="#样式选择器" class="headerlink" title="样式选择器"></a>样式选择器</h2><pre><code class="html">元素选择器   div&#123;属性:值&#125;
+
+ID选择器  #id&#123;属性:值&#125;
+
+class选择器  .类名&#123;属性:值&#125;
+
+子选择器    元数 空格 元素&#123;属性:值&#125;
+
+后代选择器  元数 &gt; 元数&#123;属性:值&#125;
+
+属性选择器  元素[属性]&#123;&#125;
+
+通配符选择器  *&#123;属性:值&#125;
+
+群组选择器  把相同的元素写在一起
+</code></pre>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220325220117278.png" alt="image-20220325220117278"></p>
+<p><strong>通配符选择器示意</strong></p>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220325220708388.png" alt="image-20220325220708388"></p>
+<p><strong>群组选择器</strong></p>
+<p>把相同的元素写在一起，减少重复代码</p>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220325221110722.png" alt="image-20220325221110722"></p>
+<p><strong>子选择器/后代选择器</strong></p>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220325222155359.png" alt="image-20220325222155359"></p>
+<h2 id="背景和边框"><a href="#背景和边框" class="headerlink" title="背景和边框"></a>背景和边框</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>background-color   规定要使用的背景颜色。</p>
+<p>background-position    规定背景图像的位置。    </p>
+<p>background-size     规定背景图片的尺寸。    </p>
+<p>background-repeat  规定如何重复背景图像。  </p>
+<pre><code>repeat  默认。背景图像将在垂直方向和水平方向重复。
+
+repeat-x 背景图像将在水平方向重复。
+
+repeat-y 背景图像将在垂直方向重复。
+
+no-repeat   背景图像将仅显示一次。
+
+inherit  规定应该从父元素继承 background-repeat 属性的设置。
+</code></pre>
+<p>background-origin  规定背景图片的定位区域。    </p>
+<p>background-clip     规定背景的绘制区域。    </p>
+<p>background-attachment  规定背景图像是否固定或者随着页面的其余部分滚动。    </p>
+<pre><code class="html">背景图片的滚动
+
+背景图片是否随着内容的滚动而滚动由background-attachment设置
+
+background-attachment:fixed; 固定，不随内容的滚动而滚动
+
+background-attachment:scroll; 滚动，随内容的滚动而滚动
+</code></pre>
+<p>background-image  规定要使用的背景图像。</p>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220325224711431.png" alt="image-20220325224711431"></p>
+<p>上述body可直接简写为</p>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220325224906687.png" alt="image-20220325224906687"></p>
+<p>inherit  规定应该从父元素继承 background 属性的设置。  </p>
+<p>left top</p>
+<p>left center</p>
+<p>left bottom</p>
+<p>right top</p>
+<p>right center</p>
+<p>right bottom</p>
+<p>center top</p>
+<p>center center</p>
+<p>center bottom</p>
+<h3 id="边框"><a href="#边框" class="headerlink" title="边框"></a>边框</h3><p>边框颜色 border-color:#000</p>
+<p>边框宽度 border-width:1px;</p>
+<p>border-left 设置左边框，一般单独设置左边框样式使用</p>
+<p>border-right 设置右边框，一般单独设置右边框样式使用</p>
+<p>border-top 设置上边框，一般单独设置上边框样式使用</p>
+<p>border-bottom 设置下边框，一般单独设置下边框样式使用,有时可将下边框样式作为css下划线效果应用。</p>
+<p><strong>边框样式值如下：</strong></p>
+<p>none : 　无边框。与任何指定的border-width值无关</p>
+<p>hidden : 　隐藏边框。IE不支持</p>
+<p>dotted : 　在MAC平台上IE4+与WINDOWS和UNIX平台上IE5.5+为点线。否则为实线（常用）</p>
+<p>dashed : 　在MAC平台上IE4+与WINDOWS和UNIX平台上IE5.5+为虚线。否则为实线（常用）</p>
+<p>solid : 　实线边框（常用）</p>
+<p>double : 　双线边框。两条单线与其间隔的和等于指定的border-width值</p>
+<p><strong>上 右 下左：</strong></p>
+<p>groove : 　根据border-color的值画3D凹槽</p>
+<p>ridge : 　根据border-color的值画菱形边框</p>
+<p>inset : 　根据border-color的值画3D凹边</p>
+<p>outset : 　根据border-color的值画3D凸边</p>
+<p><strong>上 右 下左 简写：</strong></p>
+<p>border:5px solid red;</p>
+<p> <img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220325231755509.png" alt="image-20220325231755509"></p>
+<h2 id="文字属性"><a href="#文字属性" class="headerlink" title="文字属性"></a>文字属性</h2><p>color:red; 文字颜色 #ffeeees</p>
+<p>font-size:12px; 文字大小</p>
+<p>font-weight:bolds 文字粗细(bold/normal)</p>
+<p>font-family:”宋体”文字字体</p>
+<p>font-variant:small-caps小写字母以大写字母显示</p>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220326001639314.png" alt="image-20220326001639314"></p>
+<h2 id="文本属性-1"><a href="#文本属性-1" class="headerlink" title="文本属性"></a>文本属性</h2><p>text-align:center; 文本对齐(right/left/center)</p>
+<p>line-height:10px; 行间距(可通过它实现文本的垂直居中)</p>
+<p>text-indent:20px; 首行缩进</p>
+<p>text-decoration:none;</p>
+<p>文本线(none/underline/overline/line-through) underline/overline/line-through; 定义文本上的下划线/上划线/中划线</p>
+<p>letter-spacing: 字间距</p>
+<p>文本域示例:</p>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220326004753645.png" alt="image-20220326004753645"></p>
+<h2 id="列表-1"><a href="#列表-1" class="headerlink" title="列表"></a>列表</h2><p>list-style-type   设置列表项标记的类型。参阅：list-style-type 中可能的值。</p>
+<p>list-style-image 使用图像来替换列表项的标记。参阅：list-style-image 中可能的值。</p>
+<p>inherit  规定应该从父元素继承 list-style 属性的值</p>
+<pre><code>取值:
+​    disc: 点
+
+​    circle: 圆圈
+
+​    square: 正方形
+
+​    decimal: 数字
+
+​    decimal-leading-zero: 十进制数，不足两位的补齐前导0，例如: 01, 02, 03, ..., 98, 99
+
+​    lower-roman: 小写罗马文字，例如: i, ii, iii, iv, v, ...
+
+​    upper-roman: 大写罗马文字，例如: I, II, III, IV, V, ...
+
+​    lower-greek: 小写希腊字母，例如: α(alpha), β(beta), γ(gamma), ...
+
+​    lower-latin: 小写拉丁文，例如: a, b, c, ... z
+
+​    upper-latin: 大写拉丁文，例如: A, B, C, ... Z
+
+​    armenian: 亚美尼亚数字
+
+​    georgian: 乔治亚数字，例如: an, ban, gan, ..., he, tan, in, in-an, ...
+
+​    lower-alpha: 小写拉丁文，例如: a, b, c, ... z
+
+​    upper-alpha: 大写拉丁文，例如: A, B, C, ... Z
+
+​    none: 无(取消所有的list样式)
+
+​    inherit:继承
+</code></pre>
+<p>list-style-position   设置在何处放置列表项标记。参阅：list-style-position 中可能的值。</p>
+<pre><code>inside
+列表项目标记放置在文本以内，且环绕文本根据标记对齐。
+outside
+默认值。保持标记位于文本的左侧。列表项目标记放置在文本以外，且环绕文本不根据标记对齐。
+简写
+list-style:square inside url(&#39;/i/arrow.gif&#39;);
+</code></pre>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220326011302577.png" alt="image-20220326011302577"></p>
+<h2 id="超链接"><a href="#超链接" class="headerlink" title="超链接"></a>超链接</h2><pre><code>a&#123;text-decoration: none;&#125;
+a:link &#123;color:#FF0000;&#125; /* 未访问的链接 */
+a:visited &#123;color:#00FF00;&#125; /* 已访问的链接 */
+a:hover &#123;color:#FF00FF;&#125; /* 鼠标划过链接 */
+a:active &#123;color:#0000FF;&#125; /* 已选中的链接 */
+</code></pre>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220326012956179.png" alt="image-20220326012956179"></p>
+<h2 id="盒子模型"><a href="#盒子模型" class="headerlink" title="盒子模型"></a>盒子模型</h2><p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220326171556178.png" alt="image-20220326171556178"></p>
+<p>盒子模型的组成部分：</p>
+<p>外边距（margin）、边框（border）、内边距（padding）、内容（content）四个属性</p>
+<p>自身的身高:width height </p>
+<p>内边距: padding</p>
+<p>盒子边框:border</p>
+<p>与其他盒子的距离 margin 外边距</p>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220326172438006.png" alt="image-20220326172438006"></p>
+<h2 id="border边框"><a href="#border边框" class="headerlink" title="border边框"></a>border边框</h2><p>常见的写法 border:1px solid #foo;</p>
+<p>单独属性:</p>
+<p>border-widh:</p>
+<p>border-style:</p>
+<pre><code>dotted 点状虚线
+
+dashed（虚线）
+
+solid（实线）
+
+double（双实线）
+
+border-color(颜色)
+</code></pre>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220326173422032.png" alt="image-20220326173422032"></p>
+<h2 id="margin-padding"><a href="#margin-padding" class="headerlink" title="margin padding"></a>margin padding</h2><p>padding:内边距</p>
+<p>值：像素/厘米等长度单位、百分比</p>
+<p>padding:10px; 上下左右</p>
+<p>padding:10px 10px; 上下 左右</p>
+<p>padding:10px 10px 10px; 上 左右 下</p>
+<p>padding:10px 10px 10px 10px; 上 右 下 左（设置4个点–&gt;顺时针方向）</p>
+<p>单独属性</p>
+<p>padding-top:</p>
+<p>padding-right:</p>
+<p>padding-bottom:</p>
+<p>padding-left:</p>
+<p>当设置内边距的时候会把盒子撑大，为了保持盒子原来的大小，应该高度和宽度进行减小，根据width和height减小</p>
+<p>margin 外边距值：与padding相同</p>
+<p> 单独属性：与padding相同 </p>
+<p>外边距合并：两个盒子同时设置了外边距，会进行一个外边距合并 </p>
+<p>margin</p>
+<p>margin:10px 上下左右都会腾出10px出来</p>
+<p>margin:0px auto; 居中</p>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220326175233023.png" alt="image-20220326175233023"></p>
+<p><strong>让div和内容居中</strong></p>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220326180736898.png" alt="image-20220326180736898"></p>
+<h2 id="float-脱离文档流浮动"><a href="#float-脱离文档流浮动" class="headerlink" title="float 脱离文档流浮动"></a>float 脱离文档流浮动</h2><p>left 元素向左浮动。</p>
+<p>right 元素向右浮动</p>
+<p>清除浮动:</p>
+<pre><code>clear: both;
+
+left
+
+right
+</code></pre>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220326210210962.png" alt="image-20220326210210962"></p>
+<h2 id="块级元素行内元素"><a href="#块级元素行内元素" class="headerlink" title="块级元素行内元素"></a>块级元素行内元素</h2><p><strong>块级元素</strong></p>
+<p>他会独占一行，在默认情况下，其宽度自动填满其父元素的宽度；</p>
+<p>块级元素可以设置width、height属性；</p>
+<p>块级元素即使设置了宽度也是独占一行，块级元素可以设置margin、padding属性</p>
+<p><strong>行内元素</strong></p>
+<p>行内元素不会独占一行，相邻的行内元素会排列在同一行里，直到行排不下，就自动换行，其宽度随内容而变化；</p>
+<p>行内元素的width、height属性则无效；</p>
+<p>行内元素的margin、padding属性很奇怪，水平方向的padding-left、padding-rigtht、margin-left、padding-right都会产生边距效果，但是竖直方向的padding-top、padding-bottom、margin-top、margin-bottom却不产生边距效果。</p>
+<p><strong>块级元素(block element)</strong></p>
+<pre><code>address 地址
+
+center 举中对齐块
+
+div- 常用块级容易
+
+dl 定义列表
+
+form 交互表单 （只能用来容纳其它块元素）
+
+h标签
+
+hr 水平分隔线
+
+ol 无需列表
+
+ul有序列表
+
+p 段落
+
+pre 格式化文本
+</code></pre>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220326211940013.png" alt="image-20220326211940013"></p>
+<p><strong>行内元素转换</strong></p>
+<pre><code>display:none; 不显示
+
+display:block;变成块级元素
+
+display:inline; 变成行内元素
+
+display:inline-block;以块级元素样式展示，以行级元素样式排列
+</code></pre>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220326212608009.png" alt="image-20220326212608009"></p>
+<p>两个块级元素此时在同一行了</p>
+<p><strong>行内元素溢出处理</strong></p>
+<pre><code>overflow 属性规定当内容溢出元素框时发生的事情：
+visible    默认值。内容不会被修剪，会呈现在元素框之外。
+hidden    内容会被修剪，并且其余内容是不可见的。
+scroll    内容会被修剪，但是浏览器会显示滚动条以便查看其余的内容。
+auto    如果内容被修剪，则浏览器会显示滚动条以便查看其余的内容。
+inherit    规定应该从父元素继承 overflow 属性的值。
+</code></pre>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220326214145022.png" alt="image-20220326214145022"></p>
+<p>我们可以看到此时元素超出的边框</p>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220326214302027.png" alt="image-20220326214302027"></p>
+<p>添加overflow后会增加一个拖动条</p>
+<h2 id="定位"><a href="#定位" class="headerlink" title="定位"></a>定位</h2><pre><code>position
+static静态定位（不对它的位置进行改变，在哪里就在那里）
+默认值。没有定位，元素出现在正常的流中（忽略 top,bottom, left, right 或者z-index 声明）。
+fixed固定定位（参照物--浏览器窗口）---做 弹窗广告用到
+生成固定定位的元素，相对于浏览器窗口进行定位。 元素的位置通过 &quot;left&quot;, &quot;top&quot;, &quot;right&quot;以及 &quot;bottom&quot;属性进行规定。
+relative（相对定位 ）（参照物以他本身）
+生成相对定位的元素，相对于其正常位置进行定位。
+absolute（绝对定位）(除了static都可以，找到参照物--&gt;与它最近的已经有定位的父元素进行定位)
+生成绝对定位的元素，相对于 static 定位以外的第一个父元素进行定位。
+元素的位置通过 &quot;left&quot;, &quot;top&quot;, &quot;right&quot; 以及 &quot;bottom&quot; 属性进行规定
+z-index
+z-index 属性设置元素的堆叠顺序。拥有更高堆叠顺序的元素总是会处于堆叠顺序较低的元素的前面。
+定位的基本思想: 它允许你定义元素框相对于其正常位置应该出现的位置，或者相对于父元素、另一个元素甚至浏览器窗口本身的位置。
+</code></pre>
+<p><img src="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20220327005012845.png" alt="image-20220327005012845"></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/03/24/html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">https://sakurahack-y.github.io/2022/03/24/html学习笔记/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/html/">html</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84HTML%E9%A1%B5%E9%9D%A2%E6%9E%B6%E6%9E%84"><span class="toc-number">1.</span> <span class="toc-text">简单的HTML页面架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HTML%E5%B8%B8%E8%A7%81%E6%A0%87%E7%AD%BE"><span class="toc-number">2.</span> <span class="toc-text">HTML常见标签</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#meta%E6%A0%87%E7%AD%BE"><span class="toc-number">2.1.</span> <span class="toc-text">meta标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E9%A2%98%E6%A0%87%E7%AD%BE"><span class="toc-number">2.2.</span> <span class="toc-text">标题标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E5%B1%9E%E6%80%A7"><span class="toc-number">2.3.</span> <span class="toc-text">文本属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#form%E8%A1%A8%E5%8D%95"><span class="toc-number">2.4.</span> <span class="toc-text">form表单</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#a%E6%A0%87%E7%AD%BE%E3%80%81img%E6%A0%87%E7%AD%BE%E3%80%81table%E6%A0%87%E7%AD%BE"><span class="toc-number">2.5.</span> <span class="toc-text">a标签、img标签、table标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%9A%E6%96%87%E6%9C%AC"><span class="toc-number">2.6.</span> <span class="toc-text">锚文本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#img%E6%A0%87%E7%AD%BE"><span class="toc-number">2.7.</span> <span class="toc-text">img标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#table%E8%A1%A8%E6%A0%BC"><span class="toc-number">2.8.</span> <span class="toc-text">table表格</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%97%E8%A1%A8"><span class="toc-number">2.9.</span> <span class="toc-text">列表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E5%BA%8F%E5%88%97%E8%A1%A8"><span class="toc-number">2.9.1.</span> <span class="toc-text">无序列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E5%BA%8F%E5%88%97%E8%A1%A8"><span class="toc-number">2.9.2.</span> <span class="toc-text">有序列表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%86%E6%9E%B6%E4%BD%BF%E7%94%A8"><span class="toc-number">2.10.</span> <span class="toc-text">框架使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#div-css"><span class="toc-number">3.</span> <span class="toc-text">div css</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">3.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B7%E5%BC%8F%E8%A1%A8%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.2.</span> <span class="toc-text">样式表类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B5%8C%E5%85%A5%E5%BC%8F%E6%A0%B7%E5%BC%8F%E8%A1%A8"><span class="toc-number">3.2.1.</span> <span class="toc-text">嵌入式样式表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%96%E9%83%A8%E6%A0%B7%E5%BC%8F"><span class="toc-number">3.2.2.</span> <span class="toc-text">外部样式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E8%81%94%E6%A0%B7%E5%BC%8F"><span class="toc-number">3.2.3.</span> <span class="toc-text">内联样式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E9%87%8A"><span class="toc-number">3.3.</span> <span class="toc-text">注释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B7%E5%BC%8F%E9%80%89%E6%8B%A9%E5%99%A8"><span class="toc-number">3.4.</span> <span class="toc-text">样式选择器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF%E5%92%8C%E8%BE%B9%E6%A1%86"><span class="toc-number">3.5.</span> <span class="toc-text">背景和边框</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">3.5.1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%B9%E6%A1%86"><span class="toc-number">3.5.2.</span> <span class="toc-text">边框</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E5%AD%97%E5%B1%9E%E6%80%A7"><span class="toc-number">3.6.</span> <span class="toc-text">文字属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E5%B1%9E%E6%80%A7-1"><span class="toc-number">3.7.</span> <span class="toc-text">文本属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%97%E8%A1%A8-1"><span class="toc-number">3.8.</span> <span class="toc-text">列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B6%85%E9%93%BE%E6%8E%A5"><span class="toc-number">3.9.</span> <span class="toc-text">超链接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%92%E5%AD%90%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.10.</span> <span class="toc-text">盒子模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#border%E8%BE%B9%E6%A1%86"><span class="toc-number">3.11.</span> <span class="toc-text">border边框</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#margin-padding"><span class="toc-number">3.12.</span> <span class="toc-text">margin padding</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#float-%E8%84%B1%E7%A6%BB%E6%96%87%E6%A1%A3%E6%B5%81%E6%B5%AE%E5%8A%A8"><span class="toc-number">3.13.</span> <span class="toc-text">float 脱离文档流浮动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9D%97%E7%BA%A7%E5%85%83%E7%B4%A0%E8%A1%8C%E5%86%85%E5%85%83%E7%B4%A0"><span class="toc-number">3.14.</span> <span class="toc-text">块级元素行内元素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%BD%8D"><span class="toc-number">3.15.</span> <span class="toc-text">定位</span></a></li></ol></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/03/18/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E7%AF%87/">内网渗透篇 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
 .night .v[data-class=v] a:hover { color: #216C73 !important; }
 .night .v[data-class=v] li { list-style: inherit; }
 .night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
