@@ -1,0 +1,171 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>浅学javascript | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">浅学javascript</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/">2022-04-07</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/%E8%AF%AD%E8%A8%80/">语言</a>&nbsp;&bull;&nbsp;<a href="/categories/%E8%AF%AD%E8%A8%80/javascript/">javascript</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>该来的永远跑不掉，该补的早晚要补，诶，好好学javascript，我爱学习！！！！！</p>
+<p>[TOC]</p>
+<h1 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h1><p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407213804320.png" alt="image-20220407213804320"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407213723069.png" alt="image-20220407213723069"></p>
+<h1 id="javascript的组成部分"><a href="#javascript的组成部分" class="headerlink" title="javascript的组成部分"></a>javascript的组成部分</h1><p>html是骨架，css是对页面进行渲染，js绝对这个页面可以做什么</p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407213908008.png" alt="image-20220407213908008"></p>
+<p>javascript由BOM,DMO,ECMAScript组成 </p>
+<p><strong>BOM</strong></p>
+<p>全名-Browser Object Model,指的是js操作浏览器发送变化的属性和方法</p>
+<p><strong>DOM</strong></p>
+<p>全名-Document Object Model,指的是操作文档流发生变化的属性和方法</p>
+<p><strong>ECMAScript</strong></p>
+<p>指的是JS代码的书写语法和书写规则</p>
+<h1 id="JavaScript-书写位置"><a href="#JavaScript-书写位置" class="headerlink" title="JavaScript 书写位置"></a>JavaScript 书写位置</h1><p><strong>行内式</strong></p>
+<p>a标签-书写在href属性上</p>
+<pre><code class="javascript">&lt;a href=&quot;javascript: JS代码;&quot;&gt;点我一下&lt;/a&gt;
+</code></pre>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407215348244.png" alt="image-20220407215348244"></p>
+<p>非a标签-书写在行为属性上</p>
+<pre><code class="javascript">&lt;div onclick=&quot;alert(&#39;hello word&#39;)&quot;&gt;点我一下&lt;/div&gt;
+</code></pre>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407215601888.png" alt="image-20220407215601888"></p>
+<p><strong>内嵌式</strong></p>
+<p>把代码书写在一个script标签对里面,不需要依赖任何行为，打开网页就会执行</p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407215824582.png" alt="image-20220407215824582"></p>
+<p><strong>外链式</strong></p>
+<p>把代码书写在一个.js文件内，外链式js代码，不需要依赖任何行为，打开页面就会执行</p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407220351326.png" alt="image-20220407220351326"></p>
+<h1 id="JavaScript定义变量"><a href="#JavaScript定义变量" class="headerlink" title="JavaScript定义变量"></a>JavaScript定义变量</h1><pre><code class="javascript">var num = 100
+</code></pre>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407220943173.png" alt="image-20220407220943173"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407220903524.png" alt="image-20220407220903524"></p>
+<h1 id="三种输出方式"><a href="#三种输出方式" class="headerlink" title="三种输出方式"></a>三种输出方式</h1><p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407221044266.png" alt="image-20220407221044266"></p>
+<h1 id="JS的数据类型"><a href="#JS的数据类型" class="headerlink" title="JS的数据类型"></a>JS的数据类型</h1><p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407221242187.png" alt="image-20220407221242187"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407221932277.png" alt="image-20220407221932277"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407221440539.png" alt="image-20220407221440539"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407221511452.png" alt="image-20220407221511452"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407221817260.png" alt="image-20220407221817260"></p>
+<h1 id="JavaScript数据类型转换"><a href="#JavaScript数据类型转换" class="headerlink" title="JavaScript数据类型转换"></a>JavaScript数据类型转换</h1><p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407222131138.png" alt="image-20220407222131138"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407222415779.png" alt="image-20220407222415779"></p>
+<p>当可以合法转换就正常转换，当无法合法转换时，值就变为NAN</p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407230433762.png" alt="image-20220407230433762"></p>
+<p>当可以合法转换就正常转换，当无法合法转换时，如果原值以字母，则返回值为NAN，如果原值以数字+字符串开头，则返回前面的数字而忽略字符串</p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407222543001.png" alt="image-20220407222543001"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407222630874.png" alt="image-20220407222630874"></p>
+<h1 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h1><p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407230952623.png" alt="image-20220407230952623"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407231034790.png" alt="image-20220407231034790"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407231109372.png" alt="image-20220407231109372"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407231129915.png" alt="image-20220407231129915"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407231232353.png" alt="image-20220407231232353"></p>
+<h1 id="条件分支语句"><a href="#条件分支语句" class="headerlink" title="条件分支语句"></a>条件分支语句</h1><p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407231403054.png" alt="image-20220407231403054"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407231436373.png" alt="image-20220407231436373"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407231551013.png" alt="image-20220407231551013"></p>
+<h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407232532028.png" alt="image-20220407232532028"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407232436701.png" alt="image-20220407232436701"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407232646209.png" alt="image-20220407232646209"></p>
+<h1 id="递归函数"><a href="#递归函数" class="headerlink" title="递归函数"></a>递归函数</h1><p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407232807115.png" alt="image-20220407232807115"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407232828922.png" alt="image-20220407232828922"></p>
+<h1 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h1><p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407232920259.png" alt="image-20220407232920259"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407233013700.png" alt="image-20220407233013700"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407233022496.png" alt="image-20220407233022496"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407233059818.png" alt="image-20220407233059818"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407233136738.png" alt="image-20220407233136738"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407233201625.png" alt="image-20220407233201625"></p>
+<h1 id="对象数据类型"><a href="#对象数据类型" class="headerlink" title="对象数据类型"></a>对象数据类型</h1><p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407233307155.png" alt="image-20220407233307155"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407233549115.png" alt="image-20220407233549115"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407233644769.png" alt="image-20220407233644769"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407233455066.png" alt="image-20220407233455066"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407233504184.png" alt="image-20220407233504184"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407233523944.png" alt="image-20220407233523944"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407233615368.png" alt="image-20220407233615368"></p>
+<h1 id="数组数据类型"><a href="#数组数据类型" class="headerlink" title="数组数据类型"></a>数组数据类型</h1><p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407233743737.png" alt="image-20220407233743737"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407233840225.png" alt="image-20220407233840225"></p>
+<h1 id="数组常用方法"><a href="#数组常用方法" class="headerlink" title="数组常用方法"></a>数组常用方法</h1><p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408000927943.png" alt="image-20220408000927943"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407234008850.png" alt="image-20220407234008850"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407234023183.png" alt="image-20220407234023183"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407234038569.png" alt="image-20220407234038569"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407234054841.png" alt="image-20220407234054841"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407234110601.png" alt="image-20220407234110601"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407234132600.png" alt="image-20220407234132600"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407234420968.png" alt="image-20220407234420968"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407234514112.png" alt="image-20220407234514112"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407234540680.png" alt="image-20220407234540680"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407234754392.png" alt="image-20220407234754392"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220407234822279.png" alt="image-20220407234822279"></p>
+<p>包前不包后</p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408000322543.png" alt="image-20220408000322543"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408000514401.png" alt="image-20220408000514401"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408000635298.png" alt="image-20220408000635298"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408000653869.png" alt="image-20220408000653869"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408000714136.png" alt="image-20220408000714136"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408000753278.png" alt="image-20220408000753278"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408000801246.png" alt="image-20220408000801246"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408001013869.png" alt="image-20220408001013869"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408001035076.png" alt="image-20220408001035076"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408000830365.png" alt="image-20220408000830365"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408000847454.png" alt="image-20220408000847454"></p>
+<h1 id="字符串常用方法"><a href="#字符串常用方法" class="headerlink" title="字符串常用方法"></a>字符串常用方法</h1><p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408001751547.png" alt="image-20220408001751547"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408001220640.png" alt="image-20220408001220640"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408001232044.png" alt="image-20220408001232044"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408001300510.png" alt="image-20220408001300510"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408001325030.png" alt="image-20220408001325030"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408001357820.png" alt="image-20220408001357820"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408001425680.png" alt="image-20220408001425680"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408001432558.png" alt="image-20220408001432558"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408001456688.png" alt="image-20220408001456688"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408001513319.png" alt="image-20220408001513319"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408001558293.png" alt="image-20220408001558293"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408001728712.png" alt="image-20220408001728712"></p>
+<h1 id="数字常用方法"><a href="#数字常用方法" class="headerlink" title="数字常用方法"></a>数字常用方法</h1><p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408002711294.png" alt="image-20220408002711294"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408001857190.png" alt="image-20220408001857190"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408001921068.png" alt="image-20220408001921068"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408001959789.png" alt="image-20220408001959789"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408002017326.png" alt="image-20220408002017326"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408002033918.png" alt="image-20220408002033918"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408002053540.png" alt="image-20220408002053540"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408002112036.png" alt="image-20220408002112036"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408002122229.png" alt="image-20220408002122229"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408002133196.png" alt="image-20220408002133196"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408002147147.png" alt="image-20220408002147147"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408002152859.png" alt="image-20220408002152859"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408002208364.png" alt="image-20220408002208364"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408002217762.png" alt="image-20220408002217762"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408002233052.png" alt="image-20220408002233052"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408002257196.png" alt="image-20220408002257196"></p>
+<h1 id="时间常用方法"><a href="#时间常用方法" class="headerlink" title="时间常用方法"></a>时间常用方法</h1><p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408002836962.png" alt="image-20220408002836962"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408002855807.png" alt="image-20220408002855807"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408003002403.png" alt="image-20220408003002403"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408003019626.png" alt="image-20220408003019626"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220408003107445.png" alt="image-20220408003107445"></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/">https://sakurahack-y.github.io/2022/04/07/浅学javascript/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/javascript/">javascript</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2"><span class="toc-number">1.</span> <span class="toc-text">历史</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#javascript%E7%9A%84%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86"><span class="toc-number">2.</span> <span class="toc-text">javascript的组成部分</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JavaScript-%E4%B9%A6%E5%86%99%E4%BD%8D%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">JavaScript 书写位置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JavaScript%E5%AE%9A%E4%B9%89%E5%8F%98%E9%87%8F"><span class="toc-number">4.</span> <span class="toc-text">JavaScript定义变量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E8%BE%93%E5%87%BA%E6%96%B9%E5%BC%8F"><span class="toc-number">5.</span> <span class="toc-text">三种输出方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JS%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">6.</span> <span class="toc-text">JS的数据类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JavaScript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-number">7.</span> <span class="toc-text">JavaScript数据类型转换</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">8.</span> <span class="toc-text">运算符</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF%E8%AF%AD%E5%8F%A5"><span class="toc-number">9.</span> <span class="toc-text">条件分支语句</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%87%BD%E6%95%B0"><span class="toc-number">10.</span> <span class="toc-text">函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0"><span class="toc-number">11.</span> <span class="toc-text">递归函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">12.</span> <span class="toc-text">作用域</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">13.</span> <span class="toc-text">对象数据类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">14.</span> <span class="toc-text">数组数据类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">15.</span> <span class="toc-text">数组常用方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">16.</span> <span class="toc-text">字符串常用方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E5%AD%97%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">17.</span> <span class="toc-text">数字常用方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">18.</span> <span class="toc-text">时间常用方法</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/03/28/ctf%E5%88%B7%E9%A2%98-%E7%AC%AC%E4%B8%80%E5%91%A8%E9%A2%98%E7%9B%AE/">ctf刷题-第一周题目 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
