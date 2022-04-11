@@ -198,7 +198,153 @@ document.body.scrollleft #当没有&lt;!DOCTYPE html&gt;用这个
 </code></pre>
 <p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220410164500900.png" alt="image-20220410164500900"></p>
 <p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220410164841389.png" alt="image-20220410164841389"></p>
-</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/">https://sakurahack-y.github.io/2022/04/07/浅学javascript/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/javascript/">javascript</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2"><span class="toc-number">1.</span> <span class="toc-text">历史</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#javascript%E7%9A%84%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86"><span class="toc-number">2.</span> <span class="toc-text">javascript的组成部分</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JavaScript-%E4%B9%A6%E5%86%99%E4%BD%8D%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">JavaScript 书写位置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JavaScript%E5%AE%9A%E4%B9%89%E5%8F%98%E9%87%8F"><span class="toc-number">4.</span> <span class="toc-text">JavaScript定义变量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E8%BE%93%E5%87%BA%E6%96%B9%E5%BC%8F"><span class="toc-number">5.</span> <span class="toc-text">三种输出方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JS%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">6.</span> <span class="toc-text">JS的数据类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JavaScript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-number">7.</span> <span class="toc-text">JavaScript数据类型转换</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">8.</span> <span class="toc-text">运算符</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF%E8%AF%AD%E5%8F%A5"><span class="toc-number">9.</span> <span class="toc-text">条件分支语句</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%87%BD%E6%95%B0"><span class="toc-number">10.</span> <span class="toc-text">函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0"><span class="toc-number">11.</span> <span class="toc-text">递归函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">12.</span> <span class="toc-text">作用域</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">13.</span> <span class="toc-text">对象数据类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">14.</span> <span class="toc-text">数组数据类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">15.</span> <span class="toc-text">数组常用方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">16.</span> <span class="toc-text">字符串常用方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E5%AD%97%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">17.</span> <span class="toc-text">数字常用方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">18.</span> <span class="toc-text">时间常用方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JavaScript%E7%9A%84BOM%E6%93%8D%E4%BD%9C"><span class="toc-number">19.</span> <span class="toc-text">JavaScript的BOM操作</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="prev" href="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/">&lt; 无参数rec</a><a class="next" href="/2022/03/28/ctf%E5%88%B7%E9%A2%98-%E7%AC%AC%E4%B8%80%E5%91%A8%E9%A2%98%E7%9B%AE/">ctf刷题-第一周题目 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+<h1 id="JavaScript定时器"><a href="#JavaScript定时器" class="headerlink" title="JavaScript定时器"></a>JavaScript定时器</h1><p><strong>间隔定时器</strong></p>
+<pre><code>按照指定周期(毫秒)去执行指定的代码
+语法: setInterval(函数,时间)
+函数: 每次要执行的内容
+时间: 单位是毫秒
+</code></pre>
+<p>示例代码</p>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;title&gt;sakura&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;script&gt;
+            setInterval(function()&#123;
+                console.log(&#39;执行一次&#39;)
+            &#125;,1000)  # 单位毫秒，这里也就是1秒
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411122709604.png" alt="image-20220411122709604"></p>
+<p>延时定时器</p>
+<pre><code>在固定的时间(毫秒)后指定一次代码
+语法: setTimeout(函数,时间)
+函数: 时间到达执行的内容
+时间: 单位是毫秒
+</code></pre>
+<p>示例代码</p>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;title&gt;sakura&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;script&gt;
+            setTimeout(function()&#123;
+                console.log(&#39;执行一次&#39;)
+            &#125;,1000)
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411122948862.png" alt="image-20220411122948862"></p>
+<p><strong>定时器返回值</strong></p>
+<pre><code>不区分定时器种类
+表示是当前页面的第几个定时器
+</code></pre>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411123144526.png" alt="image-20220411123144526"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411123157829.png" alt="image-20220411123157829"></p>
+<p>是不区分种类的，只表示是页面第几个定时器</p>
+<p><strong>关闭定时器</strong></p>
+<pre><code>语法一: clearInterval(要关闭的定时器返回值)
+语法二: clearTimeout(要关闭的定时器返回值)
+这是不区分定时器种类的可以互相关闭
+</code></pre>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411135402168.png" alt="image-20220411135402168"></p>
+<h1 id="DOM基本操作"><a href="#DOM基本操作" class="headerlink" title="DOM基本操作"></a>DOM基本操作</h1><p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411135516647.png" alt="image-20220411135516647"></p>
+<p><strong>获取元素方式</strong></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411135606813.png" alt="image-20220411135606813"></p>
+<ol>
+<li><p>根据id名称获取</p>
+<pre><code>语法: document.getElementById(&#39;id名称&#39;)
+作用: 获取文档流中id名对应的一个元素
+返回值:
+    如果有id对应的元素，就是这个元素
+    如果没有id对应的元素，就是null
+</code></pre>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411140343642.png" alt="image-20220411140343642"></p>
+</li>
+<li><p>根据元素类名获取</p>
+<pre><code>语法: document.getElementsByClassName(&#39;元素类名&#39;)
+作用: 获取文档流中所有类名对应的元素
+返回值: 必定是一个伪数组
+    如果有类名对应的元素，有多少获取多少
+    如果没用类名对应的元素，空的伪数组
+</code></pre>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411141050751.png" alt="image-20220411141050751"></p>
+</li>
+<li><p>根据元素标签名获取</p>
+<pre><code>语法: document.getElementsByTagName(&#39;标签名&#39;)
+作用； 获取文档流中所有标签名对应的元素
+返回值；必然是一个伪数组
+    如果有标签名对应的元素，有多少获取多少
+    如果没用标签名对应的元素，空的伪数组
+</code></pre>
+<p> <img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411141947898.png" alt="image-20220411141947898"></p>
+</li>
+<li><p>根据选择器获取一个</p>
+<pre><code>语法； document.querySelector(&#39;选择器&#39;)
+作用: 获取文档流中满足选择器规则的第一个元素
+返回值:
+    如果有选择器对应的元素，获取到第一个
+    如果没用选择器对应的元素，返回null
+</code></pre>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411142650050.png" alt="image-20220411142650050"></p>
+</li>
+<li><p>根据选择器获取一组</p>
+<pre><code>语法:document.querySelectorAll(&#39;选择器&#39;)
+作用: 获取文档流中所有满足选择器规则的元素
+返回值: 必然是一个伪数组
+    如果有选择器对应的元素，获取到第一个
+    如果没用选择器对应的元素，返回null
+</code></pre>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411143324177.png" alt="image-20220411143324177"></p>
+</li>
+</ol>
+<p><strong>操作元素内容</strong></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411144452327.png" alt="image-20220411144452327"></p>
+<ol>
+<li><p>操作元素文本内容</p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411144426234.png" alt="image-20220411144426234"></p>
+</li>
+<li><p>操作元素超文本内容</p>
+</li>
+</ol>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411144816538.png" alt="image-20220411144816538"></p>
+<p><strong>操作元素属性</strong></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411145038287.png" alt="image-20220411145038287"></p>
+<ol>
+<li><p>原生属性</p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411145906291.png" alt="image-20220411145906291"></p>
+</li>
+<li><p>自定义属性</p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411150625140.png" alt="image-20220411150625140"></p>
+</li>
+</ol>
+<p><strong>操作元素类名</strong></p>
+<pre><code>获取: 元素.className
+设置； 元素.className = &#39;新类名&#39;
+</code></pre>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411151419501.png" alt="image-20220411151419501"></p>
+<p><strong>操作元素行内样式</strong></p>
+<pre><code>获取: 元素.style.样式名
+设置: 元素.style.样式名 = &#39;样式值&#39;
+注意: 只能获取和设置元素的行内样式
+</code></pre>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411152231051.png" alt="image-20220411152231051"></p>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411152308257.png" alt="image-20220411152308257"></p>
+<p><strong>获取元素非行内样式</strong></p>
+<pre><code>获取:window.getComputedStyle(元素).样式名
+注意； 可以获取行内样式，也可以获取非行内样式
+</code></pre>
+<p><img src="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/image-20220411152807202.png" alt="image-20220411152807202"></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/04/07/%E6%B5%85%E5%AD%A6javascript/">https://sakurahack-y.github.io/2022/04/07/浅学javascript/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/javascript/">javascript</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2"><span class="toc-number">1.</span> <span class="toc-text">历史</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#javascript%E7%9A%84%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86"><span class="toc-number">2.</span> <span class="toc-text">javascript的组成部分</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JavaScript-%E4%B9%A6%E5%86%99%E4%BD%8D%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">JavaScript 书写位置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JavaScript%E5%AE%9A%E4%B9%89%E5%8F%98%E9%87%8F"><span class="toc-number">4.</span> <span class="toc-text">JavaScript定义变量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E8%BE%93%E5%87%BA%E6%96%B9%E5%BC%8F"><span class="toc-number">5.</span> <span class="toc-text">三种输出方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JS%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">6.</span> <span class="toc-text">JS的数据类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JavaScript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-number">7.</span> <span class="toc-text">JavaScript数据类型转换</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">8.</span> <span class="toc-text">运算符</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF%E8%AF%AD%E5%8F%A5"><span class="toc-number">9.</span> <span class="toc-text">条件分支语句</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%87%BD%E6%95%B0"><span class="toc-number">10.</span> <span class="toc-text">函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0"><span class="toc-number">11.</span> <span class="toc-text">递归函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">12.</span> <span class="toc-text">作用域</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">13.</span> <span class="toc-text">对象数据类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">14.</span> <span class="toc-text">数组数据类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">15.</span> <span class="toc-text">数组常用方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">16.</span> <span class="toc-text">字符串常用方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E5%AD%97%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">17.</span> <span class="toc-text">数字常用方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">18.</span> <span class="toc-text">时间常用方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JavaScript%E7%9A%84BOM%E6%93%8D%E4%BD%9C"><span class="toc-number">19.</span> <span class="toc-text">JavaScript的BOM操作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JavaScript%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="toc-number">20.</span> <span class="toc-text">JavaScript定时器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DOM%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-number">21.</span> <span class="toc-text">DOM基本操作</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="prev" href="/2022/04/10/%E6%97%A0%E5%8F%82%E6%95%B0rec/">&lt; 无参数rec</a><a class="next" href="/2022/03/28/ctf%E5%88%B7%E9%A2%98-%E7%AC%AC%E4%B8%80%E5%91%A8%E9%A2%98%E7%9B%AE/">ctf刷题-第一周题目 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
 .night .v[data-class=v] a:hover { color: #216C73 !important; }
 .night .v[data-class=v] li { list-style: inherit; }
 .night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }

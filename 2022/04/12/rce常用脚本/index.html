@@ -1,0 +1,199 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>rce常用脚本 | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">rce常用脚本</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/04/12/rce%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/">2022-04-12</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E8%84%9A%E6%9C%AC/">脚本</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>很好用，各种绕过姿势</p>
+<pre><code class="python">from typing import final
+import string
+
+def realHex(num):
+    if num &lt;16:
+        return &quot;%0&quot;+hex(num)[2:]
+    else:
+        return &#39;%&#39;+hex(num)[2:]
+pattern=input(&quot;请输入正则过滤式,没有则直接回车跳过\n&quot;)
+#正则表达式修饰符re.I大小写不敏感,re.M多行匹配,影响^和$,re.S使得.匹配包括换行在内的所有字符,re.U根据Unicode字符集解析字符,影响\w,\W,\b,\B
+#建议回车跳过,这个功能很逊
+if pattern != &quot;&quot;:
+    import re
+    blacklist=[&quot;`&quot;,&quot;&#39;&quot;,&#39;&quot;&#39;,&quot;\\&quot;]
+    for i in range(32,255):
+        if  re.search(pattern,chr(i),re.I):
+            blacklist.append(chr(i))
+else:
+    #blacklist列表中的字符在生成的拼接字符串中不会被使用,除了部分是被过滤掉的字符，其余的如&#39;,&quot;等字符考虑可能会导致闭合等问题暂列入
+    #如果有其他的要求可以对blacklist列表进行删改
+    #!注意对于|和&amp;来说拼凑字符是相当困难的,并且可用范围实际上是31-255,这就导致了要这样用必须引号包裹,否则大概率GG
+    #比如&#123;,&#125;,;,|,&amp;,$等诸多符号不带引号会导致无法使用
+    blacklist=[]
+    for word in string.ascii_letters+string.digits:
+        blacklist.append(word)
+    blacklist+=[&quot; &quot;,&quot;^&quot;,&quot;~&quot;,&quot;|&quot;,&quot;&#39;&quot;,&#39;&quot;&#39;,&quot;\\&quot;]
+#print(blacklist)
+#不同于取反,一个目标字符串使用异或的方式可以获大量的可用拼接字符串,这里只取了1种组合的拼接字符串
+#如果需要获得更多拼接字符串查看该函数中的result列表
+
+def yiHuo(string):
+    global operationEffient
+    global blacklist
+    operationEffient=False
+    result=[]
+    finalstr=&#39;&quot;&quot;^&quot;&quot;&#39;
+    rawstr=string
+    for i in range(0,len(rawstr)):
+        result.extend([[]])
+    for k in range(0,len(rawstr)):
+        #这里更换范围
+        for i in range(1,255):
+           if(chr(i) not in blacklist):
+               #这里更换范围
+                for j in range(1,255):
+                    if(chr(j) not in blacklist):
+                        if(i^j==ord(rawstr[k]) and [hex(j).replace(&#39;0x&#39;,&quot;%&quot;),hex(i).replace(&#39;0x&#39;,&quot;%&quot;)] not in result[k]):
+                            result[k].extend([[realHex(i),realHex(j)]])
+    #在这里往下的函数部分,result列表均是可用的(已填充了获得的拼接字符串)
+    for i in range(0,len(result)):
+        if(len(result[i])==0):
+            return(&quot;该字符在现有黑名单和字符范围下无法拼接出-&gt;%s&quot;%(rawstr[i]))
+    for i in range(0,len(rawstr)):
+        finalstr=finalstr[:finalstr.find(&quot;^&quot;,0)-1]+result[i][0][0]+&#39;&quot;&#39;+finalstr[finalstr.find(&quot;^&quot;,0):]
+        finalstr=finalstr[:finalstr.rfind(&quot;&#39;&quot;,0)]+result[i][0][1]+finalstr[finalstr.rfind(&#39;&quot;&#39;,0):]
+    return finalstr
+def quFan(string):
+    global operationEffient
+    global blacklist
+    operationEffient=False
+    result=[]
+    finalstr=&#39;~&quot;&quot;&#39;
+    rawstr=string
+    for i in range(0,len(rawstr)):
+        result.extend([[]])
+    for k in range(0,len(rawstr)):
+        #这里更换范围
+        for i in range(1,255):
+           if(chr(i) not in blacklist and chr(int(bin(~i &amp; 0xFF)[2:],2))==rawstr[k]):
+               result[k].extend([realHex(i)])
+    #print(result)
+    for i in range(0,len(result)):
+        if(len(result[i])==0):
+            return(&quot;该字符在现有黑名单和字符范围下无法拼接出-&gt;%s&quot;%(rawstr[i]))
+    for i in range(0,len(rawstr)):
+        finalstr=finalstr[:finalstr.rfind(&#39;&quot;&#39;,0)]+result[i][0]+finalstr[finalstr.rfind(&#39;&quot;&#39;,0):]
+    return finalstr
+def rce_and(string):
+    global operationEffient
+    global blacklist
+    operationEffient=False
+    rawstring=string
+    result=[]
+    finalstr=&quot;&quot;
+    for i in range(0,len(rawstring)):
+        result.extend([[]])
+    for l in range(0,len(rawstring)):
+        for i in range(1,255):
+            for j in range(1,255):
+                if (chr(j) in blacklist) or (chr(i) in blacklist):
+                    continue
+                if chr(i&amp;j)==rawstring[l]:
+                    #注意&amp;在URL特殊含义,故需要URL编码
+                    result[l].append(&quot;\&quot;&quot;+realHex(i)+&quot;\&quot;%26\&quot;&quot;+realHex(j)+&quot;\&quot;&quot;)
+                    continue
+    for i in range(0,len(result)):
+        if(len(result[i])==0):
+            print(&quot;该字符在现有黑名单和字符范围下无法拼接出-&gt;%s&quot;%(rawstring[i]))
+            return
+    for i in range(0,len(result)):
+        if i == 0:
+            finalstr+=&quot;(&#123;&#125;)&quot;.format(result[i][0])
+        else:
+            finalstr+=&quot;.(&#123;&#125;)&quot;.format(result[i][0])
+    return finalstr
+def rce_or(string):
+    global operationEffient
+    global blacklist
+    operationEffient=False
+    rawstring=string
+    result=[]
+    finalstr=&quot;&quot;
+    for i in range(0,len(rawstring)):
+        result.extend([[]])
+    for l in range(0,len(rawstring)):
+        for i in range(1,255):
+            for j in range(1,255):
+                if (chr(j) in blacklist) or (chr(i) in blacklist):
+                    continue
+                if chr(i|j)==rawstring[l]:
+                    result[l].append(&quot;\&quot;&quot;+realHex(i)+&quot;\&quot;|\&quot;&quot;+realHex(j)+&quot;\&quot;&quot;)
+                    continue
+    for i in range(0,len(result)):
+        if(len(result[i])==0):
+            print(&quot;该字符在现有黑名单和字符范围下无法拼接出-&gt;%s&quot;%(rawstring[i]))
+            return
+    for i in range(0,len(result)):
+        if i == 0:
+            finalstr+=&quot;(&#123;&#125;)&quot;.format(result[i][0])
+        else:
+            finalstr+=&quot;.(&#123;&#125;)&quot;.format(result[i][0])
+    return finalstr
+while(True):
+    operationEffient=True
+    target=input(&quot;请输入待转换字符\n&quot;)
+    while(operationEffient):
+        operation=input(&quot;请选择操作\n0-&gt;重新输入\n1-&gt;使用异或拼接\n2-&gt;使用取反获得\n3-&gt;使用二进制和\n4-&gt;使用二进制或\n&quot;)
+        if(operation==&quot;1&quot;):
+            result=yiHuo(target)
+            pass
+        elif(operation==&quot;2&quot;):
+            result=quFan(target)
+            pass
+        elif(operation==&#39;3&#39;):
+            result=rce_and(target)
+            pass
+        elif(operation==&#39;4&#39;):
+            result=rce_or(target)
+            pass
+        elif(operation==&quot;0&quot;):
+            break
+        else:
+            print(&quot;选择的操作无效&quot;)
+            continue
+        if result!=&#39;&#39;:
+            print(result)
+</code></pre>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/04/12/rce%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/">https://sakurahack-y.github.io/2022/04/12/rce常用脚本/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"></div><aside id="toc"><div class="toc-title">目录</div><nav></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/04/11/timeline-sec%E6%96%B0%E4%BA%BA%E8%B5%9B/">timeline sec新人赛 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
