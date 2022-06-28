@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>内网学习篇 | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">内网学习篇</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/06/27/%E5%86%85%E7%BD%91%E5%AD%A6%E4%B9%A0%E7%AF%87/">2022-06-27</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a>&nbsp;&bull;&nbsp;<a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%86%85%E7%BD%91/">内网</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>[TOC]</p>
+<h1 id="内网安全第一章"><a href="#内网安全第一章" class="headerlink" title="内网安全第一章"></a>内网安全第一章</h1><h2 id="内网基础知识"><a href="#内网基础知识" class="headerlink" title="内网基础知识"></a>内网基础知识</h2><p>**工作组:**工作组（ Work Group)，在一个大的单位内，可能有成百上千台电脑互相连接组成局域网，它们都会列在“网络（网上邻居)”内，如果这些电脑不分组，可想而知有多么混乱，要找一台电脑很困难。为了解决这一问题，就有了“工作组”这个概念，将不同的电脑一般按功能(或部门）分别列入不同的工作组中，如技术部的电脑都列入“技术部”工作组中，行政部的电脑都列入“行政部”工作组中。你要访问某个部门的资源，就在“网络”里找到那个部门的工作组名，双击就可以看到那个部门的所有电脑了。相比不分组的情况就有序的多了，尤其是对于大型局域网络来说。</p>
+<p><img src="/2022/06/27/%E5%86%85%E7%BD%91%E5%AD%A6%E4%B9%A0%E7%AF%87/image-20220628095849118.png" alt="image-20220628095849118"></p>
+<p><strong>域</strong>(Domain)是一个有安全边界的计算机集合（安全边界意思是在两个域中，一个域中的用户无法访问另一个域中的资源），可以简单的把域理解成升级版的“工作组”，相比工作组而言,它有一个更加严格的安全管理控制机制,如果你想访问域内的资源,必须拥有一个合法的身份登陆到该域中,而你对该域内的资源拥有什么样的权限,还需要取决于你在该域中的用户身份。<br><strong>域控制器</strong>（Domain Controller，简写为Dc）是一个域中的一台类似管理服务器的计算机，相当于一个单位的门卫一样，它负责每一台联入的电脑和用户的验证工作，域内电脑如果想互相访问首先都是经过它的审核。</p>
+<p><img src="/2022/06/27/%E5%86%85%E7%BD%91%E5%AD%A6%E4%B9%A0%E7%AF%87/image-20220628100052625.png" alt="image-20220628100052625"></p>
+<p><strong>域的分类:</strong></p>
+<p><strong>单域</strong><br>在一般的具有固定地理位置的小公司里，建立一个域就可以满足所需。·一般在一个域内要建立至少两个域服务器，一个作为Dc，一个是备份DC。如果没有第二个备份Dc，那么一旦DC瘫痪了，则域内的其他用户就不能登陆该域了，因为活动目录的数据库（包括用户的帐号信息)是存储在DC中的。而有一台备份域控制器（BDC），则至少该域还能正常使用，期间把瘫痪的Dc恢复了就行了。</p>
+<p><strong>父域</strong></p>
+<p>出于管理及其他一些需求，需要在网络中划分多个域，第一个域称为父域，各分部的域称为该域的子域。<br>比如一个大公司，它的不同分公司在不同的地理位置，则需父域及子域这样的结构。<br>如果把不同地理位置的分公司放在同一个域内，那么他们之间信息交互（包括同步，复制等）所花费的时间会比较长，而且占用的带宽也比较大。(因为在同一个域内，信息交互的条目是很多的，而且不压缩;而在域和域之间，信息交互的条目相对较少，而且压缩。）<br>还有一个好处，就是子公司可以通过自己的域来管理自己的资源。还有一种情况，就是出于安全策略的考虑，因为每个域都有自己独有的安全策略。比如一个公司的财务部门希望能使用特定的安全策略(包括帐号密码策略等），那么可以将财务部门做成一个子域来单独管理。</p>
+<p><strong>域树</strong></p>
+<p>域树指若干个域通过建立信任关系组成的集合。一个域管理员只能管理本域的内部，不能访问或者管理其他的域，二个域之间相互访问则需要建立信任关系(Trust Relation)。<br>信任关系是连接在域与域之间的桥梁。域树内的父域与子域之间不但可以按需要相互进行管理，还可以跨网分配文件和打印机等设备资源，使不同的域之间实现网络资源的共享与管理，以及相互通信和数据传输。</p>
+<p><img src="/2022/06/27/%E5%86%85%E7%BD%91%E5%AD%A6%E4%B9%A0%E7%AF%87/image-20220628100413944.png" alt="image-20220628100413944"></p>
+<p><strong>域森林</strong></p>
+<p><img src="/2022/06/27/%E5%86%85%E7%BD%91%E5%AD%A6%E4%B9%A0%E7%AF%87/image-20220628100503104.png" alt="image-20220628100503104"></p>
+<p><strong>DNS域名服务器</strong>是进行域名(domain name)和与之相对应的IP地址(IPaddress)转换的服务器。<br>在域树的介绍中，可以看到域树中的域的名字和DNS域的名字非常相似，实际上域的名字就是DNS域的名字，因为域中的计算机使用DNS来定位域控制器和服务器以及其他计算机、网络服务等。<br>一般情况下,我们在内网渗透时就通过寻找DNS服务器来定位域控制器，因为通常DNS服务器和域控制器会处在同一台机器上。</p>
+<p><strong>活动目录</strong>（Active Directory）是域环境中提供目录服务的组件。目录是什么?目录就是存储有关网络对象（如用户、组、计算机、共享资源、打印机和联系人等）的信息。目录服务是帮助用户快速准确的从目录中查找到他所需要的信息的服务。<br>如果将企业的内网看成是一本字典，那么内网里的资源就是字典的内容，活动目录就相当于字典的索引。即活动目录存储的是网络中所有资源的快捷方式，用户通过寻找快捷方式而定位资源。</p>
+<p><strong>逻辑结构</strong></p>
+<p>在活动目录中，管理员可以完全忽略被管理对象的具体地理位置，而将这些对象按照一定的方式放置在不同的容器中。由于这种组织对象的做法不考虑被管理对象的具体地理位置，这种组织框架称为“逻辑结构”。<br>活动目录的逻辑结构就包括上面讲到的组织单元（ou)、域(domain)、域树( tree)、域森林（forest）。在域树内的所有域共享一个活动目录，这个活动目录内的数据分散地存储在各个域内，且每一个域只存储该域内的数据。</p>
+<p><img src="/2022/06/27/%E5%86%85%E7%BD%91%E5%AD%A6%E4%B9%A0%E7%AF%87/image-20220628102316204.png" alt="image-20220628102316204"></p>
+<p><strong>活动目录主要功能</strong></p>
+<p>帐号集中管理，所有帐号均存在服务器上,方便对帐号的重命令/重置密码。<br>软件集中管理，统一推送软件，统一安装网络打印机等。利用软件发布策略分发软件,可以让用户自由选择安装软件。<br>环境集中管理，利用AD可以统一客户端桌面,IE,TCP/IP等设置。<br>增强安全性，统一部署杀毒软件和扫毒任务，集中化管理用户的计算机权限、统一制订用户密码策略等，可监控网络，资料统一管理。更可靠，更少的宕机时间。如:利用AD控制用户访问权限，利用群集、负载均衡等技术对文件服务器进行容灾设定，更可靠，宕机时间 少。活动目录为Microsoft统一管理的基础平台，其它isa,exchange,sms等服务都依赖于这个基础平台。</p>
+<p><strong>AD和DC区别</strong></p>
+<p>如果网络规模较大，我们就会考虑把网络中的众多对象:计算机、用户、用户组、打印机、共享文件等，分门别类、井然有序地放在一个大仓库中，并做好检索信息，以利于查找、管理和使用这些对象（资源）。这个有层次结构的数据库，就是活动目录数据库，简称AD库。那么我们应该把这个数据库放在哪台计算机上呢?规定是这样的，我们把存放有活动目录数据库的计算机就称为Dc。所以说我们要实现域环境，其实就是要安装AD，当内网中的一台计算机安装了AD后，它就变成了DC。</p>
+<p><strong>安全域的划分</strong></p>
+<p>安全域划分的目的是将一组安全等级相同的计算机划入同一个网段内，这一网段内的计算机拥有相同的网络边界，在网络边界上采用防火墙部署来实现对其他安全域的NACL(网络访问控制策略），允许哪些IP访问此域、不允许哪些访问此域;允许此域访问哪些IP/网段、不允许访问哪些IP/网段。使得其风险最小化，当发生攻击时可以将威胁最大化的隔离，减少对域内计算机的影响。</p>
+<p><strong>DMZ</strong></p>
+<p>DMZ称为“隔离区”，也称“非军事化区”。是为了解决安装防火墙后外部网络不能访问内部网络服务器的问题，而设立的一个非安全系统与安全系统之间的缓冲区。<br>这个缓冲区位于企业内部网络和外部网络之间的小网络区域内，在这个小网络区域内可以放置一些必须公开的服务器设施，如企业Web服务器、FTP服务器和论坛等。<br>另一方面，通过这样一个DMz区域，更加有效地保护了内部网络，因为这种网络部署，比起一般的防火墙方案，对攻击者来说又多了一道关卡。</p>
+<p><img src="/2022/06/27/%E5%86%85%E7%BD%91%E5%AD%A6%E4%B9%A0%E7%AF%87/image-20220628103312842.png" alt="image-20220628103312842"></p>
+<p><strong>DMZ屏障功能</strong></p>
+<p>(1) 内网可以访问外网<br>内网的角户需要自由地访问外网。在这一策略中，防火墙需要执行NAT。</p>
+<p>(2) 内网可以访问DMZ<br>此策略使内网用户可以使用或者管理DMZ中的服务器。</p>
+<p>(3) 外网不能访问内网<br>这是防火墙的基本策略了，内网中存放的是公司内部数据，显然这些数据是不允许外网的用户进行访问的。如果耍访问，就要通过VPN方式来进行。</p>
+<p>(4) 外网可以访问DMZ<br>DMZ中的服务器需要为外界提供服务，所以外网必须可以访问DMZ。同时，外网访问DMZ需要由防火墙完成对外地址到服务器实际地址的转换。</p>
+<p>(5) DMZ不能访问内网<br>如不执行此策略，则当入侵者攻陷DMZ时，内部网络将不会受保护。</p>
+<p>(6）DMZ不能访问外网<br>此条策略也有例外，比如我们的例子中，在DMZ中放置邮件服务器时，就需要访问外网，否则将不能正常工作。</p>
+<p><strong>域中计算机分类</strong></p>
+<p>域控制器-成员服务器-客户机-独立服务器</p>
+<p>域控制器是存放活动目录数据库的，是域中必须要有的，而其他三种则不是必须的，也就是说最简单的域可以只包含一台计算机，这台计算机就是该域的域控制器。<br>域中各个服务器的角色也是可以改变的，例如域服务器在删除活动目录时，如果是域中最后一个域控制器，则该域服务器会成为独立服务器，如果不是域中唯一的域控制器，则将使该服务器成为成员服务器。同时独立服务器既可以转换为域控制器，也可以加入到某个域成为成员服务器。</p>
+<p><strong>内权限解读:</strong></p>
+<p><strong>域本地组</strong>，多域用户访问单域资源（访问同一个域)。可以从任何域添加用户账户、通用组和全局组，只能在其所在域内指派权限。域本地组不能嵌套于其他组中。它主要是用于授予位于本域资源的访问权限</p>
+<p><strong>全局组</strong>，单域用户访问多域资源（必须是同一个域里面的用户）。只能在创建该全局组的域上进行添加用户和全局组，可以在域林中的任何域中指派权限，全局组可以嵌套在其他组中。</p>
+<p><strong>通用组</strong>，通用组成员来自域林中任何域中的用户账户、全局组和其他的通用组，可以在该域林中的任何域中指派权限，可以嵌套于其他域组中。非常适于域林中的跨域访问。</p>
+<p><img src="/2022/06/27/%E5%86%85%E7%BD%91%E5%AD%A6%E4%B9%A0%E7%AF%87/image-20220628104718578.png" alt="image-20220628104718578"></p>
+<p><strong>A-G-DL-P策略</strong></p>
+<p><img src="/2022/06/27/%E5%86%85%E7%BD%91%E5%AD%A6%E4%B9%A0%E7%AF%87/image-20220628154433781.png" alt="image-20220628154433781"></p>
+<p><strong>本地域组的权限</strong></p>
+<p><img src="/2022/06/27/%E5%86%85%E7%BD%91%E5%AD%A6%E4%B9%A0%E7%AF%87/image-20220628155157050.png" alt="image-20220628155157050"></p>
+<p><strong>全局组、通用组的权限</strong></p>
+<p><img src="/2022/06/27/%E5%86%85%E7%BD%91%E5%AD%A6%E4%B9%A0%E7%AF%87/image-20220628155303297.png" alt="image-20220628155303297"></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/06/27/%E5%86%85%E7%BD%91%E5%AD%A6%E4%B9%A0%E7%AF%87/">https://sakurahack-y.github.io/2022/06/27/内网学习篇/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/%E5%86%85%E7%BD%91/">内网</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E7%AC%AC%E4%B8%80%E7%AB%A0"><span class="toc-number">1.</span> <span class="toc-text">内网安全第一章</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">1.1.</span> <span class="toc-text">内网基础知识</span></a></li></ol></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/">web随缘刷 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
