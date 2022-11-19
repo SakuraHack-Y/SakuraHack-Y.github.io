@@ -3,6 +3,12 @@
 </script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">java学习之旅</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/">2022-02-11</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/%E8%AF%AD%E8%A8%80/">语言</a>&nbsp;&bull;&nbsp;<a href="/categories/%E8%AF%AD%E8%A8%80/java/">java</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>[TOC]</p>
 <p>本篇文章更新java系列知识—持续更新中</p>
 <p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220211163044997.png" alt="image-20220211163044997"></p>
+<h1 id="快捷键速查"><a href="#快捷键速查" class="headerlink" title="快捷键速查"></a>快捷键速查</h1><pre><code>ctrl + shift + u 大小写替换
+ctrl + alt +t 快速写一些方法，如try catch
+alt + insert 
+sout  输出
+psvm 主函数
+</code></pre>
 <h1 id="day1-java初识"><a href="#day1-java初识" class="headerlink" title="day1  java初识"></a>day1  java初识</h1><h2 id="第一个HelloWord程序"><a href="#第一个HelloWord程序" class="headerlink" title="第一个HelloWord程序"></a>第一个HelloWord程序</h2><pre><code class="java">/*
 这里HelloWord是类名
 void main 是方法，也是程序的入口
@@ -1447,8 +1453,2429 @@ public class Test &#123;
 &#125;
 </code></pre>
 <p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220322225423524.png" alt="image-20220322225423524"></p>
-<h2 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220322232627649.png" alt="image-20220322232627649"></p>
-</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/">https://sakurahack-y.github.io/2022/02/11/java学习之旅/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/java/">java</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#day1-java%E5%88%9D%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">day1  java初识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AAHelloWord%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.1.</span> <span class="toc-text">第一个HelloWord程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E8%AF%86%E7%AC%A6"><span class="toc-number">1.2.</span> <span class="toc-text">标识符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%84%E8%8C%83"><span class="toc-number">1.3.</span> <span class="toc-text">规范:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.4.</span> <span class="toc-text">数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E9%87%8F"><span class="toc-number">1.5.</span> <span class="toc-text">常量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F"><span class="toc-number">1.6.</span> <span class="toc-text">变量</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day2-java%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">day2  java基础语法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2"><span class="toc-number">2.1.</span> <span class="toc-text">进制转换:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%AD%98%E5%82%A8%E5%8D%95%E4%BD%8D"><span class="toc-number">2.2.</span> <span class="toc-text">计算机存储单位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%A6%82%E4%BD%95%E5%AD%98%E5%82%A8%E6%95%B0%E6%8D%AE"><span class="toc-number">2.3.</span> <span class="toc-text">计算机如何存储数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E7%B1%BB%E5%9E%8B%E6%8F%90%E5%8D%87"><span class="toc-number">2.4.</span> <span class="toc-text">自动类型提升</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">2.5.</span> <span class="toc-text">运算符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">2.5.1.</span> <span class="toc-text">逻辑运算符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-number">2.5.2.</span> <span class="toc-text">运算符优先级</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day3-%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5"><span class="toc-number">3.</span> <span class="toc-text">day3  流程控制语句</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E8%AF%AD%E5%8F%A5-scanner"><span class="toc-number">3.1.</span> <span class="toc-text">输入语句 scanner</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#next%E4%B8%8EnextLine"><span class="toc-number">3.2.</span> <span class="toc-text">next与nextLine</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#if%E5%8D%95%E5%88%86%E6%94%AF"><span class="toc-number">3.3.</span> <span class="toc-text">if单分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E4%B9%A0%E9%A2%98-%E9%97%B0%E5%B9%B4%E7%9A%84%E6%A0%87%E5%87%86"><span class="toc-number">3.4.</span> <span class="toc-text">小习题-闰年的标准</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#if%E5%8F%8C%E5%88%86%E6%94%AF"><span class="toc-number">3.5.</span> <span class="toc-text">if双分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B1%82%E4%B8%89%E4%B8%AA%E6%95%B0%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E5%80%BC"><span class="toc-number">3.6.</span> <span class="toc-text">求三个数中的最大值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#if%E5%A4%9A%E5%88%86%E6%94%AF"><span class="toc-number">3.7.</span> <span class="toc-text">if多分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#switch"><span class="toc-number">3.8.</span> <span class="toc-text">switch</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF"><span class="toc-number">3.9.</span> <span class="toc-text">循环</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day4-%E5%BE%AA%E7%8E%AF"><span class="toc-number">4.</span> <span class="toc-text">day4 循环</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#do-while"><span class="toc-number">4.1.</span> <span class="toc-text">do while</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9A%8F%E6%9C%BA%E6%95%B0%E5%85%AC%E5%BC%8F"><span class="toc-number">4.2.</span> <span class="toc-text">随机数公式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#for%E5%BE%AA%E7%8E%AF"><span class="toc-number">4.3.</span> <span class="toc-text">for循环</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#break"><span class="toc-number">4.4.</span> <span class="toc-text">break</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#continue%E3%80%81return%E3%80%81continue%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">4.5.</span> <span class="toc-text">continue、return、continue的区别</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day5-%E6%95%B0%E7%BB%84"><span class="toc-number">5.</span> <span class="toc-text">day5 数组</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%88%9D%E8%AF%86"><span class="toc-number">5.1.</span> <span class="toc-text">数组初识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A3%B0%E6%98%8E%E4%B8%80%E4%B8%AA%E6%95%B0%E7%BB%84"><span class="toc-number">5.1.1.</span> <span class="toc-text">声明一个数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">5.1.2.</span> <span class="toc-text">数组初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">5.1.2.1.</span> <span class="toc-text">静态初始化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">5.1.2.2.</span> <span class="toc-text">动态初始化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0%E7%9A%84%E8%AE%BF%E9%97%AE"><span class="toc-number">5.1.3.</span> <span class="toc-text">数组元素的访问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E9%95%BF%E5%BA%A6%E6%98%BE%E7%A4%BA"><span class="toc-number">5.1.4.</span> <span class="toc-text">数组长度显示</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E9%BB%98%E8%AE%A4%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">5.2.</span> <span class="toc-text">数组的默认初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E9%81%8D%E5%8E%86"><span class="toc-number">5.3.</span> <span class="toc-text">数组的遍历</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E5%AD%98%E5%88%92%E5%88%86"><span class="toc-number">5.4.</span> <span class="toc-text">数组的内存划分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%90%8D"><span class="toc-number">5.5.</span> <span class="toc-text">数组名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%BB%83%E4%B9%A0"><span class="toc-number">5.6.</span> <span class="toc-text">数组练习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E7%94%9F%E6%88%90%E7%BB%A9"><span class="toc-number">5.6.1.</span> <span class="toc-text">学生成绩</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E6%89%BE%E6%9C%80%E5%80%BC"><span class="toc-number">5.6.2.</span> <span class="toc-text">数组找最值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F"><span class="toc-number">5.7.</span> <span class="toc-text">冒泡排序</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day6-%E6%95%B0%E7%BB%84"><span class="toc-number">6.</span> <span class="toc-text">day6 数组</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E6%8C%87%E5%AE%9A%E5%85%83%E7%B4%A0%E7%9A%84%E4%B8%8B%E6%A0%87"><span class="toc-number">6.1.</span> <span class="toc-text">查找指定元素的下标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E5%A3%B0%E6%98%8E"><span class="toc-number">6.2.</span> <span class="toc-text">二维数组的声明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E9%9D%99%E6%80%81%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">6.3.</span> <span class="toc-text">二维数组的静态初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E5%8A%A8%E6%80%81%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">6.4.</span> <span class="toc-text">二维数组的动态初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E9%81%8D%E5%8E%86"><span class="toc-number">6.5.</span> <span class="toc-text">二维数组的遍历</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%99%AE%E9%80%9Afor%E5%BE%AA%E7%8E%AF"><span class="toc-number">6.5.1.</span> <span class="toc-text">普通for循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A2%9E%E5%BC%BAfor%E5%BE%AA%E7%8E%AF"><span class="toc-number">6.5.2.</span> <span class="toc-text">增强for循环</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E5%86%85%E5%AD%98%E5%9B%BE"><span class="toc-number">6.6.</span> <span class="toc-text">二维数组内存图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E7%BB%83%E4%B9%A0"><span class="toc-number">6.7.</span> <span class="toc-text">二维数组练习</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#idea%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">6.8.</span> <span class="toc-text">idea的使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day7-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-number">7.</span> <span class="toc-text">day7 面向对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E6%80%9D%E6%83%B3%E6%A6%82%E8%BF%B0"><span class="toc-number">7.1.</span> <span class="toc-text">面向对象思想概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1"><span class="toc-number">7.2.</span> <span class="toc-text">类和对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1"><span class="toc-number">7.3.</span> <span class="toc-text">创建类和对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="toc-number">7.3.1.</span> <span class="toc-text">类的创建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="toc-number">7.3.2.</span> <span class="toc-text">对象的创建</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%98%E5%9B%BE"><span class="toc-number">7.4.</span> <span class="toc-text">创建对象内存图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%85%E5%90%8D%E7%9B%B8%E5%85%B3"><span class="toc-number">7.5.</span> <span class="toc-text">包名相关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E5%8F%98%E9%87%8F%E5%86%85%E5%AD%98%E5%9B%BE"><span class="toc-number">7.6.</span> <span class="toc-text">示例变量内存图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E5%8F%98%E9%87%8F-%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F"><span class="toc-number">7.7.</span> <span class="toc-text">类变量(静态变量)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E7%BB%83%E4%B9%A0"><span class="toc-number">7.8.</span> <span class="toc-text">成员变量练习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A3%B0%E6%98%8E%E4%B8%80%E4%B8%AA%E5%9C%86%E7%9A%84%E5%9B%BE%E5%BD%A2%E7%B1%BB"><span class="toc-number">7.8.1.</span> <span class="toc-text">声明一个圆的图形类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%93%B6%E8%A1%8C%E8%B4%A6%E5%8F%B7"><span class="toc-number">7.8.2.</span> <span class="toc-text">银行账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E4%B8%AA%E7%B1%BB"><span class="toc-number">7.8.3.</span> <span class="toc-text">两个类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E7%BB%83%E4%B9%A0%E5%86%85%E5%AD%98%E5%9B%BE"><span class="toc-number">7.9.</span> <span class="toc-text">成员变量练习内存图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E7%9A%84%E5%88%9D%E8%AF%86"><span class="toc-number">7.10.</span> <span class="toc-text">方法的初识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BD%A2%E5%8F%82%E5%92%8C%E5%AE%9E%E5%8F%82"><span class="toc-number">7.11.</span> <span class="toc-text">形参和实参</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="toc-number">7.12.</span> <span class="toc-text">返回值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E6%96%B9%E6%B3%95"><span class="toc-number">7.13.</span> <span class="toc-text">实例方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day8%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-number">8.</span> <span class="toc-text">day8面向对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B%E5%80%BC%E4%BC%A0%E9%80%92"><span class="toc-number">8.1.</span> <span class="toc-text">基本类型值传递</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%BC%A0%E9%80%92"><span class="toc-number">8.2.</span> <span class="toc-text">引用数据类型传递</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%86%85%E5%AD%98%E5%9B%BE"><span class="toc-number">8.3.</span> <span class="toc-text">数组内存图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F"><span class="toc-number">8.4.</span> <span class="toc-text">局部变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E5%8F%98%E5%BD%A2%E5%8F%82"><span class="toc-number">8.5.</span> <span class="toc-text">可变形参</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E9%87%8D%E8%BD%BD"><span class="toc-number">8.6.</span> <span class="toc-text">方法重载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0"><span class="toc-number">8.7.</span> <span class="toc-text">命令行参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%AF%BC%E5%85%A5"><span class="toc-number">8.8.</span> <span class="toc-text">静态导入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%92%E5%BD%92"><span class="toc-number">8.9.</span> <span class="toc-text">递归</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E7%B1%BB%E5%9E%8B%E6%95%B0%E7%BB%84"><span class="toc-number">8.10.</span> <span class="toc-text">对象类型数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%81%E8%A3%85%E7%9A%84%E6%A6%82%E5%BF%B5%E5%8F%8A%E5%9B%9B%E4%B8%AA%E6%9D%83%E9%99%90%E4%BF%AE%E9%A5%B0%E7%AC%A6%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-number">8.11.</span> <span class="toc-text">封装的概念及四个权限修饰符的概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7%E7%9A%84%E7%AE%80%E5%8D%95%E5%B0%81%E8%A3%85"><span class="toc-number">8.12.</span> <span class="toc-text">属性的简单封装</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day9%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-number">9.</span> <span class="toc-text">day9面向对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%99%A8"><span class="toc-number">9.1.</span> <span class="toc-text">构造器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E5%B1%9E%E6%80%A7%E7%9A%84%E5%B0%81%E8%A3%85"><span class="toc-number">9.2.</span> <span class="toc-text">对属性的封装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%83%E4%B9%A0"><span class="toc-number">9.3.</span> <span class="toc-text">练习</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E5%87%86javabean"><span class="toc-number">9.4.</span> <span class="toc-text">标准javabean</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF"><span class="toc-number">9.5.</span> <span class="toc-text">继承</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BD%93%E5%87%BA%E7%8E%B0%E5%90%8C%E5%90%8D%E5%8F%98%E9%87%8F%E6%97%B6%EF%BC%9Athis%E4%B8%8Esuper"><span class="toc-number">9.6.</span> <span class="toc-text">当出现同名变量时：this与super</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF%E8%B5%84%E6%BA%90%E7%9A%84%E6%9F%A5%E6%89%BE"><span class="toc-number">9.7.</span> <span class="toc-text">继承资源的查找</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E7%9A%84%E9%87%8D%E5%86%99"><span class="toc-number">9.8.</span> <span class="toc-text">方法的重写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#this%E8%AF%A6%E8%A7%A3"><span class="toc-number">9.9.</span> <span class="toc-text">this详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#super%E8%AF%A6%E8%B0%88"><span class="toc-number">9.10.</span> <span class="toc-text">super详谈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E7%9A%84%E8%B5%8B%E5%80%BC%E6%96%B9%E6%B3%95"><span class="toc-number">9.11.</span> <span class="toc-text">成员变量的赋值方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day10-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-number">10.</span> <span class="toc-text">day10 面向对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">10.1.</span> <span class="toc-text">类的初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%8D%E5%90%AB%E5%AD%90%E7%B1%BB"><span class="toc-number">10.2.</span> <span class="toc-text">类的初始化不含子类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%8D%E5%90%AB%E5%AD%90%E7%B1%BB"><span class="toc-number">10.3.</span> <span class="toc-text">实例初始化不含子类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E5%90%AB%E5%AD%90%E7%B1%BB"><span class="toc-number">10.4.</span> <span class="toc-text">类的初始化含子类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%B7%E5%90%88%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">10.5.</span> <span class="toc-text">混合初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%80%81%E7%9A%84%E5%88%9D%E8%AF%86"><span class="toc-number">10.6.</span> <span class="toc-text">多态的初识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%80%81%E7%9A%84%E4%BD%9C%E7%94%A8%E4%B8%80%E8%8A%82%E7%9C%81%E4%BB%A3%E7%A0%81%E9%87%8F"><span class="toc-number">10.7.</span> <span class="toc-text">多态的作用一节省代码量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%80%81%E4%BD%9C%E7%94%A8%E4%BA%8C%E5%AD%98%E5%82%A8%E4%B8%8D%E5%90%8C%E7%B1%BB%E5%9E%8B%E6%95%B0%E6%8D%AE"><span class="toc-number">10.8.</span> <span class="toc-text">多态作用二存储不同类型数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%80%81%E5%BA%94%E7%94%A8%E4%B8%89%E6%96%B9%E6%B3%95%E7%9A%84%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="toc-number">10.9.</span> <span class="toc-text">多态应用三方法的返回值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%80%81%E7%9A%84%E7%BB%83%E4%B9%A0%E4%B8%80"><span class="toc-number">10.10.</span> <span class="toc-text">多态的练习一</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%80%81%E7%9A%84%E7%BB%83%E4%B9%A0%E4%BA%8C"><span class="toc-number">10.11.</span> <span class="toc-text">多态的练习二</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%91%E4%B8%8B%E8%BD%AC%E5%9E%8B"><span class="toc-number">10.12.</span> <span class="toc-text">向下转型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#instanceof"><span class="toc-number">10.13.</span> <span class="toc-text">instanceof</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day11"><span class="toc-number">11.</span> <span class="toc-text">day11</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%9E%E8%99%9A%E6%96%B9%E6%B3%95"><span class="toc-number">11.1.</span> <span class="toc-text">非虚方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#native%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">11.2.</span> <span class="toc-text">native关键字</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#final%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">11.3.</span> <span class="toc-text">final关键字</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Object%E7%B1%BB"><span class="toc-number">11.4.</span> <span class="toc-text">Object类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#to-string"><span class="toc-number">11.4.1.</span> <span class="toc-text">to_string</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#getClass"><span class="toc-number">11.4.2.</span> <span class="toc-text">getClass()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#finalize"><span class="toc-number">11.4.3.</span> <span class="toc-text">finalize</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hashcode"><span class="toc-number">11.4.4.</span> <span class="toc-text">hashcode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#equals"><span class="toc-number">11.4.5.</span> <span class="toc-text">equals()</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E6%8C%87%E9%92%88%E5%BC%82%E5%B8%B8"><span class="toc-number">11.5.</span> <span class="toc-text">空指针异常</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E5%88%9D%E8%AF%86"><span class="toc-number">11.6.</span> <span class="toc-text">抽象初识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="toc-number">11.7.</span> <span class="toc-text">抽象注意点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E5%88%9D%E8%AF%86"><span class="toc-number">11.8.</span> <span class="toc-text">接口初识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E7%9A%84%E9%9D%9E%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5"><span class="toc-number">11.9.</span> <span class="toc-text">接口的非正常情况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#comparable%E6%8E%A5%E5%8F%A3"><span class="toc-number">11.10.</span> <span class="toc-text">comparable接口</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day12-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-number">12.</span> <span class="toc-text">day12 面向对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#comparable%E6%8E%A5%E5%8F%A3-%E5%86%85%E9%83%A8%E6%AF%94%E8%BE%83%E5%99%A8"><span class="toc-number">12.1.</span> <span class="toc-text">comparable接口-内部比较器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Comparator%E6%8E%A5%E5%8F%A3-%E5%A4%96%E9%83%A8%E6%AF%94%E8%BE%83%E5%99%A8"><span class="toc-number">12.2.</span> <span class="toc-text">Comparator接口-外部比较器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%9A%E4%B8%BE"><span class="toc-number">12.3.</span> <span class="toc-text">枚举</span></a></li></ol></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="prev" href="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">&lt; 计算机组成原理</a><a class="next" href="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/">RootersCTF2019 I_&lt;3_Flask 0x70-0x7F &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+<h2 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h2><h3 id="枚举初识"><a href="#枚举初识" class="headerlink" title="枚举初识"></a>枚举初识</h3><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220322232627649.png" alt="image-20220322232627649"></p>
+<p>示例代码:</p>
+<p>Season.java</p>
+<pre><code class="java">package com.sakura.enum2;
+
+public enum Season &#123;
+    SPRING(&quot;春暖花开&quot;,&quot;春天&quot;),
+    SUMMER(&quot;夏日炎炎&quot;,&quot;夏天&quot;),
+    AUTUMN(&quot;秋高气爽&quot;,&quot;秋天&quot;),
+    WINTER(&quot;白雪恺恺&quot;,&quot;冬天&quot;);
+    private String des;
+    private String name;
+
+    Season(String des, String name) &#123;
+        this.des = des;
+        this.name = name;
+    &#125;
+    Season() &#123;
+    &#125;
+
+    @Override
+    public String toString() &#123;
+        return &quot;Season&#123;&quot; +
+                &quot;des=&#39;&quot; + des + &#39;\&#39;&#39; +
+                &quot;, name=&#39;&quot; + name + &#39;\&#39;&#39; +
+                &#39;&#125;&#39;;
+    &#125;
+&#125;
+</code></pre>
+<p>test.java</p>
+<pre><code class="java">package com.sakura.enum2;
+
+public class test &#123;
+    String name = &quot;word&quot;;
+    int num = 200;
+    Season season = Season.SPRING;
+    public static void main(String[] args) &#123;
+        test one =new test();
+        System.out.println(&quot;one.name = &quot; + one.name);
+        System.out.println(&quot;one.season = &quot; + one.season.name());
+        System.out.println(&quot;one.num = &quot; + one.num);
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220714155112254.png" alt="image-20220714155112254"></p>
+<h3 id="枚举结束"><a href="#枚举结束" class="headerlink" title="枚举结束"></a>枚举结束</h3><p>使用switch语句来判断是哪个枚举:</p>
+<p>TestSwitch.java</p>
+<pre><code class="java">package com.sakura.enum2;
+
+public class TestSwitch &#123;
+    public static void main(String[] args) &#123;
+        Season season = Season.SPRING;
+        switch (season)&#123;
+            case SPRING:
+                System.out.println(&quot;温暖&quot;);
+                break;
+            case SUMMER:
+                System.out.println(&quot;炎热&quot;);
+            case AUTUMN:
+                System.out.println(&quot;舒适&quot;);
+                break;
+            case WINTER:
+                System.out.println(&quot;寒冷&quot;);
+                break;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220714160849714.png" alt="image-20220714160849714"></p>
+<h3 id="枚举实现接口"><a href="#枚举实现接口" class="headerlink" title="枚举实现接口"></a>枚举实现接口</h3><p>Gender.java</p>
+<pre><code class="java">package com.sakura.enum3;
+
+public enum Gender implements Run&#123;
+    MAN&#123;
+        @Override
+        public void run() &#123;
+            System.out.println(&quot;男士 大步走&quot;);
+        &#125;
+    &#125;,WOMAN&#123;
+        @Override
+        public void run() &#123;
+            System.out.println(&quot;女士 不紧不慢的走&quot;);
+        &#125;
+    &#125;;
+&#125;
+interface Run&#123;
+    void run();
+&#125;
+</code></pre>
+<p>Test.java</p>
+<pre><code class="java">package com.sakura.enum3;
+
+public class Test &#123;
+    public static void main(String[] args) &#123;
+        Gender people = Gender.MAN;
+        people.run();
+    &#125;
+&#125;
+</code></pre>
+<h3 id="练习-1"><a href="#练习-1" class="headerlink" title="练习"></a>练习</h3><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220714222230916.png" alt="image-20220714222230916"></p>
+<p>示例代码:</p>
+<p>Month.java</p>
+<pre><code class="java">package com.sakura.enum4;
+
+public enum Month &#123;
+    JANUARY(1,&quot;这是一月&quot;),
+    FEBRUARY(2,&quot;这是二月&quot;),
+    March(3,&quot;这是三月&quot;),
+    APRIL(4,&quot;这是四月&quot;),
+    MAY(5,&quot;这是五月&quot;),
+    JUNE(6,&quot;这是六月&quot;),
+    JULY(7,&quot;这是七月&quot;),
+    AUGUST(8,&quot;这是八月&quot;),
+    SEPTEMBER(9,&quot;这是九月&quot;),
+    OCTOBER(10,&quot;这是十月&quot;),
+    NOVEMBER(11,&quot;这是十一月&quot;),
+    DECEMBER(12,&quot;这是十二月&quot;);
+    private int value;
+    private String des;
+
+    Month(int value, String des) &#123;
+        this.value = value;
+        this.des = des;
+    &#125;
+
+    Month() &#123;
+    &#125;
+
+    @Override
+    public String toString() &#123;
+        return &quot;Month&#123;&quot; +
+                &quot;value=&quot; + value +
+                &quot;, des=&#39;&quot; + des + &#39;\&#39;&#39; +
+                &#39;&#125;&#39;;
+    &#125;
+&#125;
+</code></pre>
+<p>Test.java</p>
+<pre><code class="java">package com.sakura.enum4;
+
+import java.util.Scanner;
+
+public class Test &#123;
+    public static void main(String[] args) &#123;
+        System.out.println(&quot;请输入您要获取月份所对应的数字:&quot;);
+        Scanner input = new Scanner(System.in);
+        int num = input.nextInt();
+        getByValue(num);
+    &#125;
+    public static Month getByValue(int value)&#123;
+        switch (value)&#123;
+            case 1:
+                System.out.println(Month.JANUARY);
+                break;
+            case 2:
+                System.out.println(Month.FEBRUARY);
+                break;
+            case 3:
+                System.out.println(Month.March);
+                break;
+            case 4:
+                System.out.println(Month.APRIL);
+                break;
+            case 5:
+                System.out.println(Month.MAY);
+                break;
+            case 6:
+                System.out.println(Month.JUNE);
+                break;
+            case 7:
+                System.out.println(Month.JULY);
+                break;
+            case 8:
+                System.out.println(Month.AUGUST);
+                break;
+            case 9:
+                System.out.println(Month.SEPTEMBER);
+                break;
+            case 10:
+                System.out.println(Month.OCTOBER);
+                break;
+            case 11:
+                System.out.println(Month.NOVEMBER);
+                break;
+            case 12:
+                System.out.println(Month.DECEMBER);
+                break;
+        &#125;
+        return Month.JANUARY; # 这个地方的return只是为了避免报错，无特殊含义
+    &#125;
+
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220714223902463.png" alt="image-20220714223902463"></p>
+<h2 id="包装类初识"><a href="#包装类初识" class="headerlink" title="包装类初识"></a>包装类初识</h2><p>Java提供了两个类型系统，基本类型与引用类型，使用基本类型在于效率，然而当要使用只针对对象设计的API或新特性（例如泛型)，那么基本数据类型的数据就需要用包装类来包装。</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220714223558341.png" alt="image-20220714223558341"></p>
+<p>比如Integer有很多方法</p>
+<p>test.java</p>
+<pre><code class="java">package com.sakura.wrapper;
+
+public class test &#123;
+    public static void main(String[] args) &#123;
+        int a = 100;
+        System.out.println(Integer.MAX_VALUE);
+        System.out.println(Integer.MIN_VALUE);
+        String s1 = Integer.toBinaryString(a);
+        String s2 =Integer.toHexString(a);
+        System.out.println(&quot;s1 = &quot; + s1);
+        System.out.println(&quot;s2 = &quot; + s2);
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220714225729157.png" alt="image-20220714225729157"></p>
+<h2 id="自动装箱和自动拆箱"><a href="#自动装箱和自动拆箱" class="headerlink" title="自动装箱和自动拆箱"></a>自动装箱和自动拆箱</h2><p>基本数据类型转化为包装类型数据:</p>
+<p><strong>老方法</strong>:</p>
+<p>方式一:通过构造器</p>
+<pre><code class="java">Integer 标识符 = new Integer(基本数据类型);
+如: 
+int a = 10;
+Integer i1 = new Integer(a);
+</code></pre>
+<p>方法二</p>
+<pre><code class="java">Integer 标识符 = Integer.valueOf(基本数据类型);
+如:
+int a = 10;
+Integer i2 = Integer.valueOf(a);
+</code></pre>
+<p><strong>新方法</strong>:</p>
+<p>自动装箱</p>
+<pre><code class="java">Integer in = 基本数据类型;
+自动装箱底层采用的是 IntegerOf.valueOf(a);
+</code></pre>
+<p>包装类型数据转化为基本类型数据:</p>
+<pre><code class="java">Integer i4 = new Integer(20);
+</code></pre>
+<p>方法一:调用包装类对象的 intValue();</p>
+<pre><code class="java">int i = i4.intValue();
+</code></pre>
+<p>方法二:自动拆箱</p>
+<p>自动将引用数据类型变为基本数据类型</p>
+<pre><code class="java">int i =i4;
+</code></pre>
+<h2 id="基本类型与包装类型与字符串之间的转换"><a href="#基本类型与包装类型与字符串之间的转换" class="headerlink" title="基本类型与包装类型与字符串之间的转换"></a>基本类型与包装类型与字符串之间的转换</h2><p>1、字符串—&gt;基本数据类型</p>
+<p>Integer.parseInt(“字符串纯数字”); 如果不是纯数字，会报异常,NumberFormatException</p>
+<p>示例代码:</p>
+<p>test.java</p>
+<pre><code class="java">package com.sakura.wrapper2;
+
+import java.util.Scanner;
+
+public class test &#123;
+    public static void main(String[] args) &#123;
+        Scanner input = new Scanner(System.in);
+        System.out.println(&quot;请输入一个数字:&quot;);
+        String a = input.next();
+        int b = Integer.parseInt(a);
+        System.out.println(&quot;b = &quot; + b);
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220715152344679.png" alt="image-20220715152344679"></p>
+<p>方法二:</p>
+<pre><code>Integer i = new Integer(&quot;字符串纯数字&quot;);
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220715152746653.png" alt="image-20220715152746653"></p>
+<p>注意char中没有此类方法:</p>
+<pre><code class="java">&quot;AB&quot;.charAt(1); 0代表第一个字符，1代表第二个字符
+</code></pre>
+<p>2、基本类型数据转为字符串</p>
+<p>方法一:</p>
+<pre><code class="java">int a = 10;
+String ss = &quot;&quot;+a;
+</code></pre>
+<p>方法二:</p>
+<pre><code class="java">int b = 20;
+string i = String.valueOf(b);
+</code></pre>
+<h2 id="对应包装类型的缓存区"><a href="#对应包装类型的缓存区" class="headerlink" title="对应包装类型的缓存区"></a>对应包装类型的缓存区</h2><p>包装类型数据，只能接受对应的包装类型，不能再采用类型自动提升</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220716155808087.png" alt="image-20220716155808087"></p>
+<p>包装类型有一个缓存区，超过这个区域，就会去new一个包装类</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220716160816365.png" alt="image-20220716160816365"></p>
+<p>示例代码:</p>
+<pre><code class="java">public class test &#123;
+    public static void main(String[] args) &#123;
+        Integer a = 100;
+        Integer b = 100;
+        System.out.println(&quot;1-----&gt;&quot; + (a==b));
+        Integer c = 1000;
+        Integer d = 1000;
+        System.out.println(&quot;2------&gt;&quot;+(c==d));
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220716161726283.png" alt="image-20220716161726283"></p>
+<h2 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h2><p>什么是内部类?</p>
+<p>将一个类A定义在另一个类B里面，里面的那个类A就称为内部类，B则称为外部类。</p>
+<p> 作用:</p>
+<p>1.可以打破java单继承的限制<br>2.在内部类中做更多的功能为外部类服务<br>3.可以资源的隐藏</p>
+<p>特点:</p>
+<p>静态内部类可以访问静态外部类资源</p>
+<p>静态的属性，静态的方法</p>
+<p>修饰：</p>
+<p>外部类只能被public和public修饰，内部类无限制</p>
+<p>语法结构：</p>
+<pre><code class="java">class 外部类名&#123;
+    [权限修饰符四种] static [final] class 内部类名&#123;
+        
+    &#125;
+&#125;
+</code></pre>
+<h2 id="非静态内部类"><a href="#非静态内部类" class="headerlink" title="非静态内部类"></a>非静态内部类</h2><p>不加static修饰的内部类</p>
+<pre><code class="java">class 外部类名&#123;
+    [权限修饰符四种] class 内部类名&#123;
+        
+    &#125;
+&#125;
+</code></pre>
+<p>特点：</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220901212139028.png" alt="image-20220901212139028"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220901212912590.png" alt="image-20220901212912590"></p>
+<h1 id="day13"><a href="#day13" class="headerlink" title="day13"></a>day13</h1><h2 id="局部内部类"><a href="#局部内部类" class="headerlink" title="局部内部类"></a>局部内部类</h2><p>不是重点</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220902214930486.png" alt="image-20220902214930486"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220902222245029.png" alt="image-20220902222245029"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220902230731669.png" alt="image-20220902230731669"></p>
+<h2 id="匿名内部类的声明"><a href="#匿名内部类的声明" class="headerlink" title="匿名内部类的声明"></a>匿名内部类的声明</h2><p>匿名内部类：没有名字的类</p>
+<p>匿名对象：没有名字的对象</p>
+<p>方式一：</p>
+<pre><code class="java">new 父类()&#123;
+    重写父类方法
+&#125;
+创建了一个子类，但是子类没有名字
+</code></pre>
+<p>方式二：</p>
+<pre><code class="java">new 父类(实参列表)&#123;
+    重写父类方法
+&#125;
+创建了一个子类，但是子类没有名字
+</code></pre>
+<p>方式三：</p>
+<pre><code class="java">new 父接口()&#123;
+    重写父类方法
+&#125;
+创建了一个子类，但是子类没有名字
+</code></pre>
+<p>方式四:</p>
+<pre><code class="java">new 父抽象类()&#123;
+    重写父类方法
+&#125;
+创建了一个子类，但是子类没有名字
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220903003418869.png" alt="image-20220903003418869"></p>
+<p>示例代码：</p>
+<pre><code class="java">package com.sakura.innerclass.anosclass;
+
+import org.junit.Test;
+
+interface Run&#123;
+    void run();
+&#125;
+
+abstract class Animal&#123;
+    abstract void eat();
+&#125;
+
+public class TestLocal &#123;
+    @Test
+    public void test01()&#123;
+        new Father()&#123;
+            @Override
+            public void show() &#123;
+                System.out.println(&quot;this is new show-1()&quot;);
+            &#125;
+        &#125;;
+    &#125;
+    @Test
+    public void test02()&#123;
+        new Father(30)&#123;
+            @Override
+            public void show() &#123;
+                System.out.println(&quot;this is new show-2(30)&quot;);
+            &#125;
+        &#125;;
+    &#125;
+    @Test
+    public void test03()&#123;
+        new Run()&#123;
+            @Override
+            public void run() &#123;
+                System.out.println(&quot;this is new Run&quot;);
+            &#125;
+        &#125;;
+
+    &#125;
+    @Test
+    public void test04()&#123;
+        new Animal()&#123;
+            @Override
+            void eat() &#123;
+                System.out.println(&quot;this is new eat()&quot;);
+            &#125;
+        &#125;
+    &#125;
+
+&#125;
+class Father&#123;
+    int age;
+    String name;
+    public Father(int age)&#123;
+        this.age=age;
+    &#125;
+    public Father()&#123;
+
+    &#125;
+    public void show()&#123;
+        System.out.println(&quot;this is father show(&quot;);
+    &#125;
+&#125;
+</code></pre>
+<h2 id="匿名内部类的使用"><a href="#匿名内部类的使用" class="headerlink" title="匿名内部类的使用"></a>匿名内部类的使用</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220903012609400.png" alt="image-20220903012609400"></p>
+<pre><code class="java">package com.sakura.innerclass.anosclass;
+
+import org.junit.Test;
+
+interface Fly&#123;
+    void fly();
+&#125;
+
+public class TestLocal2 &#123;
+    @Test
+    public void test03()&#123;
+        method(new Fly()&#123;
+            @Override
+            public void fly() &#123;
+                System.out.println(&quot;超人会飞&quot;);
+            &#125;
+        &#125;);
+        &#125;
+    public static void method(Fly fly) &#123;
+        fly.fly();
+    &#125;
+    @Test
+    public void test01()&#123;
+        new Father()&#123;
+            @Override
+            public void show() &#123;
+                System.out.println(&quot;this is new Father show()&quot;);
+            &#125;
+        &#125;.show();
+    &#125;
+    @Test
+    public void test02()&#123;
+        Father father = new Father(99)&#123;
+            @Override
+            public void show() &#123;
+                System.out.println(&quot;this is new Father show-2()&quot;);
+            &#125;
+        &#125;;
+        father.show();
+        father.test();
+        System.out.println(father.num);
+    &#125;
+&#125;
+class Father&#123;
+    int num;
+    public Father(int num) &#123;
+        this.num = num;
+    &#125;
+
+    public Father() &#123;
+    &#125;
+
+    public void test()&#123;
+        System.out.println(&quot;this is Father test&quot;);
+    &#125;
+
+    public void show()&#123;
+        System.out.println(&quot;this is Father show()&quot;);
+    &#125;
+&#125;
+</code></pre>
+<p>·<img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220903012819536.png" alt="image-20220903012819536"></p>
+<h2 id="匿名内部类练习一"><a href="#匿名内部类练习一" class="headerlink" title="匿名内部类练习一"></a>匿名内部类练习一</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220903140738094.png" alt="image-20220903140738094"></p>
+<p>Employee.java</p>
+<pre><code class="java">package com.sakura.innerclass.eaer;
+
+public class Employee &#123;
+    private int num;
+    private String name;
+    private double salary;
+
+    public Employee(int num, String name, double salary) &#123;
+        this.num = num;
+        this.name = name;
+        this.salary = salary;
+    &#125;
+
+    public void setNum(int num) &#123;
+        this.num = num;
+    &#125;
+
+    public void setName(String name) &#123;
+        this.name = name;
+    &#125;
+
+    public void setSalary(double salary) &#123;
+        this.salary = salary;
+    &#125;
+
+    public int getNum() &#123;
+        return num;
+    &#125;
+
+    public String getName() &#123;
+        return name;
+    &#125;
+
+    public double getSalary() &#123;
+        return salary;
+    &#125;
+
+    @Override
+    public String toString() &#123;
+        return &quot;Employee&#123;&quot; +
+                &quot;num=&quot; + num +
+                &quot;, name=&#39;&quot; + name + &#39;\&#39;&#39; +
+                &quot;, salary=&quot; + salary +
+                &#39;&#125;&#39;;
+    &#125;
+
+    public Employee() &#123;
+    &#125;
+&#125;
+</code></pre>
+<p>Test.java</p>
+<pre><code class="java">package com.sakura.innerclass.eaer;
+
+import java.util.Arrays;
+import java.util.Comparator;
+
+public class Test &#123;
+    public static void main(String[] args) &#123;
+        Employee e1 = new Employee(1,&quot;李白&quot;,5489.21);
+        Employee e2 = new Employee(2,&quot;杜甫&quot;,6984.66);
+        Employee e3 = new Employee(3,&quot;白居易&quot;,8888.666);
+        Employee e4 = new Employee(4,&quot;苏轼&quot;,4569.44);
+        Employee e5 = new Employee(5,&quot;李清照&quot;,8999.99);
+        Employee[] employees = &#123;e1,e2,e3,e4,e5&#125;;
+//        SortEmployee sortEmployee = new SortEmployee();
+        System.out.println(&quot;排序前&quot;);
+        arrayprint(employees);
+        System.out.println(&quot;排序后&quot;);
+        Arrays.sort(employees, new Comparator() &#123;
+            @Override
+            public int compare(Object o1, Object o2) &#123;
+                Employee e1 = (Employee)o1;
+                Employee e2 = (Employee)o2;
+                return Double.compare(e1.getSalary(),e2.getSalary());
+            &#125;
+        &#125;);
+        arrayprint(employees);
+
+
+    &#125;
+    public static void arrayprint(Employee[] e)&#123;
+        for (Employee employee : e) &#123;
+            System.out.println(employee);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>这里使用了匿名内部类，要重点关注</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220903153227023.png" alt="image-20220903153227023"></p>
+<p>运行结果：</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220903154308675.png" alt="image-20220903154308675"></p>
+<h2 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220903160756959.png" alt="image-20220903160756959"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220903161608984.png" alt="image-20220903161608984"></p>
+<h2 id="项目-客户信息管理系统"><a href="#项目-客户信息管理系统" class="headerlink" title="项目:客户信息管理系统"></a>项目:客户信息管理系统</h2><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220903162255657.png" alt="image-20220903162255657"></p>
+<h2 id><a href="#" class="headerlink" title></a><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220903162314145.png" alt="image-20220903162314145"></h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220903162332627.png" alt="image-20220903162332627"></p>
+<h2 id="开发简单架构"><a href="#开发简单架构" class="headerlink" title="开发简单架构"></a>开发简单架构</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220903162934336.png" alt="image-20220903162934336"></p>
+<h1 id="day14"><a href="#day14" class="headerlink" title="day14"></a>day14</h1><h2 id="异常体系"><a href="#异常体系" class="headerlink" title="异常体系"></a>异常体系</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220906211332365.png" alt="image-20220906211332365"></p>
+<h2 id="异常的演示"><a href="#异常的演示" class="headerlink" title="异常的演示"></a>异常的演示</h2><pre><code class="java">package com.sakura.exception;
+
+import org.junit.Test;
+
+public class test1 &#123;
+    @Test
+    public void arryException()&#123;
+        int[] arr = &#123;1,2,3&#125;;
+        try &#123;
+            System.out.println(arr[3]);
+        &#125;catch (ArrayIndexOutOfBoundsException e)&#123;
+            e.printStackTrace(); //打印异常信息
+            e.getMessage(); //获取异常位置
+            System.out.println(&quot;该行代码已执行！&quot;);
+        &#125;
+
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220906220355874.png" alt="image-20220906220355874"></p>
+<h2 id="使用try-catch处理异常"><a href="#使用try-catch处理异常" class="headerlink" title="使用try catch处理异常"></a>使用try catch处理异常</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220906224711456.png" alt="image-20220906224711456"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220906225236503.png" alt="image-20220906225236503"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220906225500468.png" alt="image-20220906225500468"></p>
+<p>但是这种写起来比较麻烦，如果采用了多层catch，我们可以省略为一个Exception</p>
+<pre><code class="java">try&#123;
+    
+&#125;catch(xxx)&#123;
+    
+&#125;catch(xxx)&#123;
+    
+&#125;catch(Exception e)&#123;
+&#125;
+</code></pre>
+<h2 id="使用try-catch-finally处理异常"><a href="#使用try-catch-finally处理异常" class="headerlink" title="使用try catch finally处理异常"></a>使用try catch finally处理异常</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220906232454261.png" alt="image-20220906232454261"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220906234338231.png" alt="image-20220906234338231"></p>
+<h2 id="使用throw和throws处理异常"><a href="#使用throw和throws处理异常" class="headerlink" title="使用throw和throws处理异常"></a>使用throw和throws处理异常</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220907002856303.png" alt="image-20220907002856303"></p>
+<p>示例代码一:</p>
+<pre><code class="java">package com.sakura.exception.throwexception;
+
+public class ThrowException2 &#123;
+    public static void main(String[] args) &#123;
+        try&#123;
+            showMessage(4);
+        &#125;catch (ArrayIndexOutOfBoundsException e)&#123;
+            System.err.println(e.getMessage());
+            System.out.println(&quot;这行也执行啦&quot;);
+        &#125;
+    &#125;
+    public static void showMessage(int index)&#123;
+        int [] arr = &#123;1,2,3&#125;;
+        if(index &lt;0 || index &gt;= arr.length)&#123;
+            throw new ArrayIndexOutOfBoundsException(&quot;数组下标越界了！&quot;);
+        &#125;
+        System.out.println(arr[index]);
+    &#125;
+&#125;
+</code></pre>
+<p>此为运行时异常:</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220907010102445.png" alt="image-20220907010102445"></p>
+<p>示例代码二:</p>
+<pre><code class="java">package com.sakura.exception.throwexception;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+
+public class ThrowException &#123;
+    public static void main(String[] args) &#123;
+        try &#123;
+            showMessage();
+        &#125; catch (FileNotFoundException e) &#123;
+            throw new RuntimeException(e);
+        &#125;
+    &#125;
+    public static void showMessage() throws FileNotFoundException&#123;
+        File file = new File(&quot;C:\\Users\\Sakura\\Desktop\\图片\\love.jpg&quot;);
+        boolean exists = file.exists();
+        if(!exists)&#123;
+            throw new FileNotFoundException(&quot;文件不存在o&quot;);
+        &#125;
+        System.out.println(exists);
+    &#125;
+&#125;
+</code></pre>
+<p>这里是一个编译时异常，必须在方法名后throw异常</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220907004537390.png" alt="image-20220907004537390"></p>
+<h2 id="异常类方法重写"><a href="#异常类方法重写" class="headerlink" title="异常类方法重写"></a>异常类方法重写</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220910224705836.png" alt="image-20220910224705836"></p>
+<p>如，此时子类的异常比父类大就会报错，将异常换位置即可！</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220910225655631.png" alt="image-20220910225655631"></p>
+<h2 id="自定义异常的方式"><a href="#自定义异常的方式" class="headerlink" title="自定义异常的方式"></a>自定义异常的方式</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220910231023392.png" alt="image-20220910231023392"></p>
+<h1 id="day15"><a href="#day15" class="headerlink" title="day15"></a>day15</h1><h2 id="多线程简介"><a href="#多线程简介" class="headerlink" title="多线程简介"></a>多线程简介</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220911001841326.png" alt="image-20220911001841326"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220911002102628.png" alt="image-20220911002102628"></p>
+<p>如何编写多线程程序？</p>
+<ul>
+<li>继承thread类</li>
+<li>实现Runnable接口</li>
+<li>实现Callable接口</li>
+<li>线程池</li>
+</ul>
+<h2 id="实现多线程方式一-继承Thread类"><a href="#实现多线程方式一-继承Thread类" class="headerlink" title="实现多线程方式一:继承Thread类"></a>实现多线程方式一:继承Thread类</h2><p>创建两条线程:</p>
+<p>采用继承的方式创建多线程</p>
+<ul>
+<li>创建一个类继承Thead</li>
+<li>重写run方法，多线程会执行重写的方法</li>
+<li>启动线程:线程对象.start()</li>
+</ul>
+<pre><code class="java">Thread.currentThead().getName()  # 获取当前线程名称
+</code></pre>
+<p>Test.java</p>
+<pre><code class="java">package com.sakura.thread.extendthread;
+
+public class Test1 &#123;
+    public static void main(String[] args) &#123;
+        Thread.currentThread().setName(&quot;这是线程一&quot;); //设置主线程的名字
+        RabbitThead rabbitThead = new RabbitThead(); //创建对象
+        rabbitThead.setName(&quot;这是线程二&quot;); //设置第二个线程名字
+        rabbitThead.start(); //启动rabbitThead线程
+        while (true)&#123;
+            System.out.println(Thread.currentThread().getName()+&quot;乌龟正在跑&quot;);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>RabbitThread.java</p>
+<pre><code class="java">package com.sakura.thread.extendthread;
+
+public class RabbitThead extends Thread&#123;
+    public void run()&#123;
+        while (true)&#123;
+            System.out.println(Thread.currentThread().getName()+&quot;兔子正在跑&quot;);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>运行结果:</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220911004936337.png" alt="image-20220911004936337"></p>
+<h2 id="创建多线程方式二-实现Runnable接口"><a href="#创建多线程方式二-实现Runnable接口" class="headerlink" title="创建多线程方式二:实现Runnable接口"></a>创建多线程方式二:实现Runnable接口</h2><ul>
+<li>创建一个对象实现 Runnable接口</li>
+<li>重写run方法</li>
+<li>创建 Runnable对象</li>
+<li>创建Thread对象 将 Runnable对象作为参数传递</li>
+<li>调用start()方法，启动线程</li>
+</ul>
+<p>继承Thread类与实现Runnable接口创建多线程方法对比:</p>
+<ul>
+<li>继承的方式简单</li>
+<li>实现Runnable接口可以更好的实现资源共享</li>
+</ul>
+<p>示例代码:</p>
+<p>Test.java</p>
+<pre><code class="java">package com.sakura.thread.runnablethread;
+
+public class Test &#123;
+
+    public static void main(String[] args) &#123;
+        Thread.currentThread().setName(&quot;这是线程一&quot;);
+        //1.创建Runnable对象
+        RabbitRunnable rabbitRunnable = new RabbitRunnable();
+        //2.创建Thead类，将 Runnable对象作为参数传递
+        Thread t1 = new Thread(rabbitRunnable);
+        t1.setName(&quot;这是线程二&quot;); //设置线程二名字
+        t1.start();        //开启线程
+        while (true)&#123;
+            System.out.println(Thread.currentThread().getName()+&quot;乌龟跑&quot;);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>RabbitRunnable.java</p>
+<pre><code class="java">package com.sakura.thread.runnablethread;
+
+public class RabbitRunnable implements Runnable&#123;
+    @Override
+    public void run() &#123;
+        while (true)&#123;
+            System.out.println(Thread.currentThread().getName()+&quot;兔子跑&quot;);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>运行结果:</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220911012040254.png" alt="image-20220911012040254"></p>
+<h2 id="采用匿名内部类的方式创建多线程程序"><a href="#采用匿名内部类的方式创建多线程程序" class="headerlink" title="采用匿名内部类的方式创建多线程程序"></a>采用匿名内部类的方式创建多线程程序</h2><p>示例代码:</p>
+<pre><code class="java">package com.sakura.thread;
+
+import org.junit.Test;
+
+public class AnonymousTest &#123;
+    public static void main(String[] args) &#123;
+        new Thread()&#123;
+            @Override
+            public void run() &#123;
+                while (true)&#123;
+                    System.out.println(&quot;乌龟跑&quot;);
+                &#125;
+            &#125;
+        &#125;.start();
+        new Thread(new Runnable() &#123;
+            @Override
+            public void run() &#123;
+                while (true)&#123;
+                    System.out.println(&quot;兔子跑&quot;);
+                &#125;
+            &#125;
+        &#125;).start();
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220911113641398.png" alt="image-20220911113641398"></p>
+<h2 id="使用构造器赋值线程名"><a href="#使用构造器赋值线程名" class="headerlink" title="使用构造器赋值线程名"></a>使用构造器赋值线程名</h2><p><strong>一、继承Thread类构造器</strong></p>
+<p>使用继承的方式，可以采用this调用父类资源getName()</p>
+<pre><code class="java">package com.sakura.thread;
+
+public class Test1 &#123;
+    public static void main(String[] args) &#123;
+        RabbitThread1 t1 = new RabbitThread1(&quot;小白兔&quot;);
+        RabbitThread1 t2 = new RabbitThread1(&quot;小灰兔&quot;);
+        t1.start();
+        t2.start();
+    &#125;
+&#125;
+class RabbitThread1 extends Thread&#123;
+    public RabbitThread1(String name) &#123;
+        super(name);
+    &#125;
+    @Override
+    public void run() &#123;
+        for (int i = 0;i&lt;5;i++)&#123;
+            System.out.println(this.getName()+&quot;正在跑&quot;);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220912221159272.png" alt="image-20220912221159272"></p>
+<p>调用父类构造器</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220912221227523.png" alt="image-20220912221227523"></p>
+<p><strong>二、继承Runnable接口</strong></p>
+<pre><code class="java">package com.sakura.thread;
+
+public class Test2 &#123;
+    public static void main(String[] args) &#123;
+        ToriseThread toriseThread = new ToriseThread();
+        Thread t1 = new Thread(toriseThread,&quot;绿毛龟&quot;);
+        Thread t2 = new Thread(toriseThread,&quot;杰尼龟&quot;);
+        t1.start();
+        t2.start();
+    &#125;
+&#125;
+class ToriseThread implements Runnable&#123;
+    @Override
+    public void run() &#123;
+        for (int i = 0;i&lt;5;i++)&#123;
+            System.out.println(Thread.currentThread().getName()); //继承Runnable无法调用this
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<h2 id="线程常用方法"><a href="#线程常用方法" class="headerlink" title="线程常用方法"></a>线程常用方法</h2><p><strong>构造方法:</strong></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220912172319527.png" alt="image-20220912172319527"></p>
+<p><strong>常用方法系列:</strong></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220912172409403.png" alt="image-20220912172409403"></p>
+<p><strong>构造器设置名字:</strong></p>
+<p>Test.java</p>
+<pre><code class="java">package com.sakura.thread;
+
+public class Test &#123;
+    public static void main(String[] args) &#123;
+        RabbitThread rabbitThread = new RabbitThread();
+        Thread t1 = new Thread(rabbitThread,&quot;小白兔&quot;);
+        Thread t2 = new Thread(rabbitThread,&quot;小黑兔&quot;);
+        System.out.println(&quot;t1.isAlive()=&quot;+t1.isAlive());
+        System.out.println(&quot;t2.isAlive()=&quot;+t2.isAlive());
+        t1.start();
+        t2.start();
+        System.out.println(&quot;t1.isAlive()=&quot;+t1.isAlive());
+        System.out.println(&quot;t2.isAlive()=&quot;+t2.isAlive());
+    &#125;
+&#125;
+class RabbitThread implements Runnable&#123;
+    @Override
+    public void run() &#123;
+        while (true)&#123;
+            System.out.println(Thread.currentThread().getName()+&quot;正在跑&quot;);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p><strong>设置优先级:</strong></p>
+<pre><code>setPriority(优先级):
+    1&lt;= 优先级 &lt;=10
+// 如果没有指定，线程的默认优先级为5
+// 优先级低也会执行，也有执行机会 
+</code></pre>
+<p>Test.java</p>
+<pre><code class="java">package com.sakura.thread;
+
+public class Test &#123;
+    public static void main(String[] args) &#123;
+        RabbitThread rabbitThread = new RabbitThread();
+        Thread t1 = new Thread(rabbitThread,&quot;小白兔&quot;);
+        Thread t2 = new Thread(rabbitThread,&quot;小黑兔&quot;);
+        t1.setPriority(10);
+        t2.setPriority(1);
+        t1.start();
+        t2.start();
+    &#125;
+&#125;
+class RabbitThread implements Runnable&#123;
+    @Override
+    public void run() &#123;
+        for(int i =0;i&lt;20;i++)&#123;
+            System.out.println(Thread.currentThread().getName()+&quot;正在跑&quot;);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>输出结果:</p>
+<pre><code class="java">小白兔正在跑
+小白兔正在跑
+小白兔正在跑
+小白兔正在跑
+小白兔正在跑
+小黑兔正在跑
+小白兔正在跑
+小白兔正在跑
+小白兔正在跑
+小白兔正在跑
+小白兔正在跑
+小白兔正在跑
+小黑兔正在跑
+小黑兔正在跑
+小黑兔正在跑
+小白兔正在跑
+小黑兔正在跑
+小白兔正在跑
+小白兔正在跑
+小白兔正在跑
+小白兔正在跑
+小白兔正在跑
+小白兔正在跑
+小白兔正在跑
+小白兔正在跑
+小黑兔正在跑
+小黑兔正在跑
+小黑兔正在跑
+小黑兔正在跑
+小黑兔正在跑
+小黑兔正在跑
+小黑兔正在跑
+小黑兔正在跑
+小黑兔正在跑
+小黑兔正在跑
+小黑兔正在跑
+小黑兔正在跑
+小黑兔正在跑
+小黑兔正在跑
+小黑兔正在跑
+</code></pre>
+<p><strong>设置睡眠:</strong></p>
+<p>Test.java</p>
+<pre><code class="java">package com.sakura.thread;
+
+public class Test &#123;
+    public static void main(String[] args) &#123;
+        RabbitThread rabbitThread = new RabbitThread();
+        Thread t1 = new Thread(rabbitThread,&quot;小白兔&quot;);
+        Thread t2 = new Thread(rabbitThread,&quot;小黑兔&quot;);
+        t1.setPriority(10);
+        t2.setPriority(1);
+        t1.start();
+        t2.start();
+    &#125;
+&#125;
+class RabbitThread implements Runnable&#123;
+    @Override
+    public void run() &#123;
+        for(int i =0;i&lt;100;i++)&#123;
+            //run方法出现异常只能采用 try&#123;&#125;catch&#123;&#125;方式处理 因为子类不能抛出比父类更大的异常
+            //而Runnable中没有抛出异常
+            try &#123;
+                Thread.sleep(1000); //单位是毫秒
+            &#125; catch (InterruptedException e) &#123;
+                throw new RuntimeException(e);
+            &#125;
+            System.out.println(Thread.currentThread().getName()+&quot;正在跑&quot;);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p><strong>使用join方法插队:</strong></p>
+<p>插队的线程调用join(2000)那么被插队的线程要进行等待 2000ms等插队的线程执行完毕后或者等待时间已到那么继续执行</p>
+<pre><code class="java">package com.sakura.thread;
+
+public class Test &#123;
+    public static void main(String[] args) &#123;
+        RabbitThread rabbitThread = new RabbitThread();
+        Thread t1 = new Thread(rabbitThread,&quot;小白兔&quot;);
+        t1.start();
+        for(int i=0;i&lt;20;i++)&#123;
+            if (i==10)&#123;
+                try &#123;
+                    t1.join();
+                &#125; catch (InterruptedException e) &#123;
+                    throw new RuntimeException(e);
+                &#125;
+            &#125;
+            System.out.println(&quot;主线程跑\t&quot;+i);
+        &#125;
+    &#125;
+&#125;
+class RabbitThread implements Runnable&#123;
+    @Override
+    public void run() &#123;
+        for(int i =0;i&lt;20;i++)&#123;
+            System.out.println(Thread.currentThread().getName()+&quot;\t正在跑\t&quot;+i);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>输出:</p>
+<pre><code>主线程跑    0
+主线程跑    1
+主线程跑    2
+主线程跑    3
+主线程跑    4
+主线程跑    5
+主线程跑    6
+主线程跑    7
+主线程跑    8
+小白兔    正在跑    0
+主线程跑    9
+小白兔    正在跑    1
+小白兔    正在跑    2
+小白兔    正在跑    3
+小白兔    正在跑    4
+小白兔    正在跑    5
+小白兔    正在跑    6
+小白兔    正在跑    7
+小白兔    正在跑    8
+小白兔    正在跑    9
+小白兔    正在跑    10
+小白兔    正在跑    11
+小白兔    正在跑    12
+小白兔    正在跑    13
+小白兔    正在跑    14
+小白兔    正在跑    15
+小白兔    正在跑    16
+小白兔    正在跑    17
+小白兔    正在跑    18
+小白兔    正在跑    19
+主线程跑    10
+主线程跑    11
+主线程跑    12
+主线程跑    13
+主线程跑    14
+主线程跑    15
+主线程跑    16
+主线程跑    17
+主线程跑    18
+主线程跑    19
+</code></pre>
+<p>如果我们设置下等待时间:</p>
+<pre><code class="java">package com.sakura.thread;
+
+public class Test &#123;
+    public static void main(String[] args) &#123;
+        RabbitThread rabbitThread = new RabbitThread();
+        Thread t1 = new Thread(rabbitThread,&quot;小白兔&quot;);
+        t1.start();
+        for(int i=0;i&lt;20;i++)&#123;
+            if (i==10)&#123;
+                try &#123;
+                    t1.join(2000);
+                &#125; catch (InterruptedException e) &#123;
+                    throw new RuntimeException(e);
+                &#125;
+            &#125;
+            System.out.println(&quot;主线程跑\t&quot;+i);
+        &#125;
+    &#125;
+&#125;
+class RabbitThread implements Runnable&#123;
+    @Override
+    public void run() &#123;
+        for(int i =0;i&lt;20;i++)&#123;
+            try &#123;
+                Thread.sleep(4000);
+            &#125; catch (InterruptedException e) &#123;
+                throw new RuntimeException(e);
+            &#125;
+            System.out.println(Thread.currentThread().getName()+&quot;\t正在跑\t&quot;+i);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>此时输出结果:</p>
+<pre><code class="java">主线程跑    0
+主线程跑    1
+主线程跑    2
+主线程跑    3
+主线程跑    4
+主线程跑    5
+主线程跑    6
+主线程跑    7
+主线程跑    8
+主线程跑    9
+主线程跑    10
+主线程跑    11
+主线程跑    12
+主线程跑    13
+主线程跑    14
+主线程跑    15
+主线程跑    16
+主线程跑    17
+主线程跑    18
+主线程跑    19
+小白兔    正在跑    0
+小白兔    正在跑    1
+    ...
+</code></pre>
+<h2 id="常用方法系列二"><a href="#常用方法系列二" class="headerlink" title="常用方法系列二"></a>常用方法系列二</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220912224414761.png" alt="image-20220912224414761"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220912225128380.png" alt="image-20220912225128380"></p>
+<p><strong>yield()方法-线程的礼让</strong></p>
+<p>所谓线程的礼让不过是从运行状态先回到就绪状态，事实上，当优先级相同时，它们仍然具有相同的概率被调用！</p>
+<p>示例代码:</p>
+<pre><code class="java">package com.sakura.thread.method;
+
+public class Test &#123;
+    public static void main(String[] args) &#123;
+        RabbitThread rabbitThread = new RabbitThread();
+        Thread t1 = new Thread(rabbitThread,&quot;小灰兔&quot;);
+        t1.start();
+        for (int i =0; i&lt;20;i++)&#123;
+            if (i==5)&#123;
+                Thread.yield();
+            &#125;
+            System.out.println(Thread.currentThread().getName()+&quot;\t正在运行\t&quot;+i);
+        &#125;
+    &#125;
+&#125;
+class RabbitThread implements Runnable&#123;
+    @Override
+    public void run() &#123;
+        for(int i = 0; i&lt;20; i++)&#123;
+            System.out.println(Thread.currentThread().getName()+&quot;\t正在运行\t&quot;+i);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p><strong>stop()与setDaemon(true)</strong></p>
+<pre><code class="java">stop() //结束线程
+setDaemon(true) //守护线程        
+</code></pre>
+<p>setDaemon的示例用法:</p>
+<pre><code class="java">package com.sakura.thread.method;
+
+public class Test &#123;
+    public static void main(String[] args) &#123;
+        RabbitThread rabbitThread = new RabbitThread();
+        Thread t1 = new Thread(rabbitThread,&quot;小灰兔&quot;);
+        t1.setDaemon(true);
+        t1.start();
+        for (int i =0; i&lt;30;i++)&#123;
+            System.out.println(Thread.currentThread().getName()+&quot;\t正在运行\t&quot;+i);
+        &#125;
+    &#125;
+&#125;
+class RabbitThread implements Runnable&#123;
+    @Override
+    public void run() &#123;
+        while (true)&#123;
+            System.out.println(Thread.currentThread().getName()+&quot;\t正在运行\t&quot;);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>t1进程是主进程的守护进程，当主进程停止时，t1也会随之停止</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220912233804696.png" alt="image-20220912233804696"></p>
+<p><strong>volatile</strong></p>
+<p>volatile的作用是确保不会因编译器的优化而省略某些指令，volatile的变量是说这变量可能会被意想不到地改变，每次都小心地重新读取这个变量的值，而不是使用保存在寄存器里的备份，这样，编译器就不会去假设这个变量的值了。</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220913001220149.png" alt="image-20220913001220149"></p>
+<p>示例代码:</p>
+<pre><code class="java">package com.sakura.thread.method;
+
+public class Test &#123;
+    public volatile static boolean flag = true; //当没有加volatile程序不会结束，加上后才会结束
+    public static void main(String[] args) &#123;
+        new Thread(new Runnable() &#123;
+            @Override
+            public void run() &#123;
+                while (flag)&#123;
+//                    System.out.println(&quot;程序执行中~~~&quot;);
+                &#125;
+            &#125;
+        &#125;).start();
+        try &#123;
+            Thread.sleep(1000);
+        &#125; catch (InterruptedException e) &#123;
+            throw new RuntimeException(e);
+        &#125;
+        flag = false;
+
+    &#125;
+&#125;
+</code></pre>
+<h2 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220913002500973.png" alt="image-20220913002500973"></p>
+<p>线程安全问题:当多个线程操作共享数据时有可能会发生线程安全问题<br>解决线程安全问题:<br>同步代码块<br>同步方法<br>Lock : 公平锁 非公平锁 juc</p>
+<p>模拟火车站卖票，体现线程安全问题:</p>
+<p>问题代码:</p>
+<pre><code class="java">package com.sakura.thread.ticket;
+
+public class Test &#123;
+    public static void main(String[] args) &#123;
+        TicketThread ticketThread1 = new TicketThread(&quot;售票点一&quot;);
+        TicketThread ticketThread2 = new TicketThread(&quot;售票点二&quot;);
+        TicketThread ticketThread3 = new TicketThread(&quot;售票点三&quot;);
+        ticketThread1.start();
+        ticketThread2.start();
+        ticketThread3.start();
+    &#125;
+
+&#125;
+
+class TicketThread extends Thread&#123;
+    public TicketThread(String name) &#123;
+        super(name);
+    &#125;
+
+    @Override
+    public void run() &#123;
+        int count = 100;
+        while (true)&#123;
+            if (count &lt;= 0)&#123;
+                break;
+            &#125;
+            System.out.println(Thread.currentThread().getName()+&quot;已卖出第&quot;+count+&quot;票!&quot;);
+            count--;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220913004908511.png" alt="image-20220913004908511"></p>
+<p>我们可以发现卖的票有重复的，我们本想要卖100张，因为多线程我们实际卖了300张。</p>
+<h2 id="使用同步代码块解决线程安全问题"><a href="#使用同步代码块解决线程安全问题" class="headerlink" title="使用同步代码块解决线程安全问题"></a>使用同步代码块解决线程安全问题</h2><p>出现的问题出现了0票或者重复的票，需要有一个监视器查看卖票的数据</p>
+<p>解决方式一:使用同步代码块:</p>
+<pre><code class="java">synchronized(同步监视器对象)&#123;
+
+&#125; //同步监视器对象必须是引用数据类型,当多条线程操作共享数据同步监视器对象必须是同一个
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220913011504347.png" alt="image-20220913011504347"></p>
+<p>保证在同步代码块内只有一条线程在执行其他线程需要在同步代码块外等待</p>
+<pre><code class="java">package com.sakura.thread.ticket;
+
+public class Test &#123;
+    public static void main(String[] args) &#123;
+        TicketThread ticketThread1 = new TicketThread(&quot;售票点一&quot;);
+        TicketThread ticketThread2 = new TicketThread(&quot;售票点二&quot;);
+        TicketThread ticketThread3 = new TicketThread(&quot;售票点三&quot;);
+        ticketThread1.start();
+        ticketThread2.start();
+        ticketThread3.start();
+    &#125;
+&#125;
+class TicketThread extends Thread&#123;
+    static int count = 100;
+    public TicketThread(String name) &#123;
+        super(name);
+    &#125;
+
+    @Override
+    public void run() &#123;
+        while (true) &#123;
+            synchronized (TicketThread.class) &#123;
+                if (count &lt;= 0) &#123;
+                    break;
+                &#125;
+                System.out.println(this.getName() + &quot;已卖出第&quot; + count + &quot;票!&quot;);
+                count--;
+            &#125;
+        &#125;
+        &#125;
+    &#125;
+</code></pre>
+<p>输出结果:</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220913012215185.png" alt="image-20220913012215185"></p>
+<p>ps:当一条线程进入同步代码块内，那么其他线程不能进入拥有同一个同步监视器对象的同步代码块</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220913233014600.png" alt="image-20220913233014600"></p>
+<h2 id="使用同步方法解决线程安全问题"><a href="#使用同步方法解决线程安全问题" class="headerlink" title="使用同步方法解决线程安全问题"></a>使用同步方法解决线程安全问题</h2><p>有一条线程进入同步方法那么其他线程不仅不能进入此方法也不能进入拥有同一个同步监视器对象的同步方法</p>
+<p>示例代码:</p>
+<pre><code class="java">package com.sakura.thread.ticket;
+
+public class Test &#123;
+    public static void main(String[] args) &#123;
+        TicketThread ticketThread = new TicketThread();
+        Thread t1 = new Thread(ticketThread,&quot;售票点一&quot;);
+        Thread t2 = new Thread(ticketThread,&quot;售票点二&quot;);
+        Thread t3 = new Thread(ticketThread,&quot;售票点三&quot;);
+        t1.start();
+        t2.start();
+        t3.start();
+        t2.setPriority(10);
+        t1.setPriority(1);
+    &#125;
+&#125;
+class TicketThread implements Runnable&#123;
+    int count = 100;
+    @Override
+    public void run() &#123;
+        while (true)&#123;
+            if (count &lt;=0)&#123;
+                return;
+            &#125;
+            saleTicket();
+        &#125;
+
+    &#125;
+    private synchronized void saleTicket()&#123;
+        if (count &lt;=0)&#123;
+            return;
+        &#125;
+        try &#123;
+            Thread.sleep(10);
+        &#125; catch (InterruptedException e) &#123;
+            throw new RuntimeException(e);
+        &#125;
+        System.out.println(Thread.currentThread().getName()+&quot;第&quot;+count+&quot;票已卖出&quot;);
+        count--;
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220914002516038.png" alt="image-20220914002516038"></p>
+<h2 id="使用同步代码块解决线程安全问题-练习题"><a href="#使用同步代码块解决线程安全问题-练习题" class="headerlink" title="使用同步代码块解决线程安全问题-练习题"></a>使用同步代码块解决线程安全问题-练习题</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220914010445756.png" alt="image-20220914010445756"></p>
+<pre><code class="java">package com.sakura.thread;
+
+import java.util.Scanner;
+
+public class AccountTest &#123;
+    public static void main(String[] args) &#123;
+        AccountRunnable account = new AccountRunnable();
+        Thread t1 = new Thread(account,&quot;HJY&quot;);
+        Thread t2 = new Thread(account,&quot;WYF&quot;);
+        t1.start();
+        t2.start();
+    &#125;
+&#125;
+class Account&#123;
+    int balance = 600;
+    public void withMoney(int money)&#123;
+        balance -= money;
+    &#125;
+&#125;
+class AccountRunnable implements Runnable&#123;
+    Account account = new Account();
+    @Override
+    public void run() &#123;
+            synchronized (account)&#123;
+                if (account.balance &lt; 500)&#123;
+                    System.out.println(Thread.currentThread().getName()+&quot;\t您的余额不足，取款失败\t&quot;+account
+                            .balance);
+                &#125;else &#123;
+                    account.withMoney(500);
+                    System.out.println(Thread.currentThread().getName()+&quot;\t恭喜您\t&quot;+&quot;已成功取出500元&quot;+&quot;您的余额为&quot;+account.balance);
+        &#125;
+    &#125;
+&#125;&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220914010500892.png" alt="image-20220914010500892"></p>
+<h2 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220914233953966.png" alt="image-20220914233953966"></p>
+<p><strong>饿汉式:</strong></p>
+<p>示例代码:</p>
+<pre><code class="java">package com.sakura.thread.single;
+
+public class Test &#123;
+    public static void main(String[] args) &#123;
+        Single s1 = Single.INSTANCE;
+        Single s2 = Single.INSTANCE;
+        System.out.println(s1==s2);
+        Single1 s3 = Single1.INSTANCE;
+        Single1 s4 = Single1.INSTANCE;
+        System.out.println(s3==s4);
+    &#125;
+&#125;
+class Single&#123;
+    public static final Single INSTANCE = new Single(); //提前将对象创建了出来
+    private Single() &#123;
+    &#125;
+&#125;
+enum Single1 &#123;
+    INSTANCE
+&#125;
+</code></pre>
+<p><strong>懒汉式:</strong></p>
+<pre><code class="java">package com.sakura.thread.single;
+
+public class Test &#123;
+    public static void main(String[] args) &#123;
+        LazyGuys s1 = LazyGuys.withsingle();
+        LazyGuys s2 = LazyGuys.withsingle();
+        System.out.println(s1==s2);
+    &#125;
+&#125;
+class LazyGuys&#123;
+    private LazyGuys()&#123;&#125;
+    private static LazyGuys lazyGuys;
+    public synchronized static LazyGuys withsingle()&#123;
+        if (lazyGuys == null)&#123;
+            synchronized (Test.class)&#123;
+            LazyGuys lazyGuys = new LazyGuys();
+        &#125;
+        &#125;
+        return lazyGuys;
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915002527942.png" alt="image-20220915002527942"></p>
+<h1 id="day16"><a href="#day16" class="headerlink" title="day16"></a>day16</h1><h2 id="线程通信的初识"><a href="#线程通信的初识" class="headerlink" title="线程通信的初识"></a>线程通信的初识</h2><p>多个线程在处理同一个资源，但是处理的动作（线程的任务）却不相同。而多个线程并发执行时,在默认情况下CPU是随机切换线程的，当我们需要多个线程来共同完成一件任务，并且我们希望他们有规律的执行,那么多线程之间需要一些通信机制，可以协调它们的工作，以此来帮我们达到多线程共同操作一份数据。<br>比如:线程A用来生成包子的，线程B用来吃包子的，包子可以理解为同一资源，线程A与线程B处理的动作，一个是生产，一个是消费，此时B线程必须等到A线程完成后才能执行，那么线程A与线程B之间就需要线程通信，即等待唤醒机制</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915003001047.png" alt="image-20220915003001047"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915003444873.png" alt="image-20220915003444873"></p>
+<h2 id="线程通信采用同步代码实现"><a href="#线程通信采用同步代码实现" class="headerlink" title="线程通信采用同步代码实现"></a>线程通信采用同步代码实现</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915003737856.png" alt="image-20220915003737856"></p>
+<p>示例代码:</p>
+<pre><code class="java">package com.sakura.thread.notify;
+
+public class Test &#123;
+    public static void main(String[] args) &#123;
+        Bar bar = new Bar();
+        CookerThread c1 = new CookerThread(bar);
+        WaiterThread w1 = new WaiterThread();
+        w1.setBar(bar);
+        c1.setName(&quot;五星级大厨&quot;);
+        w1.setName(&quot;海底捞服务员&quot;);
+        c1.start();
+        w1.start();
+    &#125;
+&#125;
+class Bar&#123;
+    int count = 0;
+    public static final int MAX_ENUM = 10;
+&#125;
+class CookerThread extends Thread&#123;
+    Bar bar;
+    public CookerThread(Bar bar) &#123;
+        this.bar = bar;
+    &#125;
+    @Override
+    public void run() &#123;
+        while (true) &#123;
+            synchronized (bar) &#123;
+                if (bar.count &gt;= bar.MAX_ENUM) &#123;
+                    try &#123;
+                        bar.wait();
+                    &#125; catch (InterruptedException e) &#123;
+                        throw new RuntimeException(e);
+                    &#125;
+                &#125;
+                bar.count++;
+                System.out.println(Thread.currentThread().getName() + &quot;正在做菜中,这是第&quot; + bar.count + &quot;份菜&quot;);
+                bar.notify();
+            &#125;
+        &#125;
+    &#125;
+&#125;
+class WaiterThread extends Thread&#123;
+    private Bar bar;
+
+    public void setBar(Bar bar) &#123;
+        this.bar = bar;
+    &#125;
+
+    @Override
+    public void run() &#123;
+        while (true) &#123;
+            synchronized (bar) &#123;
+                if (bar.count &lt;= 0) &#123;
+                    try &#123;
+                        bar.wait();
+                    &#125; catch (InterruptedException e) &#123;
+                        throw new RuntimeException(e);
+                    &#125;
+                &#125;
+                bar.count--;
+                System.out.println(Thread.currentThread().getName() + &quot;正在端菜中,端走后还有&quot; + bar.count + &quot;份菜&quot;);
+                bar.notify();
+            &#125;
+        &#125;
+        &#125;
+    &#125;
+</code></pre>
+<h2 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915134622203.png" alt="image-20220915134622203"></p>
+<p>产生死锁的原因两条线程互相持有对方的锁资源不放松，可以让一条线程先跑完另一条线程再开始</p>
+<p>示例代码:</p>
+<pre><code class="java">package com.sakura.thread.deadlock;
+
+public class Test &#123;
+    public static void main(String[] args) &#123;
+        Object goods = new Object();
+        Object money = new Object();
+        CustomerThread customerThread = new CustomerThread(goods, money);
+        GoodsThread goodsThread = new GoodsThread(goods, money);
+        customerThread.setName(&quot;供应商&quot;);
+        goodsThread.setName(&quot;采购商&quot;);
+        customerThread.start();
+        goodsThread.start();
+    &#125;
+&#125;
+    class CustomerThread extends Thread&#123;
+        Object goods;
+        Object money;
+
+        public CustomerThread(Object goods, Object money) &#123;
+            this.goods = goods;
+            this.money = money;
+        &#125;
+
+        @Override
+        public void run() &#123;
+            synchronized (goods)&#123;
+                System.out.println(Thread.currentThread().getName()+&quot;:你奶奶滴，先发货再给钱&quot;);
+                synchronized (money)&#123;
+                    System.out.println(Thread.currentThread().getName()+&quot;:已付钱&quot;);
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+    class GoodsThread extends Thread&#123;
+        Object goods;
+        Object money;
+        public GoodsThread(Object goods, Object money) &#123;
+            this.goods = goods;
+            this.money = money;
+        &#125;
+        @Override
+        public void run() &#123;
+            synchronized (money)&#123;
+                System.out.println(Thread.currentThread().getName()+&quot;:你奶奶滴，先给钱再发货&quot;);
+                synchronized (goods)&#123;
+                    System.out.println(Thread.currentThread().getName()+&quot;:已发货&quot;);
+                &#125;
+            &#125;
+
+        &#125;
+
+    &#125;
+</code></pre>
+<p>此时便形成了死锁</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915142520962.png" alt="image-20220915142520962"></p>
+<p>如何解决?</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915142811474.png" alt="image-20220915142811474"></p>
+<p>在两个启动线程的代码中间，使主线程睡眠一段时间，即可避免</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915142903030.png" alt="image-20220915142903030"></p>
+<h2 id="线程的生命周期"><a href="#线程的生命周期" class="headerlink" title="线程的生命周期"></a>线程的生命周期</h2><p><strong>观点一</strong></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915145205272.png" alt="image-20220915145205272"></p>
+<p><strong>观点二</strong></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915145534600.png" alt="image-20220915145534600"></p>
+<h2 id="基础api与常见算法"><a href="#基础api与常见算法" class="headerlink" title="基础api与常见算法"></a>基础api与常见算法</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915145954683.png" alt="image-20220915145954683"></p>
+<h3 id="和数学相关的类"><a href="#和数学相关的类" class="headerlink" title="和数学相关的类"></a>和数学相关的类</h3><p><strong>java.lang.Math</strong></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915150308868.png" alt="image-20220915150308868"></p>
+<pre><code>abs: 求绝对值
+ceil: 向上取整
+floor: 向下取整
+random(): 随机数 [0,1) 左闭右开
+n 较大的数 m 较小的数
+[m,n]  ----&gt;       (int)(Math.random()*(n-m+1)+m);
+pow(n,y)   : n^y
+sqrt() :开平方
+round(): 四舍五入
+</code></pre>
+<p>示例代码:</p>
+<pre><code class="java">package com.sakura.api;
+
+public class MathTest &#123;
+    public static void main(String[] args) &#123;
+        System.out.println(Math.abs(-10));
+        System.out.println(Math.ceil(3.00001));
+        System.out.println(Math.floor(1.999999));
+        System.out.println(Math.random());
+        int n = 100;
+        int m = 55;
+        System.out.println((int)(Math.random()*(n-m+1)));
+        System.out.println(Math.pow(2, 4));
+        System.out.println(Math.sqrt(64));
+        System.out.println(Math.round(5.4999));
+        System.out.println(Math.round(5.5));
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915152440508.png" alt="image-20220915152440508"></p>
+<h3 id="BigInteger类"><a href="#BigInteger类" class="headerlink" title="BigInteger类"></a>BigInteger类</h3><p>存储大的整数</p>
+<p>示例代码:</p>
+<pre><code class="java">package com.sakura.api;
+
+import java.math.BigInteger;
+
+public class Test1 &#123;
+    public static void main(String[] args) &#123;
+        BigInteger bigInteger = new BigInteger(&quot;999999999998484844554544545&quot;);
+        System.out.println(bigInteger);
+        BigInteger b1 = new BigInteger(&quot;300&quot;);
+        BigInteger b2 = new BigInteger(&quot;200&quot;);
+        System.out.println(&quot;加法\tb1.add(b2) = &quot; + b1.add(b2));
+        System.out.println(&quot;减法\tb1.subtract(b2) = &quot; + b1.subtract(b2));
+        System.out.println(&quot;乘法\tb1.multiply(b2) = &quot; + b1.multiply(b2));
+        System.out.println(&quot;除法\tb1.divide(b2) = &quot; + b1.divide(b2));
+        System.out.println(&quot;余数\tb1.remainder(b2) = &quot; + b1.remainder(b2));
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915161917396.png" alt="image-20220915161917396"></p>
+<h3 id="BigDecimal类"><a href="#BigDecimal类" class="headerlink" title="BigDecimal类"></a>BigDecimal类</h3><p>存储确切的小数</p>
+<pre><code class="java">package com.sakura.api;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
+public class Test1 &#123;
+    public static void main(String[] args) &#123;
+        BigDecimal bigDecimal = new BigDecimal(&quot;3.1415926&quot;);
+        System.out.println(bigDecimal);
+        BigDecimal b1 = new BigDecimal(&quot;10.00&quot;);
+        BigDecimal b2 = new BigDecimal(&quot;3.00&quot;);
+        System.out.println(&quot;加法\tb1.add(b2) = &quot; + b1.add(b2));
+        System.out.println(&quot;减法\tb1.subtract(b2) = &quot; + b1.subtract(b2));
+        System.out.println(&quot;乘法\tb1.multiply(b2) = &quot; + b1.multiply(b2));
+        System.out.println(&quot;除法\tb1.divide(b2) = &quot; + b1.divide(b2,20,BigDecimal.ROUND_FLOOR));
+        System.out.println(&quot;余数\tb1.remainder(b2) = &quot; + b1.remainder(b2));
+
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915162943916.png" alt="image-20220915162943916"></p>
+<h3 id="Random类"><a href="#Random类" class="headerlink" title="Random类"></a>Random类</h3><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915212254933.png" alt="image-20220915212254933"></p>
+<pre><code class="java">import java.util.Random;
+
+public class Test1 &#123;
+    public static void main(String[] args) &#123;
+        Random random = new Random();
+        for (int i =0; i&lt;5;i++)&#123;
+            System.out.print(random.nextInt(50)+&quot;\t&quot;);
+            System.out.print(random.nextBoolean()+&quot;\t&quot;);
+            System.out.print(random.nextDouble()+&quot;\t&quot;);
+            System.out.println();
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915212834940.png" alt="image-20220915212834940"></p>
+<p>还可以设置种子:</p>
+<pre><code class="java">import java.util.Random;
+
+public class Test1 &#123;
+    public static void main(String[] args) &#123;
+        Random random = new Random(1);  //此处设置种子为1
+        for (int i =0; i&lt;10;i++)&#123;
+            System.out.println(random.nextInt(50)+&quot;\t&quot;);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>输出:</p>
+<pre><code class="java">35    
+38    
+47    
+13    
+4    
+4    
+34    
+6    
+28    
+48    
+</code></pre>
+<p>每次运行程序，输出的结果都一致</p>
+<h3 id="日期时间Api"><a href="#日期时间Api" class="headerlink" title="日期时间Api"></a>日期时间Api</h3><p>已经过时的方法:</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915221033738.png" alt="image-20220915221033738"></p>
+<h3 id="Calendar类"><a href="#Calendar类" class="headerlink" title="Calendar类"></a>Calendar类</h3><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915222848061.png" alt="image-20220915222848061"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915223307597.png" alt="image-20220915223307597"></p>
+<p>示例代码:</p>
+<pre><code class="java">package com.sakura.api;
+
+import java.util.Calendar;
+
+public class Test1 &#123;
+    public static void main(String[] args) &#123;
+        Calendar calendar = Calendar.getInstance();
+        //System.out.println(calendar);
+        System.out.println(&quot;calendar.get(Calendar.YEAR) = &quot; + calendar.get(Calendar.YEAR));
+        System.out.println(&quot;(calendar.get(Calendar.MONTH)+1) = &quot; + (calendar.get(Calendar.MONTH) + 1));
+        System.out.println(&quot;calendar.get(Calendar.DATE) = &quot; + calendar.get(Calendar.DATE));
+        System.out.println(&quot;calendar.get((Calendar.HOUR)) = &quot; + calendar.get((Calendar.HOUR)));
+        /*修改日期
+        *属性: year,month,data...
+        * 值:正数 向后 负数 向前
+        * calender(属性,值);
+        * */
+        calendar.add(Calendar.YEAR,28);
+        System.out.println(&quot;calendar.get(Calendar.YEAR) = &quot; + calendar.get(Calendar.YEAR));
+        calendar.add(Calendar.YEAR,20);
+        System.out.println(&quot;calendar.get(Calendar.YEAR) = &quot; + calendar.get(Calendar.YEAR));
+        /*
+        设置时间
+        calender.set(year,month,data)
+         */
+        calendar.set(2050,1,1,5,20);
+        System.out.println(&quot;calendar.get(Calendar.YEAR) = &quot; + calendar.get(Calendar.YEAR));
+        System.out.println(&quot;calendar.get(Calendar.MONTH) = &quot; + calendar.get(Calendar.MONTH));
+    &#125;
+&#125;
+</code></pre>
+<p>输出:</p>
+<pre><code class="java">calendar.get(Calendar.YEAR) = 2022
+(calendar.get(Calendar.MONTH)+1) = 9
+calendar.get(Calendar.DATE) = 15
+calendar.get((Calendar.HOUR)) = 11
+calendar.get(Calendar.YEAR) = 2050
+calendar.get(Calendar.YEAR) = 2070
+calendar.get(Calendar.YEAR) = 2050
+calendar.get(Calendar.MONTH) = 1
+</code></pre>
+<h3 id="获取时区"><a href="#获取时区" class="headerlink" title="获取时区"></a>获取时区</h3><pre><code class="java">import java.util.TimeZone;
+
+public class Test1 &#123;
+    public static void main(String[] args) &#123;
+        String[] availableIDs = TimeZone.getAvailableIDs();
+        for(String availableID : availableIDs)&#123;
+            System.out.println(availableID);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220915232253904.png" alt="image-20220915232253904"></p>
+<h3 id="日期格式化"><a href="#日期格式化" class="headerlink" title="日期格式化"></a>日期格式化</h3><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220916000801519.png" alt="image-20220916000801519"></p>
+<p>示例代码:</p>
+<pre><code class="java">import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class DataTest &#123;
+    public static void main(String[] args) throws ParseException &#123;
+            /*
+    日期转换：
+     */
+        //    日期--&gt;字符串
+        DateFormat df1 = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);
+        Date date1 = new Date();
+        System.out.println(date1);
+        String res1 = df1.format(date1);
+        System.out.println(res1);
+        //    字符串--&gt;日期
+        DateFormat df2 = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);
+        String datastr = &quot;2022-09-16 00:15:41&quot;; //要解析的字符串内容必须与格式完全匹配，否则报错
+        Date date2 = df2.parse(datastr);
+        System.out.println(date2);
+    &#125;
+&#125;
+</code></pre>
+<h3 id="新增的三个日期对象"><a href="#新增的三个日期对象" class="headerlink" title="新增的三个日期对象"></a>新增的三个日期对象</h3><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220916002810246.png" alt="image-20220916002810246"></p>
+<p>示例代码:</p>
+<pre><code class="java">import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
+
+public class TestDate &#123;
+    public static void main(String[] args) &#123;
+        /*
+        LocalDate 年 月 日
+        不可变日期，一旦对日期做出修改会生成一个新的LocalDate记录改变后的日期
+        minusDays():日期减少
+         */
+        //对 年 月 日 进行操作
+        LocalDate now = LocalDate.now();
+        System.out.println(now);
+        int year = now.getYear();
+        int month = now.getMonthValue();
+        int day = now .getDayOfMonth();
+        System.out.println(&quot;year = &quot; + year);
+        System.out.println(&quot;month = &quot; + month);
+        System.out.println(&quot;day = &quot; + day);
+
+        System.out.println(&quot;-----------&quot;);
+
+        Month month1 = now.getMonth();
+        System.out.println(&quot;month1 = &quot; + month1);
+        System.out.println(month1.getValue());
+
+        System.out.println(&quot;-----------&quot;);
+        
+        LocalDate localDate = now.minusDays(15);
+        System.out.println(&quot;now = &quot; + now);
+        System.out.println(&quot;localDate = &quot; + localDate);
+
+        System.out.println(&quot;-----------&quot;);
+
+        LocalDate of = LocalDate.of(2050,12,31); //对年月日进行操作
+        System.out.println(of);
+        LocalDate localDate1 = of.plusDays(1);
+        System.out.println(localDate1);
+
+        System.out.println(&quot;-----------&quot;);
+        //对 时 分 秒 进行操作
+        LocalTime localTime = LocalTime.now();
+        System.out.println(&quot;localTime = &quot; + localTime);//尾数是纳秒
+
+        System.out.println(&quot;-----------&quot;);
+        //同时对 年 月 日 时 分 秒 进行操作
+        LocalDateTime  localDateTime = LocalDateTime.now();
+        System.out.println(&quot;localDateTime = &quot; + localDateTime);
+        LocalDateTime of1 = LocalDateTime.of(2050,12,31,15,22);
+        System.out.println(&quot;of1 = &quot; + of1);
+    &#125;
+&#125;
+</code></pre>
+<p>输出:</p>
+<pre><code>2022-09-16
+year = 2022
+month = 9
+day = 16
+-----------
+month1 = SEPTEMBER
+9
+-----------
+now = 2022-09-16
+localDate = 2022-09-01
+-----------
+2050-12-31
+2051-01-01
+-----------
+localTime = 01:13:08.425
+-----------
+localDateTime = 2022-09-16T01:13:08.425
+of1 = 2050-12-31T15:22
+</code></pre>
+<h3 id="获取与指定时区时间和两个日期间隔"><a href="#获取与指定时区时间和两个日期间隔" class="headerlink" title="获取与指定时区时间和两个日期间隔"></a>获取与指定时区时间和两个日期间隔</h3><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220916140917835.png" alt="image-20220916140917835"></p>
+<p><strong>使用period计算时间间隔</strong></p>
+<p>示例代码:</p>
+<pre><code class="java">import java.time.LocalDate;
+import java.time.Period;
+
+public class Test2 &#123;
+    public static void main(String[] args) &#123;
+        LocalDate l1 = LocalDate.now();
+        LocalDate l2 = LocalDate.of(2050,2,18);
+        System.out.println(&quot;l1 = &quot; + l1);
+        System.out.println(&quot;l2 = &quot; + l2);
+        Period period = Period.between(l1,l2);
+        System.out.println(&quot;period = &quot; + period);
+        System.out.println(&quot;period.getYears() = &quot; + period.getYears());
+        System.out.println(&quot;period.getMonths() = &quot; + period.getMonths());
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220916142343404.png" alt="image-20220916142343404"></p>
+<p><strong>使用Duration计算两个时间间隔</strong></p>
+<p>示例代码:</p>
+<pre><code class="java">import java.time.Duration;
+import java.time.LocalDateTime;
+
+public class Test2 &#123;
+    public static void main(String[] args) &#123;
+        LocalDateTime l1 = LocalDateTime.now();
+        LocalDateTime l2 = LocalDateTime.of(2050,12,31,15,21);
+        Duration duration = Duration.between(l1,l2); //计算两个时间的时间间隔
+        System.out.println(&quot;duration = &quot; + duration);
+        System.out.println(&quot;duration.toDays() = &quot; + duration.toDays());
+        System.out.println(&quot;duration.toHours() = &quot; + duration.toHours());
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220916142900289.png" alt="image-20220916142900289"></p>
+<h3 id="DateTimeFormatter类-日期格式化类"><a href="#DateTimeFormatter类-日期格式化类" class="headerlink" title="DateTimeFormatter类:日期格式化类"></a>DateTimeFormatter类:日期格式化类</h3><p>示例代码:</p>
+<pre><code class="java">import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+public class Test2 &#123;
+    public static void main(String[] args) &#123;
+        LocalDateTime l1 = LocalDateTime.now();
+        System.out.println(&quot;l1 = &quot; + l1);
+        /*
+        将日期转为字符串
+         */
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE; // DateTimeFormatter 有提供好的模板，可以直接使用
+        String format = formatter.format(l1);
+        System.out.println(&quot;format = &quot; + format);
+        //自定义格式
+        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd HH:mm:ss E&quot;);
+        String result = formatter1.format(l1);
+        System.out.println(&quot;result = &quot; + result);
+        /*
+        将字符串转化为日期
+         */
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd HH:mm:ss E&quot;);
+        String str = &quot;2022-09-16 14:51:26 星期五&quot;;
+        LocalDateTime parse= LocalDateTime.parse(str,formatter2);
+        System.out.println(&quot;parse = &quot; + parse);
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220916150014010.png" alt="image-20220916150014010"></p>
+<h3 id="系统相关类"><a href="#系统相关类" class="headerlink" title="系统相关类"></a>系统相关类</h3><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220916151720605.png" alt="image-20220916151720605"></p>
+<pre><code class="java">import java.util.Properties;
+
+public class SystemTest &#123;
+    public static void main(String[] args) &#123;
+        long l = System.currentTimeMillis(); //
+        System.out.println(&quot;l = &quot; + l);
+        System.gc(); //运行垃圾回收器
+        int [] arr = &#123;10,20,30&#125;;
+        int [] newArr = new int[arr.length];
+        System.arraycopy(arr,0,newArr,0,arr.length);
+        for (int i :newArr)&#123;
+            System.out.println(i);
+        &#125;
+        System.out.println(&quot;-----------------&quot;);
+        Properties properties = System.getProperties();
+//        properties.list(System.out);
+        String property = System.getProperty(&quot;java.version&quot;);
+        System.out.println(&quot;property = &quot; + property);
+        // Runtime
+        Runtime r1 = Runtime.getRuntime();
+        Runtime r2 = Runtime.getRuntime();
+        System.out.println(r1==r2); //说明了Runtime创建的对象都是同一个
+        System.out.println(&quot;r1.totalMemory() = &quot; + r1.totalMemory()); //总内存
+        System.out.println(&quot;r1.freeMemory() = &quot; + r1.freeMemory()); //剩余内存
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220916170328632.png" alt="image-20220916170328632"></p>
+<h2 id="数组的算法升华"><a href="#数组的算法升华" class="headerlink" title="数组的算法升华"></a>数组的算法升华</h2><h3 id="数组的反转"><a href="#数组的反转" class="headerlink" title="数组的反转"></a>数组的反转</h3><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220918230400278.png" alt="image-20220918230400278"></p>
+<p><strong>方法一 创建一个新数组</strong></p>
+<pre><code class="java">public class ArrayTest &#123;
+    public static void main(String[] args) &#123;
+        int [] arr = &#123;10,20,30,40,50,60,70&#125;;
+        //交换方法一 创建一个新数组
+        int [] newarr = new int[arr.length];
+        int index = 0;
+        for (int i =arr.length-1;i&gt;=0;i--)&#123;
+            newarr[index++] = arr[i];
+        &#125;
+        for (int i : newarr) &#123;
+            System.out.println(i);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220918233551604.png" alt="image-20220918233551604"></p>
+<p><strong>方法二数组内交换</strong></p>
+<pre><code class="java">public class ArrayTest &#123;
+    public static void main(String[] args) &#123;
+        int [] arr = &#123;10,20,30,40,50,60,70&#125;;
+        //交换方法二 数组内交换
+        for (int i =0;i&lt;arr.length/2;i++)&#123;
+            int temp;
+            temp = arr[i];
+            arr[i] = arr[arr.length-1-i];
+            arr[arr.length-1-i] = temp;
+        &#125;
+        for (int i : arr) &#123;
+            System.out.println(i);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220918234451781.png" alt="image-20220918234451781"></p>
+<h3 id="数组的二分查找"><a href="#数组的二分查找" class="headerlink" title="数组的二分查找"></a>数组的二分查找</h3><pre><code class="java">public class ArrayTest &#123;
+    public static void main(String[] args) &#123;
+        int[] arr = &#123;10, 20, 30, 40, 50, 60, 70,82,92,103&#125;;
+        //二分查找。二分查找排序必须是有序的
+        int res = binarySearch(arr,103);
+        System.out.println(&quot;您要查找的数字下标为&quot;+res);
+    &#125;
+    private static int binarySearch(int[] arr, int ele) &#123;
+        int ArrIndex = 0;
+        int ArrEnd = arr.length - 1;
+        while (ArrIndex &lt;= ArrEnd) &#123;
+            int ArrMid = (ArrIndex + ArrEnd) / 2;
+            if (ele &gt; arr[ArrMid]) &#123;
+                ArrIndex = ArrMid + 1;
+            &#125; else if (ele &lt; arr[ArrEnd])&#123;
+                ArrEnd = ArrMid;
+            &#125; else &#123;
+                return ArrMid;
+            &#125;
+        &#125;
+        return -1;
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220919002943734.png" alt="image-20220919002943734"></p>
+<h1 id="day17"><a href="#day17" class="headerlink" title="day17"></a>day17</h1><h2 id="数组的扩容"><a href="#数组的扩容" class="headerlink" title="数组的扩容"></a>数组的扩容</h2><p>示例代码:</p>
+<pre><code class="java">public class ArrTest &#123;
+    @Test
+    public void test01()&#123;
+        //旧数组不够要扩容
+        String [] strarr = &#123;&quot;张三&quot;,&quot;李四&quot;,&quot;王五&quot;&#125;;
+        //现在有需求，需要将数组扩容至原来的两倍、
+        String [] newarr = new String[strarr.length*2];
+        //先将旧数组复制到新数组
+        System.arraycopy(strarr,0,newarr,0,3);
+        //添加需要的值
+        newarr[strarr.length] = &quot;李白&quot;;
+        newarr[strarr.length+1] = &quot;杜甫&quot;;
+        newarr[strarr.length+2] = &quot;白居易&quot;;
+        //将新数组的地址赋值给旧数组
+        strarr = newarr;
+        //输出旧数组
+        for (String s : strarr) &#123;
+            System.out.println(s);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220921144123079.png" alt="image-20220921144123079"></p>
+<h2 id="数组的插入"><a href="#数组的插入" class="headerlink" title="数组的插入"></a>数组的插入</h2><p><strong>数组未满</strong></p>
+<p>示例代码:</p>
+<pre><code class="java">     @Test
+    public void test02()&#123;
+        //数组的插入，分两种情况，数组未满和数组已满
+        //1.数组未满
+        String [] arr = new String[5];
+        arr[0] = &quot;蔡徐坤&quot;;
+        arr[1] = &quot;肖战&quot;;
+        arr[2] = &quot;王一博&quot;;
+        System.arraycopy(arr,1,arr,2,2); //从第二个元素开始，整体后移一个位置
+        arr[1] = &quot;赵四&quot;; //在第二个位置插入赵四
+        for (String s : arr) &#123;
+            System.out.println(s);
+        &#125;
+    &#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220921150522702.png" alt="image-20220921150522702"></p>
+<p><strong>数组已满</strong></p>
+<p>示例代码:</p>
+<pre><code class="java">    @Test
+    public void test03()&#123;
+        //数组已满的时候插入元素
+        String [] arr = &#123;&quot;张三&quot;,&quot;李四&quot;,&quot;王五&quot;&#125;;
+        //需求：在张三和李四中间插入一个蔡徐坤
+        //由于数组已满，所以我们需要进行扩容，并将改变之前的赋值给新数组
+        String [] newarr = new String[arr.length+1]; //扩容操作
+        int index = 1;
+        for (int i =0;i&lt;index;i++)&#123;
+            newarr[i] = arr[i];
+        &#125;
+        System.arraycopy(arr,1,newarr,2,2);
+        newarr[1] = &quot;蔡徐坤&quot;;
+        arr = newarr;
+        for (String s : arr) &#123;
+            System.out.println(s);
+        &#125;
+    &#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220921151843085.png" alt="image-20220921151843085"></p>
+<h2 id="数组的删除"><a href="#数组的删除" class="headerlink" title="数组的删除"></a>数组的删除</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220921160641109.png" alt="image-20220921160641109"></p>
+<p>思路一:</p>
+<p>新建一个数组</p>
+<pre><code class="java">    @Test
+    public void test04()&#123;
+        String [] arr = &#123;&quot;张三&quot;,&quot;李四&quot;,&quot;王五&quot;&#125;;
+        //新建一个数组
+        String [] newarr = new String[arr.length-1];
+        newarr[0] = arr[0];
+        newarr[1] = arr[2];
+        arr = newarr;
+        for (String s : arr) &#123;
+            System.out.println(s);
+        &#125;
+    &#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220921161127117.png" alt="image-20220921161127117"></p>
+<p>思路二:</p>
+<p>在数组内进行操作</p>
+<pre><code class="java">    @Test
+    public void test05()&#123;
+        String [] arr = &#123;&quot;张三&quot;,&quot;李四&quot;,&quot;王五&quot;&#125;;
+        //数组内进行操作
+        System.arraycopy(arr,2,arr,1,1);
+        arr[2] = null;
+        for (String s : arr) &#123;
+            System.out.println(s);
+        &#125;
+
+    &#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220921161356596.png" alt="image-20220921161356596"></p>
+<h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220921165230529.png" alt="image-20220921165230529"></p>
+<p>示例代码:</p>
+<pre><code class="java">    @Test
+    public void test06()&#123;
+        int [] arr = &#123;100,50,90,45,56,73,20&#125;;
+        for (int i =0;i&lt;arr.length-1;i++)&#123;
+            int minindex = i;
+            for (int j=i+1;j&lt;=arr.length-1;j++)&#123;
+                if (arr[minindex] &lt;= arr[j])&#123;
+                    continue;
+                &#125;else &#123;
+                    minindex = j;
+                &#125;
+            &#125;
+            int temp = arr[i];
+            arr[i] = arr[minindex];
+            arr[minindex] = temp;
+        &#125;
+        for (int i : arr) &#123;
+            System.out.println(i);
+        &#125;
+    &#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220921172432856.png" alt="image-20220921172432856"></p>
+<h2 id="数组的工具类"><a href="#数组的工具类" class="headerlink" title="数组的工具类"></a>数组的工具类</h2><p><strong>Arrays.toString函数</strong></p>
+<pre><code class="java">    @Test
+    public void test11()&#123;
+        int [] arr = &#123;10,20,50,32,12&#125;;
+        System.out.println(arr);
+        System.out.println(Arrays.toString(arr));
+    &#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922140706344.png" alt="image-20220922140706344"></p>
+<p>输出数组的值</p>
+<p><strong>Arrays.deepToString函数</strong></p>
+<p>Array.toString函数只能显示一维数组</p>
+<pre><code class="java">    @Test
+    public void test11()&#123;
+        int [] [] arrs = &#123;&#123;1,2&#125;,&#123;22,43&#125;,&#123;97,67&#125;&#125;;
+        System.out.println(Arrays.toString(arrs));
+        System.out.println(Arrays.deepToString(arrs));
+    &#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922141005991.png" alt="image-20220922141005991"></p>
+<p><strong>Arrays.sort方法</strong></p>
+<pre><code class="java">    @Test
+    public void test07()&#123;
+        //Array.sort可以对数组进行排序
+        int [] arr = &#123;50,56,12,80,5&#125;;
+        System.out.println(Arrays.toString(arr));
+        Arrays.sort(arr);
+        System.out.println(Arrays.toString(arr));
+    &#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922133838302.png" alt="image-20220922133838302"></p>
+<p>问题：如何对对象数组进行比较?</p>
+<p>如果我们直接进行排序就会报错，因为程序不知道根据什么进行比较</p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922134730091-16638256523091.png" alt="image-20220922134730091"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922134744471.png" alt="image-20220922134744471"></p>
+<p>解决方法:重写Comparable</p>
+<p>方法一:继承的方式</p>
+<p>示例代码:</p>
+<pre><code class="java">    public void test08()&#123;
+        Person p1 = new Person(&quot;David&quot;,17);
+        Person p2 = new Person(&quot;瑞贝卡&quot;,15);
+        Person p3 = new Person(&quot;Lucy&quot;,19);
+        Person [] arr = &#123;p1,p2,p3&#125;;
+        System.out.println(Arrays.toString(arr));
+        Arrays.sort(arr);
+        System.out.println(Arrays.toString(arr));
+
+    &#125;
+    class Person implements Comparable&#123;
+        @Override
+        public int compareTo(Object o) &#123;
+            Person p = (Person)o;
+            return this.age-p.age;
+        &#125;
+
+        String name;
+        int age;
+
+        public Person(String name, int age) &#123;
+            this.name = name;
+            this.age = age;
+        &#125;
+        public Person() &#123;
+        &#125;
+
+        public String getName() &#123;
+            return name;
+        &#125;
+
+        public void setName(String name) &#123;
+            this.name = name;
+        &#125;
+
+        public int getAge() &#123;
+            return age;
+        &#125;
+
+        public void setAge(int age) &#123;
+            this.age = age;
+        &#125;
+
+        @Override
+        public String toString() &#123;
+            return &quot;Person&#123;&quot; +
+                    &quot;name=&#39;&quot; + name + &#39;\&#39;&#39; +
+                    &quot;, age=&quot; + age +
+                    &#39;&#125;&#39;;
+        &#125;
+    &#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922135320269.png" alt="image-20220922135320269"></p>
+<p>方法二:采用匿名内部类</p>
+<pre><code class="java">    @Test
+    public void test09()&#123;
+        Person p1 = new Person(&quot;David&quot;,17);
+        Person p2 = new Person(&quot;瑞贝卡&quot;,15);
+        Person p3 = new Person(&quot;Lucy&quot;,19);
+        Person [] arr = &#123;p1,p2,p3&#125;;
+        System.out.println(Arrays.toString(arr));
+        Arrays.sort(arr, new Comparator&lt;Person&gt;() &#123;
+            @Override
+            public int compare(Person o1, Person o2) &#123;
+                Person p1 = (Person) o1;
+                Person p2 = (Person) o2;
+                return p1.getAge()-p2.getAge();
+            &#125;
+        &#125;);
+        System.out.println(Arrays.toString(arr));
+    &#125;
+    class Person&#123;
+        String name;
+        int age;
+
+        public Person(String name, int age) &#123;
+            this.name = name;
+            this.age = age;
+        &#125;
+        public Person() &#123;
+        &#125;
+
+        public String getName() &#123;
+            return name;
+        &#125;
+
+        public void setName(String name) &#123;
+            this.name = name;
+        &#125;
+
+        public int getAge() &#123;
+            return age;
+        &#125;
+
+        public void setAge(int age) &#123;
+            this.age = age;
+        &#125;
+
+        @Override
+        public String toString() &#123;
+            return &quot;Person&#123;&quot; +
+                    &quot;name=&#39;&quot; + name + &#39;\&#39;&#39; +
+                    &quot;, age=&quot; + age +
+                    &#39;&#125;&#39;;
+        &#125;
+    &#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922135738345.png" alt="image-20220922135738345"></p>
+<p><strong>Arrays.fill函数</strong></p>
+<p>注意：此函数范围为左闭右开</p>
+<p>[n,m)</p>
+<pre><code class="java">    @Test
+    public void test10()&#123;
+        int [] arr = &#123;10,20,50,32,12&#125;;
+        System.out.println(Arrays.toString(arr));
+        Arrays.fill(arr,0,2,666); //注意:此函数范围是左闭右开
+        System.out.println(Arrays.toString(arr));
+    &#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922140159868.png" alt="image-20220922140159868"></p>
+<p><strong>Arrays.equals函数</strong></p>
+<p>比较的是内容及其下标是否完全一致</p>
+<pre><code class="java">    @Test
+    public void test12()&#123;
+        int [] arr1 = &#123;10,20,50,32,12&#125;;
+        int [] arr2 = &#123;10,20,50,32,12&#125;;
+        System.out.println(arr1==arr2);
+        boolean flag = Arrays.equals(arr1,arr2);
+        System.out.println(&quot;flag = &quot; + flag);
+    &#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922141245975.png" alt="image-20220922141245975"></p>
+<p><strong>Arrays.copyOf函数</strong></p>
+<p>复制旧数组，创建一个新数组</p>
+<pre><code class="java">    @Test
+    public void test13()&#123;
+        int [] arr1 = &#123;10,20,50,32,12&#125;;
+        int [] arr2 = Arrays.copyOf(arr1,2);
+        System.out.println(Arrays.toString(arr2));
+    &#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922141529755.png" alt="image-20220922141529755"></p>
+<p><strong>Arrays.copyOfRange函数</strong></p>
+<p>复制旧数组的一段，创建一个新数组</p>
+<p>范围也是左闭右开</p>
+<p>[n,m)</p>
+<pre><code class="java">    @Test
+    public void test13()&#123;
+        int [] arr1 = &#123;10,20,50,32,12&#125;;
+        int [] arr2 = Arrays.copyOfRange(arr1,2,4);
+        System.out.println(Arrays.toString(arr2));
+    &#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922141939165.png" alt="image-20220922141939165"></p>
+<h2 id="字符串的简介介绍"><a href="#字符串的简介介绍" class="headerlink" title="字符串的简介介绍"></a>字符串的简介介绍</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922143602790-16638285641583.png" alt="image-20220922143602790"></p>
+<h2 id="创建字符串的方式"><a href="#创建字符串的方式" class="headerlink" title="创建字符串的方式"></a>创建字符串的方式</h2><pre><code class="java">public class TestSrting &#123;
+    public static void main(String[] args) &#123;
+        //方式一
+        String s1 = &quot;你好&quot;;
+        //方式二
+        char [] a = &#123;&#39;a&#39;,&#39;b&#39;&#125;;
+        String s2 = new String(a);
+        System.out.println(s2);
+        //方式三
+        String s3 = new String(&quot;世界&quot;);
+        //方式四
+        byte [] bytes = &#123;65,66,67,97&#125;;
+        String s4 = new String(bytes); //会将byte类型中的数字解析为对应字符
+        System.out.println(s4);
+        String s5 = new String(bytes,1,2); //从1开始，取两个
+        System.out.println(s5);
+        //方式五 通过方法创建
+        char [] c = &#123;&#39;a&#39;,&#39;b&#39;,&#39;c&#39;&#125;;
+        int b = 5;
+        String s6 = &quot;&quot;+b; //字符串与整数相连接成为字符串
+        String s7 = String.valueOf(b); //方法返回值为字符串
+        String s8 = String.copyValueOf(c,0,3);
+        //方法有很多，多翻阅文档
+    &#125;
+&#125;
+</code></pre>
+<h2 id="对象的个数问题"><a href="#对象的个数问题" class="headerlink" title="对象的个数问题"></a>对象的个数问题</h2><pre><code class="java">public class TestSrting &#123;
+    public static void main(String[] args) &#123;
+        String s1 = &quot;hello&quot;;
+        String s2 = &quot;hello&quot;;
+        System.out.println(s1==s2);
+        System.out.println(s1.equals(s2));
+        
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922150958579.png" alt="image-20220922150958579"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922151425322.png" alt="image-20220922151425322"></p>
+<pre><code class="java">public class TestSrting &#123;
+    public static void main(String[] args) &#123;
+        String s1 = &quot;hello&quot;;
+        String s2 = new String(&quot;hello&quot;);
+        System.out.println(s1==s2);
+        System.out.println(s1.equals(s2));
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922151244855.png" alt="image-20220922151244855"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922151514096.png" alt="image-20220922151514096"></p>
+<h2 id="String内存分析"><a href="#String内存分析" class="headerlink" title="String内存分析"></a>String内存分析</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922153204909.png" alt="image-20220922153204909"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922153526437.png" alt="image-20220922153526437"></p>
+<h2 id="字符串的拼接"><a href="#字符串的拼接" class="headerlink" title="字符串的拼接"></a>字符串的拼接</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922172731643.png" alt="image-20220922172731643"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922172901733.png" alt="image-20220922172901733"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922173113725.png" alt="image-20220922173113725"></p>
+<p><strong>jdk7以后，调用intern方法时，如果该字符串已经存在于常量池中，则将常量池中的引用直接返回；如果不存在，则在常量池中生成一个对原字符串的引用。</strong></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922173746272.png" alt="image-20220922173746272"></p>
+<h2 id="字符串常用方法一"><a href="#字符串常用方法一" class="headerlink" title="字符串常用方法一"></a>字符串常用方法一</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922212123884.png" alt="image-20220922212123884"></p>
+<h2 id="字符串常用方法二"><a href="#字符串常用方法二" class="headerlink" title="字符串常用方法二"></a>字符串常用方法二</h2><pre><code class="java">public class TestSrting &#123;
+    public static void main(String[] args) &#123;
+        String message = &quot;hello word!&quot;;
+        //contain 判断是否包含指定字符串
+        boolean flag1 = message.contains(&quot;he&quot;);
+        boolean flag2 = message.contains(&quot;he11&quot;);
+        System.out.println(&quot;flag1 = &quot; + flag1);
+        System.out.println(&quot;flag2 = &quot; + flag2);
+        //indexOf 查找指定元素第一次出现得下标，从0开始 不存在返回-1
+        int res1 = message.indexOf(&quot;l&quot;);
+        int res2 = message.indexOf(&quot;o&quot;);
+        System.out.println(&quot;res1 = &quot; + res1);
+        System.out.println(&quot;res2 = &quot; + res2);
+        //lastIndexOf 查找指定元素最后一次出现的位置 不存在返回-1
+        int res3 = message.lastIndexOf(&quot;l&quot;);
+        System.out.println(&quot;res3 = &quot; + res3);
+        //截取字符串
+        String s1 = message.substring(6); //从第六个字符开始截取，包括第六个字符
+        System.out.println(&quot;s1 = &quot; + s1);
+        String s2 = message.substring(0,5); //截取第1个道第五个字符，左闭右开
+        System.out.println(&quot;s2 = &quot; + s2);
+        //获取指定位置字符串
+        char c =message.charAt(message.length()-1);
+        System.out.println(&quot;c = &quot; + c);
+        //将字符串转化为char数组
+        char [] chars = message.toCharArray();
+        System.out.println(Arrays.toString(chars));
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922214732176.png" alt="image-20220922214732176"></p>
+<h2 id="字符串常用方法三"><a href="#字符串常用方法三" class="headerlink" title="字符串常用方法三"></a>字符串常用方法三</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922215134780.png" alt="image-20220922215134780"></p>
+<pre><code class="java">public class TestString2 &#123;
+    public static void main(String[] args) throws UnsupportedEncodingException &#123;
+        String message = &quot;你好世界&quot;;
+        byte [] bytes = message.getBytes();
+        System.out.println(&quot;Arrays.toString(bytes) = &quot; + Arrays.toString(bytes));
+        byte [] messBytes = message.getBytes(&quot;iso8859-1&quot;); //这是统一标准
+        System.out.println(Arrays.toString(messBytes));
+        System.out.println(message.getBytes(&quot;gbk&quot;).length); //国标 一个汉字等于两个字节
+        System.out.println(message.getBytes(&quot;utf-8&quot;).length); //一个汉字等于三个字节
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922221107346-16638558691005.png" alt="image-20220922221107346"></p>
+<p><strong>starts with和ends with、正则表达式、replace函数、split函数</strong></p>
+<pre><code class="java">public class TestString2 &#123;
+    public static void main(String[] args) throws UnsupportedEncodingException &#123;
+        //判断以什么开头和以什么结尾
+        String message = &quot;I really want to stat at your house&quot;;
+        boolean flag1 = message.startsWith(&quot;I&quot;);
+        System.out.println(&quot;flag1 = &quot; + flag1);
+        boolean flag2 = message.endsWith(&quot;house&quot;);
+        System.out.println(&quot;flag2 = &quot; + flag2);
+        //replace函数，替换第一个字符
+        String rpmessage = message.replace(&quot;stat at your house&quot;,&quot;love you&quot;);
+        System.out.println(&quot;rpmessage = &quot; + rpmessage);
+        //replaceall函数，替换所有字符,第一个参数可用正则进行匹配
+        String message2 = &quot;wo wo wo love you&quot;;
+        String rpmessage2 = message2.replaceAll(&quot;wo&quot;,&quot;I&quot;);
+        System.out.println(&quot;rpmessage2 = &quot; + rpmessage2);
+        //split函数分割字符串 可用正则匹配
+        String s1 = &quot;Fly1to1the1moon&quot;;
+        String [] strings = s1.split(&quot;1&quot;);
+        System.out.println(Arrays.toString(strings));
+        //正则表达式进行匹配
+        /*
+        []:代表一个字符
+        [a-z]:小写字母[a-z]任何一个都可以
+        +: 一个或多个
+        *: 0个或多个
+        [^a]:代表匹配不是a的数据
+        ^ :代表以什么开始
+        $ : 代表以什么结尾
+        \d：代表任意一个数字 0-9
+        \w 代表数字字母和下划线
+         */
+        String s2 = &quot;b&quot;;
+        boolean matchs = s2.matches(&quot;[^a]&quot;);
+        System.out.println(&quot;matchs = &quot; + matchs);
+    &#125;
+&#125;
+</code></pre>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20220922225821274.png" alt="image-20220922225821274"></p>
+<h1 id="day18"><a href="#day18" class="headerlink" title="day18"></a>day18</h1><h2 id="StringBuilder与StringBuffer"><a href="#StringBuilder与StringBuffer" class="headerlink" title="StringBuilder与StringBuffer"></a>StringBuilder与StringBuffer</h2><p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20221004210916260.png" alt="image-20221004210916260"></p>
+<p><img src="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/image-20221004211139017.png" alt="image-20221004211139017"></p>
+<h2 id="StringBuffer常用方法"><a href="#StringBuffer常用方法" class="headerlink" title="StringBuffer常用方法"></a>StringBuffer常用方法</h2></div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/02/11/java%E5%AD%A6%E4%B9%A0%E4%B9%8B%E6%97%85/">https://sakurahack-y.github.io/2022/02/11/java学习之旅/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/java/">java</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BF%AB%E6%8D%B7%E9%94%AE%E9%80%9F%E6%9F%A5"><span class="toc-number">1.</span> <span class="toc-text">快捷键速查</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day1-java%E5%88%9D%E8%AF%86"><span class="toc-number">2.</span> <span class="toc-text">day1  java初识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AAHelloWord%E7%A8%8B%E5%BA%8F"><span class="toc-number">2.1.</span> <span class="toc-text">第一个HelloWord程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E8%AF%86%E7%AC%A6"><span class="toc-number">2.2.</span> <span class="toc-text">标识符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%84%E8%8C%83"><span class="toc-number">2.3.</span> <span class="toc-text">规范:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.4.</span> <span class="toc-text">数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E9%87%8F"><span class="toc-number">2.5.</span> <span class="toc-text">常量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F"><span class="toc-number">2.6.</span> <span class="toc-text">变量</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day2-java%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">day2  java基础语法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2"><span class="toc-number">3.1.</span> <span class="toc-text">进制转换:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%AD%98%E5%82%A8%E5%8D%95%E4%BD%8D"><span class="toc-number">3.2.</span> <span class="toc-text">计算机存储单位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%A6%82%E4%BD%95%E5%AD%98%E5%82%A8%E6%95%B0%E6%8D%AE"><span class="toc-number">3.3.</span> <span class="toc-text">计算机如何存储数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E7%B1%BB%E5%9E%8B%E6%8F%90%E5%8D%87"><span class="toc-number">3.4.</span> <span class="toc-text">自动类型提升</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.5.</span> <span class="toc-text">运算符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.5.1.</span> <span class="toc-text">逻辑运算符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-number">3.5.2.</span> <span class="toc-text">运算符优先级</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day3-%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5"><span class="toc-number">4.</span> <span class="toc-text">day3  流程控制语句</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E8%AF%AD%E5%8F%A5-scanner"><span class="toc-number">4.1.</span> <span class="toc-text">输入语句 scanner</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#next%E4%B8%8EnextLine"><span class="toc-number">4.2.</span> <span class="toc-text">next与nextLine</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#if%E5%8D%95%E5%88%86%E6%94%AF"><span class="toc-number">4.3.</span> <span class="toc-text">if单分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E4%B9%A0%E9%A2%98-%E9%97%B0%E5%B9%B4%E7%9A%84%E6%A0%87%E5%87%86"><span class="toc-number">4.4.</span> <span class="toc-text">小习题-闰年的标准</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#if%E5%8F%8C%E5%88%86%E6%94%AF"><span class="toc-number">4.5.</span> <span class="toc-text">if双分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B1%82%E4%B8%89%E4%B8%AA%E6%95%B0%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E5%80%BC"><span class="toc-number">4.6.</span> <span class="toc-text">求三个数中的最大值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#if%E5%A4%9A%E5%88%86%E6%94%AF"><span class="toc-number">4.7.</span> <span class="toc-text">if多分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#switch"><span class="toc-number">4.8.</span> <span class="toc-text">switch</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF"><span class="toc-number">4.9.</span> <span class="toc-text">循环</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day4-%E5%BE%AA%E7%8E%AF"><span class="toc-number">5.</span> <span class="toc-text">day4 循环</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#do-while"><span class="toc-number">5.1.</span> <span class="toc-text">do while</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9A%8F%E6%9C%BA%E6%95%B0%E5%85%AC%E5%BC%8F"><span class="toc-number">5.2.</span> <span class="toc-text">随机数公式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#for%E5%BE%AA%E7%8E%AF"><span class="toc-number">5.3.</span> <span class="toc-text">for循环</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#break"><span class="toc-number">5.4.</span> <span class="toc-text">break</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#continue%E3%80%81return%E3%80%81continue%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">5.5.</span> <span class="toc-text">continue、return、continue的区别</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day5-%E6%95%B0%E7%BB%84"><span class="toc-number">6.</span> <span class="toc-text">day5 数组</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%88%9D%E8%AF%86"><span class="toc-number">6.1.</span> <span class="toc-text">数组初识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A3%B0%E6%98%8E%E4%B8%80%E4%B8%AA%E6%95%B0%E7%BB%84"><span class="toc-number">6.1.1.</span> <span class="toc-text">声明一个数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">6.1.2.</span> <span class="toc-text">数组初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">6.1.2.1.</span> <span class="toc-text">静态初始化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">6.1.2.2.</span> <span class="toc-text">动态初始化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0%E7%9A%84%E8%AE%BF%E9%97%AE"><span class="toc-number">6.1.3.</span> <span class="toc-text">数组元素的访问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E9%95%BF%E5%BA%A6%E6%98%BE%E7%A4%BA"><span class="toc-number">6.1.4.</span> <span class="toc-text">数组长度显示</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E9%BB%98%E8%AE%A4%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">6.2.</span> <span class="toc-text">数组的默认初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E9%81%8D%E5%8E%86"><span class="toc-number">6.3.</span> <span class="toc-text">数组的遍历</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E5%AD%98%E5%88%92%E5%88%86"><span class="toc-number">6.4.</span> <span class="toc-text">数组的内存划分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%90%8D"><span class="toc-number">6.5.</span> <span class="toc-text">数组名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%BB%83%E4%B9%A0"><span class="toc-number">6.6.</span> <span class="toc-text">数组练习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E7%94%9F%E6%88%90%E7%BB%A9"><span class="toc-number">6.6.1.</span> <span class="toc-text">学生成绩</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E6%89%BE%E6%9C%80%E5%80%BC"><span class="toc-number">6.6.2.</span> <span class="toc-text">数组找最值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F"><span class="toc-number">6.7.</span> <span class="toc-text">冒泡排序</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day6-%E6%95%B0%E7%BB%84"><span class="toc-number">7.</span> <span class="toc-text">day6 数组</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E6%8C%87%E5%AE%9A%E5%85%83%E7%B4%A0%E7%9A%84%E4%B8%8B%E6%A0%87"><span class="toc-number">7.1.</span> <span class="toc-text">查找指定元素的下标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E5%A3%B0%E6%98%8E"><span class="toc-number">7.2.</span> <span class="toc-text">二维数组的声明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E9%9D%99%E6%80%81%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">7.3.</span> <span class="toc-text">二维数组的静态初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E5%8A%A8%E6%80%81%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">7.4.</span> <span class="toc-text">二维数组的动态初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84%E9%81%8D%E5%8E%86"><span class="toc-number">7.5.</span> <span class="toc-text">二维数组的遍历</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%99%AE%E9%80%9Afor%E5%BE%AA%E7%8E%AF"><span class="toc-number">7.5.1.</span> <span class="toc-text">普通for循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A2%9E%E5%BC%BAfor%E5%BE%AA%E7%8E%AF"><span class="toc-number">7.5.2.</span> <span class="toc-text">增强for循环</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E5%86%85%E5%AD%98%E5%9B%BE"><span class="toc-number">7.6.</span> <span class="toc-text">二维数组内存图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E7%BB%83%E4%B9%A0"><span class="toc-number">7.7.</span> <span class="toc-text">二维数组练习</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#idea%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">7.8.</span> <span class="toc-text">idea的使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day7-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-number">8.</span> <span class="toc-text">day7 面向对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E6%80%9D%E6%83%B3%E6%A6%82%E8%BF%B0"><span class="toc-number">8.1.</span> <span class="toc-text">面向对象思想概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1"><span class="toc-number">8.2.</span> <span class="toc-text">类和对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1"><span class="toc-number">8.3.</span> <span class="toc-text">创建类和对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="toc-number">8.3.1.</span> <span class="toc-text">类的创建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="toc-number">8.3.2.</span> <span class="toc-text">对象的创建</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%98%E5%9B%BE"><span class="toc-number">8.4.</span> <span class="toc-text">创建对象内存图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%85%E5%90%8D%E7%9B%B8%E5%85%B3"><span class="toc-number">8.5.</span> <span class="toc-text">包名相关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E5%8F%98%E9%87%8F%E5%86%85%E5%AD%98%E5%9B%BE"><span class="toc-number">8.6.</span> <span class="toc-text">示例变量内存图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E5%8F%98%E9%87%8F-%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F"><span class="toc-number">8.7.</span> <span class="toc-text">类变量(静态变量)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E7%BB%83%E4%B9%A0"><span class="toc-number">8.8.</span> <span class="toc-text">成员变量练习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A3%B0%E6%98%8E%E4%B8%80%E4%B8%AA%E5%9C%86%E7%9A%84%E5%9B%BE%E5%BD%A2%E7%B1%BB"><span class="toc-number">8.8.1.</span> <span class="toc-text">声明一个圆的图形类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%93%B6%E8%A1%8C%E8%B4%A6%E5%8F%B7"><span class="toc-number">8.8.2.</span> <span class="toc-text">银行账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E4%B8%AA%E7%B1%BB"><span class="toc-number">8.8.3.</span> <span class="toc-text">两个类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E7%BB%83%E4%B9%A0%E5%86%85%E5%AD%98%E5%9B%BE"><span class="toc-number">8.9.</span> <span class="toc-text">成员变量练习内存图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E7%9A%84%E5%88%9D%E8%AF%86"><span class="toc-number">8.10.</span> <span class="toc-text">方法的初识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BD%A2%E5%8F%82%E5%92%8C%E5%AE%9E%E5%8F%82"><span class="toc-number">8.11.</span> <span class="toc-text">形参和实参</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="toc-number">8.12.</span> <span class="toc-text">返回值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E6%96%B9%E6%B3%95"><span class="toc-number">8.13.</span> <span class="toc-text">实例方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day8%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-number">9.</span> <span class="toc-text">day8面向对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B%E5%80%BC%E4%BC%A0%E9%80%92"><span class="toc-number">9.1.</span> <span class="toc-text">基本类型值传递</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%BC%A0%E9%80%92"><span class="toc-number">9.2.</span> <span class="toc-text">引用数据类型传递</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%86%85%E5%AD%98%E5%9B%BE"><span class="toc-number">9.3.</span> <span class="toc-text">数组内存图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F"><span class="toc-number">9.4.</span> <span class="toc-text">局部变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E5%8F%98%E5%BD%A2%E5%8F%82"><span class="toc-number">9.5.</span> <span class="toc-text">可变形参</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E9%87%8D%E8%BD%BD"><span class="toc-number">9.6.</span> <span class="toc-text">方法重载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0"><span class="toc-number">9.7.</span> <span class="toc-text">命令行参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%AF%BC%E5%85%A5"><span class="toc-number">9.8.</span> <span class="toc-text">静态导入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%92%E5%BD%92"><span class="toc-number">9.9.</span> <span class="toc-text">递归</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E7%B1%BB%E5%9E%8B%E6%95%B0%E7%BB%84"><span class="toc-number">9.10.</span> <span class="toc-text">对象类型数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%81%E8%A3%85%E7%9A%84%E6%A6%82%E5%BF%B5%E5%8F%8A%E5%9B%9B%E4%B8%AA%E6%9D%83%E9%99%90%E4%BF%AE%E9%A5%B0%E7%AC%A6%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-number">9.11.</span> <span class="toc-text">封装的概念及四个权限修饰符的概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7%E7%9A%84%E7%AE%80%E5%8D%95%E5%B0%81%E8%A3%85"><span class="toc-number">9.12.</span> <span class="toc-text">属性的简单封装</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day9%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-number">10.</span> <span class="toc-text">day9面向对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%99%A8"><span class="toc-number">10.1.</span> <span class="toc-text">构造器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E5%B1%9E%E6%80%A7%E7%9A%84%E5%B0%81%E8%A3%85"><span class="toc-number">10.2.</span> <span class="toc-text">对属性的封装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%83%E4%B9%A0"><span class="toc-number">10.3.</span> <span class="toc-text">练习</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E5%87%86javabean"><span class="toc-number">10.4.</span> <span class="toc-text">标准javabean</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF"><span class="toc-number">10.5.</span> <span class="toc-text">继承</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BD%93%E5%87%BA%E7%8E%B0%E5%90%8C%E5%90%8D%E5%8F%98%E9%87%8F%E6%97%B6%EF%BC%9Athis%E4%B8%8Esuper"><span class="toc-number">10.6.</span> <span class="toc-text">当出现同名变量时：this与super</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF%E8%B5%84%E6%BA%90%E7%9A%84%E6%9F%A5%E6%89%BE"><span class="toc-number">10.7.</span> <span class="toc-text">继承资源的查找</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E7%9A%84%E9%87%8D%E5%86%99"><span class="toc-number">10.8.</span> <span class="toc-text">方法的重写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#this%E8%AF%A6%E8%A7%A3"><span class="toc-number">10.9.</span> <span class="toc-text">this详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#super%E8%AF%A6%E8%B0%88"><span class="toc-number">10.10.</span> <span class="toc-text">super详谈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E7%9A%84%E8%B5%8B%E5%80%BC%E6%96%B9%E6%B3%95"><span class="toc-number">10.11.</span> <span class="toc-text">成员变量的赋值方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day10-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-number">11.</span> <span class="toc-text">day10 面向对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">11.1.</span> <span class="toc-text">类的初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%8D%E5%90%AB%E5%AD%90%E7%B1%BB"><span class="toc-number">11.2.</span> <span class="toc-text">类的初始化不含子类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%8D%E5%90%AB%E5%AD%90%E7%B1%BB"><span class="toc-number">11.3.</span> <span class="toc-text">实例初始化不含子类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E5%90%AB%E5%AD%90%E7%B1%BB"><span class="toc-number">11.4.</span> <span class="toc-text">类的初始化含子类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%B7%E5%90%88%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">11.5.</span> <span class="toc-text">混合初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%80%81%E7%9A%84%E5%88%9D%E8%AF%86"><span class="toc-number">11.6.</span> <span class="toc-text">多态的初识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%80%81%E7%9A%84%E4%BD%9C%E7%94%A8%E4%B8%80%E8%8A%82%E7%9C%81%E4%BB%A3%E7%A0%81%E9%87%8F"><span class="toc-number">11.7.</span> <span class="toc-text">多态的作用一节省代码量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%80%81%E4%BD%9C%E7%94%A8%E4%BA%8C%E5%AD%98%E5%82%A8%E4%B8%8D%E5%90%8C%E7%B1%BB%E5%9E%8B%E6%95%B0%E6%8D%AE"><span class="toc-number">11.8.</span> <span class="toc-text">多态作用二存储不同类型数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%80%81%E5%BA%94%E7%94%A8%E4%B8%89%E6%96%B9%E6%B3%95%E7%9A%84%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="toc-number">11.9.</span> <span class="toc-text">多态应用三方法的返回值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%80%81%E7%9A%84%E7%BB%83%E4%B9%A0%E4%B8%80"><span class="toc-number">11.10.</span> <span class="toc-text">多态的练习一</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%80%81%E7%9A%84%E7%BB%83%E4%B9%A0%E4%BA%8C"><span class="toc-number">11.11.</span> <span class="toc-text">多态的练习二</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%91%E4%B8%8B%E8%BD%AC%E5%9E%8B"><span class="toc-number">11.12.</span> <span class="toc-text">向下转型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#instanceof"><span class="toc-number">11.13.</span> <span class="toc-text">instanceof</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day11"><span class="toc-number">12.</span> <span class="toc-text">day11</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%9E%E8%99%9A%E6%96%B9%E6%B3%95"><span class="toc-number">12.1.</span> <span class="toc-text">非虚方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#native%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">12.2.</span> <span class="toc-text">native关键字</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#final%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">12.3.</span> <span class="toc-text">final关键字</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Object%E7%B1%BB"><span class="toc-number">12.4.</span> <span class="toc-text">Object类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#to-string"><span class="toc-number">12.4.1.</span> <span class="toc-text">to_string</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#getClass"><span class="toc-number">12.4.2.</span> <span class="toc-text">getClass()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#finalize"><span class="toc-number">12.4.3.</span> <span class="toc-text">finalize</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hashcode"><span class="toc-number">12.4.4.</span> <span class="toc-text">hashcode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#equals"><span class="toc-number">12.4.5.</span> <span class="toc-text">equals()</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E6%8C%87%E9%92%88%E5%BC%82%E5%B8%B8"><span class="toc-number">12.5.</span> <span class="toc-text">空指针异常</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E5%88%9D%E8%AF%86"><span class="toc-number">12.6.</span> <span class="toc-text">抽象初识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="toc-number">12.7.</span> <span class="toc-text">抽象注意点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E5%88%9D%E8%AF%86"><span class="toc-number">12.8.</span> <span class="toc-text">接口初识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E7%9A%84%E9%9D%9E%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5"><span class="toc-number">12.9.</span> <span class="toc-text">接口的非正常情况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#comparable%E6%8E%A5%E5%8F%A3"><span class="toc-number">12.10.</span> <span class="toc-text">comparable接口</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day12-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-number">13.</span> <span class="toc-text">day12 面向对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#comparable%E6%8E%A5%E5%8F%A3-%E5%86%85%E9%83%A8%E6%AF%94%E8%BE%83%E5%99%A8"><span class="toc-number">13.1.</span> <span class="toc-text">comparable接口-内部比较器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Comparator%E6%8E%A5%E5%8F%A3-%E5%A4%96%E9%83%A8%E6%AF%94%E8%BE%83%E5%99%A8"><span class="toc-number">13.2.</span> <span class="toc-text">Comparator接口-外部比较器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%9A%E4%B8%BE"><span class="toc-number">13.3.</span> <span class="toc-text">枚举</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%9A%E4%B8%BE%E5%88%9D%E8%AF%86"><span class="toc-number">13.3.1.</span> <span class="toc-text">枚举初识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%9A%E4%B8%BE%E7%BB%93%E6%9D%9F"><span class="toc-number">13.3.2.</span> <span class="toc-text">枚举结束</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%9A%E4%B8%BE%E5%AE%9E%E7%8E%B0%E6%8E%A5%E5%8F%A3"><span class="toc-number">13.3.3.</span> <span class="toc-text">枚举实现接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%83%E4%B9%A0-1"><span class="toc-number">13.3.4.</span> <span class="toc-text">练习</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%85%E8%A3%85%E7%B1%BB%E5%88%9D%E8%AF%86"><span class="toc-number">13.4.</span> <span class="toc-text">包装类初识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1%E5%92%8C%E8%87%AA%E5%8A%A8%E6%8B%86%E7%AE%B1"><span class="toc-number">13.5.</span> <span class="toc-text">自动装箱和自动拆箱</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B%E4%B8%8E%E5%8C%85%E8%A3%85%E7%B1%BB%E5%9E%8B%E4%B8%8E%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B9%8B%E9%97%B4%E7%9A%84%E8%BD%AC%E6%8D%A2"><span class="toc-number">13.6.</span> <span class="toc-text">基本类型与包装类型与字符串之间的转换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E5%BA%94%E5%8C%85%E8%A3%85%E7%B1%BB%E5%9E%8B%E7%9A%84%E7%BC%93%E5%AD%98%E5%8C%BA"><span class="toc-number">13.7.</span> <span class="toc-text">对应包装类型的缓存区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%86%85%E9%83%A8%E7%B1%BB"><span class="toc-number">13.8.</span> <span class="toc-text">静态内部类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%9E%E9%9D%99%E6%80%81%E5%86%85%E9%83%A8%E7%B1%BB"><span class="toc-number">13.9.</span> <span class="toc-text">非静态内部类</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day13"><span class="toc-number">14.</span> <span class="toc-text">day13</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%80%E9%83%A8%E5%86%85%E9%83%A8%E7%B1%BB"><span class="toc-number">14.1.</span> <span class="toc-text">局部内部类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%E7%9A%84%E5%A3%B0%E6%98%8E"><span class="toc-number">14.2.</span> <span class="toc-text">匿名内部类的声明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">14.3.</span> <span class="toc-text">匿名内部类的使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%E7%BB%83%E4%B9%A0%E4%B8%80"><span class="toc-number">14.4.</span> <span class="toc-text">匿名内部类练习一</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E8%A7%A3"><span class="toc-number">14.5.</span> <span class="toc-text">注解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE-%E5%AE%A2%E6%88%B7%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F"><span class="toc-number">14.6.</span> <span class="toc-text">项目:客户信息管理系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82"><span class="toc-number">14.7.</span> <span class="toc-text">需求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">14.8.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E7%AE%80%E5%8D%95%E6%9E%B6%E6%9E%84"><span class="toc-number">14.9.</span> <span class="toc-text">开发简单架构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day14"><span class="toc-number">15.</span> <span class="toc-text">day14</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E4%BD%93%E7%B3%BB"><span class="toc-number">15.1.</span> <span class="toc-text">异常体系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E7%9A%84%E6%BC%94%E7%A4%BA"><span class="toc-number">15.2.</span> <span class="toc-text">异常的演示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8try-catch%E5%A4%84%E7%90%86%E5%BC%82%E5%B8%B8"><span class="toc-number">15.3.</span> <span class="toc-text">使用try catch处理异常</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8try-catch-finally%E5%A4%84%E7%90%86%E5%BC%82%E5%B8%B8"><span class="toc-number">15.4.</span> <span class="toc-text">使用try catch finally处理异常</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8throw%E5%92%8Cthrows%E5%A4%84%E7%90%86%E5%BC%82%E5%B8%B8"><span class="toc-number">15.5.</span> <span class="toc-text">使用throw和throws处理异常</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E7%B1%BB%E6%96%B9%E6%B3%95%E9%87%8D%E5%86%99"><span class="toc-number">15.6.</span> <span class="toc-text">异常类方法重写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BC%82%E5%B8%B8%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-number">15.7.</span> <span class="toc-text">自定义异常的方式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day15"><span class="toc-number">16.</span> <span class="toc-text">day15</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%AE%80%E4%BB%8B"><span class="toc-number">16.1.</span> <span class="toc-text">多线程简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%96%B9%E5%BC%8F%E4%B8%80-%E7%BB%A7%E6%89%BFThread%E7%B1%BB"><span class="toc-number">16.2.</span> <span class="toc-text">实现多线程方式一:继承Thread类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%96%B9%E5%BC%8F%E4%BA%8C-%E5%AE%9E%E7%8E%B0Runnable%E6%8E%A5%E5%8F%A3"><span class="toc-number">16.3.</span> <span class="toc-text">创建多线程方式二:实现Runnable接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%87%E7%94%A8%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%E7%9A%84%E6%96%B9%E5%BC%8F%E5%88%9B%E5%BB%BA%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%A8%8B%E5%BA%8F"><span class="toc-number">16.4.</span> <span class="toc-text">采用匿名内部类的方式创建多线程程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%9E%84%E9%80%A0%E5%99%A8%E8%B5%8B%E5%80%BC%E7%BA%BF%E7%A8%8B%E5%90%8D"><span class="toc-number">16.5.</span> <span class="toc-text">使用构造器赋值线程名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">16.6.</span> <span class="toc-text">线程常用方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E7%B3%BB%E5%88%97%E4%BA%8C"><span class="toc-number">16.7.</span> <span class="toc-text">常用方法系列二</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8"><span class="toc-number">16.8.</span> <span class="toc-text">线程安全</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%90%8C%E6%AD%A5%E4%BB%A3%E7%A0%81%E5%9D%97%E8%A7%A3%E5%86%B3%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-number">16.9.</span> <span class="toc-text">使用同步代码块解决线程安全问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%90%8C%E6%AD%A5%E6%96%B9%E6%B3%95%E8%A7%A3%E5%86%B3%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-number">16.10.</span> <span class="toc-text">使用同步方法解决线程安全问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%90%8C%E6%AD%A5%E4%BB%A3%E7%A0%81%E5%9D%97%E8%A7%A3%E5%86%B3%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98-%E7%BB%83%E4%B9%A0%E9%A2%98"><span class="toc-number">16.11.</span> <span class="toc-text">使用同步代码块解决线程安全问题-练习题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F"><span class="toc-number">16.12.</span> <span class="toc-text">单例模式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day16"><span class="toc-number">17.</span> <span class="toc-text">day16</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%E7%9A%84%E5%88%9D%E8%AF%86"><span class="toc-number">17.1.</span> <span class="toc-text">线程通信的初识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1%E9%87%87%E7%94%A8%E5%90%8C%E6%AD%A5%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">17.2.</span> <span class="toc-text">线程通信采用同步代码实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%BB%E9%94%81"><span class="toc-number">17.3.</span> <span class="toc-text">死锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">17.4.</span> <span class="toc-text">线程的生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80api%E4%B8%8E%E5%B8%B8%E8%A7%81%E7%AE%97%E6%B3%95"><span class="toc-number">17.5.</span> <span class="toc-text">基础api与常见算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%92%8C%E6%95%B0%E5%AD%A6%E7%9B%B8%E5%85%B3%E7%9A%84%E7%B1%BB"><span class="toc-number">17.5.1.</span> <span class="toc-text">和数学相关的类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BigInteger%E7%B1%BB"><span class="toc-number">17.5.2.</span> <span class="toc-text">BigInteger类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BigDecimal%E7%B1%BB"><span class="toc-number">17.5.3.</span> <span class="toc-text">BigDecimal类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Random%E7%B1%BB"><span class="toc-number">17.5.4.</span> <span class="toc-text">Random类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A5%E6%9C%9F%E6%97%B6%E9%97%B4Api"><span class="toc-number">17.5.5.</span> <span class="toc-text">日期时间Api</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Calendar%E7%B1%BB"><span class="toc-number">17.5.6.</span> <span class="toc-text">Calendar类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%97%B6%E5%8C%BA"><span class="toc-number">17.5.7.</span> <span class="toc-text">获取时区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F%E5%8C%96"><span class="toc-number">17.5.8.</span> <span class="toc-text">日期格式化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%A2%9E%E7%9A%84%E4%B8%89%E4%B8%AA%E6%97%A5%E6%9C%9F%E5%AF%B9%E8%B1%A1"><span class="toc-number">17.5.9.</span> <span class="toc-text">新增的三个日期对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E4%B8%8E%E6%8C%87%E5%AE%9A%E6%97%B6%E5%8C%BA%E6%97%B6%E9%97%B4%E5%92%8C%E4%B8%A4%E4%B8%AA%E6%97%A5%E6%9C%9F%E9%97%B4%E9%9A%94"><span class="toc-number">17.5.10.</span> <span class="toc-text">获取与指定时区时间和两个日期间隔</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DateTimeFormatter%E7%B1%BB-%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F%E5%8C%96%E7%B1%BB"><span class="toc-number">17.5.11.</span> <span class="toc-text">DateTimeFormatter类:日期格式化类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3%E7%B1%BB"><span class="toc-number">17.5.12.</span> <span class="toc-text">系统相关类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E7%AE%97%E6%B3%95%E5%8D%87%E5%8D%8E"><span class="toc-number">17.6.</span> <span class="toc-text">数组的算法升华</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E5%8F%8D%E8%BD%AC"><span class="toc-number">17.6.1.</span> <span class="toc-text">数组的反转</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="toc-number">17.6.2.</span> <span class="toc-text">数组的二分查找</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day17"><span class="toc-number">18.</span> <span class="toc-text">day17</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E6%89%A9%E5%AE%B9"><span class="toc-number">18.1.</span> <span class="toc-text">数组的扩容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E6%8F%92%E5%85%A5"><span class="toc-number">18.2.</span> <span class="toc-text">数组的插入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E5%88%A0%E9%99%A4"><span class="toc-number">18.3.</span> <span class="toc-text">数组的删除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F"><span class="toc-number">18.4.</span> <span class="toc-text">选择排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E7%B1%BB"><span class="toc-number">18.5.</span> <span class="toc-text">数组的工具类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E7%AE%80%E4%BB%8B%E4%BB%8B%E7%BB%8D"><span class="toc-number">18.6.</span> <span class="toc-text">字符串的简介介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-number">18.7.</span> <span class="toc-text">创建字符串的方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E7%9A%84%E4%B8%AA%E6%95%B0%E9%97%AE%E9%A2%98"><span class="toc-number">18.8.</span> <span class="toc-text">对象的个数问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#String%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90"><span class="toc-number">18.9.</span> <span class="toc-text">String内存分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%8B%BC%E6%8E%A5"><span class="toc-number">18.10.</span> <span class="toc-text">字符串的拼接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%B8%80"><span class="toc-number">18.11.</span> <span class="toc-text">字符串常用方法一</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BA%8C"><span class="toc-number">18.12.</span> <span class="toc-text">字符串常用方法二</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%B8%89"><span class="toc-number">18.13.</span> <span class="toc-text">字符串常用方法三</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#day18"><span class="toc-number">19.</span> <span class="toc-text">day18</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#StringBuilder%E4%B8%8EStringBuffer"><span class="toc-number">19.1.</span> <span class="toc-text">StringBuilder与StringBuffer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#StringBuffer%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">19.2.</span> <span class="toc-text">StringBuffer常用方法</span></a></li></ol></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="prev" href="/2022/02/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">&lt; 计算机组成原理</a><a class="next" href="/2022/02/11/RootersCTF2019-I-3-Flask-0x70-0x7F/">RootersCTF2019 I_&lt;3_Flask 0x70-0x7F &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
 .night .v[data-class=v] a:hover { color: #216C73 !important; }
 .night .v[data-class=v] li { list-style: inherit; }
 .night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
